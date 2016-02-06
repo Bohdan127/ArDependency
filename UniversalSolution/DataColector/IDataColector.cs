@@ -1,7 +1,10 @@
-﻿namespace DataColector
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+namespace DataColector
 {
     public interface IDataColector
     {
-        string Test { get; }
+        JArray GetJsonArray(string url);
     }
 }

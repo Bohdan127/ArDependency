@@ -1,12 +1,33 @@
-﻿namespace DataColector
+﻿using System;
+using Newtonsoft.Json.Linq;
+using System.Net;
+using Newtonsoft.Json;
+
+namespace DataColector
 {
     public class DefaultDataColector : IDataColector
     {
-        string IDataColector.Test
+        public JArray GetJsonArray(string url)
         {
-            get
+            //Url що повертає json з необхідною інформацією
+            string uri = url;
+
+            var webClient = new WebClient();
+            try
             {
-                return "DefaultDataColector";
+                //Отримуємо json за запитом
+                string json = webClient.DownloadString(uri);
+                JObject matches = (JObject)JsonConvert.DeserializeObject(json);
+                if (matches["Success"].ToString() == "True")
+                {
+                    return(JArray)matches["Value"];
+                }
+                return new JArray();//todo повернути щось якщо Success = folse
+            }
+            catch (Exception ex)
+            {
+                Console.Write("Error downloading content");
+                throw ex; //todo Щось повертати якшо виник Exception
             }
         }
     }

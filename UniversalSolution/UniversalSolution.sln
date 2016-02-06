@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataColector", "DataColector\DataColector.csproj", "{2004C562-F4ED-4BA9-81C9-822956CF44CD}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSaver", "DataSaver\DataSaver.csproj", "{86F12AF1-4223-4194-9D54-E67E12481447}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApplication1", "WindowsFormsApplication1\WindowsFormsApplication1.csproj", "{7FE1A8FC-74B5-4E2D-BD9F-B8042FE73172}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{CD34375C-4AB0-485F-83BA-08BEF38805D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,22 @@ Global
 		{7FE1A8FC-74B5-4E2D-BD9F-B8042FE73172}.Release|x64.Build.0 = Release|Any CPU
 		{7FE1A8FC-74B5-4E2D-BD9F-B8042FE73172}.Release|x86.ActiveCfg = Release|Any CPU
 		{7FE1A8FC-74B5-4E2D-BD9F-B8042FE73172}.Release|x86.Build.0 = Release|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Debug|ARM.Build.0 = Debug|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Debug|x64.Build.0 = Debug|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Debug|x86.Build.0 = Debug|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Release|ARM.ActiveCfg = Release|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Release|ARM.Build.0 = Release|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Release|x64.ActiveCfg = Release|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Release|x64.Build.0 = Release|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Release|x86.ActiveCfg = Release|Any CPU
+		{CD34375C-4AB0-485F-83BA-08BEF38805D8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

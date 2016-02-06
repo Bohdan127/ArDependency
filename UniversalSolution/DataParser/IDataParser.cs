@@ -1,7 +1,10 @@
-﻿namespace DataParser
+﻿using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+
+namespace DataParser
 {
     public interface IDataParser
     {
-        string Test { get; }
+        List<Match> ParseData(JArray input);
     }
 }

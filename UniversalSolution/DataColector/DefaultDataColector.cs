@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System.Net;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace DataColector
 {
@@ -16,8 +17,9 @@ namespace DataColector
             try
             {
                 //Отримуємо json за запитом
-                string json = webClient.DownloadString(uri);
-                JObject matches = (JObject)JsonConvert.DeserializeObject(json);
+                //string json = webClient.DownloadString(uri);
+                //todo потім поміняти щоби парсело URL
+                JObject matches = (JObject)JsonConvert.DeserializeObject((new StreamReader(@"..\..\1.txt")).ReadToEnd());
                 if (matches["Success"].ToString() == "True")
                 {
                     return(JArray)matches["Value"];

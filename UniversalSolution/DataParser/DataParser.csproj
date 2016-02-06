@@ -51,9 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefaultDataParser.cs" />
-    <Compile Include="IDataParser.cs" />
-    <Compile Include="Match.cs" />
+    <Compile Include="DefaultRealization\DefaultDataParser.cs" />
+    <Compile Include="DefaultRealization\DefaultEvent.cs" />
+    <Compile Include="Interfaces\IDataEvent.cs" />
+    <Compile Include="Interfaces\IDataMatch.cs" />
+    <Compile Include="Interfaces\IDataParser.cs" />
+    <Compile Include="DefaultRealization\Match.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

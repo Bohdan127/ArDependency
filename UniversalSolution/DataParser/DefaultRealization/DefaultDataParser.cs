@@ -80,7 +80,7 @@ namespace DataParser.DefaultRealization
                     }
                 }
                 matchesRes.Add(match);
-                matchesJson.Remove(val);
+                matchesJson.Remove(val);           
             }
             return matchesRes;
         }

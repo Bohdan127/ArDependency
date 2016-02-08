@@ -31,5 +31,11 @@ namespace DataColector.DefaultRealization
                 throw ex; //todo Щось повертати якшо виник Exception
             }
         }
+
+
+        public string t
+        {
+            get { return "DefaultDataColector"; }
+        }
     }
 }

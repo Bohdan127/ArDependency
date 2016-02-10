@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO.Ports;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Text.RegularExpressions;
-using DataParser;
-using DataColector;
+using HtmlAgilityPack;
+using WatiN.Core;
 
 namespace ParseAPI
 {
@@ -18,32 +14,14 @@ namespace ParseAPI
     {
         static void Main(string[] args)
         {
-            DefaultDataColector dataColector = new DefaultDataColector();
-            string uri = "https://ua.1xbet.com/LiveFeed/Get1x2?sportId=0&sports=&champId=0&tf=1000000&count=50&cnt=10&lng=ru&cfview=0";
-            DefaultDataParser dataParser = new DefaultDataParser();
-            List<DataParser.Match> matches =  dataParser.ParseData(dataColector.GetJsonArray(uri));
-            foreach(var match in matches)
-            {
-                Console.WriteLine(match.Id);
-                Console.WriteLine(match.Champ);
-                Console.WriteLine(match.Sportname);
-                Console.WriteLine(match.Opp1Name);
-                Console.WriteLine(match.Opp2Name);
-                Console.WriteLine(match.Event.P1);
-                Console.WriteLine(match.Event.X);
-                Console.WriteLine(match.Event.P2);
-                Console.WriteLine(match.Event.X1);
-                Console.WriteLine(match.Event.I2);
-                Console.WriteLine(match.Event.X2);
-                Console.WriteLine(match.Event.Fora1);
-                Console.WriteLine(match.Event.I);
-                Console.WriteLine(match.Event.Fora2);
-                Console.WriteLine(match.Event.II);
-                Console.WriteLine(match.Event.Total);
-                Console.WriteLine(match.Event.B);
-                Console.WriteLine(match.Event.M);
-            }
 
+            WebClient wClient = new WebClient();
+
+            HtmlDocument html = new HtmlDocument();
+
+            html.LoadHtml(wClient.DownloadString("http://ls.betradar.com/ls/livescore/?/olimp/en/page#domain=olimp.kz"));
+            HtmlNodeCollection c = html.DocumentNode.SelectNodes("/html[1]/body[1]/div[1]/div[4]/div[2]");
+            var trNodes = html.GetElementbyId("job-items").ChildNodes.Where(x => x.Name == "tr");
             Console.ReadLine();
         }
         public static string Update(int id = 0)

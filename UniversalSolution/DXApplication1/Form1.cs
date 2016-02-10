@@ -5,6 +5,9 @@ using DevExpress.XtraBars.Helpers;
 using DevExpress.XtraEditors;
 using System;
 using System.Threading;
+using System.Timers;
+using System.Windows.Forms;
+using Timer = System.Timers.Timer;
 
 namespace DXApplication1
 {
@@ -13,6 +16,7 @@ namespace DXApplication1
         private IDataColector _collector;
         private IDataParser _parser;
         private IDataSaver _saver;
+        private Timer updateTimer;
 
         private string defUrl = @"https://ua.1xbet.com/LiveFeed/Get1x2?sportId=0&sports=&champId=0&tf=1000000&count=50&cnt=10&lng=ru&cfview=0";
 
@@ -21,12 +25,28 @@ namespace DXApplication1
             _collector = colector;
             _parser = parser;
             _saver = saver;
+
             InitializeComponent();
             InitSkinGallery();
 
+
+            updateTimer = new Timer(1000 * 60);
+            updateTimer.Elapsed += UpdateTimer_Elapsed;
             backgroundWorker1.RunWorkerCompleted += BackgroundWorker1_RunWorkerCompleted;
             backgroundWorker1.DoWork += BackgroundWorker1_DoWork;
-            this.Shown += Form1_Shown;
+            Shown += Form1_Shown;
+
+            repositoryItemToggleSwitch1.Toggled += AutoUpdateChanged;
+            barEditItem1.EditValue = false;
+            barEditItem1.EditValueChanged += AutoUpdateChanged;
+            repositoryItemTextEdit1.Appearance.Options.UseTextOptions = true;
+            repositoryItemTextEdit1.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            barUpdateNow.ItemClick += barUpdateNow_ItemClick;
+        }
+
+        private void UpdateTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            barUpdateNow_ItemClick(null, null);
         }
 
         private void BackgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -58,10 +78,35 @@ namespace DXApplication1
 
         private void barUpdateNow_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            gridView1.SelectRows(0, gridView1.RowCount);
-            gridView1.DeleteSelectedRows();
-            gridControl1.DataSource = null;
-            backgroundWorker1.RunWorkerAsync();
+            if (!backgroundWorker1.IsBusy)
+            {
+                this.Invoke(new MethodInvoker(delegate
+                {
+                    gridView1.SelectRows(0, gridView1.RowCount);
+                    gridView1.DeleteSelectedRows();
+                    gridControl1.DataSource = null;
+
+                    backgroundWorker1.RunWorkerAsync();
+                }));
+            }
+        }
+
+        private void ChangeUpdateTime(object sender, EventArgs e)
+        {
+            if (updateTimer.Enabled)
+            {
+                updateTimer.Stop();
+                barEditItem1.EditValue = false;
+            }
+            updateTimer.Interval = int.Parse(barEditItem2.EditValue.ToString()) * 1000 * 60;//60 - seconds in one minute, 1000 miliseconds at one second 
+        }
+
+        private void AutoUpdateChanged(object sender, EventArgs e)
+        {
+            if ((bool)barEditItem1.EditValue)
+                updateTimer.Start();
+            else
+                updateTimer.Stop();
         }
     }
 }

@@ -34,9 +34,6 @@ namespace DXApplication1
 
         public Form1()
         {
-#if DEBUG
-            var start = DateTime.Now;
-#endif
             _parser = new DefaultDataParser();
             _sites = new List<Office>();
 
@@ -45,9 +42,11 @@ namespace DXApplication1
 
             DefaultData();
             DefaultEvents();
-#if DEBUG
-            MessageBox.Show((DateTime.Now - start).Milliseconds.ToString());
-#endif                                                 
+
+            barDeleteOldData.Enabled = false;
+            barColorNewData.Enabled = false;
+            barNewColor.Enabled = false;
+            isDeleteOldData = true;
         }
 
         #endregion
@@ -228,9 +227,6 @@ namespace DXApplication1
 
         private void barUpdateNow_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-#if DEBUG
-            var start = DateTime.Now;
-#endif
             if (!backgroundWorker1.IsBusy)
             {
                 this.Invoke(new MethodInvoker(delegate
@@ -245,9 +241,6 @@ namespace DXApplication1
                     backgroundWorker1.RunWorkerAsync();
                 }));
             }
-#if DEBUG
-            MessageBox.Show((DateTime.Now - start).Milliseconds.ToString());
-#endif
         }
 
         private void ChangeUpdateTime(object sender, EventArgs e)

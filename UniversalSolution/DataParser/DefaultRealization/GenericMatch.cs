@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataParser.DefaultRealization
+﻿namespace DataParser.DefaultRealization
 {
     public class GenericMatch
     {
@@ -31,7 +25,7 @@ namespace DataParser.DefaultRealization
         /// <summary>
         /// Тип ставки
         /// </summary>
-        public string BetType { get; set; } 
+        public string BetType { get; set; }
         /// <summary>
         /// Индикатор1
         /// </summary>
@@ -57,12 +51,5 @@ namespace DataParser.DefaultRealization
         /// </summary>
         public string Time { get; set; } //todo знову який тип???????????
     }
-    public enum Office
-    {
-        ua1xetCom,
-        olimpKz,
-        fonbetCom,
-        williamhillCom,
-        ru10betCom
-    }
+
 }

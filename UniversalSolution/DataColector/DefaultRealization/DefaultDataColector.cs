@@ -28,7 +28,8 @@ namespace DataColector.DefaultRealization
             catch (Exception ex)
             {
                 Console.Write("Error downloading content");
-                throw ex; //todo Щось повертати якшо виник Exception
+                return new JArray();
+                //throw ex; //todo Щось повертати якшо виник Exception
             }
         }
 

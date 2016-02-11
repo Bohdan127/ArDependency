@@ -7,21 +7,20 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using HtmlAgilityPack;
 using WatiN.Core;
+using DataParser.DefaultRealization;
 
 namespace ParseAPI
 {
     class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
+            DefaultDataParser dataParser = new DefaultDataParser();
+            List<GenericMatch> resultList = new List<GenericMatch>();
+            //resultList = dataParser.Ua1xetComDataParser();
+            resultList = dataParser.OlimpDataParser();
 
-            WebClient wClient = new WebClient();
-
-            HtmlDocument html = new HtmlDocument();
-
-            html.LoadHtml(wClient.DownloadString("http://ls.betradar.com/ls/livescore/?/olimp/en/page#domain=olimp.kz"));
-            HtmlNodeCollection c = html.DocumentNode.SelectNodes("/html[1]/body[1]/div[1]/div[4]/div[2]");
-            var trNodes = html.GetElementbyId("job-items").ChildNodes.Where(x => x.Name == "tr");
             Console.ReadLine();
         }
         public static string Update(int id = 0)

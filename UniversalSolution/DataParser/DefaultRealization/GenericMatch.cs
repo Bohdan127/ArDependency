@@ -15,11 +15,11 @@ namespace DataParser.DefaultRealization
         /// <summary>
         /// Контора
         /// </summary>
-        public string Office { get; set; }
+        public Office Office;
         /// <summary>
         /// Вид спорта
         /// </summary>
-        public string Sportname { get; set; }
+        public string SportName { get; set; }
         /// <summary>
         /// Событие
         /// </summary>
@@ -56,5 +56,13 @@ namespace DataParser.DefaultRealization
         /// Время  
         /// </summary>
         public string Time { get; set; } //todo знову який тип???????????
+    }
+    public enum Office
+    {
+        ua1xetCom,
+        olimpKz,
+        fonbetCom,
+        williamhillCom,
+        ru10betCom
     }
 }

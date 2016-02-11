@@ -49,7 +49,7 @@ namespace DataParser.DefaultRealization
                 //Мабуть це піде в окремий метод, але поітм
                 JToken val = matchesJson.First;
                 match.Id = (int)val["Num"];
-                match.Office = Office.ua1xetCom;
+                match.Office = Office.ua1xetCom.ToString();
                 match.SportName = val["SportNameEng"].ToString();
                 match.Champ = val["ChampEng"].ToString();
                 matchListResult.Add(match);
@@ -90,7 +90,7 @@ namespace DataParser.DefaultRealization
                             //todo Берем Id тегу tr де знаходиться 1 матч, і відкидаємо лишнє, 
                             //бо він має вигляд: match-8848438
                             matchResult.Id = int.Parse(match.Attributes["id"].Value.Substring(6));
-                            matchResult.Office = Office.olimpKz;
+                            matchResult.Office = Office.olimpKz.ToString();
                             matchResult.SportName = sportName;
                             matchResult.Champ = champ;
                             matchListResult.Add(matchResult);
@@ -100,11 +100,32 @@ namespace DataParser.DefaultRealization
             }
             return matchListResult;
         }
+        public List<GenericMatch> FonbetDataParser()
+        {
+            List<GenericMatch> matchListResult = new List<GenericMatch>();
 
+            HtmlDocument doc = GetHtmlDocument("https://live.fonbet.com/");
+
+            //todo мож регуляркою шукати зразу потрібне
+            //string allHTML = browser.Body.OuterHtml; 
+
+            //todo При деяких запусках чомусь масив елементів пустий  ??????????????
+            var liveMatchList = doc.GetElementbyId("lineContainer");
+            if (liveMatchList != null)
+            {
+                //todo Деколи коли сторінка повільно прогружається в mainDiv присвоюється не список діві
+                //а Lading елемент, і тоді при обході цього масива отримуєм екзепшин
+                foreach (HtmlNode tr 
+                    in liveMatchList.ChildNodes[0].ChildNodes[0].ChildNodes)
+                {
+                    
+                }
+            }
+            return matchListResult;
+        }
         #region AdditionalMethod
         public static string GetHtml(string Url)
         {
-            //Console.OutputEncoding = Encoding.UTF8;//Because Error "The handle is invalid"
             Settings.Instance.MakeNewIeInstanceVisible = false; //невідображати браузер
             Settings.WaitForCompleteTimeOut = 999999999; //todo хз нашо це було так в прикладі
             using (var browser = new IE(Url))

@@ -18,8 +18,8 @@ namespace ParseAPI
         {
             DefaultDataParser dataParser = new DefaultDataParser();
             List<GenericMatch> resultList = new List<GenericMatch>();
-            //resultList = dataParser.Ua1xetComDataParser();
             resultList = dataParser.OlimpDataParser();
+            //resultList = dataParser.FonbetDataParser();
 
             Console.ReadLine();
         }

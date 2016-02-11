@@ -9,7 +9,7 @@
         /// <summary>
         /// Контора
         /// </summary>
-        public Office Office;
+        public string Office { get; set; }
         /// <summary>
         /// Вид спорта
         /// </summary>

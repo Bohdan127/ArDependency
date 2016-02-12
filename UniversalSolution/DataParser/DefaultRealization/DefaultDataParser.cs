@@ -14,6 +14,8 @@ namespace DataParser.DefaultRealization
     {
         public const string olimpUrl = "http://ls.betradar.com/ls/livescore/?/olimp/en/page#domain=olimp.kz";
         public const string ua1xetUrl = "https://ua.1xbet.com/LiveFeed/Get1x2?sportId=0&sports=&champId=0&tf=1000000&count=50&cnt=10&lng=ru&cfview=0";
+        public const string fonbetUrl = "https://live.fonbet.com/";
+        public const string williamhill = "http://sports.williamhill.com/bet/ru/betlive/all"; 
 
         public List<GenericMatch> GetDataForSomeSites(List<Office> sites)
         {                 //   todo це гавнокод вищої степені але зарза на це немає часу
@@ -69,7 +71,7 @@ namespace DataParser.DefaultRealization
 
             //todo При деяких запусках чомусь масив елементів пустий  ??????????????
             var liveMatchList = doc.GetElementbyId("srlive_matchlist").ChildNodes.Where(x => x.Name == "div");
-            var loadNode = liveMatchList.FirstOrDefault();
+            var loadNode = liveMatchList?.FirstOrDefault();
             if (loadNode != null && loadNode.InnerText.Trim() != "Loading")
             {
                 //todo Деколи коли сторінка повільно прогружається в mainDiv присвоюється не список діві
@@ -93,6 +95,7 @@ namespace DataParser.DefaultRealization
                             matchResult.Office = Office.olimpKz.ToString();
                             matchResult.SportName = sportName;
                             matchResult.Champ = champ;
+                            matchResult.GameTime = match.ChildNodes[1].InnerText;
                             matchListResult.Add(matchResult);
                         }
                     }
@@ -100,25 +103,77 @@ namespace DataParser.DefaultRealization
             }
             return matchListResult;
         }
+
         public List<GenericMatch> FonbetDataParser()
         {
             List<GenericMatch> matchListResult = new List<GenericMatch>();
 
-            HtmlDocument doc = GetHtmlDocument("https://live.fonbet.com/");
+            HtmlDocument doc = GetHtmlDocument(fonbetUrl);
 
             //todo мож регуляркою шукати зразу потрібне
             //string allHTML = browser.Body.OuterHtml; 
 
             //todo При деяких запусках чомусь масив елементів пустий  ??????????????
-            var liveMatchList = doc.GetElementbyId("lineContainer");
-            if (liveMatchList != null)
+            HtmlNode liveMatchList = doc.GetElementbyId("lineContainer");
+            if (liveMatchList != null && liveMatchList.ChildNodes.Count != 0)
             {
-                //todo Деколи коли сторінка повільно прогружається в mainDiv присвоюється не список діві
-                //а Lading елемент, і тоді при обході цього масива отримуєм екзепшин
-                foreach (HtmlNode tr 
-                    in liveMatchList.ChildNodes[0].ChildNodes[0].ChildNodes)
+                string sportName="";
+                var list = liveMatchList.ChildNodes[0].ChildNodes[0].ChildNodes;
+                foreach (HtmlNode tr in liveMatchList.ChildNodes[0].ChildNodes[0].ChildNodes)
                 {
-                    
+                    if(tr.Attributes["class"].Value == "trSegment")
+                    {
+                        if(tr.ChildNodes[0].ChildNodes[0].ChildNodes[1].InnerText != sportName)
+                        {
+                            sportName = tr.ChildNodes[0].ChildNodes[0].ChildNodes[1].InnerText;
+                        }
+                    }
+                    if (tr.Attributes["class"].Value.Substring(0, 7) == "trEvent")
+                    {
+                        GenericMatch matchResult = new GenericMatch();
+                        matchResult.Id = int.Parse(tr.Attributes["id"].Value.Substring(5));
+                        matchResult.Office = Office.fonbetCom.ToString();
+                        //todo magic number
+                        var index = sportName.IndexOf(".");
+                        matchResult.SportName = sportName.Substring(0, index);
+                        matchResult.Champ = sportName.Substring(index+1);
+                        //todo Беру час гри просто в трінгу тобто не реальний чи це підходить хз ???????
+                        matchResult.GameTime = tr.ChildNodes[2].ChildNodes[1].FirstChild.InnerText;
+                        matchListResult.Add(matchResult);
+                    }
+                }
+            }
+            return matchListResult;
+        }
+        
+        public List<GenericMatch> WilliamhillDataParser()
+        {
+            List<GenericMatch> matchListResult = new List<GenericMatch>();
+
+            HtmlDocument doc = GetHtmlDocument(williamhill);
+            
+            var liveMatchList = doc.GetElementbyId("sports_holder").ChildNodes.Where(x=>x.Name == "div");
+            foreach (var sport in liveMatchList)
+            {
+                var sportname = sport.ChildNodes[1].ChildNodes[1].InnerText;
+                foreach(var champ in sport.ChildNodes[3].ChildNodes.Where(x => x.Name == "div"))
+                {
+                    var champName = champ.ChildNodes[1].InnerText;
+                    foreach (var match 
+                        in champ.ChildNodes[5].ChildNodes[3].ChildNodes[1].ChildNodes[5].ChildNodes.Where(x => x.Name == "tr"))
+                    {
+                        GenericMatch matchResult = new GenericMatch();
+                        //todo Є екзепшин десь ловить якусь кончену tr 
+                        if(match.Attributes["id"].Value != null)
+                        {
+                            matchResult.Id = int.Parse(match.Attributes["id"].Value.Substring(7));
+                            matchResult.GameTime = match.ChildNodes[1].ChildNodes[1].InnerText;
+                            matchResult.SportName = sportname;
+                            matchResult.Champ = champName;
+                            matchResult.Office = Office.williamhillCom.ToString();
+                            matchListResult.Add(matchResult);
+                        }
+                    }
                 }
             }
             return matchListResult;
@@ -130,7 +185,6 @@ namespace DataParser.DefaultRealization
             Settings.WaitForCompleteTimeOut = 999999999; //todo хз нашо це було так в прикладі
             using (var browser = new IE(Url))
             {
-                HtmlDocument doc = new HtmlDocument();
                 //затримка 1 секунда, щоби не ловився блок Lading
                 browser.WaitForComplete();
                 Thread.Sleep(1000);

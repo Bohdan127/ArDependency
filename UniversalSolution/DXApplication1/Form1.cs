@@ -6,10 +6,12 @@ using DevExpress.XtraBars.Helpers;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
+using System.Xml;
 using Timer = System.Timers.Timer;
 
 namespace DXApplication1
@@ -27,6 +29,7 @@ namespace DXApplication1
         private bool isColoredNewData = false;
         private List<Office> _sites;
         private string defUrl = @"https://ua.1xbet.com/LiveFeed/Get1x2?sportId=0&sports=&champId=0&tf=1000000&count=50&cnt=10&lng=ru&cfview=0";
+        private static string outFileName = @"lastChanges.xml";
 
         #endregion
 
@@ -41,12 +44,7 @@ namespace DXApplication1
             InitSkinGallery();
 
             DefaultData();
-            DefaultEvents();
-
-            barDeleteOldData.Enabled = false;
-            barColorNewData.Enabled = false;
-            barNewColor.Enabled = false;
-            isDeleteOldData = true;
+            DefaultEvents();                    
         }
 
         #endregion
@@ -71,8 +69,84 @@ namespace DXApplication1
         /// </summary>
         private void GetPreviousState()
         {
-            //todo доставати дані із файла
-        }
+            using (XmlReader reader = XmlReader.Create(outFileName))
+            {
+                reader.MoveToContent();
+                while (reader.Read())
+                {
+                    if (reader.NodeType == XmlNodeType.Element)
+                    {
+                        switch (reader.Name)
+                        {
+                            case "UpdateTime":
+                                barUpdateTime.EditValue = reader.ReadString();
+                                break;
+                            case "AutoUpdate":
+                                if (reader.ReadString() == "True")
+                                {
+                                    barAutoUpdate.EditValue = true;
+                                    AutoUpdateChanged(null, null);
+                                }
+                                break;
+                            case "DeleteOldData":
+                                if (reader.ReadString() == "True")
+                                {
+                                    barDeleteOldData.EditValue = true;
+                                    isDeleteOldData = true;
+                                }
+                                break;
+                            case "ColoredNewData":
+                                if (reader.ReadString() == "True")
+                                {
+                                    barColorNewData.EditValue = true;
+                                    isColoredNewData = true;
+                                }
+                                break;
+                            case "NewColor":
+                                barNewColor.EditValue = Color.FromArgb(Convert.ToInt32(reader.ReadString()));
+                                break;
+                            case "ua1xetCom":
+                                if (reader.ReadString() == "True")
+                                {
+                                    barua1xetCom.EditValue = true;
+                                    SwitchUa1xetCom_Toggled(null, null);
+                                }
+                                break;
+                            case "olimpKz":
+                                if (reader.ReadString() == "True")
+                                {
+                                    barolimpKz.EditValue = true;
+                                    SwitchOlimpKz_Toggled(null, null);
+                                }
+                                break;
+                            case "fonbetCom":
+                                if (reader.ReadString() == "True")
+                                {
+                                    barfonbetCom.EditValue = true;
+                                    SwitchFonbetCom_Toggled(null, null);
+                                }
+                                break;
+                            case "williamhillCom":
+                                if (reader.ReadString() == "True")
+                                {
+                                    barwilliamhillCom.EditValue = true;
+                                    SwitchWilliamHillCom_Toggled(null, null);
+                                }
+                                break;
+                            case "ru10betCom":
+                                if (reader.ReadString() == "True")
+                                {
+                                    barru10betCom.EditValue = true;
+                                    SwitchRu10BetCom_Toggled(null, null);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+        }      
 
         /// <summary>
         /// Set default event for some fields
@@ -135,9 +209,38 @@ namespace DXApplication1
             }
         }
 
-        void InitSkinGallery()
+        private void InitSkinGallery()
         {
             SkinHelper.InitSkinGallery(rgbiSkins, true);
+        }
+
+        /// <summary>
+        /// Create new XML file with name outFileName and write all current settings
+        /// </summary>
+        private void WriteSettings()
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.ConformanceLevel = ConformanceLevel.Auto;
+            using (XmlWriter writer = XmlWriter.Create(outFileName, settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("MainForm");
+
+                writer.WriteElementString("UpdateTime", barUpdateTime.EditValue?.ToString());
+                writer.WriteElementString("AutoUpdate", isAutoUpdate.ToString());
+                writer.WriteElementString("DeleteOldData", isDeleteOldData.ToString());
+                writer.WriteElementString("ColoredNewData", isColoredNewData.ToString());
+                writer.WriteElementString("NewColor", ((Color)barNewColor.EditValue).ToArgb().ToString());
+                writer.WriteElementString("ua1xetCom", barua1xetCom.EditValue?.ToString());
+                writer.WriteElementString("olimpKz", barolimpKz.EditValue?.ToString());
+                writer.WriteElementString("fonbetCom", barfonbetCom.EditValue?.ToString());
+                writer.WriteElementString("williamhillCom", barwilliamhillCom.EditValue?.ToString());
+                writer.WriteElementString("ru10betCom", barru10betCom.EditValue?.ToString());
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
         }
 
         #endregion
@@ -186,8 +289,14 @@ namespace DXApplication1
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //todo питати чи юзер зоче закрити
             //todo щберігати стан в xml
+
+            if (MessageBox.Show("Желаете выйти?", "Выход", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                WriteSettings();
+            }
+            else
+                e.Cancel = true;
         }
 
         private void SwitchDeleteOldData_Toggled(object sender, EventArgs e)

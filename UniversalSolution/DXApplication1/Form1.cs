@@ -28,7 +28,6 @@ namespace DXApplication1
         private bool isDeleteOldData = false;
         private bool isColoredNewData = false;
         private List<Office> _sites;
-        private string defUrl = @"https://ua.1xbet.com/LiveFeed/Get1x2?sportId=0&sports=&champId=0&tf=1000000&count=50&cnt=10&lng=ru&cfview=0";
         private static string outFileName = @"lastChanges.xml";
 
         #endregion
@@ -44,7 +43,7 @@ namespace DXApplication1
             InitSkinGallery();
 
             DefaultData();
-            DefaultEvents();                    
+            DefaultEvents();
         }
 
         #endregion
@@ -146,7 +145,7 @@ namespace DXApplication1
                     }
                 }
             }
-        }      
+        }
 
         /// <summary>
         /// Set default event for some fields
@@ -180,20 +179,37 @@ namespace DXApplication1
                 List<GenericMatch> currentDataList = (List<GenericMatch>)gridControl1.DataSource;
 
                 var newDataList = _parser.GetDataForSomeSites(_sites);
-                foreach (var dataMatch in newDataList)
+
+                if (currentDataList == null || currentDataList.Count == 0)
                 {
-                    var currMatch = currentDataList.FirstOrDefault(
-                                d => d.Id == dataMatch.Id);
-                    if (currMatch == null)
+                    currentDataList = newDataList;
+                    return;
+                }
+
+                for (int i = 0; i < gridView1.RowCount; i++)
+                {
+                    gridView1.FocusedRowHandle = i;
+                    var currMatch = newDataList.FirstOrDefault(
+                                d => d.Id == currentDataList[i].Id);
+                    if (currMatch != null)
                     {
-                        currentDataList.Add(dataMatch);
+                        CheckDiff(currentDataList[i], currMatch, i);
+                        newDataList.Remove(currMatch);
                     }
-                    else
-                    {
-                        CheckDiff(currMatch, dataMatch);
-                    }
+                    //todo пофарбувати тут всі нові
+                    currentDataList.AddRange(newDataList);
                 }
             }
+        }
+
+        /// <summary>
+        /// Draw selected column with color selected in menu for barNewColor  for focused row   if isColoredNewData set to True
+        /// </summary>
+        /// <param name="colName">Name of column for painting</param>
+        protected virtual void DrawSomeColumnInFocusedRow(string colName)
+        {
+            if (isColoredNewData)
+                gridView1.Columns[colName].AppearanceCell.BackColor = (Color)barNewColor.EditValue;
         }
 
         /// <summary>
@@ -201,11 +217,68 @@ namespace DXApplication1
         /// </summary>
         /// <param name="match"></param>
         /// <param name="dataMatch"></param>
-        private void CheckDiff(GenericMatch match, GenericMatch dataMatch)
+        private void CheckDiff(GenericMatch match, GenericMatch dataMatch, int rowHanle)
         {
-            if (match.BetType != dataMatch.BetType)
+            if (match.Champ != dataMatch.Champ)
             {
-                match.BetType = dataMatch.BetType;
+                DrawSomeColumnInFocusedRow(colChamp.Name);
+                match.Champ = dataMatch.Champ;
+            }
+            if (match.ForkPercent != dataMatch.ForkPercent)
+            {
+                DrawSomeColumnInFocusedRow(colForkPercent.Name);
+                match.ForkPercent = dataMatch.ForkPercent;
+            }
+            if (match.GameTime != dataMatch.GameTime)
+            {
+                DrawSomeColumnInFocusedRow(colGameTime.Name);
+                match.GameTime = dataMatch.GameTime;
+            }
+            if (match.Id != dataMatch.Id)
+            {
+                DrawSomeColumnInFocusedRow(colId.Name);
+                match.Id = dataMatch.Id;
+            }
+            if (match.Indicator1 != dataMatch.Indicator1)
+            {
+                DrawSomeColumnInFocusedRow(colIndicator1.Name);
+                match.Indicator1 = dataMatch.Indicator1;
+            }
+            if (match.Indicator2 != dataMatch.Indicator2)
+            {
+                DrawSomeColumnInFocusedRow(colIndicator2.Name);
+                match.Indicator2 = dataMatch.Indicator2;
+            }
+            if (match.Indicator3 != dataMatch.Indicator3)
+            {
+                DrawSomeColumnInFocusedRow(colIndicator3.Name);
+                match.Indicator3 = dataMatch.Indicator3;
+            }
+            if (match.Office != dataMatch.Office)
+            {
+                DrawSomeColumnInFocusedRow(colOffice.Name);
+                match.Office = dataMatch.Office;
+            }
+            if (match.OfficeBetType != dataMatch.OfficeBetType)
+            {
+                DrawSomeColumnInFocusedRow(colBetType.Name);
+                match.OfficeBetType = dataMatch.OfficeBetType;
+            }
+            if (match.SportName != dataMatch.SportName)
+            {
+                DrawSomeColumnInFocusedRow(colSportname.Name);
+                match.SportName = dataMatch.SportName;
+            }
+            if (match.Time != dataMatch.Time)
+            {
+                DrawSomeColumnInFocusedRow(colTime.Name);
+                match.Time = dataMatch.Time;
+            }
+            if (match.Сoefficient != dataMatch.Сoefficient)
+            {
+                //DrawSomeColumnInFocusedRow(coe);
+                //todo ми нафік не має цієї колонки треба додати
+                match.Сoefficient = dataMatch.Сoefficient;
             }
         }
 
@@ -340,14 +413,15 @@ namespace DXApplication1
             {
                 this.Invoke(new MethodInvoker(delegate
                 {
-                    if (isDeleteOldData)
+                    if (isDeleteOldData)//delete old data
                     {
                         gridView1.SelectRows(0, gridView1.RowCount);
                         gridView1.DeleteSelectedRows();
                         gridControl1.DataSource = null;
                     }
-
+                    //load new data
                     backgroundWorker1.RunWorkerAsync();
+                    gridView1.RefreshData();//refresh view for load new data
                 }));
             }
         }

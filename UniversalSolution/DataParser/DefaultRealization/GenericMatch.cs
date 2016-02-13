@@ -5,7 +5,7 @@
         /// <summary>
         /// Id
         /// </summary>
-        public int Id { get; set; }
+        public long Id { get; set; }
         /// <summary>
         /// Контора
         /// </summary>
@@ -25,7 +25,7 @@
         /// <summary>
         /// Тип ставки
         /// </summary>
-        public string BetType { get; set; }
+        public string OfficeBetType { get; set; }
         /// <summary>
         /// Индикатор1
         /// </summary>

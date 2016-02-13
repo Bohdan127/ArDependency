@@ -15,26 +15,37 @@ namespace DataParser.DefaultRealization
         public const string olimpUrl = "http://ls.betradar.com/ls/livescore/?/olimp/en/page#domain=olimp.kz";
         public const string ua1xetUrl = "https://ua.1xbet.com/LiveFeed/Get1x2?sportId=0&sports=&champId=0&tf=1000000&count=50&cnt=10&lng=ru&cfview=0";
         public const string fonbetUrl = "https://live.fonbet.com/";
-        public const string williamhill = "http://sports.williamhill.com/bet/ru/betlive/all"; 
+        public const string williamhill = "http://sports.williamhill.com/bet/ru/betlive/all";
 
         public List<GenericMatch> GetDataForSomeSites(List<Office> sites)
         {                 //   todo це гавнокод вищої степені але зарза на це немає часу
             var resList = new List<GenericMatch>();
 
             if (sites.Any(s => s == Office.fonbetCom))
-            { }
+            {
+                return new List<GenericMatch>() { new GenericMatch() { Id = 2, Champ = "1" } };
+                resList.AddRange(FonbetDataParser());
+            }
             if (sites.Any(s => s == Office.olimpKz))
             {
+                return new List<GenericMatch>() { new GenericMatch() { Id = 1, Champ = "1" }, new GenericMatch() { Id = 2, Champ = "2" } };
+
                 resList.AddRange(OlimpDataParser());
             }
             if (sites.Any(s => s == Office.ru10betCom))
-            { }
+            {
+                return new List<GenericMatch>() { new GenericMatch() { Id = 1, Champ = "1" } };
+                //resList.AddRange(?????????);
+            }
             if (sites.Any(s => s == Office.ua1xetCom))
             {
+                return new List<GenericMatch>() { new GenericMatch() { Id = 1, Champ = "2" } };
                 resList.AddRange(Ua1xetComDataParser());
             }
             if (sites.Any(s => s == Office.williamhillCom))
-            { }
+            {
+                resList.AddRange(WilliamhillDataParser());
+            }
 
             return resList;
         }
@@ -50,7 +61,7 @@ namespace DataParser.DefaultRealization
                 GenericMatch match = new GenericMatch();
                 //Мабуть це піде в окремий метод, але поітм
                 JToken val = matchesJson.First;
-                match.Id = (int)val["Num"];
+                match.Id = (long)val["Num"];
                 match.Office = Office.ua1xetCom.ToString();
                 match.SportName = val["SportNameEng"].ToString();
                 match.Champ = val["ChampEng"].ToString();
@@ -91,7 +102,7 @@ namespace DataParser.DefaultRealization
                             GenericMatch matchResult = new GenericMatch();
                             //todo Берем Id тегу tr де знаходиться 1 матч, і відкидаємо лишнє, 
                             //бо він має вигляд: match-8848438
-                            matchResult.Id = int.Parse(match.Attributes["id"].Value.Substring(6));
+                            matchResult.Id = long.Parse(match.Attributes["id"].Value.Substring(6));
                             matchResult.Office = Office.olimpKz.ToString();
                             matchResult.SportName = sportName;
                             matchResult.Champ = champ;
@@ -117,13 +128,13 @@ namespace DataParser.DefaultRealization
             HtmlNode liveMatchList = doc.GetElementbyId("lineContainer");
             if (liveMatchList != null && liveMatchList.ChildNodes.Count != 0)
             {
-                string sportName="";
+                string sportName = "";
                 var list = liveMatchList.ChildNodes[0].ChildNodes[0].ChildNodes;
                 foreach (HtmlNode tr in liveMatchList.ChildNodes[0].ChildNodes[0].ChildNodes)
                 {
-                    if(tr.Attributes["class"].Value == "trSegment")
+                    if (tr.Attributes["class"].Value == "trSegment")
                     {
-                        if(tr.ChildNodes[0].ChildNodes[0].ChildNodes[1].InnerText != sportName)
+                        if (tr.ChildNodes[0].ChildNodes[0].ChildNodes[1].InnerText != sportName)
                         {
                             sportName = tr.ChildNodes[0].ChildNodes[0].ChildNodes[1].InnerText;
                         }
@@ -131,12 +142,12 @@ namespace DataParser.DefaultRealization
                     if (tr.Attributes["class"].Value.Substring(0, 7) == "trEvent")
                     {
                         GenericMatch matchResult = new GenericMatch();
-                        matchResult.Id = int.Parse(tr.Attributes["id"].Value.Substring(5));
+                        matchResult.Id = long.Parse(tr.Attributes["id"].Value.Substring(5));
                         matchResult.Office = Office.fonbetCom.ToString();
                         //todo magic number
                         var index = sportName.IndexOf(".");
                         matchResult.SportName = sportName.Substring(0, index);
-                        matchResult.Champ = sportName.Substring(index+1);
+                        matchResult.Champ = sportName.Substring(index + 1);
                         //todo Беру час гри просто в трінгу тобто не реальний чи це підходить хз ???????
                         matchResult.GameTime = tr.ChildNodes[2].ChildNodes[1].FirstChild.InnerText;
                         matchListResult.Add(matchResult);
@@ -145,18 +156,18 @@ namespace DataParser.DefaultRealization
             }
             return matchListResult;
         }
-        
+
         public List<GenericMatch> WilliamhillDataParser()
         {
             List<GenericMatch> matchListResult = new List<GenericMatch>();
 
             HtmlDocument doc = GetHtmlDocument(williamhill);
-            
-            var liveMatchList = doc.GetElementbyId("sports_holder").ChildNodes.Where(x=>x.Name == "div");
+
+            var liveMatchList = doc.GetElementbyId("sports_holder").ChildNodes.Where(x => x.Name == "div");
             foreach (var sport in liveMatchList)
             {
                 var sportname = sport.ChildNodes[1].ChildNodes[1].InnerText;
-                foreach(var champ in sport.ChildNodes[3].ChildNodes.Where(x => x.Name == "div"))
+                foreach (var champ in sport.ChildNodes[3].ChildNodes.Where(x => x.Name == "div"))
                 {
                     var champName = champ.ChildNodes[1].InnerText;
                     try
@@ -167,7 +178,7 @@ namespace DataParser.DefaultRealization
                         //але вроді при ній менше екзепшинів, але не понятно чи потрібні дані з rowOdd
                         {
                             GenericMatch matchResult = new GenericMatch();
-                            matchResult.Id = int.Parse(match.Attributes["id"].Value.Substring(7));
+                            matchResult.Id = long.Parse(match.Attributes["id"].Value.Substring(7));
                             matchResult.GameTime = match.ChildNodes[1].ChildNodes[1].InnerText;
                             matchResult.SportName = sportname;
                             matchResult.Champ = champName;

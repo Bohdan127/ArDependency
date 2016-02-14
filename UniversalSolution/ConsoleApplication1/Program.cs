@@ -20,10 +20,13 @@ namespace ParseAPI
             List<GenericMatch> resultList = new List<GenericMatch>();
             List<GenericMatch> resultList2 = new List<GenericMatch>();
             List<GenericMatch> resultList3 = new List<GenericMatch>();
+            List<GenericMatch> resultList4 = new List<GenericMatch>();
+            List<GenericMatch> resultList5 = new List<GenericMatch>();
             //resultList = dataParser.Ua1xetComDataParser();
             //resultList2 = dataParser.OlimpDataParser();
             //resultList3 = dataParser.FonbetDataParser();
-            resultList3 = dataParser.WilliamhillDataParser();
+            //resultList4 = dataParser.WilliamhillDataParser();
+            //resultList5 = dataParser.Ru10betDataParser();
 
             Console.ReadLine();
         }

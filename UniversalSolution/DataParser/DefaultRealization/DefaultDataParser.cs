@@ -16,6 +16,7 @@ namespace DataParser.DefaultRealization
         public const string ua1xetUrl = "https://ua.1xbet.com/LiveFeed/Get1x2?sportId=0&sports=&champId=0&tf=1000000&count=50&cnt=10&lng=ru&cfview=0";
         public const string fonbetUrl = "https://live.fonbet.com/";
         public const string williamhill = "http://sports.williamhill.com/bet/ru/betlive/all";
+        public const string ru10bet = "http://ru.10bet.com/live-betting/";
 
         public List<GenericMatch> GetDataForSomeSites(List<Office> sites)
         {                 //   todo це гавнокод вищої степені але зарза на це немає часу
@@ -188,9 +189,50 @@ namespace DataParser.DefaultRealization
                     }
                     catch (Exception e)
                     {
+                        //todo продовжує виникати екзепшин, томущо сайт трохи збудований рахітно
+                        //і є леві елементи при проходжені по ньому, в тих місцях виникають екзепшини
                         Console.WriteLine(e.Message);
                     }
                 }
+            }
+            return matchListResult;
+        }
+
+        public List<GenericMatch> Ru10betDataParser()
+        {
+            List<GenericMatch> matchListResult = new List<GenericMatch>();
+
+            HtmlDocument doc = GetHtmlDocument(ru10bet);
+            try
+            {
+                //todo тут слабке місце при поганому интернеті тут виникає екзепшин
+                //не дуже розумію чому мабуть сторінка не загружається і відповідно немає таких елементів
+                var liveMatchList = doc.GetElementbyId("LiveNow").ChildNodes[5].ChildNodes.Where(x => x.Name == "div");
+                foreach (var sport in liveMatchList)
+                {
+                    //todo magic number
+                    var index = sport.ChildNodes[1].InnerText.Trim().IndexOf("(");
+                    var sportName = sport.ChildNodes[1].InnerText.Trim().Substring(0, index - 1);
+                    foreach (var champ in sport.ChildNodes[5].ChildNodes.Where(x => x.Name == "div"))
+                    {
+                        index = champ.ChildNodes[1].InnerText.Trim().IndexOf("(");
+                        var champName = champ.ChildNodes[1].InnerText.Trim().Substring(0, index - 1);
+                        foreach (var match in champ.ChildNodes[5].ChildNodes.Where(x => x.Name == "div"))
+                        {
+                            GenericMatch matchResult = new GenericMatch();
+                            matchResult.Id = long.Parse(match.Attributes["id"].Value.Substring(7));
+                            matchResult.GameTime = match.ChildNodes[5].ChildNodes.FirstOrDefault().InnerText.Trim();
+                            matchResult.SportName = sportName;
+                            matchResult.Champ = champName;
+                            matchResult.Office = Office.ru10betCom.ToString();
+                            matchListResult.Add(matchResult);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
             return matchListResult;
         }

@@ -4,6 +4,7 @@ using DataParser.DefaultRealization;
 using DataSaver.DefaultRealization;
 using DevExpress.XtraBars.Helpers;
 using DevExpress.XtraEditors;
+using License.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -28,7 +29,8 @@ namespace DXApplication1
         private bool isDeleteOldData = false;
         private bool isColoredNewData = false;
         private List<Office> _sites;
-        private static string outFileName = @"lastChanges.xml";
+        private string licenseKey = string.Empty;
+        private const string outFileName = @"lastChanges.xml";
 
         #endregion
 
@@ -43,7 +45,22 @@ namespace DXApplication1
             InitSkinGallery();
 
             DefaultData();
+
+            LicenseForm licenseForm = new LicenseForm();
+            if (!licenseForm.CheckInstance(licenseKey))
+                licenseForm.ShowDialog();
+            if (!licenseForm.IsRegistered)
+                Close();
+
             DefaultEvents();
+
+            //дефолт бо неробить ця ф-ціональність іще
+            barDeleteOldData.EditValue = true;
+            isDeleteOldData = true;
+            barColorNewData.EditValue = false;
+            barNewColor.Enabled = false;
+            barColorNewData.Enabled = false;
+            barDeleteOldData.Enabled = false;
         }
 
         #endregion
@@ -139,6 +156,9 @@ namespace DXApplication1
                                     SwitchRu10BetCom_Toggled(null, null);
                                 }
                                 break;
+                            case "LicenseKey":
+                                licenseKey = reader.ReadString();
+                                break;
                             default:
                                 break;
                         }
@@ -182,7 +202,7 @@ namespace DXApplication1
 
                 if (currentDataList == null || currentDataList.Count == 0)
                 {
-                    currentDataList = newDataList;
+                    gridControl1.DataSource = newDataList;
                     return;
                 }
 
@@ -221,57 +241,57 @@ namespace DXApplication1
         {
             if (match.Champ != dataMatch.Champ)
             {
-                DrawSomeColumnInFocusedRow(colChamp.Name);
+                DrawSomeColumnInFocusedRow(colChamp.FieldName);
                 match.Champ = dataMatch.Champ;
             }
             if (match.ForkPercent != dataMatch.ForkPercent)
             {
-                DrawSomeColumnInFocusedRow(colForkPercent.Name);
+                DrawSomeColumnInFocusedRow(colForkPercent.FieldName);
                 match.ForkPercent = dataMatch.ForkPercent;
             }
             if (match.GameTime != dataMatch.GameTime)
             {
-                DrawSomeColumnInFocusedRow(colGameTime.Name);
+                DrawSomeColumnInFocusedRow(colGameTime.FieldName);
                 match.GameTime = dataMatch.GameTime;
             }
             if (match.Id != dataMatch.Id)
             {
-                DrawSomeColumnInFocusedRow(colId.Name);
+                DrawSomeColumnInFocusedRow(colId.FieldName);
                 match.Id = dataMatch.Id;
             }
             if (match.Indicator1 != dataMatch.Indicator1)
             {
-                DrawSomeColumnInFocusedRow(colIndicator1.Name);
+                DrawSomeColumnInFocusedRow(colIndicator1.FieldName);
                 match.Indicator1 = dataMatch.Indicator1;
             }
             if (match.Indicator2 != dataMatch.Indicator2)
             {
-                DrawSomeColumnInFocusedRow(colIndicator2.Name);
+                DrawSomeColumnInFocusedRow(colIndicator2.FieldName);
                 match.Indicator2 = dataMatch.Indicator2;
             }
             if (match.Indicator3 != dataMatch.Indicator3)
             {
-                DrawSomeColumnInFocusedRow(colIndicator3.Name);
+                DrawSomeColumnInFocusedRow(colIndicator3.FieldName);
                 match.Indicator3 = dataMatch.Indicator3;
             }
             if (match.Office != dataMatch.Office)
             {
-                DrawSomeColumnInFocusedRow(colOffice.Name);
+                DrawSomeColumnInFocusedRow(colOffice.FieldName);
                 match.Office = dataMatch.Office;
             }
             if (match.OfficeBetType != dataMatch.OfficeBetType)
             {
-                DrawSomeColumnInFocusedRow(colBetType.Name);
+                DrawSomeColumnInFocusedRow(colBetType.FieldName);
                 match.OfficeBetType = dataMatch.OfficeBetType;
             }
             if (match.SportName != dataMatch.SportName)
             {
-                DrawSomeColumnInFocusedRow(colSportname.Name);
+                DrawSomeColumnInFocusedRow(colSportname.FieldName);
                 match.SportName = dataMatch.SportName;
             }
             if (match.Time != dataMatch.Time)
             {
-                DrawSomeColumnInFocusedRow(colTime.Name);
+                DrawSomeColumnInFocusedRow(colTime.FieldName);
                 match.Time = dataMatch.Time;
             }
             if (match.Сoefficient != dataMatch.Сoefficient)
@@ -310,6 +330,7 @@ namespace DXApplication1
                 writer.WriteElementString("fonbetCom", barfonbetCom.EditValue?.ToString());
                 writer.WriteElementString("williamhillCom", barwilliamhillCom.EditValue?.ToString());
                 writer.WriteElementString("ru10betCom", barru10betCom.EditValue?.ToString());
+                writer.WriteElementString("LicenseKey", licenseKey);
 
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
@@ -398,6 +419,7 @@ namespace DXApplication1
                 gridControl1.DataSource = _parser.GetDataForSomeSites(_sites);
             else
                 UpdateGrid();
+            gridView1.RefreshData();//refresh view for load new data
         }
 
         private void Form1_Shown(object sender, EventArgs e)
@@ -421,7 +443,6 @@ namespace DXApplication1
                     }
                     //load new data
                     backgroundWorker1.RunWorkerAsync();
-                    gridView1.RefreshData();//refresh view for load new data
                 }));
             }
         }

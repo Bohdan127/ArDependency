@@ -17,30 +17,25 @@ namespace DataParser.DefaultRealization
         public const string fonbetUrl = "https://live.fonbet.com/";
         public const string williamhill = "http://sports.williamhill.com/bet/ru/betlive/all";
         public const string ru10bet = "http://ru.10bet.com/live-betting/";
-
+        private bool ss = true;
         public List<GenericMatch> GetDataForSomeSites(List<Office> sites)
         {                 //   todo це гавнокод вищої степені але зарза на це немає часу
             var resList = new List<GenericMatch>();
 
             if (sites.Any(s => s == Office.fonbetCom))
             {
-                return new List<GenericMatch>() { new GenericMatch() { Id = 2, Champ = "1" } };
                 resList.AddRange(FonbetDataParser());
             }
             if (sites.Any(s => s == Office.olimpKz))
             {
-                return new List<GenericMatch>() { new GenericMatch() { Id = 1, Champ = "1" }, new GenericMatch() { Id = 2, Champ = "2" } };
-
                 resList.AddRange(OlimpDataParser());
             }
             if (sites.Any(s => s == Office.ru10betCom))
             {
-                return new List<GenericMatch>() { new GenericMatch() { Id = 1, Champ = "1" } };
-                //resList.AddRange(?????????);
+                resList.AddRange(Ru10betDataParser());
             }
             if (sites.Any(s => s == Office.ua1xetCom))
             {
-                return new List<GenericMatch>() { new GenericMatch() { Id = 1, Champ = "2" } };
                 resList.AddRange(Ua1xetComDataParser());
             }
             if (sites.Any(s => s == Office.williamhillCom))
@@ -238,6 +233,7 @@ namespace DataParser.DefaultRealization
         }
 
         #region AdditionalMethod
+
         public static string GetHtml(string Url)
         {
             Settings.Instance.MakeNewIeInstanceVisible = false; //невідображати браузер
@@ -252,12 +248,14 @@ namespace DataParser.DefaultRealization
                 return html;
             }
         }
+
         public static HtmlDocument GetHtmlDocument(string url)
         {
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(GetHtml(url));
             return doc;
         }
+
         public static JArray GetJsonArray(string url)
         {
             //Url що повертає json з необхідною інформацією
@@ -281,6 +279,7 @@ namespace DataParser.DefaultRealization
                 throw ex; //todo Щось повертати якшо виник Exception
             }
         }
+
         #endregion
     }
 }

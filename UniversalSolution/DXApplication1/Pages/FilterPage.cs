@@ -5,6 +5,11 @@ namespace DXApplication1.Pages
 {
     public partial class FilterPage : Form
     {
+        public DataSet1 DataSet
+        {
+            get { return this.dataSet1; }
+        }
+
         public FilterPage()
         {
             InitializeComponent();

@@ -34,6 +34,7 @@ namespace DXApplication1.Pages
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FilterPage));
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.dateTimePicker1 = new DevExpress.XtraEditors.TimeSpanEdit();
+            this.dataSet1 = new DXApplication1.DB.DataSet1();
             this.textEdit2 = new DevExpress.XtraEditors.TextEdit();
             this.textEdit1 = new DevExpress.XtraEditors.TextEdit();
             this.toggleSwitch5 = new DevExpress.XtraEditors.ToggleSwitch();
@@ -65,11 +66,10 @@ namespace DXApplication1.Pages
             this.layoutControlGroupGameTime = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemNotFaster = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemNoLater = new DevExpress.XtraLayout.LayoutControlItem();
-            this.dataSet1 = new DXApplication1.DB.DataSet1();
-            this.filterBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dateTimePicker1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit2.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch5.Properties)).BeginInit();
@@ -101,8 +101,6 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupGameTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNotFaster)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNoLater)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.filterBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
@@ -130,7 +128,7 @@ namespace DXApplication1.Pages
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.filterBindingSource, "FasterThen", true));
+            this.dateTimePicker1.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.FasterThen", true));
             this.dateTimePicker1.EditValue = System.TimeSpan.Parse("00:00:00");
             this.dateTimePicker1.Location = new System.Drawing.Point(510, 42);
             this.dateTimePicker1.Name = "dateTimePicker1";
@@ -139,9 +137,14 @@ namespace DXApplication1.Pages
             this.dateTimePicker1.StyleController = this.dataLayoutControl1;
             this.dateTimePicker1.TabIndex = 7;
             // 
+            // dataSet1
+            // 
+            this.dataSet1.DataSetName = "DataSet1";
+            this.dataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
             // textEdit2
             // 
-            this.textEdit2.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.filterBindingSource, "Max", true));
+            this.textEdit2.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Max", true));
             this.textEdit2.Location = new System.Drawing.Point(141, 66);
             this.textEdit2.Name = "textEdit2";
             this.textEdit2.Size = new System.Drawing.Size(224, 20);
@@ -150,7 +153,7 @@ namespace DXApplication1.Pages
             // 
             // textEdit1
             // 
-            this.textEdit1.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.filterBindingSource, "Min", true));
+            this.textEdit1.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Min", true));
             this.textEdit1.Location = new System.Drawing.Point(141, 42);
             this.textEdit1.Name = "textEdit1";
             this.textEdit1.Size = new System.Drawing.Size(224, 20);
@@ -159,7 +162,7 @@ namespace DXApplication1.Pages
             // 
             // toggleSwitch5
             // 
-            this.toggleSwitch5.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.filterBindingSource, "Base2", true));
+            this.toggleSwitch5.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Base2", true));
             this.toggleSwitch5.Location = new System.Drawing.Point(510, 132);
             this.toggleSwitch5.Name = "toggleSwitch5";
             this.toggleSwitch5.Properties.OffText = "Off";
@@ -170,7 +173,7 @@ namespace DXApplication1.Pages
             // 
             // toggleSwitch8
             // 
-            this.toggleSwitch8.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.filterBindingSource, "Base3", true));
+            this.toggleSwitch8.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Base3", true));
             this.toggleSwitch8.Location = new System.Drawing.Point(510, 160);
             this.toggleSwitch8.Name = "toggleSwitch8";
             this.toggleSwitch8.Properties.OffText = "Off";
@@ -181,7 +184,7 @@ namespace DXApplication1.Pages
             // 
             // toggleSwitch9
             // 
-            this.toggleSwitch9.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.filterBindingSource, "PinnacleSports", true));
+            this.toggleSwitch9.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.PinnacleSports", true));
             this.toggleSwitch9.Location = new System.Drawing.Point(141, 160);
             this.toggleSwitch9.Name = "toggleSwitch9";
             this.toggleSwitch9.Properties.OffText = "Off";
@@ -192,7 +195,7 @@ namespace DXApplication1.Pages
             // 
             // toggleSwitch16
             // 
-            this.toggleSwitch16.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.filterBindingSource, "MarathonBet", true));
+            this.toggleSwitch16.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.MarathonBet", true));
             this.toggleSwitch16.Location = new System.Drawing.Point(141, 132);
             this.toggleSwitch16.Name = "toggleSwitch16";
             this.toggleSwitch16.Properties.OffText = "Off";
@@ -203,7 +206,7 @@ namespace DXApplication1.Pages
             // 
             // toggleSwitch22
             // 
-            this.toggleSwitch22.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.filterBindingSource, "Basketball", true));
+            this.toggleSwitch22.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Basketball", true));
             this.toggleSwitch22.Location = new System.Drawing.Point(141, 258);
             this.toggleSwitch22.Name = "toggleSwitch22";
             this.toggleSwitch22.Properties.OffText = "Off";
@@ -214,7 +217,7 @@ namespace DXApplication1.Pages
             // 
             // toggleSwitch19
             // 
-            this.toggleSwitch19.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.filterBindingSource, "Football", true));
+            this.toggleSwitch19.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Football", true));
             this.toggleSwitch19.Location = new System.Drawing.Point(141, 230);
             this.toggleSwitch19.Name = "toggleSwitch19";
             this.toggleSwitch19.Properties.OffText = "Off";
@@ -225,7 +228,7 @@ namespace DXApplication1.Pages
             // 
             // dateTimePicker2
             // 
-            this.dateTimePicker2.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.filterBindingSource, "LongerThen", true));
+            this.dateTimePicker2.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.LongerThen", true));
             this.dateTimePicker2.EditValue = System.TimeSpan.Parse("00:00:00");
             this.dateTimePicker2.Location = new System.Drawing.Point(510, 66);
             this.dateTimePicker2.Name = "dateTimePicker2";
@@ -236,7 +239,7 @@ namespace DXApplication1.Pages
             // 
             // toggleSwitch10
             // 
-            this.toggleSwitch10.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.filterBindingSource, "Volleyball", true));
+            this.toggleSwitch10.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Volleyball", true));
             this.toggleSwitch10.Location = new System.Drawing.Point(141, 286);
             this.toggleSwitch10.Name = "toggleSwitch10";
             this.toggleSwitch10.Properties.OffText = "Off";
@@ -247,7 +250,7 @@ namespace DXApplication1.Pages
             // 
             // toggleSwitch11
             // 
-            this.toggleSwitch11.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.filterBindingSource, "Tennis", true));
+            this.toggleSwitch11.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Tennis", true));
             this.toggleSwitch11.Location = new System.Drawing.Point(141, 342);
             this.toggleSwitch11.Name = "toggleSwitch11";
             this.toggleSwitch11.Properties.OffText = "Off";
@@ -258,7 +261,7 @@ namespace DXApplication1.Pages
             // 
             // toggleSwitch12
             // 
-            this.toggleSwitch12.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.filterBindingSource, "Hockey", true));
+            this.toggleSwitch12.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Hockey", true));
             this.toggleSwitch12.Location = new System.Drawing.Point(141, 314);
             this.toggleSwitch12.Name = "toggleSwitch12";
             this.toggleSwitch12.Properties.OffText = "Off";
@@ -477,16 +480,6 @@ namespace DXApplication1.Pages
             this.layoutControlItemNoLater.Text = "Игра не позже";
             this.layoutControlItemNoLater.TextSize = new System.Drawing.Size(106, 13);
             // 
-            // dataSet1
-            // 
-            this.dataSet1.DataSetName = "DataSet1";
-            this.dataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // filterBindingSource
-            // 
-            this.filterBindingSource.DataMember = "Filter";
-            this.filterBindingSource.DataSource = this.dataSet1;
-            // 
             // FilterPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -500,6 +493,7 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).EndInit();
             this.dataLayoutControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dateTimePicker1.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch5.Properties)).EndInit();
@@ -531,8 +525,6 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupGameTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNotFaster)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNoLater)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.filterBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -572,7 +564,6 @@ namespace DXApplication1.Pages
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemSport5;
         private TimeSpanEdit dateTimePicker2;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemNoLater;
-        private System.Windows.Forms.BindingSource filterBindingSource;
         private DB.DataSet1 dataSet1;
     }
 }

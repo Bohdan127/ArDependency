@@ -17,7 +17,6 @@ namespace DataParser.DefaultRealization
         public const string fonbetUrl = "https://live.fonbet.com/";
         public const string williamhill = "http://sports.williamhill.com/bet/ru/betlive/all";
         public const string ru10bet = "http://ru.10bet.com/live-betting/";
-        private bool ss = true;
         public List<GenericMatch> GetDataForSomeSites(List<Office> sites)
         {                 //   todo це гавнокод вищої степені але зарза на це немає часу
             var resList = new List<GenericMatch>();

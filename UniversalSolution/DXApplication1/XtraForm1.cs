@@ -9,28 +9,30 @@ namespace DXApplication1
 {
     public partial class XtraForm1 : DevExpress.XtraEditors.XtraForm
     {
+
+        #region Members
         //todo Later Make this parameter visible from UI with possibility to change
         public const string SettingsPath = "./";
         public const string SettingsFile = "DataSet.xml";
 
         private DataSet1 _dataSet1;
         private FilterPage _filterPage;
+        #endregion
 
-
+        #region CTOR
         public XtraForm1()
         {
             InitializeComponent();
             this.IsMdiContainer = true;
-            _dataSet1 = new DataSet1();
-            var row = _dataSet1.Filter.NewFilterRow();
-            row.Min = 1;
-            row.Max = 3;
-            _dataSet1.Filter.Rows.Add(row);
-            DeserializeAll();
             this.Closed += XtraForm1_Closed;
             this.Closing += XtraForm1_Closing;
-        }
 
+            DeserializeAll();
+            PrepareDataSet();
+        }
+        #endregion
+
+        #region Events
         private void XtraForm1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = XtraMessageBox.Show(
@@ -49,7 +51,39 @@ namespace DXApplication1
             SerializeAll();
         }
 
-        private bool DeserializeAll()
+        private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (_filterPage == null)
+            {
+                _filterPage = new FilterPage(_dataSet1);
+                _filterPage.MdiParent = this;
+                _filterPage.Close = false;
+            }
+            _filterPage.Show();
+        }
+        #endregion
+
+        #region Functions
+        /// <summary>
+        /// Defile for one row for each settings page
+        /// </summary>
+        public void PrepareDataSet()
+        {
+            if (_dataSet1 == null)
+                _dataSet1 = new DataSet1();
+
+            if (_dataSet1.Filter?.Rows.Count != 1)
+            {
+                _dataSet1.Filter?.Rows.Clear();
+                _dataSet1.Filter?.Rows.Add(_dataSet1.Filter.NewFilterRow());
+            }
+        }
+
+        /// <summary>
+        /// Save changes to XML output file
+        /// </summary>
+        /// <returns></returns>
+        protected bool DeserializeAll()
         {
             //todo Show Message if bRes == False that can't read old data
             var bRes = true;
@@ -61,11 +95,17 @@ namespace DXApplication1
             return bRes;
         }
 
-        private bool SerializeAll()
+        /// <summary>
+        /// Read previous data from XML
+        /// </summary>
+        /// <returns></returns>
+        protected bool SerializeAll()
         {
             //todo Show Message if bRes == False that can't read old data
             var bRes = true;
             var writer = File.Create(SettingsPath + SettingsFile);
+
+            MergeDataSet();
 
             new XmlSerializer(typeof(DataSet1)).Serialize(
                writer, _dataSet1);
@@ -74,16 +114,19 @@ namespace DXApplication1
             return bRes;
         }
 
-
-        private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        /// <summary>
+        /// Get last Data from all Pages
+        /// </summary>
+        protected void MergeDataSet() //todo mybe this one can return Boolean value
         {
-            if (_filterPage == null)
-            {
-                _filterPage = new FilterPage(_dataSet1);
-                _filterPage.MdiParent = this;
-                _filterPage.Close = false;
-            }
-            _filterPage.Show();
+            //Get Filter Page Data
+            _dataSet1.Filter.Rows.Clear();
+            _dataSet1.Merge(_filterPage.DataSet.Filter);
         }
+
+        #endregion
+
+
+
     }
 }

@@ -4,6 +4,7 @@ using DataParser.DefaultRealization;
 using DataSaver.DefaultRealization;
 using DevExpress.XtraBars.Helpers;
 using DevExpress.XtraEditors;
+using License.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -37,30 +38,28 @@ namespace DXApplication1
 
         public Form1()
         {
+            _parser = new DefaultDataParser();
+            _sites = new List<Office>();
 
+            InitSkinGallery();
 
-            //_parser = new DefaultDataParser();
-            //_sites = new List<Office>();
+            DefaultData();
 
-            //InitSkinGallery();
+            LicenseForm licenseForm = new LicenseForm();
+            if (!licenseForm.CheckInstance(licenseKey))
+                licenseForm.ShowDialog();
+            if (!licenseForm.IsRegistered)
+                Close();
 
-            //DefaultData();
-
-            //LicenseForm licenseForm = new LicenseForm();
-            //if (!licenseForm.CheckInstance(licenseKey))
-            //    licenseForm.ShowDialog();
-            //if (!licenseForm.IsRegistered)
-            //    Close();
-
-            //DefaultEvents();
+            DefaultEvents();
 
             ////дефолт бо неробить ця ф-ціональність іще
-            //barDeleteOldData.EditValue = true;
-            //isDeleteOldData = true;
-            //barColorNewData.EditValue = false;
-            //barNewColor.Enabled = false;
-            //barColorNewData.Enabled = false;
-            //barDeleteOldData.Enabled = false;
+            barDeleteOldData.EditValue = true;
+            isDeleteOldData = true;
+            barColorNewData.EditValue = false;
+            barNewColor.Enabled = false;
+            barColorNewData.Enabled = false;
+            barDeleteOldData.Enabled = false;
         }
 
         #endregion

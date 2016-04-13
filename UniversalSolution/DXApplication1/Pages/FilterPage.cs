@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using DXApplication1.DB;
+using System.Windows.Forms;
 
 namespace DXApplication1.Pages
 {
@@ -7,23 +8,32 @@ namespace DXApplication1.Pages
         public FilterPage()
         {
             InitializeComponent();
+        }
 
-            //default settings
-            this.dataLayoutControl1.OptionsCustomizationForm.ShowLoadButton = false;
-            this.dataLayoutControl1.OptionsCustomizationForm.ShowPropertyGrid = true;
-            this.dataLayoutControl1.OptionsCustomizationForm.ShowSaveButton = false;
-            this.dataLayoutControl1.OptionsSerialization.RestoreAppearanceItemCaption = true;
-            this.dataLayoutControl1.OptionsSerialization.RestoreAppearanceTabPage = true;
-            this.dataLayoutControl1.OptionsSerialization.RestoreGroupPadding = true;
-            this.dataLayoutControl1.OptionsSerialization.RestoreGroupSpacing = true;
-            this.dataLayoutControl1.OptionsSerialization.RestoreLayoutGroupAppearanceGroup = true;
-            this.dataLayoutControl1.OptionsSerialization.RestoreLayoutItemPadding = true;
-            this.dataLayoutControl1.OptionsSerialization.RestoreLayoutItemSpacing = true;
-            this.dataLayoutControl1.OptionsSerialization.RestoreRootGroupPadding = true;
-            this.dataLayoutControl1.OptionsSerialization.RestoreRootGroupSpacing = true;
-            this.dataLayoutControl1.OptionsSerialization.RestoreTabbedGroupPadding = true;
-            this.dataLayoutControl1.OptionsSerialization.RestoreTabbedGroupSpacing = true;
-            this.dataLayoutControl1.OptionsSerialization.RestoreTextToControlDistance = true;
+        public bool Close { get; set; }
+
+        public FilterPage(DataSet1 dataSet1)
+            : this()
+        {
+            this.dataSet1 = dataSet1;
+            InitializeEvents();
+        }
+
+        public void InitializeEvents()
+        {
+            this.Closing += FilterPage_Closing;
+        }
+
+        public void DeInitializeEvents()
+        {
+            this.Closing -= FilterPage_Closing;
+        }
+
+        private void FilterPage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = !Close;
+            if (!Close)
+                Hide();
         }
     }
 }

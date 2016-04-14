@@ -27,11 +27,11 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ProductName>ValeoBet</ProductName>
+    <ProductName>Parser #4</ProductName>
     <PublisherName>Bohdan</PublisherName>
     <SuiteName>DxApplication1</SuiteName>
-    <ApplicationRevision>17</ApplicationRevision>
-    <ApplicationVersion>1.0.10.%2a</ApplicationVersion>
+    <ApplicationRevision>15</ApplicationRevision>
+    <ApplicationVersion>0.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -132,16 +132,18 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DB\DataSet1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-    </Compile>
+    <Compile Include="Models\Filter.cs" />
     <Compile Include="Old\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Old\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\AccountingPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\AccountingPage.Designer.cs">
+      <DependentUpon>AccountingPage.cs</DependentUpon>
     </Compile>
     <Compile Include="Pages\FilterPage.cs">
       <SubType>Form</SubType>
@@ -159,6 +161,9 @@
     </Compile>
     <EmbeddedResource Include="Old\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\AccountingPage.resx">
+      <DependentUpon>AccountingPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\FilterPage.resx">
       <DependentUpon>FilterPage.cs</DependentUpon>
@@ -178,17 +183,6 @@
       <DependentUpon>XtraForm1.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="DB\DataSet1.xsc">
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-    </None>
-    <None Include="DB\DataSet1.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="DB\DataSet1.xss">
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-    </None>
     <None Include="DXApplication1_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\DataParser.DefaultRealization.DefaultMatch.datasource" />
@@ -231,6 +225,10 @@
     <ProjectReference Include="..\License\License.csproj">
       <Project>{f2608d24-a0e2-4bf8-8e58-c3b931df08a6}</Project>
       <Name>License</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools\Tools.csproj">
+      <Project>{0c00658f-ecd3-4c88-ac62-6022bf496214}</Project>
+      <Name>Tools</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

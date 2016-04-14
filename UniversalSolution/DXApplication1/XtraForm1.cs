@@ -1,5 +1,5 @@
 ﻿using DevExpress.XtraEditors;
-using DXApplication1.DB;
+using DXApplication1.Models;
 using DXApplication1.Pages;
 using System.IO;
 using System.Windows.Forms;
@@ -15,8 +15,9 @@ namespace DXApplication1
         public const string SettingsPath = "./";
         public const string SettingsFile = "DataSet.xml";
 
-        private DataSet1 _dataSet1;
         private FilterPage _filterPage;
+        private AccountingPage _accountingPage;
+        private Filter _filter;
         #endregion
 
         #region CTOR
@@ -28,11 +29,32 @@ namespace DXApplication1
             this.Closing += XtraForm1_Closing;
 
             DeserializeAll();
-            PrepareDataSet();
+            PrepareData();
         }
         #endregion
 
         #region Events
+
+        private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+
+        }
+
+        private void barButtonItem3_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (_accountingPage == null)
+            {
+                _accountingPage = new AccountingPage();
+                _accountingPage.MdiParent = this;
+                _accountingPage.Close = false;
+            }
+            else
+            {
+                _accountingPage.Hide();
+            }
+            _accountingPage.Show();
+        }
+
         private void XtraForm1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = XtraMessageBox.Show(
@@ -44,6 +66,9 @@ namespace DXApplication1
 
             if (_filterPage != null)
                 _filterPage.Close = !e.Cancel;
+
+            if (_accountingPage != null)
+                _accountingPage.Close = !e.Cancel;
         }
 
         private void XtraForm1_Closed(object sender, System.EventArgs e)
@@ -55,28 +80,23 @@ namespace DXApplication1
         {
             if (_filterPage == null)
             {
-                _filterPage = new FilterPage(_dataSet1);
+                _filterPage = new FilterPage(_filter);
                 _filterPage.MdiParent = this;
                 _filterPage.Close = false;
+            }
+            else
+            {
+                _filterPage.Hide();
             }
             _filterPage.Show();
         }
         #endregion
 
         #region Functions
-        /// <summary>
-        /// Defile for one row for each settings page
-        /// </summary>
-        public void PrepareDataSet()
+        private void PrepareData()
         {
-            if (_dataSet1 == null)
-                _dataSet1 = new DataSet1();
-
-            if (_dataSet1.Filter?.Rows.Count != 1)
-            {
-                _dataSet1.Filter?.Rows.Clear();
-                _dataSet1.Filter?.Rows.Add(_dataSet1.Filter.NewFilterRow());
-            }
+            if (_filter == null)
+                _filter = new Filter();
         }
 
         /// <summary>
@@ -87,10 +107,17 @@ namespace DXApplication1
         {
             //todo Show Message if bRes == False that can't read old data
             var bRes = true;
+            try
+            {
+                _filter = (Filter)new XmlSerializer(typeof(Filter))
+                    .Deserialize(new StreamReader(SettingsPath + SettingsFile));
+            }
+            catch
+            {
+                bRes = false;
+            }
 
-            _dataSet1 = (DataSet1)new XmlSerializer(typeof(DataSet1))
-                .Deserialize(new StreamReader(SettingsPath + SettingsFile));
-            bRes = _dataSet1 != null;
+            bRes &= _filter != null;
 
             return bRes;
         }
@@ -105,27 +132,16 @@ namespace DXApplication1
             var bRes = true;
             var writer = File.Create(SettingsPath + SettingsFile);
 
-            MergeDataSet();
+            //todo looks like this method is deficiency
+            //MergeDataSet();
 
-            new XmlSerializer(typeof(DataSet1)).Serialize(
-               writer, _dataSet1);
+            new XmlSerializer(typeof(Filter)).Serialize(
+               writer, _filter);
 
             writer.Close();
             return bRes;
         }
-
-        /// <summary>
-        /// Get last Data from all Pages
-        /// </summary>
-        protected void MergeDataSet() //todo mybe this one can return Boolean value
-        {
-            //Get Filter Page Data
-            _dataSet1.Filter.Rows.Clear();
-            _dataSet1.Merge(_filterPage.DataSet.Filter);
-        }
-
         #endregion
-
 
 
     }

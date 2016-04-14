@@ -30,23 +30,21 @@ namespace DXApplication1.Pages
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FilterPage));
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
-            this.dateTimePicker1 = new DevExpress.XtraEditors.TimeSpanEdit();
-            this.dataSet1 = new DXApplication1.DB.DataSet1();
-            this.textEdit2 = new DevExpress.XtraEditors.TextEdit();
-            this.textEdit1 = new DevExpress.XtraEditors.TextEdit();
-            this.toggleSwitch5 = new DevExpress.XtraEditors.ToggleSwitch();
-            this.toggleSwitch8 = new DevExpress.XtraEditors.ToggleSwitch();
-            this.toggleSwitch9 = new DevExpress.XtraEditors.ToggleSwitch();
-            this.toggleSwitch16 = new DevExpress.XtraEditors.ToggleSwitch();
-            this.toggleSwitch22 = new DevExpress.XtraEditors.ToggleSwitch();
-            this.toggleSwitch19 = new DevExpress.XtraEditors.ToggleSwitch();
-            this.dateTimePicker2 = new DevExpress.XtraEditors.TimeSpanEdit();
-            this.toggleSwitch10 = new DevExpress.XtraEditors.ToggleSwitch();
-            this.toggleSwitch11 = new DevExpress.XtraEditors.ToggleSwitch();
-            this.toggleSwitch12 = new DevExpress.XtraEditors.ToggleSwitch();
+            this.fasterDateTimePicker = new DevExpress.XtraEditors.TimeSpanEdit();
+            this.maxTextEdit = new DevExpress.XtraEditors.TextEdit();
+            this.minTextEdit = new DevExpress.XtraEditors.TextEdit();
+            this.outCome2ToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
+            this.outcome3ToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
+            this.pinnacleSportsToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
+            this.marathonBetToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
+            this.basketballToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
+            this.footballToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
+            this.longerDateTimePicker = new DevExpress.XtraEditors.TimeSpanEdit();
+            this.volleyballToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
+            this.tennisToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
+            this.hockeyToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlGroupIncome = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemMin = new DevExpress.XtraLayout.LayoutControlItem();
@@ -68,20 +66,19 @@ namespace DXApplication1.Pages
             this.layoutControlItemNoLater = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dateTimePicker1.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEdit2.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch5.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch8.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch9.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch16.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch22.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch19.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dateTimePicker2.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch10.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch11.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch12.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fasterDateTimePicker.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxTextEdit.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minTextEdit.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.outCome2ToggleSwitch.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.outcome3ToggleSwitch.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pinnacleSportsToggleSwitch.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.marathonBetToggleSwitch.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.basketballToggleSwitch.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.footballToggleSwitch.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.longerDateTimePicker.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.volleyballToggleSwitch.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tennisToggleSwitch.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.hockeyToggleSwitch.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIncome)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemMin)).BeginInit();
@@ -105,19 +102,19 @@ namespace DXApplication1.Pages
             // 
             // dataLayoutControl1
             // 
-            this.dataLayoutControl1.Controls.Add(this.dateTimePicker1);
-            this.dataLayoutControl1.Controls.Add(this.textEdit2);
-            this.dataLayoutControl1.Controls.Add(this.textEdit1);
-            this.dataLayoutControl1.Controls.Add(this.toggleSwitch5);
-            this.dataLayoutControl1.Controls.Add(this.toggleSwitch8);
-            this.dataLayoutControl1.Controls.Add(this.toggleSwitch9);
-            this.dataLayoutControl1.Controls.Add(this.toggleSwitch16);
-            this.dataLayoutControl1.Controls.Add(this.toggleSwitch22);
-            this.dataLayoutControl1.Controls.Add(this.toggleSwitch19);
-            this.dataLayoutControl1.Controls.Add(this.dateTimePicker2);
-            this.dataLayoutControl1.Controls.Add(this.toggleSwitch10);
-            this.dataLayoutControl1.Controls.Add(this.toggleSwitch11);
-            this.dataLayoutControl1.Controls.Add(this.toggleSwitch12);
+            this.dataLayoutControl1.Controls.Add(this.fasterDateTimePicker);
+            this.dataLayoutControl1.Controls.Add(this.maxTextEdit);
+            this.dataLayoutControl1.Controls.Add(this.minTextEdit);
+            this.dataLayoutControl1.Controls.Add(this.outCome2ToggleSwitch);
+            this.dataLayoutControl1.Controls.Add(this.outcome3ToggleSwitch);
+            this.dataLayoutControl1.Controls.Add(this.pinnacleSportsToggleSwitch);
+            this.dataLayoutControl1.Controls.Add(this.marathonBetToggleSwitch);
+            this.dataLayoutControl1.Controls.Add(this.basketballToggleSwitch);
+            this.dataLayoutControl1.Controls.Add(this.footballToggleSwitch);
+            this.dataLayoutControl1.Controls.Add(this.longerDateTimePicker);
+            this.dataLayoutControl1.Controls.Add(this.volleyballToggleSwitch);
+            this.dataLayoutControl1.Controls.Add(this.tennisToggleSwitch);
+            this.dataLayoutControl1.Controls.Add(this.hockeyToggleSwitch);
             this.dataLayoutControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataLayoutControl1.Location = new System.Drawing.Point(0, 0);
             this.dataLayoutControl1.Name = "dataLayoutControl1";
@@ -126,149 +123,144 @@ namespace DXApplication1.Pages
             this.dataLayoutControl1.TabIndex = 0;
             this.dataLayoutControl1.Text = "dataLayoutControl1";
             // 
-            // dateTimePicker1
+            // fasterDateTimePicker
             // 
-            this.dateTimePicker1.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.FasterThen", true));
-            this.dateTimePicker1.EditValue = System.TimeSpan.Parse("00:00:00");
-            this.dateTimePicker1.Location = new System.Drawing.Point(510, 42);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Properties.Mask.EditMask = "dd.HH:mm:ss";
-            this.dateTimePicker1.Size = new System.Drawing.Size(398, 20);
-            this.dateTimePicker1.StyleController = this.dataLayoutControl1;
-            this.dateTimePicker1.TabIndex = 7;
+            this.fasterDateTimePicker.EditValue = System.TimeSpan.Parse("00:00:00");
+            this.fasterDateTimePicker.Location = new System.Drawing.Point(510, 42);
+            this.fasterDateTimePicker.Name = "fasterDateTimePicker";
+            this.fasterDateTimePicker.Properties.Mask.EditMask = "dd.HH:mm:ss";
+            this.fasterDateTimePicker.Size = new System.Drawing.Size(398, 20);
+            this.fasterDateTimePicker.StyleController = this.dataLayoutControl1;
+            this.fasterDateTimePicker.TabIndex = 7;
+            this.fasterDateTimePicker.EditValueChanging += new DevExpress.XtraEditors.Controls.ChangingEventHandler(this.Faster_Changing);
             // 
-            // dataSet1
+            // maxTextEdit
             // 
-            this.dataSet1.DataSetName = "DataSet1";
-            this.dataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            this.maxTextEdit.Location = new System.Drawing.Point(141, 66);
+            this.maxTextEdit.Name = "maxTextEdit";
+            this.maxTextEdit.Size = new System.Drawing.Size(224, 20);
+            this.maxTextEdit.StyleController = this.dataLayoutControl1;
+            this.maxTextEdit.TabIndex = 5;
+            this.maxTextEdit.EditValueChanging += new DevExpress.XtraEditors.Controls.ChangingEventHandler(this.Max_Changing);
             // 
-            // textEdit2
+            // minTextEdit
             // 
-            this.textEdit2.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Max", true));
-            this.textEdit2.Location = new System.Drawing.Point(141, 66);
-            this.textEdit2.Name = "textEdit2";
-            this.textEdit2.Size = new System.Drawing.Size(224, 20);
-            this.textEdit2.StyleController = this.dataLayoutControl1;
-            this.textEdit2.TabIndex = 5;
+            this.minTextEdit.Location = new System.Drawing.Point(141, 42);
+            this.minTextEdit.Name = "minTextEdit";
+            this.minTextEdit.Size = new System.Drawing.Size(224, 20);
+            this.minTextEdit.StyleController = this.dataLayoutControl1;
+            this.minTextEdit.TabIndex = 4;
+            this.minTextEdit.EditValueChanging += new DevExpress.XtraEditors.Controls.ChangingEventHandler(this.Min_Changing);
             // 
-            // textEdit1
+            // outCome2ToggleSwitch
             // 
-            this.textEdit1.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Min", true));
-            this.textEdit1.Location = new System.Drawing.Point(141, 42);
-            this.textEdit1.Name = "textEdit1";
-            this.textEdit1.Size = new System.Drawing.Size(224, 20);
-            this.textEdit1.StyleController = this.dataLayoutControl1;
-            this.textEdit1.TabIndex = 4;
+            this.outCome2ToggleSwitch.Location = new System.Drawing.Point(510, 132);
+            this.outCome2ToggleSwitch.Name = "outCome2ToggleSwitch";
+            this.outCome2ToggleSwitch.Properties.OffText = "Off";
+            this.outCome2ToggleSwitch.Properties.OnText = "On";
+            this.outCome2ToggleSwitch.Size = new System.Drawing.Size(398, 24);
+            this.outCome2ToggleSwitch.StyleController = this.dataLayoutControl1;
+            this.outCome2ToggleSwitch.TabIndex = 6;
+            this.outCome2ToggleSwitch.Toggled += new System.EventHandler(this.OutCome2_Toggled);
             // 
-            // toggleSwitch5
+            // outcome3ToggleSwitch
             // 
-            this.toggleSwitch5.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Base2", true));
-            this.toggleSwitch5.Location = new System.Drawing.Point(510, 132);
-            this.toggleSwitch5.Name = "toggleSwitch5";
-            this.toggleSwitch5.Properties.OffText = "Off";
-            this.toggleSwitch5.Properties.OnText = "On";
-            this.toggleSwitch5.Size = new System.Drawing.Size(398, 24);
-            this.toggleSwitch5.StyleController = this.dataLayoutControl1;
-            this.toggleSwitch5.TabIndex = 6;
+            this.outcome3ToggleSwitch.Location = new System.Drawing.Point(510, 160);
+            this.outcome3ToggleSwitch.Name = "outcome3ToggleSwitch";
+            this.outcome3ToggleSwitch.Properties.OffText = "Off";
+            this.outcome3ToggleSwitch.Properties.OnText = "On";
+            this.outcome3ToggleSwitch.Size = new System.Drawing.Size(398, 24);
+            this.outcome3ToggleSwitch.StyleController = this.dataLayoutControl1;
+            this.outcome3ToggleSwitch.TabIndex = 6;
+            this.outcome3ToggleSwitch.Toggled += new System.EventHandler(this.OutCome3_Toggled);
             // 
-            // toggleSwitch8
+            // pinnacleSportsToggleSwitch
             // 
-            this.toggleSwitch8.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Base3", true));
-            this.toggleSwitch8.Location = new System.Drawing.Point(510, 160);
-            this.toggleSwitch8.Name = "toggleSwitch8";
-            this.toggleSwitch8.Properties.OffText = "Off";
-            this.toggleSwitch8.Properties.OnText = "On";
-            this.toggleSwitch8.Size = new System.Drawing.Size(398, 24);
-            this.toggleSwitch8.StyleController = this.dataLayoutControl1;
-            this.toggleSwitch8.TabIndex = 6;
+            this.pinnacleSportsToggleSwitch.Location = new System.Drawing.Point(141, 160);
+            this.pinnacleSportsToggleSwitch.Name = "pinnacleSportsToggleSwitch";
+            this.pinnacleSportsToggleSwitch.Properties.OffText = "Off";
+            this.pinnacleSportsToggleSwitch.Properties.OnText = "On";
+            this.pinnacleSportsToggleSwitch.Size = new System.Drawing.Size(224, 24);
+            this.pinnacleSportsToggleSwitch.StyleController = this.dataLayoutControl1;
+            this.pinnacleSportsToggleSwitch.TabIndex = 6;
+            this.pinnacleSportsToggleSwitch.Toggled += new System.EventHandler(this.PinnacleSports_Toggled);
             // 
-            // toggleSwitch9
+            // marathonBetToggleSwitch
             // 
-            this.toggleSwitch9.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.PinnacleSports", true));
-            this.toggleSwitch9.Location = new System.Drawing.Point(141, 160);
-            this.toggleSwitch9.Name = "toggleSwitch9";
-            this.toggleSwitch9.Properties.OffText = "Off";
-            this.toggleSwitch9.Properties.OnText = "On";
-            this.toggleSwitch9.Size = new System.Drawing.Size(224, 24);
-            this.toggleSwitch9.StyleController = this.dataLayoutControl1;
-            this.toggleSwitch9.TabIndex = 6;
+            this.marathonBetToggleSwitch.Location = new System.Drawing.Point(141, 132);
+            this.marathonBetToggleSwitch.Name = "marathonBetToggleSwitch";
+            this.marathonBetToggleSwitch.Properties.OffText = "Off";
+            this.marathonBetToggleSwitch.Properties.OnText = "On";
+            this.marathonBetToggleSwitch.Size = new System.Drawing.Size(224, 24);
+            this.marathonBetToggleSwitch.StyleController = this.dataLayoutControl1;
+            this.marathonBetToggleSwitch.TabIndex = 6;
+            this.marathonBetToggleSwitch.Toggled += new System.EventHandler(this.MarathonBet_Toggled);
             // 
-            // toggleSwitch16
+            // basketballToggleSwitch
             // 
-            this.toggleSwitch16.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.MarathonBet", true));
-            this.toggleSwitch16.Location = new System.Drawing.Point(141, 132);
-            this.toggleSwitch16.Name = "toggleSwitch16";
-            this.toggleSwitch16.Properties.OffText = "Off";
-            this.toggleSwitch16.Properties.OnText = "On";
-            this.toggleSwitch16.Size = new System.Drawing.Size(224, 24);
-            this.toggleSwitch16.StyleController = this.dataLayoutControl1;
-            this.toggleSwitch16.TabIndex = 6;
+            this.basketballToggleSwitch.Location = new System.Drawing.Point(141, 258);
+            this.basketballToggleSwitch.Name = "basketballToggleSwitch";
+            this.basketballToggleSwitch.Properties.OffText = "Off";
+            this.basketballToggleSwitch.Properties.OnText = "On";
+            this.basketballToggleSwitch.Size = new System.Drawing.Size(224, 24);
+            this.basketballToggleSwitch.StyleController = this.dataLayoutControl1;
+            this.basketballToggleSwitch.TabIndex = 6;
+            this.basketballToggleSwitch.Toggled += new System.EventHandler(this.Basketball_Toggled);
             // 
-            // toggleSwitch22
+            // footballToggleSwitch
             // 
-            this.toggleSwitch22.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Basketball", true));
-            this.toggleSwitch22.Location = new System.Drawing.Point(141, 258);
-            this.toggleSwitch22.Name = "toggleSwitch22";
-            this.toggleSwitch22.Properties.OffText = "Off";
-            this.toggleSwitch22.Properties.OnText = "On";
-            this.toggleSwitch22.Size = new System.Drawing.Size(224, 24);
-            this.toggleSwitch22.StyleController = this.dataLayoutControl1;
-            this.toggleSwitch22.TabIndex = 6;
+            this.footballToggleSwitch.Location = new System.Drawing.Point(141, 230);
+            this.footballToggleSwitch.Name = "footballToggleSwitch";
+            this.footballToggleSwitch.Properties.OffText = "Off";
+            this.footballToggleSwitch.Properties.OnText = "On";
+            this.footballToggleSwitch.Size = new System.Drawing.Size(224, 24);
+            this.footballToggleSwitch.StyleController = this.dataLayoutControl1;
+            this.footballToggleSwitch.TabIndex = 6;
+            this.footballToggleSwitch.Toggled += new System.EventHandler(this.Football_Toggled);
             // 
-            // toggleSwitch19
+            // longerDateTimePicker
             // 
-            this.toggleSwitch19.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Football", true));
-            this.toggleSwitch19.Location = new System.Drawing.Point(141, 230);
-            this.toggleSwitch19.Name = "toggleSwitch19";
-            this.toggleSwitch19.Properties.OffText = "Off";
-            this.toggleSwitch19.Properties.OnText = "On";
-            this.toggleSwitch19.Size = new System.Drawing.Size(224, 24);
-            this.toggleSwitch19.StyleController = this.dataLayoutControl1;
-            this.toggleSwitch19.TabIndex = 6;
+            this.longerDateTimePicker.EditValue = System.TimeSpan.Parse("00:00:00");
+            this.longerDateTimePicker.Location = new System.Drawing.Point(510, 66);
+            this.longerDateTimePicker.Name = "longerDateTimePicker";
+            this.longerDateTimePicker.Properties.Mask.EditMask = "dd.HH:mm:ss";
+            this.longerDateTimePicker.Size = new System.Drawing.Size(398, 20);
+            this.longerDateTimePicker.StyleController = this.dataLayoutControl1;
+            this.longerDateTimePicker.TabIndex = 7;
+            this.longerDateTimePicker.EditValueChanging += new DevExpress.XtraEditors.Controls.ChangingEventHandler(this.Later_Changing);
             // 
-            // dateTimePicker2
+            // volleyballToggleSwitch
             // 
-            this.dateTimePicker2.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.LongerThen", true));
-            this.dateTimePicker2.EditValue = System.TimeSpan.Parse("00:00:00");
-            this.dateTimePicker2.Location = new System.Drawing.Point(510, 66);
-            this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Properties.Mask.EditMask = "dd.HH:mm:ss";
-            this.dateTimePicker2.Size = new System.Drawing.Size(398, 20);
-            this.dateTimePicker2.StyleController = this.dataLayoutControl1;
-            this.dateTimePicker2.TabIndex = 7;
+            this.volleyballToggleSwitch.Location = new System.Drawing.Point(141, 286);
+            this.volleyballToggleSwitch.Name = "volleyballToggleSwitch";
+            this.volleyballToggleSwitch.Properties.OffText = "Off";
+            this.volleyballToggleSwitch.Properties.OnText = "On";
+            this.volleyballToggleSwitch.Size = new System.Drawing.Size(224, 24);
+            this.volleyballToggleSwitch.StyleController = this.dataLayoutControl1;
+            this.volleyballToggleSwitch.TabIndex = 6;
+            this.volleyballToggleSwitch.Toggled += new System.EventHandler(this.Volleyball_Toggled);
             // 
-            // toggleSwitch10
+            // tennisToggleSwitch
             // 
-            this.toggleSwitch10.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Volleyball", true));
-            this.toggleSwitch10.Location = new System.Drawing.Point(141, 286);
-            this.toggleSwitch10.Name = "toggleSwitch10";
-            this.toggleSwitch10.Properties.OffText = "Off";
-            this.toggleSwitch10.Properties.OnText = "On";
-            this.toggleSwitch10.Size = new System.Drawing.Size(224, 24);
-            this.toggleSwitch10.StyleController = this.dataLayoutControl1;
-            this.toggleSwitch10.TabIndex = 6;
+            this.tennisToggleSwitch.Location = new System.Drawing.Point(141, 342);
+            this.tennisToggleSwitch.Name = "tennisToggleSwitch";
+            this.tennisToggleSwitch.Properties.OffText = "Off";
+            this.tennisToggleSwitch.Properties.OnText = "On";
+            this.tennisToggleSwitch.Size = new System.Drawing.Size(224, 24);
+            this.tennisToggleSwitch.StyleController = this.dataLayoutControl1;
+            this.tennisToggleSwitch.TabIndex = 6;
+            this.tennisToggleSwitch.Toggled += new System.EventHandler(this.Tennis_Toggled);
             // 
-            // toggleSwitch11
+            // hockeyToggleSwitch
             // 
-            this.toggleSwitch11.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Tennis", true));
-            this.toggleSwitch11.Location = new System.Drawing.Point(141, 342);
-            this.toggleSwitch11.Name = "toggleSwitch11";
-            this.toggleSwitch11.Properties.OffText = "Off";
-            this.toggleSwitch11.Properties.OnText = "On";
-            this.toggleSwitch11.Size = new System.Drawing.Size(224, 24);
-            this.toggleSwitch11.StyleController = this.dataLayoutControl1;
-            this.toggleSwitch11.TabIndex = 6;
-            // 
-            // toggleSwitch12
-            // 
-            this.toggleSwitch12.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.dataSet1, "Filter.Hockey", true));
-            this.toggleSwitch12.Location = new System.Drawing.Point(141, 314);
-            this.toggleSwitch12.Name = "toggleSwitch12";
-            this.toggleSwitch12.Properties.OffText = "Off";
-            this.toggleSwitch12.Properties.OnText = "On";
-            this.toggleSwitch12.Size = new System.Drawing.Size(224, 24);
-            this.toggleSwitch12.StyleController = this.dataLayoutControl1;
-            this.toggleSwitch12.TabIndex = 6;
+            this.hockeyToggleSwitch.Location = new System.Drawing.Point(141, 314);
+            this.hockeyToggleSwitch.Name = "hockeyToggleSwitch";
+            this.hockeyToggleSwitch.Properties.OffText = "Off";
+            this.hockeyToggleSwitch.Properties.OnText = "On";
+            this.hockeyToggleSwitch.Size = new System.Drawing.Size(224, 24);
+            this.hockeyToggleSwitch.StyleController = this.dataLayoutControl1;
+            this.hockeyToggleSwitch.TabIndex = 6;
+            this.hockeyToggleSwitch.Toggled += new System.EventHandler(this.Hockey_Toggled);
             // 
             // layoutControlGroup1
             // 
@@ -297,7 +289,7 @@ namespace DXApplication1.Pages
             // 
             // layoutControlItemMin
             // 
-            this.layoutControlItemMin.Control = this.textEdit1;
+            this.layoutControlItemMin.Control = this.minTextEdit;
             this.layoutControlItemMin.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemMin.Name = "layoutControlItemMin";
             this.layoutControlItemMin.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
@@ -307,7 +299,7 @@ namespace DXApplication1.Pages
             // 
             // layoutControlItemMax
             // 
-            this.layoutControlItemMax.Control = this.textEdit2;
+            this.layoutControlItemMax.Control = this.maxTextEdit;
             this.layoutControlItemMax.Location = new System.Drawing.Point(0, 24);
             this.layoutControlItemMax.Name = "layoutControlItemMax";
             this.layoutControlItemMax.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
@@ -328,7 +320,7 @@ namespace DXApplication1.Pages
             // 
             // layoutControlItemPinnacleSports
             // 
-            this.layoutControlItemPinnacleSports.Control = this.toggleSwitch9;
+            this.layoutControlItemPinnacleSports.Control = this.pinnacleSportsToggleSwitch;
             this.layoutControlItemPinnacleSports.CustomizationFormText = "PinnacleSports";
             this.layoutControlItemPinnacleSports.Location = new System.Drawing.Point(0, 28);
             this.layoutControlItemPinnacleSports.Name = "layoutControlItemPinnacleSports";
@@ -339,7 +331,7 @@ namespace DXApplication1.Pages
             // 
             // layoutControlItemMarathonBet
             // 
-            this.layoutControlItemMarathonBet.Control = this.toggleSwitch16;
+            this.layoutControlItemMarathonBet.Control = this.marathonBetToggleSwitch;
             this.layoutControlItemMarathonBet.CustomizationFormText = "MarathonBet";
             this.layoutControlItemMarathonBet.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemMarathonBet.Name = "layoutControlItemMarathonBet";
@@ -364,7 +356,7 @@ namespace DXApplication1.Pages
             // 
             // layoutControlItemSport2
             // 
-            this.layoutControlItemSport2.Control = this.toggleSwitch22;
+            this.layoutControlItemSport2.Control = this.basketballToggleSwitch;
             this.layoutControlItemSport2.CustomizationFormText = "layoutControlItem3";
             this.layoutControlItemSport2.Location = new System.Drawing.Point(0, 28);
             this.layoutControlItemSport2.Name = "layoutControlItemSport2";
@@ -375,7 +367,7 @@ namespace DXApplication1.Pages
             // 
             // layoutControlItemSport1
             // 
-            this.layoutControlItemSport1.Control = this.toggleSwitch19;
+            this.layoutControlItemSport1.Control = this.footballToggleSwitch;
             this.layoutControlItemSport1.CustomizationFormText = "layoutControlItem3";
             this.layoutControlItemSport1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemSport1.Name = "layoutControlItemSport1";
@@ -386,7 +378,7 @@ namespace DXApplication1.Pages
             // 
             // layoutControlItemSport3
             // 
-            this.layoutControlItemSport3.Control = this.toggleSwitch10;
+            this.layoutControlItemSport3.Control = this.volleyballToggleSwitch;
             this.layoutControlItemSport3.CustomizationFormText = "layoutControlItem3";
             this.layoutControlItemSport3.Location = new System.Drawing.Point(0, 56);
             this.layoutControlItemSport3.Name = "layoutControlItemSport3";
@@ -397,7 +389,7 @@ namespace DXApplication1.Pages
             // 
             // layoutControlItemSport4
             // 
-            this.layoutControlItemSport4.Control = this.toggleSwitch12;
+            this.layoutControlItemSport4.Control = this.hockeyToggleSwitch;
             this.layoutControlItemSport4.CustomizationFormText = "layoutControlItem3";
             this.layoutControlItemSport4.Location = new System.Drawing.Point(0, 84);
             this.layoutControlItemSport4.Name = "layoutControlItemSport4";
@@ -408,7 +400,7 @@ namespace DXApplication1.Pages
             // 
             // layoutControlItemSport5
             // 
-            this.layoutControlItemSport5.Control = this.toggleSwitch11;
+            this.layoutControlItemSport5.Control = this.tennisToggleSwitch;
             this.layoutControlItemSport5.CustomizationFormText = "layoutControlItem3";
             this.layoutControlItemSport5.Location = new System.Drawing.Point(0, 112);
             this.layoutControlItemSport5.Name = "layoutControlItemSport5";
@@ -429,7 +421,7 @@ namespace DXApplication1.Pages
             // 
             // layoutControlItemOutCome3
             // 
-            this.layoutControlItemOutCome3.Control = this.toggleSwitch8;
+            this.layoutControlItemOutCome3.Control = this.outcome3ToggleSwitch;
             this.layoutControlItemOutCome3.CustomizationFormText = "layoutControlItem3";
             this.layoutControlItemOutCome3.Location = new System.Drawing.Point(0, 28);
             this.layoutControlItemOutCome3.Name = "layoutControlItemOutCome3";
@@ -440,7 +432,7 @@ namespace DXApplication1.Pages
             // 
             // layoutControlItemOutCome2
             // 
-            this.layoutControlItemOutCome2.Control = this.toggleSwitch5;
+            this.layoutControlItemOutCome2.Control = this.outCome2ToggleSwitch;
             this.layoutControlItemOutCome2.CustomizationFormText = "layoutControlItem3";
             this.layoutControlItemOutCome2.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemOutCome2.Name = "layoutControlItemOutCome2";
@@ -461,7 +453,7 @@ namespace DXApplication1.Pages
             // 
             // layoutControlItemNotFaster
             // 
-            this.layoutControlItemNotFaster.Control = this.dateTimePicker1;
+            this.layoutControlItemNotFaster.Control = this.fasterDateTimePicker;
             this.layoutControlItemNotFaster.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemNotFaster.Name = "layoutControlItemNotFaster";
             this.layoutControlItemNotFaster.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
@@ -471,7 +463,7 @@ namespace DXApplication1.Pages
             // 
             // layoutControlItemNoLater
             // 
-            this.layoutControlItemNoLater.Control = this.dateTimePicker2;
+            this.layoutControlItemNoLater.Control = this.longerDateTimePicker;
             this.layoutControlItemNoLater.CustomizationFormText = "layoutControlItem19";
             this.layoutControlItemNoLater.Location = new System.Drawing.Point(0, 24);
             this.layoutControlItemNoLater.Name = "layoutControlItemNoLater";
@@ -492,20 +484,19 @@ namespace DXApplication1.Pages
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).EndInit();
             this.dataLayoutControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dateTimePicker1.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEdit2.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch5.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch8.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch9.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch16.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch22.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch19.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dateTimePicker2.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch10.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch11.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitch12.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fasterDateTimePicker.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxTextEdit.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minTextEdit.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.outCome2ToggleSwitch.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.outcome3ToggleSwitch.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pinnacleSportsToggleSwitch.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.marathonBetToggleSwitch.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.basketballToggleSwitch.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.footballToggleSwitch.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.longerDateTimePicker.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.volleyballToggleSwitch.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tennisToggleSwitch.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.hockeyToggleSwitch.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIncome)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemMin)).EndInit();
@@ -532,38 +523,37 @@ namespace DXApplication1.Pages
         #endregion
 
         private DevExpress.XtraDataLayout.DataLayoutControl dataLayoutControl1;
-        private DevExpress.XtraEditors.TextEdit textEdit2;
-        private DevExpress.XtraEditors.TextEdit textEdit1;
+        private DevExpress.XtraEditors.TextEdit maxTextEdit;
+        private DevExpress.XtraEditors.TextEdit minTextEdit;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup1;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroupIncome;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemMin;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemMax;
-        private DevExpress.XtraEditors.ToggleSwitch toggleSwitch5;
+        private DevExpress.XtraEditors.ToggleSwitch outCome2ToggleSwitch;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemOutCome2;
-        private DevExpress.XtraEditors.ToggleSwitch toggleSwitch8;
+        private DevExpress.XtraEditors.ToggleSwitch outcome3ToggleSwitch;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroupOutCome;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemOutCome3;
-        private DevExpress.XtraEditors.ToggleSwitch toggleSwitch9;
-        private DevExpress.XtraEditors.ToggleSwitch toggleSwitch16;
-        private DevExpress.XtraEditors.ToggleSwitch toggleSwitch22;
-        private DevExpress.XtraEditors.ToggleSwitch toggleSwitch19;
+        private DevExpress.XtraEditors.ToggleSwitch pinnacleSportsToggleSwitch;
+        private DevExpress.XtraEditors.ToggleSwitch marathonBetToggleSwitch;
+        private DevExpress.XtraEditors.ToggleSwitch basketballToggleSwitch;
+        private DevExpress.XtraEditors.ToggleSwitch footballToggleSwitch;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroupBookMakers;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemPinnacleSports;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemMarathonBet;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroupSport;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemSport2;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemSport1;
-        private TimeSpanEdit dateTimePicker1;
+        private TimeSpanEdit fasterDateTimePicker;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroupGameTime;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemNotFaster;
-        private DevExpress.XtraEditors.ToggleSwitch toggleSwitch10;
+        private DevExpress.XtraEditors.ToggleSwitch volleyballToggleSwitch;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemSport3;
-        private DevExpress.XtraEditors.ToggleSwitch toggleSwitch11;
-        private DevExpress.XtraEditors.ToggleSwitch toggleSwitch12;
+        private DevExpress.XtraEditors.ToggleSwitch tennisToggleSwitch;
+        private DevExpress.XtraEditors.ToggleSwitch hockeyToggleSwitch;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemSport4;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemSport5;
-        private TimeSpanEdit dateTimePicker2;
+        private TimeSpanEdit longerDateTimePicker;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemNoLater;
-        private DB.DataSet1 dataSet1;
     }
 }

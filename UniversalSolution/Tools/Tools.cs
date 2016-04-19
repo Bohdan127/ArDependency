@@ -532,6 +532,16 @@ namespace Tools
             return result;
         }
 
+        public static int? ConvertToIntOrNull(this object ob)
+        {
+            int result;
+
+            if (int.TryParse(ob.ConvertToString(), out result))
+                return result;
+
+            return null;
+        }
+
         static public double ConvertToDouble(this object ob)
         {
             double res = 0;

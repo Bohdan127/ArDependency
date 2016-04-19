@@ -25,19 +25,22 @@ namespace DXApplication1.Pages
 
         protected virtual void FirstBind()
         {
-            minTextEdit.EditValue = _filter.Min;
-            maxTextEdit.EditValue = _filter.Max;
-            marathonBetToggleSwitch.EditValue = _filter.MarathonBet;
-            pinnacleSportsToggleSwitch.EditValue = _filter.PinnacleSports;
-            footballToggleSwitch.EditValue = _filter.Football;
-            basketballToggleSwitch.EditValue = _filter.Basketball;
-            volleyballToggleSwitch.EditValue = _filter.Volleyball;
-            hockeyToggleSwitch.EditValue = _filter.Hockey;
-            tennisToggleSwitch.EditValue = _filter.Tennis;
-            fasterDateTimePicker.EditValue = _filter.FaterThen;//???
-            longerDateTimePicker.EditValue = _filter.LongerThen;//???
-            outCome2ToggleSwitch.EditValue = _filter.OutCome2;
-            outcome3ToggleSwitch.EditValue = _filter.OutCome3;
+            lock (_filter)
+            {
+                minTextEdit.EditValue = _filter.Min;
+                maxTextEdit.EditValue = _filter.Max;
+                marathonBetToggleSwitch.EditValue = _filter.MarathonBet;
+                pinnacleSportsToggleSwitch.EditValue = _filter.PinnacleSports;
+                footballToggleSwitch.EditValue = _filter.Football;
+                basketballToggleSwitch.EditValue = _filter.Basketball;
+                volleyballToggleSwitch.EditValue = _filter.Volleyball;
+                hockeyToggleSwitch.EditValue = _filter.Hockey;
+                tennisToggleSwitch.EditValue = _filter.Tennis;
+                fasterDateTimePicker.EditValue = _filter.FaterThen;//???
+                longerDateTimePicker.EditValue = _filter.LongerThen;//???
+                outCome2ToggleSwitch.EditValue = _filter.OutCome2;
+                outcome3ToggleSwitch.EditValue = _filter.OutCome3;
+            }
         }
 
         public void InitializeEvents()
@@ -59,67 +62,106 @@ namespace DXApplication1.Pages
 
         private void Min_Changing(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
-            _filter.Min = e.NewValue.ConvertToIntOrNull();
+            lock (_filter)
+            {
+                _filter.Min = e.NewValue.ConvertToIntOrNull();
+            }
         }
 
         private void Max_Changing(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
-            _filter.Max = e.NewValue.ConvertToIntOrNull();
+            lock (_filter)
+            {
+                _filter.Max = e.NewValue.ConvertToIntOrNull();
+            }
         }
 
         private void MarathonBet_Toggled(object sender, System.EventArgs e)
         {
-            _filter.MarathonBet = !_filter.MarathonBet;
+            lock (_filter)
+            {
+                _filter.MarathonBet = !_filter.MarathonBet;
+            }
         }
 
         private void PinnacleSports_Toggled(object sender, System.EventArgs e)
         {
-            _filter.PinnacleSports = !_filter.PinnacleSports;
+            lock (_filter)
+            {
+                _filter.PinnacleSports = !_filter.PinnacleSports;
+            }
         }
 
         private void Football_Toggled(object sender, System.EventArgs e)
         {
-            _filter.Football = !_filter.Football;
+            lock (_filter)
+            {
+                _filter.Football = !_filter.Football;
+            }
         }
 
         private void Basketball_Toggled(object sender, System.EventArgs e)
         {
-            _filter.Basketball = !_filter.Basketball;
+            lock (_filter)
+            {
+                _filter.Basketball = !_filter.Basketball;
+            }
         }
 
         private void Volleyball_Toggled(object sender, System.EventArgs e)
         {
-            _filter.Volleyball = !_filter.Volleyball;
+            lock (_filter)
+            {
+                _filter.Volleyball = !_filter.Volleyball;
+            }
         }
 
         private void Hockey_Toggled(object sender, System.EventArgs e)
         {
-            _filter.Hockey = !_filter.Hockey;
+            lock (_filter)
+            {
+                _filter.Hockey = !_filter.Hockey;
+            }
         }
 
         private void Tennis_Toggled(object sender, System.EventArgs e)
         {
-            _filter.Tennis = !_filter.Hockey;
+            lock (_filter)
+            {
+                _filter.Tennis = !_filter.Hockey;
+            }
         }
 
         private void Faster_Changing(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
-            _filter.FaterThen = DBTools.ConvertToDateTime(e.NewValue);
+            lock (_filter)
+            {
+                _filter.FaterThen = DBTools.ConvertToDateTime(e.NewValue);
+            }
         }
 
         private void Later_Changing(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
-            _filter.LongerThen = DBTools.ConvertToDateTime(e.NewValue);
+            lock (_filter)
+            {
+                _filter.LongerThen = DBTools.ConvertToDateTime(e.NewValue);
+            }
         }
 
         private void OutCome2_Toggled(object sender, System.EventArgs e)
         {
-            _filter.OutCome2 = !_filter.OutCome2;
+            lock (_filter)
+            {
+                _filter.OutCome2 = !_filter.OutCome2;
+            }
         }
 
         private void OutCome3_Toggled(object sender, System.EventArgs e)
         {
-            _filter.OutCome3 = !_filter.OutCome3;
+            lock (_filter)
+            {
+                _filter.OutCome3 = !_filter.OutCome3;
+            }
         }
     }
 }

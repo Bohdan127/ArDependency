@@ -41,6 +41,9 @@
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
             this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.colCalc = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemButtonEditCalculator = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
+            this.repositoryItemPictureEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
@@ -49,6 +52,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEditCalculator)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemPictureEdit1)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
@@ -79,6 +84,9 @@
             this.gridControl1.Location = new System.Drawing.Point(148, 12);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
+            this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repositoryItemButtonEditCalculator,
+            this.repositoryItemPictureEdit1});
             this.gridControl1.Size = new System.Drawing.Size(483, 359);
             this.gridControl1.TabIndex = 4;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -90,7 +98,8 @@
             this.colSite,
             this.colType,
             this.colTeam,
-            this.colTime});
+            this.colTime,
+            this.colCalc});
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsView.ShowGroupPanel = false;
@@ -166,6 +175,28 @@
             this.emptySpaceItem1.Size = new System.Drawing.Size(481, 42);
             this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
             // 
+            // colCalc
+            // 
+            this.colCalc.Caption = "Калькулятор";
+            this.colCalc.ColumnEdit = this.repositoryItemPictureEdit1;
+            this.colCalc.Name = "colCalc";
+            this.colCalc.Visible = true;
+            this.colCalc.VisibleIndex = 4;
+            // 
+            // repositoryItemButtonEditCalculator
+            // 
+            this.repositoryItemButtonEditCalculator.AllowNullInput = DevExpress.Utils.DefaultBoolean.True;
+            this.repositoryItemButtonEditCalculator.AutoHeight = false;
+            this.repositoryItemButtonEditCalculator.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton()});
+            this.repositoryItemButtonEditCalculator.ContextImage = ((System.Drawing.Image)(resources.GetObject("repositoryItemButtonEditCalculator.ContextImage")));
+            this.repositoryItemButtonEditCalculator.Name = "repositoryItemButtonEditCalculator";
+            // 
+            // repositoryItemPictureEdit1
+            // 
+            this.repositoryItemPictureEdit1.InitialImage = ((System.Drawing.Image)(resources.GetObject("repositoryItemPictureEdit1.InitialImage")));
+            this.repositoryItemPictureEdit1.Name = "repositoryItemPictureEdit1";
+            // 
             // AccountingPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -184,6 +215,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEditCalculator)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemPictureEdit1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -202,5 +235,8 @@
         private DevExpress.XtraEditors.SimpleButton bUpdate;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem2;
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem1;
+        private DevExpress.XtraGrid.Columns.GridColumn colCalc;
+        private DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit repositoryItemButtonEditCalculator;
+        private DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit repositoryItemPictureEdit1;
     }
 }

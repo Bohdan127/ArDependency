@@ -1,7 +1,5 @@
-﻿using DataColector.DefaultRealization;
-using DataParser;
+﻿using DataParser;
 using DataParser.DefaultRealization;
-using DataSaver.DefaultRealization;
 using DevExpress.XtraBars.Helpers;
 using DevExpress.XtraEditors;
 using License.Logic;
@@ -21,9 +19,7 @@ namespace DXApplication1
     {
         #region Fields       
 
-        private DefaultDataColector _collector;
         private DefaultDataParser _parser;
-        private DefaultDataSaver _saver;
         private Timer _updateTimer;
         private bool isAutoUpdate = false;
         private bool isDeleteOldData = false;

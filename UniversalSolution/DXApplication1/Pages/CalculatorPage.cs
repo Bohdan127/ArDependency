@@ -1,17 +1,22 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace DXApplication1.Pages
 {
-    public partial class AccountingPage : Form
+    public partial class CalculatorPage : Form
     {
-        public EventHandler Update;
         public bool Close { get; set; }
+        public bool IsOpen { get; set; }
 
-        public AccountingPage()
+        public CalculatorPage()
         {
             InitializeComponent();
             InitializeEvents();
+            Shown += CalculatorPage_Shown;
+        }
+
+        private void CalculatorPage_Shown(object sender, System.EventArgs e)
+        {
+            IsOpen = true;
         }
 
         public void InitializeEvents()
@@ -26,16 +31,10 @@ namespace DXApplication1.Pages
 
         private void AccountingPage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            IsOpen = false;
             e.Cancel = !Close;
             if (!Close)
                 Hide();
-        }
-
-        protected virtual void OnUpdate() => Update?.Invoke(null, null);
-
-        private void bUpdate_Click(object sender, System.EventArgs e)
-        {
-            OnUpdate();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DevExpress.XtraEditors;
 using DXApplication1.Models;
 using DXApplication1.Pages;
+using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -17,6 +18,7 @@ namespace DXApplication1
 
         private FilterPage _filterPage;
         private AccountingPage _accountingPage;
+        private CalculatorPage _calculatorPage;
         private Filter _filter;
         #endregion
 
@@ -37,6 +39,22 @@ namespace DXApplication1
 
         private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            if (_calculatorPage == null)
+            {
+                _calculatorPage = new CalculatorPage();
+                _calculatorPage.MdiParent = this;
+                _calculatorPage.Close = false;
+            }
+            var openForm = new OpenCalculatorForm();
+
+            if (!_calculatorPage.IsOpen)
+            {
+                if (openForm.ShowDialog() != DialogResult.OK)
+                    return;
+            }
+
+            _calculatorPage.Hide();//if already shown right now
+            _calculatorPage.Show();
 
         }
 
@@ -47,12 +65,18 @@ namespace DXApplication1
                 _accountingPage = new AccountingPage();
                 _accountingPage.MdiParent = this;
                 _accountingPage.Close = false;
+                _accountingPage.Update += AccountPage_Update;
             }
             else
             {
                 _accountingPage.Hide();
             }
             _accountingPage.Show();
+        }
+
+        private void AccountPage_Update(object sender, EventArgs e)
+        {
+            //todo Call here all async logic for getting new Data from Parser  with parameters defined in _filter
         }
 
         private void XtraForm1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -70,7 +94,6 @@ namespace DXApplication1
             if (_accountingPage != null)
                 _accountingPage.Close = !e.Cancel;
         }
-
         private void XtraForm1_Closed(object sender, System.EventArgs e)
         {
             SerializeAll();

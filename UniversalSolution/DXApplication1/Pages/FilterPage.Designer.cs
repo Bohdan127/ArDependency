@@ -32,7 +32,7 @@ namespace DXApplication1.Pages
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FilterPage));
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
-            this.fasterDateTimePicker = new DevExpress.XtraEditors.TimeSpanEdit();
+            this.fasterDateTimePicker = new DevExpress.XtraEditors.DateEdit();
             this.maxTextEdit = new DevExpress.XtraEditors.TextEdit();
             this.minTextEdit = new DevExpress.XtraEditors.TextEdit();
             this.outCome2ToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
@@ -41,7 +41,7 @@ namespace DXApplication1.Pages
             this.marathonBetToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
             this.basketballToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
             this.footballToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
-            this.longerDateTimePicker = new DevExpress.XtraEditors.TimeSpanEdit();
+            this.longerDateTimePicker = new DevExpress.XtraEditors.DateEdit();
             this.volleyballToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
             this.tennisToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
             this.hockeyToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
@@ -66,6 +66,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemNoLater = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fasterDateTimePicker.Properties.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fasterDateTimePicker.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.maxTextEdit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minTextEdit.Properties)).BeginInit();
@@ -75,6 +76,7 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.marathonBetToggleSwitch.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.basketballToggleSwitch.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.footballToggleSwitch.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.longerDateTimePicker.Properties.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.longerDateTimePicker.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.volleyballToggleSwitch.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tennisToggleSwitch.Properties)).BeginInit();
@@ -125,11 +127,17 @@ namespace DXApplication1.Pages
             // 
             // fasterDateTimePicker
             // 
-            this.fasterDateTimePicker.EditValue = System.TimeSpan.Parse("00:00:00");
-            this.fasterDateTimePicker.Location = new System.Drawing.Point(510, 42);
+            // 
+            // dateEdit1
+            // 
+            this.fasterDateTimePicker.EditValue = null;
+            this.fasterDateTimePicker.Location = new System.Drawing.Point(761, 160);
             this.fasterDateTimePicker.Name = "fasterDateTimePicker";
-            this.fasterDateTimePicker.Properties.Mask.EditMask = "dd.HH:mm:ss";
-            this.fasterDateTimePicker.Size = new System.Drawing.Size(398, 20);
+            this.fasterDateTimePicker.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.fasterDateTimePicker.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.fasterDateTimePicker.Size = new System.Drawing.Size(147, 20);
             this.fasterDateTimePicker.StyleController = this.dataLayoutControl1;
             this.fasterDateTimePicker.TabIndex = 7;
             this.fasterDateTimePicker.EditValueChanging += new DevExpress.XtraEditors.Controls.ChangingEventHandler(this.Faster_Changing);
@@ -169,7 +177,7 @@ namespace DXApplication1.Pages
             this.outcome3ToggleSwitch.Name = "outcome3ToggleSwitch";
             this.outcome3ToggleSwitch.Properties.OffText = "Off";
             this.outcome3ToggleSwitch.Properties.OnText = "On";
-            this.outcome3ToggleSwitch.Size = new System.Drawing.Size(398, 24);
+            this.outcome3ToggleSwitch.Size = new System.Drawing.Size(138, 24);
             this.outcome3ToggleSwitch.StyleController = this.dataLayoutControl1;
             this.outcome3ToggleSwitch.TabIndex = 6;
             this.outcome3ToggleSwitch.Toggled += new System.EventHandler(this.OutCome3_Toggled);
@@ -220,11 +228,14 @@ namespace DXApplication1.Pages
             // 
             // longerDateTimePicker
             // 
-            this.longerDateTimePicker.EditValue = System.TimeSpan.Parse("00:00:00");
-            this.longerDateTimePicker.Location = new System.Drawing.Point(510, 66);
+            this.longerDateTimePicker.EditValue = null;
+            this.longerDateTimePicker.Location = new System.Drawing.Point(761, 160);
             this.longerDateTimePicker.Name = "longerDateTimePicker";
-            this.longerDateTimePicker.Properties.Mask.EditMask = "dd.HH:mm:ss";
-            this.longerDateTimePicker.Size = new System.Drawing.Size(398, 20);
+            this.longerDateTimePicker.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.longerDateTimePicker.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.longerDateTimePicker.Size = new System.Drawing.Size(147, 20);
             this.longerDateTimePicker.StyleController = this.dataLayoutControl1;
             this.longerDateTimePicker.TabIndex = 7;
             this.longerDateTimePicker.EditValueChanging += new DevExpress.XtraEditors.Controls.ChangingEventHandler(this.Later_Changing);
@@ -426,7 +437,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemOutCome3.Location = new System.Drawing.Point(0, 28);
             this.layoutControlItemOutCome3.Name = "layoutControlItemOutCome3";
             this.layoutControlItemOutCome3.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
-            this.layoutControlItemOutCome3.Size = new System.Drawing.Size(519, 223);
+            this.layoutControlItemOutCome3.Size = new System.Drawing.Size(259, 223);
             this.layoutControlItemOutCome3.Text = "Исход 3";
             this.layoutControlItemOutCome3.TextSize = new System.Drawing.Size(106, 13);
             // 
@@ -484,6 +495,7 @@ namespace DXApplication1.Pages
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).EndInit();
             this.dataLayoutControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.fasterDateTimePicker.Properties.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fasterDateTimePicker.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.maxTextEdit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.minTextEdit.Properties)).EndInit();
@@ -493,6 +505,7 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.marathonBetToggleSwitch.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.basketballToggleSwitch.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.footballToggleSwitch.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.longerDateTimePicker.Properties.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.longerDateTimePicker.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.volleyballToggleSwitch.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tennisToggleSwitch.Properties)).EndInit();
@@ -544,7 +557,7 @@ namespace DXApplication1.Pages
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroupSport;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemSport2;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemSport1;
-        private TimeSpanEdit fasterDateTimePicker;
+        private DateEdit fasterDateTimePicker;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroupGameTime;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemNotFaster;
         private DevExpress.XtraEditors.ToggleSwitch volleyballToggleSwitch;
@@ -553,7 +566,7 @@ namespace DXApplication1.Pages
         private DevExpress.XtraEditors.ToggleSwitch hockeyToggleSwitch;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemSport4;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemSport5;
-        private TimeSpanEdit longerDateTimePicker;
+        private DateEdit longerDateTimePicker;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemNoLater;
     }
 }

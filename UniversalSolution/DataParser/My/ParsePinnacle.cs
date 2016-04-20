@@ -1,31 +1,24 @@
-﻿using HtmlAgilityPack;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading;
-using System.Xml;
-using System.Xml.Serialization;
-using WatiN.Core;
+using System.Threading.Tasks;
+using Tools;
 
 namespace DataParser.MY
 {
     public class ParsePinnacle
     {
-       // "https://www.marathonbet.com/su/popular/Basketball/?menu=true";
-        private readonly string link = "https://www.marathonbet.com/su/";
+        // "https://www.marathonbet.com/su/popular/Basketball/?menu=true";
+        private const string link = "https://www.marathonbet.com/su/";
 
         public ParsePinnacle()
         {
             //this.WriteToFile();
 
             //Ця метода вертає лісту команд з коффами GetNameTeamsAndDate
-            var a = GetNameTeamsAndDate(link);
-            this.Show(a);
+            // var a = GetNameTeamsAndDate(link);
+            // this.Show(a);
         }
         public void WriteToFile()
         {
@@ -51,23 +44,23 @@ namespace DataParser.MY
         /*
         //GetHtmlDocument(this.link);
     }*/
-        public static void GetHtmlDocument(string url)
+        public static async Task GetHtmlDocumentAsync(string url)
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(true);
             StreamReader reader = new StreamReader(response.GetResponseStream());
             List<string> result = new List<string>();
             string HTML = reader.ReadToEnd();
             reader.Close();
-            StreamWriter sw = new StreamWriter("HTML3.html");
+            StreamWriter sw = new StreamWriter("HTML.html");
             sw.WriteLine(HTML);
             sw.Close();
         }
 
         //data-selection-price=
-        public List<Teams> GetNameTeamsAndDate(string url)
+        public async Task<List<Teams>> GetNameTeamsAndDateAsync(string url = link)
         {
-            GetHtmlDocument(url);
+            await GetHtmlDocumentAsync(url).ConfigureAwait(true);
             List<Teams> teams = new List<Teams>();
 
             List<string> koff = new List<string>();
@@ -79,66 +72,91 @@ namespace DataParser.MY
             int i = 0;
             foreach (var line in lines)
             {
-                #region [NameTeams and Date]
-                if (line.Contains("<div class=\"member-name nowrap \" data-ellipsis='{}'>"))
+                try
                 {
-                    string findElements = "<div class=\"member-name nowrap \" data-ellipsis='{}'>";
-                    int startIndex = line.LastIndexOf(findElements);
-                    int endIndex = line.LastIndexOf("</");
-                    if (startIndex < endIndex && startIndex != -1 && endIndex != -1)
+
+
+                    #region [NameTeams and Date]
+                    if (line.Contains("<div class=\"member-name nowrap \" data-ellipsis='{}'>"))
                     {
-                        if (name1 == null)
-                            name1 = line.Substring(findElements.Length + 1, endIndex - findElements.Length - 1);
-                        else name2 = line.Substring(findElements.Length + 1, endIndex - findElements.Length - 1);
-                        i++;
+                        string findElements = "<div class=\"member-name nowrap \" data-ellipsis='{}'>";
+                        int startIndex = line.LastIndexOf(findElements);
+                        int endIndex = line.LastIndexOf("</");
+                        if (startIndex < endIndex && startIndex != -1 && endIndex != -1)
+                        {
+                            if (name1 == null)
+                                name1 = line.Substring(findElements.Length + 1, endIndex - findElements.Length - 1);
+                            else name2 = line.Substring(findElements.Length + 1, endIndex - findElements.Length - 1);
+                            i++;
+                        }
+
+                    }
+                    if (isDate)
+                    {
+                        date = line;
+                        isDate = false;
+                    }
+                    if (line.Contains("<td class=\"date\">"))
+                    {
+                        isDate = true;
                     }
 
-                }
-                if (isDate)
-                {
-                    date = line;
-                    isDate = false;
-                }
-                if (line.Contains("<td class=\"date\">"))
-                {
-                    isDate = true;
-                }
+                    #endregion
 
-                #endregion
+                    if (line.Contains("data-selection-price="))
+                    {
+                        int indexStart = line.IndexOf("data-selection-price=") + ("data-selection-price=").Length;
+                        var res = line.Substring(indexStart).Trim('\"');
+                        koff.Add(res);
 
-                if (line.Contains("data-selection-price="))
-                {
-                    int indexStart = line.IndexOf("data-selection-price=") + ("data-selection-price=").Length;
-                    var res = line.Substring(indexStart).Trim('\"');
-                    koff.Add(res);
+                    }
+                    if (name1 != null && name2 != null && date != null && koff.Count == 10)
+                    {
+                        string win1 = koff[0];
+                        string x = koff[1];
+                        string win2 = koff[2];
+                        string x_win1 = koff[3];
+                        string x_win2 = koff[4];
+                        string win1_win2 = koff[5];
+                        string fora1 = koff[6];
+                        string fora2 = koff[7];
+                        string less = koff[8];
+                        string more = koff[9];
 
+                        teams.Add(new Teams(name1, name2, date, win1, x, win2, x_win1, x_win2, win1_win2, fora1, fora2, less, more));
+                        name1 = null;
+                        name2 = null;
+                        date = null;
+                        koff = new List<string>();
+                    }
+                    if (koff.Count > 10)
+                    {
+                        koff = new List<string>();
+                    }
+
+                    if (teams.Count == 10)
+                    {
+                        i++;
+                    }
                 }
-                if (name1 != null && name2 != null && date != null && koff.Count == 10)
+                catch
                 {
-                    string win1 = koff[0];
-                    string x = koff[1];
-                    string win2 = koff[2];
-                    string x_win1 = koff[3];
-                    string x_win2 = koff[4];
-                    string win1_win2 = koff[5];
-                    string fora1 = koff[6];
-                    string fora2 = koff[7];
-                    string less = koff[8];
-                    string more = koff[9];
-                    
-                    teams.Add(new Teams(name1,name2,date,win1,x,win2,x_win1,x_win2,win1_win2,fora1,fora2,less,more));
-                    name1 = null;
-                    name2 = null;
-                    date = null;
-                    koff = new List<string>();
                 }
-                if (koff.Count > 10) {
-                    koff = new List<string>();
+            }
+
+            //Forks will be here like a tmp solution
+            var resList = new List<Teams>();
+            for (int j = 0; j < teams.Count; j++)
+            {
+                try
+                {
+                    if (CheckIsFork(teams[j].win1, teams[j].win2))
+                    {
+                        teams[j].fork = 1 / teams[j].win1 + 1 / teams[j].win2;
+                        resList.Add(teams[j]);
+                    }
                 }
-                
-                if (teams.Count == 10) {
-                    i++;
-                }
+                catch { }
             }
             return teams;
 
@@ -152,6 +170,8 @@ namespace DataParser.MY
             }
         }
 
+        public static bool CheckIsFork(double kof1, double kof2)
+            => 1 < (1 / kof1 + 1 / kof2);
 
         /*public List<Teams> PinnacleSports() {
             //<span class="text"><span class="trigger" назви команд
@@ -163,9 +183,9 @@ namespace DataParser.MY
         private string nameTeam1;
         private string nameTeam2;
         private string date;
-        public string win1;
+        public double win1 { get; set; }
         public string x;
-        public string win2;
+        public double win2 { get; set; }
         public string x_win1;
         public string x_win2;
         public string win1_win2;
@@ -173,6 +193,7 @@ namespace DataParser.MY
         public string fora2;
         public string less;
         public string more;
+        public double fork { get; set; }
         public Teams() { }
         public Teams(string nameTeam1, string nameTeam2, string date,
             string win1, string x, string win2,
@@ -182,9 +203,9 @@ namespace DataParser.MY
             this.nameTeam1 = nameTeam1;
             this.nameTeam2 = nameTeam2;
             this.date = date;
-            this.win1 = win1;
+            this.win1 = win1.ConvertToDouble();
             this.x = x;
-            this.win2 = win2;
+            this.win2 = win2.ConvertToDouble();
             this.x_win1 = x_win1;
             this.x_win2 = x_win2;
             this.win1_win2 = win1_win2;

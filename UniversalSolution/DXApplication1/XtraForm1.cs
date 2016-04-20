@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraEditors;
+﻿using DataParser.MY;
+using DevExpress.XtraEditors;
 using DXApplication1.Models;
 using DXApplication1.Pages;
 using System;
@@ -74,9 +75,10 @@ namespace DXApplication1
             _accountingPage.Show();
         }
 
-        private void AccountPage_Update(object sender, EventArgs e)
+        private async void AccountPage_Update(object sender, EventArgs e)
         {
-            //todo Call here all async logic for getting new Data from Parser  with parameters defined in _filter
+            _accountingPage.MainGridControl.DataSource = await (new ParsePinnacle()).GetNameTeamsAndDateAsync().ConfigureAwait(true);
+            _accountingPage.Refresh();
         }
 
         private void XtraForm1_Closing(object sender, System.ComponentModel.CancelEventArgs e)

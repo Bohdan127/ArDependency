@@ -33,27 +33,29 @@
             this.bUpdate = new DevExpress.XtraEditors.SimpleButton();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.colSite = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colTeam = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colTeam1 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colTeam2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colTime = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colWin1 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colWin2 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colFork = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colCalc = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemPictureEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit();
+            this.repositoryItemButtonEditCalculator = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
             this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.colCalc = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.repositoryItemButtonEditCalculator = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
-            this.repositoryItemPictureEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemPictureEdit1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEditCalculator)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEditCalculator)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemPictureEdit1)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
@@ -95,46 +97,89 @@
             // gridView1
             // 
             this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
-            this.colSite,
-            this.colType,
-            this.colTeam,
+            this.colTeam1,
+            this.colTeam2,
             this.colTime,
+            this.colWin1,
+            this.colWin2,
+            this.colFork,
             this.colCalc});
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsView.ShowGroupPanel = false;
             // 
-            // colSite
+            // colTeam1
             // 
-            this.colSite.Caption = "Сайт";
-            this.colSite.Name = "colSite";
-            this.colSite.OptionsColumn.ReadOnly = true;
-            this.colSite.Visible = true;
-            this.colSite.VisibleIndex = 0;
+            this.colTeam1.Caption = "Командa 1";
+            this.colTeam1.FieldName = "NameTeame1";
+            this.colTeam1.Name = "colTeam1";
+            this.colTeam1.OptionsColumn.ReadOnly = true;
+            this.colTeam1.Visible = true;
+            this.colTeam1.VisibleIndex = 0;
             // 
-            // colType
+            // colTeam2
             // 
-            this.colType.Caption = "Тип Игры";
-            this.colType.Name = "colType";
-            this.colType.OptionsColumn.ReadOnly = true;
-            this.colType.Visible = true;
-            this.colType.VisibleIndex = 1;
-            // 
-            // colTeam
-            // 
-            this.colTeam.Caption = "Команды";
-            this.colTeam.Name = "colTeam";
-            this.colTeam.OptionsColumn.ReadOnly = true;
-            this.colTeam.Visible = true;
-            this.colTeam.VisibleIndex = 2;
+            this.colTeam2.Caption = "Команда 2";
+            this.colTeam2.FieldName = "NameTeame2";
+            this.colTeam2.Name = "colTeam2";
+            this.colTeam2.Visible = true;
+            this.colTeam2.VisibleIndex = 1;
             // 
             // colTime
             // 
             this.colTime.Caption = "Время Игры";
+            this.colTime.FieldName = "Date";
             this.colTime.Name = "colTime";
             this.colTime.OptionsColumn.ReadOnly = true;
             this.colTime.Visible = true;
-            this.colTime.VisibleIndex = 3;
+            this.colTime.VisibleIndex = 2;
+            // 
+            // colWin1
+            // 
+            this.colWin1.Caption = "Выигрыш первой команды";
+            this.colWin1.FieldName = "win1";
+            this.colWin1.Name = "colWin1";
+            this.colWin1.OptionsColumn.ReadOnly = true;
+            this.colWin1.Visible = true;
+            this.colWin1.VisibleIndex = 3;
+            // 
+            // colWin2
+            // 
+            this.colWin2.Caption = "Выигрыш второй команды";
+            this.colWin2.FieldName = "win2";
+            this.colWin2.Name = "colWin2";
+            this.colWin2.OptionsColumn.ReadOnly = true;
+            this.colWin2.Visible = true;
+            this.colWin2.VisibleIndex = 4;
+            // 
+            // colFork
+            // 
+            this.colFork.Caption = "Вилка";
+            this.colFork.FieldName = "fork";
+            this.colFork.Name = "colFork";
+            this.colFork.OptionsColumn.ReadOnly = true;
+            this.colFork.Visible = true;
+            this.colFork.VisibleIndex = 5;
+            // 
+            // colCalc
+            // 
+            this.colCalc.Caption = "Калькулятор";
+            this.colCalc.ColumnEdit = this.repositoryItemPictureEdit1;
+            this.colCalc.Name = "colCalc";
+            // 
+            // repositoryItemPictureEdit1
+            // 
+            this.repositoryItemPictureEdit1.InitialImage = ((System.Drawing.Image)(resources.GetObject("repositoryItemPictureEdit1.InitialImage")));
+            this.repositoryItemPictureEdit1.Name = "repositoryItemPictureEdit1";
+            // 
+            // repositoryItemButtonEditCalculator
+            // 
+            this.repositoryItemButtonEditCalculator.AllowNullInput = DevExpress.Utils.DefaultBoolean.True;
+            this.repositoryItemButtonEditCalculator.AutoHeight = false;
+            this.repositoryItemButtonEditCalculator.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton()});
+            this.repositoryItemButtonEditCalculator.ContextImage = ((System.Drawing.Image)(resources.GetObject("repositoryItemButtonEditCalculator.ContextImage")));
+            this.repositoryItemButtonEditCalculator.Name = "repositoryItemButtonEditCalculator";
             // 
             // layoutControlGroup1
             // 
@@ -175,28 +220,6 @@
             this.emptySpaceItem1.Size = new System.Drawing.Size(481, 42);
             this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
             // 
-            // colCalc
-            // 
-            this.colCalc.Caption = "Калькулятор";
-            this.colCalc.ColumnEdit = this.repositoryItemPictureEdit1;
-            this.colCalc.Name = "colCalc";
-            this.colCalc.Visible = true;
-            this.colCalc.VisibleIndex = 4;
-            // 
-            // repositoryItemButtonEditCalculator
-            // 
-            this.repositoryItemButtonEditCalculator.AllowNullInput = DevExpress.Utils.DefaultBoolean.True;
-            this.repositoryItemButtonEditCalculator.AutoHeight = false;
-            this.repositoryItemButtonEditCalculator.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton()});
-            this.repositoryItemButtonEditCalculator.ContextImage = ((System.Drawing.Image)(resources.GetObject("repositoryItemButtonEditCalculator.ContextImage")));
-            this.repositoryItemButtonEditCalculator.Name = "repositoryItemButtonEditCalculator";
-            // 
-            // repositoryItemPictureEdit1
-            // 
-            this.repositoryItemPictureEdit1.InitialImage = ((System.Drawing.Image)(resources.GetObject("repositoryItemPictureEdit1.InitialImage")));
-            this.repositoryItemPictureEdit1.Name = "repositoryItemPictureEdit1";
-            // 
             // AccountingPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -211,12 +234,12 @@
             this.dataLayoutControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemPictureEdit1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEditCalculator)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEditCalculator)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemPictureEdit1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -228,9 +251,7 @@
         private DevExpress.XtraGrid.GridControl gridControl1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem1;
-        private DevExpress.XtraGrid.Columns.GridColumn colSite;
-        private DevExpress.XtraGrid.Columns.GridColumn colType;
-        private DevExpress.XtraGrid.Columns.GridColumn colTeam;
+        private DevExpress.XtraGrid.Columns.GridColumn colTeam1;
         private DevExpress.XtraGrid.Columns.GridColumn colTime;
         private DevExpress.XtraEditors.SimpleButton bUpdate;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem2;
@@ -238,5 +259,9 @@
         private DevExpress.XtraGrid.Columns.GridColumn colCalc;
         private DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit repositoryItemButtonEditCalculator;
         private DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit repositoryItemPictureEdit1;
+        private DevExpress.XtraGrid.Columns.GridColumn colTeam2;
+        private DevExpress.XtraGrid.Columns.GridColumn colWin1;
+        private DevExpress.XtraGrid.Columns.GridColumn colWin2;
+        private DevExpress.XtraGrid.Columns.GridColumn colFork;
     }
 }

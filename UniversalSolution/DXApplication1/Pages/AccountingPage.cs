@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.XtraGrid;
+using System;
 using System.Windows.Forms;
 
 namespace DXApplication1.Pages
@@ -7,6 +8,7 @@ namespace DXApplication1.Pages
     {
         public EventHandler Update;
         public bool Close { get; set; }
+        public GridControl MainGridControl => gridControl1;
 
         public AccountingPage()
         {

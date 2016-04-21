@@ -9,6 +9,7 @@ namespace DXApplication1.Pages
         public EventHandler Update;
         public bool Close { get; set; }
         public GridControl MainGridControl => gridControl1;
+        protected virtual void OnUpdate() => Update?.Invoke(null, null);
 
         public AccountingPage()
         {
@@ -32,8 +33,6 @@ namespace DXApplication1.Pages
             if (!Close)
                 Hide();
         }
-
-        protected virtual void OnUpdate() => Update?.Invoke(null, null);
 
         private void bUpdate_Click(object sender, System.EventArgs e)
         {

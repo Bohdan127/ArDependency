@@ -158,7 +158,7 @@ namespace DataParser.MY
                 }
                 catch { }
             }
-            return teams;
+            return resList;
 
         }
         public void Show(List<Teams> teams)

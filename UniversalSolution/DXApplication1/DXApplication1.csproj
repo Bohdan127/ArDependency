@@ -237,6 +237,10 @@
       <Project>{586a03bb-1702-4143-b370-e1dc6656762a}</Project>
       <Name>DataParser</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FormulasCollection\FormulasCollection.csproj">
+      <Project>{652BA621-388B-4A6E-8465-AB8C3910D579}</Project>
+      <Name>FormulasCollection</Name>
+    </ProjectReference>
     <ProjectReference Include="..\License\License.csproj">
       <Project>{f2608d24-a0e2-4bf8-8e58-c3b931df08a6}</Project>
       <Name>License</Name>

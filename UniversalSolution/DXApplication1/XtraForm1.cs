@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using FormulasCollection;
 
 namespace DXApplication1
 {
@@ -42,7 +43,7 @@ namespace DXApplication1
         {
             if (_calculatorPage == null)
             {
-                _calculatorPage = new CalculatorPage();
+                _calculatorPage = new CalculatorPage(new TwoOutComeCalculatorFormulas());
                 _calculatorPage.MdiParent = this;
                 _calculatorPage.Close = false;
             }

@@ -253,7 +253,7 @@ namespace DataParser.MY
 
 
 
-        //твоя метода GetNameTeamsAndDate(type);
+        //твоя метода this.GetResult(Type.basketball);
 
         public ParsePinnacle()
         {
@@ -265,7 +265,7 @@ namespace DataParser.MY
         public List<ResultForVilki> GetResult(Type type)
         {
             List<ResultForVilki> result = new List<ResultForVilki>();
-            var a = GetNameTeamsAndDate(type/*, ref result*/);
+            var a = GetNameTeamsAndDate(type, ref result);
             this.Show(a);
             return result;
         }
@@ -316,7 +316,7 @@ namespace DataParser.MY
         private const int countCoff2 = 6;
 
 
-        public List<Teams> GetNameTeamsAndDate(Type type/*, ref List<ResultForVilki> result*/)
+        public List<Teams> GetNameTeamsAndDate(Type type, ref List<ResultForVilki> result)
         {
             string url = "https://www.marathonbet.com/su/popular/Ice+Hockey/?menu=true";
             string namefile = "Default.html";
@@ -362,12 +362,13 @@ namespace DataParser.MY
             int index = 0;
             foreach (var line in lines)
             {
-                if (oldLine.Contains("<span class=\"hint\">"))
+                #region
+                /*if (oldLine.Contains("<span class=\"hint\">"))
                 {
                     string t = line.Trim(' ');
-                    int start = t.IndexOf(">") + 1;
+                    int start = t.IndexOf(">")+1;
                     int end = t.IndexOf("</");
-                    end = end - start;
+                    end = end - start ;
                     string typeCoff = "";
                     if (end != -1 && start != -1)
                         typeCoff = t.Substring(start, end);
@@ -386,8 +387,8 @@ namespace DataParser.MY
                             countTypeCoff.Add(typeCoff);
                         }
                     }
-                }
-
+                }*/
+                #endregion
                 #region [NameTeams and Date]
                 if (this.Get(line, forTeam))
                 {
@@ -424,15 +425,15 @@ namespace DataParser.MY
 
                 }
 
-                /*if (name1 != null && name2 != null && date != null && res != null)
+                if (name1 != null && name2 != null && date != null && res != null)
                 {
                     if (index >= countTypeCoff.Count)
                         index = 0;
-                    var a=countTypeCoff[index];
-                    result.Add(new ResultForVilki(name1, name2, date, a, res));
+                    //var a=countTypeCoff[index];
+                    result.Add(new ResultForVilki(name1, name2, date, " - ", res));
                     res = null;
                     i++;
-                }*/
+                }
 
                 if (name1 != null && name2 != null && date != null)
                 {
@@ -545,8 +546,8 @@ namespace DataParser.MY
         protected string nameTeam2;
         protected string date;
 
-        public double win1 { get; set; }
-        public double win2 { get; set; }
+        public string win1;
+        public string win2;
         public string fora1;
         public string fora2;
         public string less;
@@ -566,7 +567,7 @@ namespace DataParser.MY
             this.date = date;
 
             this.win1 = win1;
-            this.win2 = win2.ConvertToDouble();
+            this.win2 = win2;
             this.fora1 = fora1;
             this.fora2 = fora2;
             this.less = less;

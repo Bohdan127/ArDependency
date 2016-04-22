@@ -7,9 +7,11 @@ namespace DXApplication1.Pages
     public partial class AccountingPage : Form
     {
         public EventHandler Update;
+        public EventHandler CalculatorCall;
         public bool Close { get; set; }
         public GridControl MainGridControl => gridControl1;
         protected virtual void OnUpdate() => Update?.Invoke(null, null);
+        protected virtual void OnCalculatorCall() => CalculatorCall?.Invoke(gridView1.GetFocusedRow(), null);
 
         public AccountingPage()
         {
@@ -19,24 +21,23 @@ namespace DXApplication1.Pages
 
         public void InitializeEvents()
         {
-            this.Closing += AccountingPage_Closing;
+            Closing += AccountingPage_Closing;
         }
 
         public void DeInitializeEvents()
         {
-            this.Closing -= AccountingPage_Closing;
+            Closing -= AccountingPage_Closing;
         }
 
-        private void AccountingPage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        protected virtual void AccountingPage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = !Close;
             if (!Close)
                 Hide();
         }
 
-        private void bUpdate_Click(object sender, System.EventArgs e)
-        {
-            OnUpdate();
-        }
+        protected virtual void bUpdate_Click(object sender, System.EventArgs e) => OnUpdate();
+
+        protected virtual void simpleButton1_Click(object sender, EventArgs e) => OnCalculatorCall();
     }
 }

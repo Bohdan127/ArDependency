@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataParser.My
 {
@@ -29,7 +26,7 @@ namespace DataParser.My
 
         bool checkIsWylka(double kof1, double kof2)
         {
-            return 1 < (1 / kof1 + 1 / kof2);
+            return 1 > (1 / kof1 + 1 / kof2);
         }
         double getStawka(double stawka1, Double kof1, double kof2)
         {

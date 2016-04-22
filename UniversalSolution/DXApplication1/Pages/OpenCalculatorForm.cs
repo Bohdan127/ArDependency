@@ -1,11 +1,12 @@
-﻿using System;
+﻿using FormulasCollection.Realizations;
+using System;
 using System.Windows.Forms;
 
 namespace DXApplication1.Pages
 {
     public partial class OpenCalculatorForm : Form
     {
-        public object SelectedEvent { get; set; }
+        public Fork SelectedEvent { get; set; }
 
         public OpenCalculatorForm()
         {
@@ -15,13 +16,13 @@ namespace DXApplication1.Pages
             if (gridView1.RowCount < 0)
                 buttonOpen.Enabled = false;
             else
-                SelectedEvent = gridView1.GetFocusedDataRow();
+                SelectedEvent = gridView1.GetFocusedRow() as Fork;
             //disable while we not choose some row from GridView
         }
 
         private void buttonFind_Click(object sender, EventArgs e)
         {
-
+            //todo make search here
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
@@ -48,7 +49,7 @@ namespace DXApplication1.Pages
             if (e.FocusedRowHandle >= 0)
             {
                 buttonOpen.Enabled = true;
-                SelectedEvent = gridView1.GetFocusedDataRow();
+                SelectedEvent = gridView1.GetFocusedRow() as Fork;
             }
         }
     }

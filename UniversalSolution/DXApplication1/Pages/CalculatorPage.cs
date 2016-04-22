@@ -1,4 +1,5 @@
-﻿using FormulasCollection;
+﻿using FormulasCollection.Interfaces;
+using FormulasCollection.Realizations;
 using System;
 using System.Windows.Forms;
 using Tools;
@@ -13,6 +14,8 @@ namespace DXApplication1.Pages
         public bool IsOpen { get; set; }
         public EventHandler RateChanging;
         protected virtual void OnURateChanging() => RateChanging?.Invoke(null, null);
+        private Fork _fork;
+        public Fork Fork { set { _fork = value; UpdateForm(); } }//todo check what is true way!!!!
 
         public CalculatorPage(ICalculatorFormulas _calculatorFormulas)
         {
@@ -22,9 +25,15 @@ namespace DXApplication1.Pages
             CalculatorFormulas = _calculatorFormulas;
         }
 
-        private void CalculatorPage_Shown(object sender, System.EventArgs e)
+        private void CalculatorPage_Shown(object sender, System.EventArgs e) => IsOpen = true;
+
+        private void UpdateForm()
         {
-            IsOpen = true;
+            lbMain.Text = _fork?.Event;
+            lbType1.Text = _fork?.TypeFirst;
+            lbCoef1.Text = _fork?.CoefFirst.ToString();
+            lbType2.Text = _fork?.TypeSecond;
+            lbCoef2.Text = _fork?.CoefSecond.ToString();
         }
 
         public void InitializeEvents()

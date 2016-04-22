@@ -1,4 +1,4 @@
-﻿namespace FormulasCollection
+﻿namespace FormulasCollection.Interfaces
 {
     public interface ICalculatorFormulas
     {

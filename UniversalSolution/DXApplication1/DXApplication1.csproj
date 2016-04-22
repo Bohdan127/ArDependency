@@ -133,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Filter.cs" />
+    <Compile Include="Models\PageManager.cs" />
     <Compile Include="Old\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -238,7 +239,7 @@
       <Name>DataParser</Name>
     </ProjectReference>
     <ProjectReference Include="..\FormulasCollection\FormulasCollection.csproj">
-      <Project>{652BA621-388B-4A6E-8465-AB8C3910D579}</Project>
+      <Project>{c6982ab9-704a-474f-a303-89b4c4a3d11e}</Project>
       <Name>FormulasCollection</Name>
     </ProjectReference>
     <ProjectReference Include="..\License\License.csproj">

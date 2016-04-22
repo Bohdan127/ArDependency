@@ -1,6 +1,7 @@
-﻿using System.Linq;
+﻿using FormulasCollection.Interfaces;
+using System.Linq;
 
-namespace FormulasCollection
+namespace FormulasCollection.Realizations
 {
     public class TwoOutComeCalculatorFormulas : ICalculatorFormulas
     {

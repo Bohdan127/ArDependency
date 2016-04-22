@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using HtmlAgilityPack;
 using WatiN.Core;
 using DataParser.DefaultRealization;
+using DataParser.MY;
 
 namespace ParseAPI
 {
@@ -27,6 +28,8 @@ namespace ParseAPI
             //resultList3 = dataParser.FonbetDataParser();
             //resultList4 = dataParser.WilliamhillDataParser();
             //resultList5 = dataParser.Ru10betDataParser();
+
+            new ParsePinnacle();
 
             Console.ReadLine();
         }

@@ -1,16 +1,14 @@
-﻿using DataParser.MY;
-using DevExpress.XtraEditors;
+﻿using DevExpress.XtraEditors;
 using DXApplication1.Models;
 using DXApplication1.Pages;
-using System;
+using FormulasCollection.Interfaces;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using FormulasCollection;
 
 namespace DXApplication1
 {
-    public partial class XtraForm1 : DevExpress.XtraEditors.XtraForm
+    public partial class XtraForm1 : XtraForm
     {
 
         #region Members
@@ -18,19 +16,20 @@ namespace DXApplication1
         public const string SettingsPath = "./";
         public const string SettingsFile = "DataSet.xml";
 
-        private FilterPage _filterPage;
-        private AccountingPage _accountingPage;
-        private CalculatorPage _calculatorPage;
         private Filter _filter;
+        private PageManager _pageManager;
         #endregion
 
         #region CTOR
-        public XtraForm1()
+        public XtraForm1(IForkFormulas forkFormulas)
         {
             InitializeComponent();
-            this.IsMdiContainer = true;
-            this.Closed += XtraForm1_Closed;
-            this.Closing += XtraForm1_Closing;
+
+            IsMdiContainer = true;
+            Closed += XtraForm1_Closed;
+            Closing += XtraForm1_Closing;
+
+            _pageManager = new PageManager(this, forkFormulas);
 
             DeserializeAll();
             PrepareData();
@@ -38,49 +37,29 @@ namespace DXApplication1
         #endregion
 
         #region Events
-
         private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (_calculatorPage == null)
-            {
-                _calculatorPage = new CalculatorPage(new TwoOutComeCalculatorFormulas());
-                _calculatorPage.MdiParent = this;
-                _calculatorPage.Close = false;
-            }
             var openForm = new OpenCalculatorForm();
 
-            if (!_calculatorPage.IsOpen)
+            if (!_pageManager.GetCalculatorPage().IsOpen)
             {
                 if (openForm.ShowDialog() != DialogResult.OK)
                     return;
+                _pageManager.GetCalculatorPage(reload: true).Fork = openForm.SelectedEvent;
             }
 
-            _calculatorPage.Hide();//if already shown right now
-            _calculatorPage.Show();
+            _pageManager.GetCalculatorPage().Hide();//if already shown right now
+            _pageManager.GetCalculatorPage().Show();
 
         }
 
         private void barButtonItem3_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (_accountingPage == null)
-            {
-                _accountingPage = new AccountingPage();
-                _accountingPage.MdiParent = this;
-                _accountingPage.Close = false;
-                _accountingPage.Update += AccountPage_Update;
-            }
-            else
-            {
-                _accountingPage.Hide();
-            }
-            _accountingPage.Show();
+            _pageManager.GetAccountPage().Hide();//if already shown right now
+            _pageManager.GetAccountPage().Show();
         }
 
-        private async void AccountPage_Update(object sender, EventArgs e)
-        {
-            _accountingPage.MainGridControl.DataSource = await (new ParsePinnacle()).GetNameTeamsAndDateAsync().ConfigureAwait(true);
-            _accountingPage.Refresh();
-        }
+
 
         private void XtraForm1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -91,11 +70,8 @@ namespace DXApplication1
                 MessageBoxIcon.Warning)
                        == DialogResult.No;
 
-            if (_filterPage != null)
-                _filterPage.Close = !e.Cancel;
-
-            if (_accountingPage != null)
-                _accountingPage.Close = !e.Cancel;
+            if (!e.Cancel)
+                _pageManager.CloseAllPages();
         }
         private void XtraForm1_Closed(object sender, System.EventArgs e)
         {
@@ -104,17 +80,8 @@ namespace DXApplication1
 
         private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (_filterPage == null)
-            {
-                _filterPage = new FilterPage(_filter);
-                _filterPage.MdiParent = this;
-                _filterPage.Close = false;
-            }
-            else
-            {
-                _filterPage.Hide();
-            }
-            _filterPage.Show();
+            _pageManager.GetFilterPage(_filter).Hide();//if already shown right now
+            _pageManager.GetFilterPage(_filter).Show();
         }
         #endregion
 
@@ -168,7 +135,5 @@ namespace DXApplication1
             return bRes;
         }
         #endregion
-
-
     }
 }

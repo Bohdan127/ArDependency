@@ -1,4 +1,5 @@
 ﻿using DevExpress.LookAndFeel;
+using FormulasCollection.Realizations;
 using System;
 using System.Globalization;
 using System.Threading;
@@ -34,7 +35,7 @@ namespace DXApplication1
             DevExpress.UserSkins.BonusSkins.Register();
             UserLookAndFeel.Default.SetSkinStyle("DevExpress Style");
 
-            Application.Run(new XtraForm1());
+            Application.Run(new XtraForm1(new TwoOutComeForkFormulas()));
         }
     }
 }

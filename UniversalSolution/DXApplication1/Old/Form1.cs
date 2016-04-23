@@ -17,7 +17,7 @@ namespace DXApplication1
 {
     public partial class Form1 : XtraForm
     {
-        #region Fields       
+        #region Fields
 
         private DefaultDataParser _parser;
         private Timer _updateTimer;
@@ -28,7 +28,7 @@ namespace DXApplication1
         private string licenseKey = string.Empty;
         private const string outFileName = @"lastChanges.xml";
 
-        #endregion
+        #endregion Fields
 
         #region CTOR
 
@@ -58,7 +58,7 @@ namespace DXApplication1
             barDeleteOldData.Enabled = false;
         }
 
-        #endregion
+        #endregion CTOR
 
         #region Function
 
@@ -92,6 +92,7 @@ namespace DXApplication1
                             case "UpdateTime":
                                 barUpdateTime.EditValue = reader.ReadString();
                                 break;
+
                             case "AutoUpdate":
                                 if (reader.ReadString() == "True")
                                 {
@@ -99,6 +100,7 @@ namespace DXApplication1
                                     AutoUpdateChanged(null, null);
                                 }
                                 break;
+
                             case "DeleteOldData":
                                 if (reader.ReadString() == "True")
                                 {
@@ -106,6 +108,7 @@ namespace DXApplication1
                                     isDeleteOldData = true;
                                 }
                                 break;
+
                             case "ColoredNewData":
                                 if (reader.ReadString() == "True")
                                 {
@@ -113,9 +116,11 @@ namespace DXApplication1
                                     isColoredNewData = true;
                                 }
                                 break;
+
                             case "NewColor":
                                 barNewColor.EditValue = Color.FromArgb(Convert.ToInt32(reader.ReadString()));
                                 break;
+
                             case "ua1xetCom":
                                 if (reader.ReadString() == "True")
                                 {
@@ -123,6 +128,7 @@ namespace DXApplication1
                                     SwitchUa1xetCom_Toggled(null, null);
                                 }
                                 break;
+
                             case "olimpKz":
                                 if (reader.ReadString() == "True")
                                 {
@@ -130,6 +136,7 @@ namespace DXApplication1
                                     SwitchOlimpKz_Toggled(null, null);
                                 }
                                 break;
+
                             case "fonbetCom":
                                 if (reader.ReadString() == "True")
                                 {
@@ -137,6 +144,7 @@ namespace DXApplication1
                                     SwitchFonbetCom_Toggled(null, null);
                                 }
                                 break;
+
                             case "williamhillCom":
                                 if (reader.ReadString() == "True")
                                 {
@@ -144,6 +152,7 @@ namespace DXApplication1
                                     SwitchWilliamHillCom_Toggled(null, null);
                                 }
                                 break;
+
                             case "ru10betCom":
                                 if (reader.ReadString() == "True")
                                 {
@@ -151,9 +160,11 @@ namespace DXApplication1
                                     SwitchRu10BetCom_Toggled(null, null);
                                 }
                                 break;
+
                             case "LicenseKey":
                                 licenseKey = reader.ReadString();
                                 break;
+
                             default:
                                 break;
                         }
@@ -332,7 +343,7 @@ namespace DXApplication1
             }
         }
 
-        #endregion
+        #endregion Function
 
         #region Events
 
@@ -449,7 +460,7 @@ namespace DXApplication1
                 _updateTimer.Stop();
                 barAutoUpdate.EditValue = false;
             }
-            _updateTimer.Interval = int.Parse(barUpdateTime.EditValue.ToString()) * 1000 * 60;//60 - seconds in one minute, 1000 miliseconds at one second 
+            _updateTimer.Interval = int.Parse(barUpdateTime.EditValue.ToString()) * 1000 * 60;//60 - seconds in one minute, 1000 miliseconds at one second
         }
 
         private void AutoUpdateChanged(object sender, EventArgs e)
@@ -462,7 +473,6 @@ namespace DXApplication1
                 _updateTimer.Stop();
         }
 
-        #endregion
-
+        #endregion Events
     }
 }

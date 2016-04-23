@@ -1,5 +1,6 @@
 ﻿using FormulasCollection.Realizations;
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace DXApplication1.Pages
@@ -7,17 +8,28 @@ namespace DXApplication1.Pages
     public partial class OpenCalculatorForm : Form
     {
         public Fork SelectedEvent { get; set; }
+        private List<Fork> dataSource;
 
         public OpenCalculatorForm()
         {
             InitializeComponent();
 
-            //todo maybe this one we should call after load data to GridView
+            dataSource = new List<Fork>();
+        }
+
+        public OpenCalculatorForm(List<Fork> dataList)
+            : this()
+        {
+            dataSource.AddRange(dataList);
+            gridControl1.DataSource = dataList;
+
             if (gridView1.RowCount < 0)
                 buttonOpen.Enabled = false;
             else
+            {
+                gridView1.FocusedRowHandle = 0;
                 SelectedEvent = gridView1.GetFocusedRow() as Fork;
-            //disable while we not choose some row from GridView
+            }
         }
 
         private void buttonFind_Click(object sender, EventArgs e)

@@ -10,11 +10,11 @@ namespace FormulasCollection.Realizations
             Formatter = "-";
         }
 
-        public object CalculateIncome(double coef, double rate) => coef * rate;
+        public string CalculateIncome(double coef, double rate) => (coef * rate).ToString();
 
-        public object CalculateSummaryRate(params double[] rates) => rates.Sum();
+        public string CalculateSummaryRate(params double[] rates) => rates.Sum().ToString();
 
-        public object CalculateSummaryIncome(params string[] incomes) => incomes.Aggregate((a, b) => a + Formatter + b);
+        public string CalculateSummaryIncome(params string[] incomes) => incomes.Aggregate((a, b) => a + Formatter + b);
 
         public string Formatter { get; set; }
     }

@@ -10,7 +10,9 @@ namespace DXApplication1.Pages
         public EventHandler CalculatorCall;
         public bool Close { get; set; }
         public GridControl MainGridControl => gridControl1;
+
         protected virtual void OnUpdate() => Update?.Invoke(null, null);
+
         protected virtual void OnCalculatorCall() => CalculatorCall?.Invoke(gridView1.GetFocusedRow(), null);
 
         public AccountingPage()

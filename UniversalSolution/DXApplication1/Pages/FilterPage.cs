@@ -1,4 +1,7 @@
-﻿using DXApplication1.Models;
+﻿using DevExpress.XtraEditors.Controls;
+using DXApplication1.Models;
+using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 using Tools;
 
@@ -36,8 +39,8 @@ namespace DXApplication1.Pages
                 volleyballToggleSwitch.EditValue = Filter.Volleyball;
                 hockeyToggleSwitch.EditValue = Filter.Hockey;
                 tennisToggleSwitch.EditValue = Filter.Tennis;
-                fasterDateTimePicker.EditValue = Filter.FaterThen;//???
-                longerDateTimePicker.EditValue = Filter.LongerThen;//???
+                fasterDateTimePicker.EditValue = Filter.FaterThen;//todo ???
+                longerDateTimePicker.EditValue = Filter.LongerThen;//todo ???
                 outCome2ToggleSwitch.EditValue = Filter.OutCome2;
                 outcome3ToggleSwitch.EditValue = Filter.OutCome3;
             }
@@ -45,22 +48,48 @@ namespace DXApplication1.Pages
 
         public void InitializeEvents()
         {
-            this.Closing += FilterPage_Closing;
+            Closing += FilterPage_Closing;
+            fasterDateTimePicker.EditValueChanging += Faster_Changing;
+            maxTextEdit.EditValueChanging += Max_Changing;
+            minTextEdit.EditValueChanging += Min_Changing;
+            outCome2ToggleSwitch.Toggled += OutCome2_Toggled;
+            outcome3ToggleSwitch.Toggled += OutCome3_Toggled;
+            pinnacleSportsToggleSwitch.Toggled += PinnacleSports_Toggled;
+            marathonBetToggleSwitch.Toggled += MarathonBet_Toggled;
+            basketballToggleSwitch.Toggled += Basketball_Toggled;
+            footballToggleSwitch.Toggled += Football_Toggled;
+            longerDateTimePicker.EditValueChanging += Later_Changing;
+            volleyballToggleSwitch.Toggled += Volleyball_Toggled;
+            tennisToggleSwitch.Toggled += Tennis_Toggled;
+            hockeyToggleSwitch.Toggled += Hockey_Toggled;
         }
 
         public void DeInitializeEvents()
         {
-            this.Closing -= FilterPage_Closing;
+            Closing -= FilterPage_Closing;
+            fasterDateTimePicker.EditValueChanging -= Faster_Changing;
+            maxTextEdit.EditValueChanging -= Max_Changing;
+            minTextEdit.EditValueChanging -= Min_Changing;
+            outCome2ToggleSwitch.Toggled -= OutCome2_Toggled;
+            outcome3ToggleSwitch.Toggled -= OutCome3_Toggled;
+            pinnacleSportsToggleSwitch.Toggled -= PinnacleSports_Toggled;
+            marathonBetToggleSwitch.Toggled -= MarathonBet_Toggled;
+            basketballToggleSwitch.Toggled -= Basketball_Toggled;
+            footballToggleSwitch.Toggled -= Football_Toggled;
+            longerDateTimePicker.EditValueChanging -= Later_Changing;
+            volleyballToggleSwitch.Toggled -= Volleyball_Toggled;
+            tennisToggleSwitch.Toggled -= Tennis_Toggled;
+            hockeyToggleSwitch.Toggled -= Hockey_Toggled;
         }
 
-        private void FilterPage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void FilterPage_Closing(object sender, CancelEventArgs e)
         {
             e.Cancel = !Close;
             if (!Close)
                 Hide();
         }
 
-        private void Min_Changing(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
+        private void Min_Changing(object sender, ChangingEventArgs e)
         {
             lock (Filter)
             {
@@ -68,7 +97,7 @@ namespace DXApplication1.Pages
             }
         }
 
-        private void Max_Changing(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
+        private void Max_Changing(object sender, ChangingEventArgs e)
         {
             lock (Filter)
             {
@@ -76,63 +105,63 @@ namespace DXApplication1.Pages
             }
         }
 
-        private void MarathonBet_Toggled(object sender, System.EventArgs e)
+        private void MarathonBet_Toggled(object sender, EventArgs e)
         {
             lock (Filter)
             {
-                Filter.MarathonBet = !Filter.MarathonBet;
+                Filter.MarathonBet = marathonBetToggleSwitch.EditValue.ConvertToBool();
             }
         }
 
-        private void PinnacleSports_Toggled(object sender, System.EventArgs e)
+        private void PinnacleSports_Toggled(object sender, EventArgs e)
         {
             lock (Filter)
             {
-                Filter.PinnacleSports = !Filter.PinnacleSports;
+                Filter.PinnacleSports = pinnacleSportsToggleSwitch.EditValue.ConvertToBool();
             }
         }
 
-        private void Football_Toggled(object sender, System.EventArgs e)
+        private void Football_Toggled(object sender, EventArgs e)
         {
             lock (Filter)
             {
-                Filter.Football = !Filter.Football;
+                Filter.Football = footballToggleSwitch.EditValue.ConvertToBool();
             }
         }
 
-        private void Basketball_Toggled(object sender, System.EventArgs e)
+        private void Basketball_Toggled(object sender, EventArgs e)
         {
             lock (Filter)
             {
-                Filter.Basketball = !Filter.Basketball;
+                Filter.Basketball = basketballToggleSwitch.EditValue.ConvertToBool();
             }
         }
 
-        private void Volleyball_Toggled(object sender, System.EventArgs e)
+        private void Volleyball_Toggled(object sender, EventArgs e)
         {
             lock (Filter)
             {
-                Filter.Volleyball = !Filter.Volleyball;
+                Filter.Volleyball = volleyballToggleSwitch.EditValue.ConvertToBool();
             }
         }
 
-        private void Hockey_Toggled(object sender, System.EventArgs e)
+        private void Hockey_Toggled(object sender, EventArgs e)
         {
             lock (Filter)
             {
-                Filter.Hockey = !Filter.Hockey;
+                Filter.Hockey = hockeyToggleSwitch.EditValue.ConvertToBool();
             }
         }
 
-        private void Tennis_Toggled(object sender, System.EventArgs e)
+        private void Tennis_Toggled(object sender, EventArgs e)
         {
             lock (Filter)
             {
-                Filter.Tennis = !Filter.Hockey;
+                Filter.Tennis = tennisToggleSwitch.EditValue.ConvertToBool();
             }
         }
 
-        private void Faster_Changing(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
+        private void Faster_Changing(object sender, ChangingEventArgs e)
         {
             lock (Filter)
             {
@@ -140,7 +169,7 @@ namespace DXApplication1.Pages
             }
         }
 
-        private void Later_Changing(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
+        private void Later_Changing(object sender, ChangingEventArgs e)
         {
             lock (Filter)
             {
@@ -148,7 +177,7 @@ namespace DXApplication1.Pages
             }
         }
 
-        private void OutCome2_Toggled(object sender, System.EventArgs e)
+        private void OutCome2_Toggled(object sender, EventArgs e)
         {
             lock (Filter)
             {
@@ -156,7 +185,7 @@ namespace DXApplication1.Pages
             }
         }
 
-        private void OutCome3_Toggled(object sender, System.EventArgs e)
+        private void OutCome3_Toggled(object sender, EventArgs e)
         {
             lock (Filter)
             {

@@ -1,6 +1,5 @@
 ﻿using DevExpress.XtraEditors;
 using DXApplication1.Models;
-using DXApplication1.Pages;
 using FormulasCollection.Interfaces;
 using System.IO;
 using System.Windows.Forms;
@@ -10,17 +9,20 @@ namespace DXApplication1
 {
     public partial class XtraForm1 : XtraForm
     {
-
         #region Members
+
         //todo Later Make this parameter visible from UI with possibility to change
         public const string SettingsPath = "./";
+
         public const string SettingsFile = "DataSet.xml";
 
         private Filter _filter;
         private PageManager _pageManager;
-        #endregion
+
+        #endregion Members
 
         #region CTOR
+
         public XtraForm1(IForkFormulas forkFormulas)
         {
             InitializeComponent();
@@ -34,15 +36,18 @@ namespace DXApplication1
             DeserializeAll();
             PrepareData();
         }
-        #endregion
+
+        #endregion CTOR
 
         #region Events
-        private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+
+        private async void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            var openForm = new OpenCalculatorForm();
+
 
             if (!_pageManager.GetCalculatorPage().IsOpen)
             {
+                var openForm = await _pageManager.CreateCalculatorForm().ConfigureAwait(true);
                 if (openForm.ShowDialog() != DialogResult.OK)
                     return;
                 _pageManager.GetCalculatorPage(reload: true).Fork = openForm.SelectedEvent;
@@ -50,7 +55,6 @@ namespace DXApplication1
 
             _pageManager.GetCalculatorPage().Hide();//if already shown right now
             _pageManager.GetCalculatorPage().Show();
-
         }
 
         private void barButtonItem3_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -58,8 +62,6 @@ namespace DXApplication1
             _pageManager.GetAccountPage().Hide();//if already shown right now
             _pageManager.GetAccountPage().Show();
         }
-
-
 
         private void XtraForm1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -73,6 +75,7 @@ namespace DXApplication1
             if (!e.Cancel)
                 _pageManager.CloseAllPages();
         }
+
         private void XtraForm1_Closed(object sender, System.EventArgs e)
         {
             SerializeAll();
@@ -83,9 +86,11 @@ namespace DXApplication1
             _pageManager.GetFilterPage(_filter).Hide();//if already shown right now
             _pageManager.GetFilterPage(_filter).Show();
         }
-        #endregion
+
+        #endregion Events
 
         #region Functions
+
         private void PrepareData()
         {
             if (_filter == null)
@@ -123,17 +128,23 @@ namespace DXApplication1
         {
             //todo Show Message if bRes == False that can't read old data
             var bRes = true;
-            var writer = File.Create(SettingsPath + SettingsFile);
+            try
+            {
+                var writer = File.Create(SettingsPath + SettingsFile);
 
-            //todo looks like this method is deficiency
-            //MergeDataSet();
+                new XmlSerializer(typeof(Filter)).Serialize(
+                   writer, _filter);
 
-            new XmlSerializer(typeof(Filter)).Serialize(
-               writer, _filter);
+                writer.Close();
+            }
+            catch
+            {
+                bRes = false;
+            }
 
-            writer.Close();
             return bRes;
         }
-        #endregion
+
+        #endregion Functions
     }
 }

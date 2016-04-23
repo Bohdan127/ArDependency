@@ -121,66 +121,58 @@ namespace DXApplication1.Pages
             this.dataLayoutControl1.Location = new System.Drawing.Point(0, 0);
             this.dataLayoutControl1.Name = "dataLayoutControl1";
             this.dataLayoutControl1.Root = this.layoutControlGroup1;
-            this.dataLayoutControl1.Size = new System.Drawing.Size(932, 403);
+            this.dataLayoutControl1.Size = new System.Drawing.Size(600, 394);
             this.dataLayoutControl1.TabIndex = 0;
             this.dataLayoutControl1.Text = "dataLayoutControl1";
             // 
             // fasterDateTimePicker
             // 
-            // 
-            // dateEdit1
-            // 
             this.fasterDateTimePicker.EditValue = null;
-            this.fasterDateTimePicker.Location = new System.Drawing.Point(761, 160);
+            this.fasterDateTimePicker.Location = new System.Drawing.Point(404, 42);
             this.fasterDateTimePicker.Name = "fasterDateTimePicker";
             this.fasterDateTimePicker.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.fasterDateTimePicker.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.fasterDateTimePicker.Size = new System.Drawing.Size(147, 20);
+            this.fasterDateTimePicker.Size = new System.Drawing.Size(172, 20);
             this.fasterDateTimePicker.StyleController = this.dataLayoutControl1;
             this.fasterDateTimePicker.TabIndex = 7;
-            this.fasterDateTimePicker.EditValueChanging += new DevExpress.XtraEditors.Controls.ChangingEventHandler(this.Faster_Changing);
             // 
             // maxTextEdit
             // 
             this.maxTextEdit.Location = new System.Drawing.Point(141, 66);
             this.maxTextEdit.Name = "maxTextEdit";
-            this.maxTextEdit.Size = new System.Drawing.Size(224, 20);
+            this.maxTextEdit.Size = new System.Drawing.Size(118, 20);
             this.maxTextEdit.StyleController = this.dataLayoutControl1;
             this.maxTextEdit.TabIndex = 5;
-            this.maxTextEdit.EditValueChanging += new DevExpress.XtraEditors.Controls.ChangingEventHandler(this.Max_Changing);
             // 
             // minTextEdit
             // 
             this.minTextEdit.Location = new System.Drawing.Point(141, 42);
             this.minTextEdit.Name = "minTextEdit";
-            this.minTextEdit.Size = new System.Drawing.Size(224, 20);
+            this.minTextEdit.Size = new System.Drawing.Size(118, 20);
             this.minTextEdit.StyleController = this.dataLayoutControl1;
             this.minTextEdit.TabIndex = 4;
-            this.minTextEdit.EditValueChanging += new DevExpress.XtraEditors.Controls.ChangingEventHandler(this.Min_Changing);
             // 
             // outCome2ToggleSwitch
             // 
-            this.outCome2ToggleSwitch.Location = new System.Drawing.Point(510, 132);
+            this.outCome2ToggleSwitch.Location = new System.Drawing.Point(404, 132);
             this.outCome2ToggleSwitch.Name = "outCome2ToggleSwitch";
             this.outCome2ToggleSwitch.Properties.OffText = "Off";
             this.outCome2ToggleSwitch.Properties.OnText = "On";
-            this.outCome2ToggleSwitch.Size = new System.Drawing.Size(398, 24);
+            this.outCome2ToggleSwitch.Size = new System.Drawing.Size(172, 24);
             this.outCome2ToggleSwitch.StyleController = this.dataLayoutControl1;
             this.outCome2ToggleSwitch.TabIndex = 6;
-            this.outCome2ToggleSwitch.Toggled += new System.EventHandler(this.OutCome2_Toggled);
             // 
             // outcome3ToggleSwitch
             // 
-            this.outcome3ToggleSwitch.Location = new System.Drawing.Point(510, 160);
+            this.outcome3ToggleSwitch.Location = new System.Drawing.Point(404, 160);
             this.outcome3ToggleSwitch.Name = "outcome3ToggleSwitch";
             this.outcome3ToggleSwitch.Properties.OffText = "Off";
             this.outcome3ToggleSwitch.Properties.OnText = "On";
-            this.outcome3ToggleSwitch.Size = new System.Drawing.Size(138, 24);
+            this.outcome3ToggleSwitch.Size = new System.Drawing.Size(172, 24);
             this.outcome3ToggleSwitch.StyleController = this.dataLayoutControl1;
             this.outcome3ToggleSwitch.TabIndex = 6;
-            this.outcome3ToggleSwitch.Toggled += new System.EventHandler(this.OutCome3_Toggled);
             // 
             // pinnacleSportsToggleSwitch
             // 
@@ -188,10 +180,9 @@ namespace DXApplication1.Pages
             this.pinnacleSportsToggleSwitch.Name = "pinnacleSportsToggleSwitch";
             this.pinnacleSportsToggleSwitch.Properties.OffText = "Off";
             this.pinnacleSportsToggleSwitch.Properties.OnText = "On";
-            this.pinnacleSportsToggleSwitch.Size = new System.Drawing.Size(224, 24);
+            this.pinnacleSportsToggleSwitch.Size = new System.Drawing.Size(118, 24);
             this.pinnacleSportsToggleSwitch.StyleController = this.dataLayoutControl1;
             this.pinnacleSportsToggleSwitch.TabIndex = 6;
-            this.pinnacleSportsToggleSwitch.Toggled += new System.EventHandler(this.PinnacleSports_Toggled);
             // 
             // marathonBetToggleSwitch
             // 
@@ -199,10 +190,9 @@ namespace DXApplication1.Pages
             this.marathonBetToggleSwitch.Name = "marathonBetToggleSwitch";
             this.marathonBetToggleSwitch.Properties.OffText = "Off";
             this.marathonBetToggleSwitch.Properties.OnText = "On";
-            this.marathonBetToggleSwitch.Size = new System.Drawing.Size(224, 24);
+            this.marathonBetToggleSwitch.Size = new System.Drawing.Size(118, 24);
             this.marathonBetToggleSwitch.StyleController = this.dataLayoutControl1;
             this.marathonBetToggleSwitch.TabIndex = 6;
-            this.marathonBetToggleSwitch.Toggled += new System.EventHandler(this.MarathonBet_Toggled);
             // 
             // basketballToggleSwitch
             // 
@@ -210,10 +200,9 @@ namespace DXApplication1.Pages
             this.basketballToggleSwitch.Name = "basketballToggleSwitch";
             this.basketballToggleSwitch.Properties.OffText = "Off";
             this.basketballToggleSwitch.Properties.OnText = "On";
-            this.basketballToggleSwitch.Size = new System.Drawing.Size(224, 24);
+            this.basketballToggleSwitch.Size = new System.Drawing.Size(118, 24);
             this.basketballToggleSwitch.StyleController = this.dataLayoutControl1;
             this.basketballToggleSwitch.TabIndex = 6;
-            this.basketballToggleSwitch.Toggled += new System.EventHandler(this.Basketball_Toggled);
             // 
             // footballToggleSwitch
             // 
@@ -221,24 +210,22 @@ namespace DXApplication1.Pages
             this.footballToggleSwitch.Name = "footballToggleSwitch";
             this.footballToggleSwitch.Properties.OffText = "Off";
             this.footballToggleSwitch.Properties.OnText = "On";
-            this.footballToggleSwitch.Size = new System.Drawing.Size(224, 24);
+            this.footballToggleSwitch.Size = new System.Drawing.Size(118, 24);
             this.footballToggleSwitch.StyleController = this.dataLayoutControl1;
             this.footballToggleSwitch.TabIndex = 6;
-            this.footballToggleSwitch.Toggled += new System.EventHandler(this.Football_Toggled);
             // 
             // longerDateTimePicker
             // 
             this.longerDateTimePicker.EditValue = null;
-            this.longerDateTimePicker.Location = new System.Drawing.Point(761, 160);
+            this.longerDateTimePicker.Location = new System.Drawing.Point(404, 66);
             this.longerDateTimePicker.Name = "longerDateTimePicker";
             this.longerDateTimePicker.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.longerDateTimePicker.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.longerDateTimePicker.Size = new System.Drawing.Size(147, 20);
+            this.longerDateTimePicker.Size = new System.Drawing.Size(172, 20);
             this.longerDateTimePicker.StyleController = this.dataLayoutControl1;
             this.longerDateTimePicker.TabIndex = 7;
-            this.longerDateTimePicker.EditValueChanging += new DevExpress.XtraEditors.Controls.ChangingEventHandler(this.Later_Changing);
             // 
             // volleyballToggleSwitch
             // 
@@ -246,10 +233,9 @@ namespace DXApplication1.Pages
             this.volleyballToggleSwitch.Name = "volleyballToggleSwitch";
             this.volleyballToggleSwitch.Properties.OffText = "Off";
             this.volleyballToggleSwitch.Properties.OnText = "On";
-            this.volleyballToggleSwitch.Size = new System.Drawing.Size(224, 24);
+            this.volleyballToggleSwitch.Size = new System.Drawing.Size(118, 24);
             this.volleyballToggleSwitch.StyleController = this.dataLayoutControl1;
             this.volleyballToggleSwitch.TabIndex = 6;
-            this.volleyballToggleSwitch.Toggled += new System.EventHandler(this.Volleyball_Toggled);
             // 
             // tennisToggleSwitch
             // 
@@ -257,10 +243,9 @@ namespace DXApplication1.Pages
             this.tennisToggleSwitch.Name = "tennisToggleSwitch";
             this.tennisToggleSwitch.Properties.OffText = "Off";
             this.tennisToggleSwitch.Properties.OnText = "On";
-            this.tennisToggleSwitch.Size = new System.Drawing.Size(224, 24);
+            this.tennisToggleSwitch.Size = new System.Drawing.Size(118, 24);
             this.tennisToggleSwitch.StyleController = this.dataLayoutControl1;
             this.tennisToggleSwitch.TabIndex = 6;
-            this.tennisToggleSwitch.Toggled += new System.EventHandler(this.Tennis_Toggled);
             // 
             // hockeyToggleSwitch
             // 
@@ -268,10 +253,9 @@ namespace DXApplication1.Pages
             this.hockeyToggleSwitch.Name = "hockeyToggleSwitch";
             this.hockeyToggleSwitch.Properties.OffText = "Off";
             this.hockeyToggleSwitch.Properties.OnText = "On";
-            this.hockeyToggleSwitch.Size = new System.Drawing.Size(224, 24);
+            this.hockeyToggleSwitch.Size = new System.Drawing.Size(118, 24);
             this.hockeyToggleSwitch.StyleController = this.dataLayoutControl1;
             this.hockeyToggleSwitch.TabIndex = 6;
-            this.hockeyToggleSwitch.Toggled += new System.EventHandler(this.Hockey_Toggled);
             // 
             // layoutControlGroup1
             // 
@@ -285,7 +269,7 @@ namespace DXApplication1.Pages
             this.layoutControlGroupGameTime});
             this.layoutControlGroup1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup1.Name = "Root";
-            this.layoutControlGroup1.Size = new System.Drawing.Size(932, 403);
+            this.layoutControlGroup1.Size = new System.Drawing.Size(600, 394);
             this.layoutControlGroup1.TextVisible = false;
             // 
             // layoutControlGroupIncome
@@ -295,7 +279,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemMax});
             this.layoutControlGroupIncome.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroupIncome.Name = "layoutControlGroupIncome";
-            this.layoutControlGroupIncome.Size = new System.Drawing.Size(369, 90);
+            this.layoutControlGroupIncome.Size = new System.Drawing.Size(263, 90);
             this.layoutControlGroupIncome.Text = "Доход";
             // 
             // layoutControlItemMin
@@ -304,7 +288,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemMin.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemMin.Name = "layoutControlItemMin";
             this.layoutControlItemMin.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
-            this.layoutControlItemMin.Size = new System.Drawing.Size(345, 24);
+            this.layoutControlItemMin.Size = new System.Drawing.Size(239, 24);
             this.layoutControlItemMin.Text = "Мин";
             this.layoutControlItemMin.TextSize = new System.Drawing.Size(106, 13);
             // 
@@ -314,7 +298,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemMax.Location = new System.Drawing.Point(0, 24);
             this.layoutControlItemMax.Name = "layoutControlItemMax";
             this.layoutControlItemMax.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
-            this.layoutControlItemMax.Size = new System.Drawing.Size(345, 24);
+            this.layoutControlItemMax.Size = new System.Drawing.Size(239, 24);
             this.layoutControlItemMax.Text = "Макс";
             this.layoutControlItemMax.TextSize = new System.Drawing.Size(106, 13);
             // 
@@ -326,7 +310,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemMarathonBet});
             this.layoutControlGroupBookMakers.Location = new System.Drawing.Point(0, 90);
             this.layoutControlGroupBookMakers.Name = "layoutControlGroupBookMakers";
-            this.layoutControlGroupBookMakers.Size = new System.Drawing.Size(369, 98);
+            this.layoutControlGroupBookMakers.Size = new System.Drawing.Size(263, 98);
             this.layoutControlGroupBookMakers.Text = "Букмекер?";
             // 
             // layoutControlItemPinnacleSports
@@ -336,7 +320,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemPinnacleSports.Location = new System.Drawing.Point(0, 28);
             this.layoutControlItemPinnacleSports.Name = "layoutControlItemPinnacleSports";
             this.layoutControlItemPinnacleSports.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
-            this.layoutControlItemPinnacleSports.Size = new System.Drawing.Size(345, 28);
+            this.layoutControlItemPinnacleSports.Size = new System.Drawing.Size(239, 28);
             this.layoutControlItemPinnacleSports.Text = "PinnacleSports";
             this.layoutControlItemPinnacleSports.TextSize = new System.Drawing.Size(106, 13);
             // 
@@ -347,7 +331,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemMarathonBet.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemMarathonBet.Name = "layoutControlItemMarathonBet";
             this.layoutControlItemMarathonBet.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
-            this.layoutControlItemMarathonBet.Size = new System.Drawing.Size(345, 28);
+            this.layoutControlItemMarathonBet.Size = new System.Drawing.Size(239, 28);
             this.layoutControlItemMarathonBet.Text = "MarathonBet";
             this.layoutControlItemMarathonBet.TextSize = new System.Drawing.Size(106, 13);
             // 
@@ -362,7 +346,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemSport5});
             this.layoutControlGroupSport.Location = new System.Drawing.Point(0, 188);
             this.layoutControlGroupSport.Name = "layoutControlGroupSport";
-            this.layoutControlGroupSport.Size = new System.Drawing.Size(369, 195);
+            this.layoutControlGroupSport.Size = new System.Drawing.Size(263, 186);
             this.layoutControlGroupSport.Text = "Спорт";
             // 
             // layoutControlItemSport2
@@ -372,7 +356,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemSport2.Location = new System.Drawing.Point(0, 28);
             this.layoutControlItemSport2.Name = "layoutControlItemSport2";
             this.layoutControlItemSport2.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
-            this.layoutControlItemSport2.Size = new System.Drawing.Size(345, 28);
+            this.layoutControlItemSport2.Size = new System.Drawing.Size(239, 28);
             this.layoutControlItemSport2.Text = "Баскетбол";
             this.layoutControlItemSport2.TextSize = new System.Drawing.Size(106, 13);
             // 
@@ -383,7 +367,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemSport1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemSport1.Name = "layoutControlItemSport1";
             this.layoutControlItemSport1.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
-            this.layoutControlItemSport1.Size = new System.Drawing.Size(345, 28);
+            this.layoutControlItemSport1.Size = new System.Drawing.Size(239, 28);
             this.layoutControlItemSport1.Text = "Футбол";
             this.layoutControlItemSport1.TextSize = new System.Drawing.Size(106, 13);
             // 
@@ -394,7 +378,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemSport3.Location = new System.Drawing.Point(0, 56);
             this.layoutControlItemSport3.Name = "layoutControlItemSport3";
             this.layoutControlItemSport3.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
-            this.layoutControlItemSport3.Size = new System.Drawing.Size(345, 28);
+            this.layoutControlItemSport3.Size = new System.Drawing.Size(239, 28);
             this.layoutControlItemSport3.Text = "Волейбол";
             this.layoutControlItemSport3.TextSize = new System.Drawing.Size(106, 13);
             // 
@@ -405,7 +389,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemSport4.Location = new System.Drawing.Point(0, 84);
             this.layoutControlItemSport4.Name = "layoutControlItemSport4";
             this.layoutControlItemSport4.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
-            this.layoutControlItemSport4.Size = new System.Drawing.Size(345, 28);
+            this.layoutControlItemSport4.Size = new System.Drawing.Size(239, 28);
             this.layoutControlItemSport4.Text = "Хоккей";
             this.layoutControlItemSport4.TextSize = new System.Drawing.Size(106, 13);
             // 
@@ -416,7 +400,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemSport5.Location = new System.Drawing.Point(0, 112);
             this.layoutControlItemSport5.Name = "layoutControlItemSport5";
             this.layoutControlItemSport5.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
-            this.layoutControlItemSport5.Size = new System.Drawing.Size(345, 41);
+            this.layoutControlItemSport5.Size = new System.Drawing.Size(239, 32);
             this.layoutControlItemSport5.Text = "Теннис";
             this.layoutControlItemSport5.TextSize = new System.Drawing.Size(106, 13);
             // 
@@ -425,9 +409,9 @@ namespace DXApplication1.Pages
             this.layoutControlGroupOutCome.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlItemOutCome3,
             this.layoutControlItemOutCome2});
-            this.layoutControlGroupOutCome.Location = new System.Drawing.Point(369, 90);
+            this.layoutControlGroupOutCome.Location = new System.Drawing.Point(263, 90);
             this.layoutControlGroupOutCome.Name = "layoutControlGroupOutCome";
-            this.layoutControlGroupOutCome.Size = new System.Drawing.Size(543, 293);
+            this.layoutControlGroupOutCome.Size = new System.Drawing.Size(317, 284);
             this.layoutControlGroupOutCome.Text = "Исход";
             // 
             // layoutControlItemOutCome3
@@ -437,7 +421,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemOutCome3.Location = new System.Drawing.Point(0, 28);
             this.layoutControlItemOutCome3.Name = "layoutControlItemOutCome3";
             this.layoutControlItemOutCome3.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
-            this.layoutControlItemOutCome3.Size = new System.Drawing.Size(259, 223);
+            this.layoutControlItemOutCome3.Size = new System.Drawing.Size(293, 214);
             this.layoutControlItemOutCome3.Text = "Исход 3";
             this.layoutControlItemOutCome3.TextSize = new System.Drawing.Size(106, 13);
             // 
@@ -448,7 +432,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemOutCome2.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemOutCome2.Name = "layoutControlItemOutCome2";
             this.layoutControlItemOutCome2.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
-            this.layoutControlItemOutCome2.Size = new System.Drawing.Size(519, 28);
+            this.layoutControlItemOutCome2.Size = new System.Drawing.Size(293, 28);
             this.layoutControlItemOutCome2.Text = "Исход 2";
             this.layoutControlItemOutCome2.TextSize = new System.Drawing.Size(106, 13);
             // 
@@ -457,9 +441,9 @@ namespace DXApplication1.Pages
             this.layoutControlGroupGameTime.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlItemNotFaster,
             this.layoutControlItemNoLater});
-            this.layoutControlGroupGameTime.Location = new System.Drawing.Point(369, 0);
+            this.layoutControlGroupGameTime.Location = new System.Drawing.Point(263, 0);
             this.layoutControlGroupGameTime.Name = "layoutControlGroupGameTime";
-            this.layoutControlGroupGameTime.Size = new System.Drawing.Size(543, 90);
+            this.layoutControlGroupGameTime.Size = new System.Drawing.Size(317, 90);
             this.layoutControlGroupGameTime.Text = "Время игры";
             // 
             // layoutControlItemNotFaster
@@ -468,7 +452,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemNotFaster.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemNotFaster.Name = "layoutControlItemNotFaster";
             this.layoutControlItemNotFaster.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
-            this.layoutControlItemNotFaster.Size = new System.Drawing.Size(519, 24);
+            this.layoutControlItemNotFaster.Size = new System.Drawing.Size(293, 24);
             this.layoutControlItemNotFaster.Text = "Игра не быстрее чем";
             this.layoutControlItemNotFaster.TextSize = new System.Drawing.Size(106, 13);
             // 
@@ -479,7 +463,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemNoLater.Location = new System.Drawing.Point(0, 24);
             this.layoutControlItemNoLater.Name = "layoutControlItemNoLater";
             this.layoutControlItemNoLater.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
-            this.layoutControlItemNoLater.Size = new System.Drawing.Size(519, 24);
+            this.layoutControlItemNoLater.Size = new System.Drawing.Size(293, 24);
             this.layoutControlItemNoLater.Text = "Игра не позже";
             this.layoutControlItemNoLater.TextSize = new System.Drawing.Size(106, 13);
             // 
@@ -487,7 +471,7 @@ namespace DXApplication1.Pages
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(932, 403);
+            this.ClientSize = new System.Drawing.Size(600, 394);
             this.Controls.Add(this.dataLayoutControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FilterPage";

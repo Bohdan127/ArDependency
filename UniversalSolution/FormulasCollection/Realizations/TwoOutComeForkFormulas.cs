@@ -1,6 +1,7 @@
 ﻿using DataParser.MY;
 using FormulasCollection.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Tools;
 
@@ -13,8 +14,8 @@ namespace FormulasCollection.Realizations
         public List<Fork> GetAllForks(List<ResultForForks> events)
         {
             var resList = new List<Fork>(); //todo remake later to linq!!!!
-            foreach (var eventFirst in events)
-                foreach (var eventSecond in events)
+            foreach (var eventFirst in events.Take(events.Count / 2))
+                foreach (var eventSecond in events.Skip(events.Count / 2).Take(events.Count / 2))
                 {
                     if (eventFirst != eventSecond &&
                         CheckIsFork(eventFirst.Coef.ConvertToDouble(), eventSecond.Coef.ConvertToDouble()))
@@ -34,7 +35,7 @@ namespace FormulasCollection.Realizations
 
         public async Task<List<Fork>> GetAllForksAsync(List<ResultForForks> events)
         {
-            return GetAllForks(events);
+            return await Task.Run(() => GetAllForks(events)).ConfigureAwait(false);
         }
     }
 }

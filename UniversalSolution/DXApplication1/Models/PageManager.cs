@@ -1,9 +1,8 @@
-﻿using DataParser.MY;
-using DXApplication1.Pages;
+﻿using DXApplication1.Pages;
 using FormulasCollection.Interfaces;
 using FormulasCollection.Realizations;
 using System;
-using System.Diagnostics.Contracts;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DXApplication1.Models
@@ -15,20 +14,21 @@ namespace DXApplication1.Models
         private FilterPage _filterPage;
         private AccountingPage _accountingPage;
         private CalculatorPage _calculatorPage;
-        private IForkFormulas _forkFormulas;
         private Form _defaultMdiParent;
+        private OpenCalculatorForm _openCalculatorForm;
+        public DataManager DataManager { get; set; }
 
-        #endregion
+        #endregion Members
 
         #region CTOR
 
         public PageManager(Form mdiParent, IForkFormulas forkFormulas)
         {
             _defaultMdiParent = mdiParent;
-            _forkFormulas = forkFormulas;
+            DataManager = new DataManager(forkFormulas);
         }
 
-        #endregion
+        #endregion CTOR
 
         #region Functions
 
@@ -39,9 +39,28 @@ namespace DXApplication1.Models
             _filterPage = null;
         }
 
+        /// <summary>
+        /// This Control always reloaded in each call.
+        /// </summary>
+        /// <param name="useMdiParent"></param>
+        /// <param name="mdiParent"></param>
+        /// <param name="loadData"></param>
+        /// <returns></returns>
+        public async Task<OpenCalculatorForm> CreateCalculatorForm(bool useMdiParent = false, Form mdiParent = null, bool loadData = true)
+        {
+            if (loadData) _openCalculatorForm = new OpenCalculatorForm(await DataManager.
+                 GetForksForAllSportsAsync(_filterPage?.Filter).ConfigureAwait(true));
+            else
+                _openCalculatorForm = new OpenCalculatorForm();
+
+            _openCalculatorForm.MdiParent = useMdiParent ? mdiParent ?? _defaultMdiParent : null;
+
+            return _openCalculatorForm;
+        }
+
         public FilterPage GetFilterPage(Filter _filter, Form mdiParent = null, bool reload = false)
         {
-            Contract.Requires(_filter != null);
+            if (_filter == null) _filter = new Filter();
 
             if (_filterPage == null)
             {
@@ -75,16 +94,13 @@ namespace DXApplication1.Models
             }
             return _accountingPage;
         }
-        #endregion
+
+        #endregion Functions
 
         #region Events
+
         private void AccountPage_CalculatorCall(object sender, EventArgs eventArgs)
         {
-            Contract.Requires(sender != null);
-
-            //  if(sender == null)
-            //      return;
-
             if (sender is Fork)
             {
                 GetCalculatorPage(reload: true).Fork = (Fork)sender;
@@ -94,29 +110,11 @@ namespace DXApplication1.Models
 
         private async void AccountPage_Update(object sender, EventArgs e)
         {
-            ParsePinnacle.SportType type;
-
-            if (_filterPage == null) return;
-
-            Filter filter = _filterPage.Filter;
-
-            if (filter.Basketball)
-                type = ParsePinnacle.SportType.Basketball;
-            else if (filter.Football)
-                type = ParsePinnacle.SportType.Football;
-            else if (filter.Hockey)
-                type = ParsePinnacle.SportType.Hockey;
-            else if (filter.Tennis)
-                type = ParsePinnacle.SportType.Tennis;
-            else if (filter.Volleyball)
-                type = ParsePinnacle.SportType.Volleyball;
-
-            else
-                return;
-
-            _accountingPage.MainGridControl.DataSource = await _forkFormulas.GetAllForksAsync(await new ParsePinnacle().GetNameTeamsAndDateAsync(type).ConfigureAwait(true)).ConfigureAwait(true);
+            _accountingPage.MainGridControl.DataSource = await DataManager.
+                GetForksForAllSportsAsync(_filterPage?.Filter).ConfigureAwait(true);
             _accountingPage.Refresh();
         }
-        #endregion
+
+        #endregion Events
     }
 }

@@ -64,7 +64,7 @@ namespace DataParser.MY
    //data-selection-price=
    public async Task<List<Teams>> GetNameTeamsAndDateAsync(string url = link)
    {
-       await GetHtmlDocumentAsync(url).ConfigureAwait(true);
+       await GetHtmlDocumentAsync(url).ConfigureAwait(false);
        List<Teams> teams = new List<Teams>();
 
        List<string> koff = new List<string>();
@@ -289,10 +289,10 @@ namespace DataParser.MY
         public static async Task GetHtmlDocumentAsync(string url, string namefile)
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
-            HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(true);
+            HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
             StreamReader reader = new StreamReader(response.GetResponseStream());
             List<string> result = new List<string>();
-            string HTML = await reader.ReadToEndAsync().ConfigureAwait(true);
+            string HTML = await reader.ReadToEndAsync().ConfigureAwait(false);
             reader.Close();
             StreamWriter sw = new StreamWriter(namefile);
             sw.WriteLine(HTML);
@@ -338,7 +338,7 @@ namespace DataParser.MY
                     break;
             }
             #endregion
-            await GetHtmlDocumentAsync(url, namefile).ConfigureAwait(true);
+            await GetHtmlDocumentAsync(url, namefile).ConfigureAwait(false);
             List<Teams> teams = new List<Teams>();
 
             List<string> koff = new List<string>();

@@ -31,19 +31,24 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OpenCalculatorForm));
             this.buttonFind = new DevExpress.XtraEditors.SimpleButton();
             this.buttonClear = new DevExpress.XtraEditors.SimpleButton();
-            this.textEdit1 = new DevExpress.XtraEditors.TextEdit();
-            this.textEdit2 = new DevExpress.XtraEditors.TextEdit();
-            this.textEdit3 = new DevExpress.XtraEditors.TextEdit();
+            this.textEditEvent = new DevExpress.XtraEditors.TextEdit();
+            this.textEditTypeSecond = new DevExpress.XtraEditors.TextEdit();
+            this.textEditTypeFirst = new DevExpress.XtraEditors.TextEdit();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.colEvent = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colType1 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colCoef1 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colType2 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colCoef2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.buttonCancel = new DevExpress.XtraEditors.SimpleButton();
             this.buttonOpen = new DevExpress.XtraEditors.SimpleButton();
-            ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEdit2.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEdit3.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditEvent.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditTypeSecond.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditTypeFirst.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             this.SuspendLayout();
@@ -54,7 +59,7 @@
             this.buttonFind.Name = "buttonFind";
             this.buttonFind.Size = new System.Drawing.Size(75, 23);
             this.buttonFind.TabIndex = 0;
-            this.buttonFind.Text = "Find";
+            this.buttonFind.Text = "Найти";
             this.buttonFind.Click += new System.EventHandler(this.buttonFind_Click);
             // 
             // buttonClear
@@ -63,29 +68,29 @@
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(75, 23);
             this.buttonClear.TabIndex = 1;
-            this.buttonClear.Text = "CLear";
+            this.buttonClear.Text = "Очистить";
             this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
             // 
-            // textEdit1
+            // textEditEvent
             // 
-            this.textEdit1.Location = new System.Drawing.Point(124, 22);
-            this.textEdit1.Name = "textEdit1";
-            this.textEdit1.Size = new System.Drawing.Size(331, 20);
-            this.textEdit1.TabIndex = 2;
+            this.textEditEvent.Location = new System.Drawing.Point(124, 22);
+            this.textEditEvent.Name = "textEditEvent";
+            this.textEditEvent.Size = new System.Drawing.Size(331, 20);
+            this.textEditEvent.TabIndex = 2;
             // 
-            // textEdit2
+            // textEditTypeSecond
             // 
-            this.textEdit2.Location = new System.Drawing.Point(124, 72);
-            this.textEdit2.Name = "textEdit2";
-            this.textEdit2.Size = new System.Drawing.Size(331, 20);
-            this.textEdit2.TabIndex = 3;
+            this.textEditTypeSecond.Location = new System.Drawing.Point(124, 72);
+            this.textEditTypeSecond.Name = "textEditTypeSecond";
+            this.textEditTypeSecond.Size = new System.Drawing.Size(331, 20);
+            this.textEditTypeSecond.TabIndex = 3;
             // 
-            // textEdit3
+            // textEditTypeFirst
             // 
-            this.textEdit3.Location = new System.Drawing.Point(124, 46);
-            this.textEdit3.Name = "textEdit3";
-            this.textEdit3.Size = new System.Drawing.Size(331, 20);
-            this.textEdit3.TabIndex = 4;
+            this.textEditTypeFirst.Location = new System.Drawing.Point(124, 46);
+            this.textEditTypeFirst.Name = "textEditTypeFirst";
+            this.textEditTypeFirst.Size = new System.Drawing.Size(331, 20);
+            this.textEditTypeFirst.TabIndex = 4;
             // 
             // gridControl1
             // 
@@ -99,18 +104,70 @@
             // 
             // gridView1
             // 
+            this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.colEvent,
+            this.colType1,
+            this.colCoef1,
+            this.colType2,
+            this.colCoef2});
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
+            this.gridView1.OptionsView.ShowGroupPanel = false;
             this.gridView1.FocusedRowChanged += new DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventHandler(this.gridView1_FocusedRowChanged);
+            // 
+            // colEvent
+            // 
+            this.colEvent.Caption = "Событие";
+            this.colEvent.FieldName = "Event";
+            this.colEvent.Name = "colEvent";
+            this.colEvent.OptionsColumn.ReadOnly = true;
+            this.colEvent.Visible = true;
+            this.colEvent.VisibleIndex = 0;
+            // 
+            // colType1
+            // 
+            this.colType1.Caption = "Тип 1";
+            this.colType1.FieldName = "TypeFirst";
+            this.colType1.Name = "colType1";
+            this.colType1.OptionsColumn.ReadOnly = true;
+            this.colType1.Visible = true;
+            this.colType1.VisibleIndex = 1;
+            // 
+            // colCoef1
+            // 
+            this.colCoef1.Caption = "Коэффициент 1";
+            this.colCoef1.FieldName = "CoefFirst";
+            this.colCoef1.Name = "colCoef1";
+            this.colCoef1.OptionsColumn.ReadOnly = true;
+            this.colCoef1.Visible = true;
+            this.colCoef1.VisibleIndex = 2;
+            // 
+            // colType2
+            // 
+            this.colType2.Caption = "Тип 2";
+            this.colType2.FieldName = "TypeSecond";
+            this.colType2.Name = "colType2";
+            this.colType2.OptionsColumn.ReadOnly = true;
+            this.colType2.Visible = true;
+            this.colType2.VisibleIndex = 3;
+            // 
+            // colCoef2
+            // 
+            this.colCoef2.Caption = "Коэффициент 2";
+            this.colCoef2.FieldName = "CoefSecond";
+            this.colCoef2.Name = "colCoef2";
+            this.colCoef2.OptionsColumn.ReadOnly = true;
+            this.colCoef2.Visible = true;
+            this.colCoef2.VisibleIndex = 4;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(83, 25);
+            this.label1.Location = new System.Drawing.Point(67, 25);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.Size = new System.Drawing.Size(51, 13);
             this.label1.TabIndex = 7;
-            this.label1.Text = "label1";
+            this.label1.Text = "Событие";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label2
@@ -120,7 +177,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(35, 13);
             this.label2.TabIndex = 8;
-            this.label2.Text = "label2";
+            this.label2.Text = "Тип 1";
             this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label3
@@ -130,7 +187,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(35, 13);
             this.label3.TabIndex = 9;
-            this.label3.Text = "label3";
+            this.label3.Text = "Тип 2";
             this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // buttonCancel
@@ -139,7 +196,7 @@
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 10;
-            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.Text = "Отменить";
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // buttonOpen
@@ -148,7 +205,7 @@
             this.buttonOpen.Name = "buttonOpen";
             this.buttonOpen.Size = new System.Drawing.Size(75, 23);
             this.buttonOpen.TabIndex = 11;
-            this.buttonOpen.Text = "Open";
+            this.buttonOpen.Text = "Открыть";
             this.buttonOpen.Click += new System.EventHandler(this.buttonOpen_Click);
             // 
             // OpenCalculatorForm
@@ -162,9 +219,9 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.gridControl1);
-            this.Controls.Add(this.textEdit3);
-            this.Controls.Add(this.textEdit2);
-            this.Controls.Add(this.textEdit1);
+            this.Controls.Add(this.textEditTypeFirst);
+            this.Controls.Add(this.textEditTypeSecond);
+            this.Controls.Add(this.textEditEvent);
             this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.buttonFind);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -172,9 +229,9 @@
             this.MinimizeBox = false;
             this.Name = "OpenCalculatorForm";
             this.Text = "OpenCalculatorForm";
-            ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEdit2.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEdit3.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditEvent.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditTypeSecond.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditTypeFirst.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             this.ResumeLayout(false);
@@ -186,9 +243,9 @@
 
         private DevExpress.XtraEditors.SimpleButton buttonFind;
         private DevExpress.XtraEditors.SimpleButton buttonClear;
-        private DevExpress.XtraEditors.TextEdit textEdit1;
-        private DevExpress.XtraEditors.TextEdit textEdit2;
-        private DevExpress.XtraEditors.TextEdit textEdit3;
+        private DevExpress.XtraEditors.TextEdit textEditEvent;
+        private DevExpress.XtraEditors.TextEdit textEditTypeSecond;
+        private DevExpress.XtraEditors.TextEdit textEditTypeFirst;
         private DevExpress.XtraGrid.GridControl gridControl1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private System.Windows.Forms.Label label1;
@@ -196,5 +253,10 @@
         private System.Windows.Forms.Label label3;
         private DevExpress.XtraEditors.SimpleButton buttonCancel;
         private DevExpress.XtraEditors.SimpleButton buttonOpen;
+        private DevExpress.XtraGrid.Columns.GridColumn colEvent;
+        private DevExpress.XtraGrid.Columns.GridColumn colCoef1;
+        private DevExpress.XtraGrid.Columns.GridColumn colType1;
+        private DevExpress.XtraGrid.Columns.GridColumn colType2;
+        private DevExpress.XtraGrid.Columns.GridColumn colCoef2;
     }
 }

@@ -32,9 +32,11 @@ namespace DXApplication1
             Closing += XtraForm1_Closing;
 
             _pageManager = new PageManager(this, forkFormulas);
-
             DeserializeAll();
             PrepareData();
+
+            //todo this is bad and illogic crutch
+            _pageManager.GetFilterPage(_filter);//default preload filter page
         }
 
         #endregion CTOR
@@ -43,8 +45,6 @@ namespace DXApplication1
 
         private async void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-
-
             if (!_pageManager.GetCalculatorPage().IsOpen)
             {
                 var openForm = await _pageManager.CreateCalculatorForm().ConfigureAwait(true);

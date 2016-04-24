@@ -1,7 +1,9 @@
 ﻿using FormulasCollection.Realizations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+using Tools;
 
 namespace DXApplication1.Pages
 {
@@ -13,7 +15,6 @@ namespace DXApplication1.Pages
         public OpenCalculatorForm()
         {
             InitializeComponent();
-
             dataSource = new List<Fork>();
         }
 
@@ -23,7 +24,7 @@ namespace DXApplication1.Pages
             dataSource.AddRange(dataList);
             gridControl1.DataSource = dataList;
 
-            if (gridView1.RowCount < 0)
+            if (gridView1.RowCount == 0)
                 buttonOpen.Enabled = false;
             else
             {
@@ -34,14 +35,41 @@ namespace DXApplication1.Pages
 
         private void buttonFind_Click(object sender, EventArgs e)
         {
-            //todo make search here
+            if (textEditEvent.Text.IsNotBlank() ||
+                textEditTypeFirst.Text.IsNotBlank() ||
+                textEditTypeSecond.Text.IsNotBlank())
+            {
+                gridControl1.DataSource = MakeSearch(
+                    textEditEvent.Text,
+                    textEditTypeFirst.Text,
+                    textEditTypeSecond.Text);
+                gridControl1.Refresh();
+            }
+        }
+
+        private List<Fork> MakeSearch(string eventCriteria, string typeFirstCriteria, string typeSecondCriteria)
+        {
+            var resList = new List<Fork>();
+            resList.AddRange(dataSource);
+
+            if (eventCriteria.IsNotBlank())
+                resList = resList.Where(f => f.Event.Contains(eventCriteria)).ToList();
+            if (typeFirstCriteria.IsNotBlank())
+                resList = resList.Where(f => f.TypeFirst.Contains(typeFirstCriteria)).ToList();
+            if (typeSecondCriteria.IsNotBlank())
+                resList = resList.Where(f => f.TypeSecond.Contains(typeSecondCriteria)).ToList();
+
+            return resList;
+
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
         {
-            textEdit1.Text = string.Empty;
-            textEdit2.Text = string.Empty;
-            textEdit3.Text = string.Empty;
+            textEditEvent.Text = string.Empty;
+            textEditTypeSecond.Text = string.Empty;
+            textEditTypeFirst.Text = string.Empty;
+            gridControl1.DataSource = dataSource;
+            gridControl1.Refresh();
         }
 
         private void buttonOpen_Click(object sender, EventArgs e)

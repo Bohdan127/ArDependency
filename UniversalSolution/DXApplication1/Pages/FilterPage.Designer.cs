@@ -311,7 +311,7 @@ namespace DXApplication1.Pages
             this.layoutControlGroupBookMakers.Location = new System.Drawing.Point(0, 90);
             this.layoutControlGroupBookMakers.Name = "layoutControlGroupBookMakers";
             this.layoutControlGroupBookMakers.Size = new System.Drawing.Size(263, 98);
-            this.layoutControlGroupBookMakers.Text = "Букмекер?";
+            this.layoutControlGroupBookMakers.Text = "Букмекеры";
             // 
             // layoutControlItemPinnacleSports
             // 

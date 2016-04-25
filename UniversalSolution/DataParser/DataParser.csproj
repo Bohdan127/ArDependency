@@ -56,6 +56,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Json, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Json.4.0.20126.16343\lib\net40\System.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -71,12 +75,17 @@
     <Compile Include="DefaultRealization\DefaultDataParser.cs" />
     <Compile Include="DefaultRealization\DefaultEvent.cs" />
     <Compile Include="DefaultRealization\GenericMatch.cs" />
+    <Compile Include="DefaultRealization\PinnacleSportsDataParser.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Enums\Site.cs" />
+    <Compile Include="Enums\SportType.cs" />
     <Compile Include="Forks\ForkSearcher.cs" />
     <Compile Include="Interfaces\IDataEvent.cs" />
     <Compile Include="Interfaces\IDataMatch.cs" />
     <Compile Include="Interfaces\IDataParser.cs" />
     <Compile Include="DefaultRealization\DefaultMatch.cs" />
+    <Compile Include="Models\EventWithTeamName.cs" />
+    <Compile Include="Models\EventWithTotal.cs" />
     <Compile Include="My\ParsePinnacle.cs" />
     <Compile Include="My\Vitia.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,6 +100,7 @@
       <Name>Tools</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

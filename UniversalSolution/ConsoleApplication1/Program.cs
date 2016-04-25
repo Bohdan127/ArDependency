@@ -1,10 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using DataParser.Enums;
+using DataParser.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Json;
 using System.Net;
 using System.Text;
+using Tools;
 
 namespace ParseAPI
 {
@@ -13,7 +17,11 @@ namespace ParseAPI
         [STAThread]
         static void Main(string[] args)
         {
-            var request = (HttpWebRequest)WebRequest.Create("https://api.pinnaclesports.com/v1/odds?sportid=29");
+            var request =
+                (HttpWebRequest)
+                    WebRequest.Create(
+                        "https://api.pinnaclesports.com/v1/odds?sportid=" + (int)SportType.Tennis);   //for totals
+                                                                                                      //"https://api.pinnaclesports.com/v1/fixtures?sportid=" + (int)SportType.Tennis); //for team name
             string credentials = String.Format("{0}:{1}", "VB794327", "artem89@");
             byte[] bytes = Encoding.UTF8.GetBytes(credentials);
             string base64 = Convert.ToBase64String(bytes);
@@ -52,12 +60,39 @@ namespace ParseAPI
                 response = (HttpWebResponse)ex.Response;
             }
 
-            var stream = response.GetResponseStream();
-            string responseBody;
-            using (var reader = new StreamReader(stream))
+            //var stream = response.GetResponseStream();
+            //string responseBody;
+            //using (var reader = new StreamReader(stream))
+            //{
+            //    responseBody = reader.ReadToEnd();
+            //}
+            bool bSwitch = false;
+            var sportEvents = (JsonObject)JsonObject.Load(response.GetResponseStream());
+            foreach (var league in sportEvents["leagues"])
             {
-                responseBody = reader.ReadToEnd();
+                foreach (var sportEvent in league.Value["events"])
+                {
+                    if (sportEvent.Value != null)
+                    {
+                        try
+                        {
+                            var type = bSwitch ? "home" : "away";
+                            var eventWithTotal = new EventWithTotal()
+                            {
+                                Id = sportEvent.Value["id"].ConvertToLong(),
+                                TotalType = type,
+                                TotalValue = sportEvent.Value["periods"]?[0]?["teamTotal"]?[type]?["points"].ToString()
+                            };
+                            bSwitch = !bSwitch;
+                        }
+                        catch (Exception)
+                        {
+                            // ignored
+                        }
+                    }
+                }
             }
+
         }
 
         public static string Update(int id = 0)

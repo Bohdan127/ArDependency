@@ -1,6 +1,7 @@
 ﻿using DevExpress.XtraEditors;
 using DXApplication1.Models;
 using FormulasCollection.Interfaces;
+using License.Logic;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -18,6 +19,7 @@ namespace DXApplication1
 
         private Filter _filter;
         private PageManager _pageManager;
+        private string licenseKey = string.Empty;
 
         #endregion Members
 
@@ -37,13 +39,25 @@ namespace DXApplication1
 
             //todo this is bad and illogic crutch
             _pageManager.GetFilterPage(_filter);//default preload filter page
+
+            licenseKey = _filter.LicenseKey ?? string.Empty;
+            //before payment will be with license
+            LicenseForm licenseForm = new LicenseForm();
+            if (!licenseForm.CheckInstance(licenseKey))
+                licenseForm.ShowDialog();
+            if (!licenseForm.IsRegistered)
+                Close();
+            licenseKey = licenseForm.LicenseKey;
         }
 
         #endregion CTOR
 
         #region Events
 
-        private async void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        /// <summary>
+        /// Function with dead code for opening calculation after search form if calculator wasn't open before
+        /// </summary>
+        public async void OpenSearchForCalculator()
         {
             if (!_pageManager.GetCalculatorPage().IsOpen)
             {
@@ -55,6 +69,12 @@ namespace DXApplication1
 
             _pageManager.GetCalculatorPage().Hide();//if already shown right now
             _pageManager.GetCalculatorPage().Show();
+        }
+
+        private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            _pageManager.GetSearchPage().Hide();//if already shown right now
+            _pageManager.GetSearchPage().Show();
         }
 
         private void barButtonItem3_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -130,6 +150,8 @@ namespace DXApplication1
             var bRes = true;
             try
             {
+                _filter.LicenseKey = licenseKey;
+
                 var writer = File.Create(SettingsPath + SettingsFile);
 
                 new XmlSerializer(typeof(Filter)).Serialize(

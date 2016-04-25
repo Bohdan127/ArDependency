@@ -73,9 +73,9 @@
             // 
             // barButtonItem2
             // 
-            this.barButtonItem2.Caption = "Калькулятор";
+            this.barButtonItem2.Caption = "Поиск вилок";
             this.barButtonItem2.Id = 2;
-            this.barButtonItem2.ImageUri.Uri = "ClearFormatting";
+            this.barButtonItem2.ImageUri.Uri = "Paste";
             this.barButtonItem2.Name = "barButtonItem2";
             this.barButtonItem2.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem2_ItemClick);
             // 

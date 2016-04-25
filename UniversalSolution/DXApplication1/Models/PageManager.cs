@@ -2,6 +2,7 @@
 using FormulasCollection.Interfaces;
 using FormulasCollection.Realizations;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,6 +14,7 @@ namespace DXApplication1.Models
 
         private FilterPage _filterPage;
         private AccountingPage _accountingPage;
+        private SearchPage _searchPage;
         private CalculatorPage _calculatorPage;
         private Form _defaultMdiParent;
         private OpenCalculatorForm _openCalculatorForm;
@@ -42,10 +44,6 @@ namespace DXApplication1.Models
         /// <summary>
         /// This Control always reloaded in each call.
         /// </summary>
-        /// <param name="useMdiParent"></param>
-        /// <param name="mdiParent"></param>
-        /// <param name="loadData"></param>
-        /// <returns></returns>
         public async Task<OpenCalculatorForm> CreateCalculatorForm(bool useMdiParent = false, Form mdiParent = null, bool loadData = true)
         {
             if (loadData) _openCalculatorForm = new OpenCalculatorForm(await DataManager.
@@ -95,9 +93,26 @@ namespace DXApplication1.Models
             return _accountingPage;
         }
 
+        public SearchPage GetSearchPage(Form mdiParent = null, bool reload = false)
+        {
+            if (_searchPage == null || reload)
+            {
+                _searchPage = new SearchPage();
+                _searchPage.MdiParent = mdiParent ?? _defaultMdiParent;
+                _searchPage.Close = false;
+                _searchPage.Update += SearchPage_Update;
+                _searchPage.CalculatorCall += AccountPage_CalculatorCall;//can be the same as for account page
+            }
+            return _searchPage;
+        }
+
         #endregion Functions
 
         #region Events
+        private void AccountPage_Update(object sender, EventArgs e)
+        {
+
+        }
 
         private void AccountPage_CalculatorCall(object sender, EventArgs eventArgs)
         {
@@ -108,11 +123,13 @@ namespace DXApplication1.Models
             }
         }
 
-        private async void AccountPage_Update(object sender, EventArgs e)
+        private async void SearchPage_Update(object sender, EventArgs e)
         {
-            _accountingPage.MainGridControl.DataSource = await DataManager.
-                GetForksForAllSportsAsync(_filterPage?.Filter).ConfigureAwait(true);
-            _accountingPage.Refresh();
+            _searchPage.MainGridControl.DataSource = null;//todo delete this part!!!!!(but maybe we should show to user that data is updated)
+            _searchPage.Refresh();
+            _searchPage.MainGridControl.DataSource = (await DataManager.
+                  GetForksForAllSportsAsync(_filterPage?.Filter).ConfigureAwait(true)).Take(10);
+            _searchPage.Refresh();
         }
 
         #endregion Events

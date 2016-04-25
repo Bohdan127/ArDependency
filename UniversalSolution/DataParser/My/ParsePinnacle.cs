@@ -1,4 +1,6 @@
 ﻿
+using DataParser.DefaultRealization;
+using DataParser.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +13,6 @@ namespace DataParser.MY
     {
         // "https://www.marathonbet.com/su/popular/Basketball/?menu=true";
         private readonly string link = "https://www.marathonbet.com/su/popular/Football/?menu=true";
-        public enum SportType { Football, Basketball, Hockey, Tennis, Volleyball }
         private string oldLine = "";
 
 
@@ -28,7 +29,7 @@ namespace DataParser.MY
         public List<ResultForForks> GetResult(SportType sportType)
         {
             List<ResultForForks> result = new List<ResultForForks>();
-            var a = GetNameTeamsAndDateAsync(sportType).Result;
+            //var a = GetNameTeamsAndDateAsync(sportType).Result;
             //this.Show(a);
             return result;
         }
@@ -79,149 +80,162 @@ namespace DataParser.MY
         private const int countCoff2 = 6;
 
 
-        public async Task<List<ResultForForks>> GetNameTeamsAndDateAsync(SportType sportType)
+        public async Task<List<ResultForForks>> GetNameTeamsAndDateAsync(SportType sportType, Site site)
         {
             List<ResultForForks> result = new List<ResultForForks>();
             string url = "https://www.marathonbet.com/su/popular/Ice+Hockey/?menu=true";
             string namefile = "Default.html";
-            #region
-            switch (sportType)
+            #region     switch
+
+            switch (site)
             {
-                case SportType.Football:
-                    namefile = "Football.html";
-                    url = "https://www.marathonbet.com/su/popular/Football/?menu=true";
+                case Site.MarathonBet:
+                    switch (sportType)//bad way for bad code
+                    {
+                        case SportType.Football:
+                            namefile = "Football.html";
+                            url = "https://www.marathonbet.com/su/popular/Football/?menu=true";
+                            break;
+                        case SportType.Basketball:
+                            namefile = "Basketball.html";
+                            url = "https://www.marathonbet.com/su/popular/Basketball/?menu=true";
+                            break;
+                        case SportType.Hockey:
+                            namefile = "Hokey.html";
+                            url = "https://www.marathonbet.com/su/popular/Ice+Hockey/?menu=true";
+                            break;
+                        case SportType.Tennis:
+                            namefile = "Tenis.html";
+                            url = "https://www.marathonbet.com/su/popular/Tennis/?menu=true";
+                            break;
+                        case SportType.Volleyball:
+                            namefile = "Volleyball.html";
+                            url = "https://www.marathonbet.com/su/popular/Volleyball/?menu=true";
+                            break;
+                    }
+                   // await GetHtmlDocumentAsync(url, namefile).ConfigureAwait(false);
+                    List<Teams> teams = new List<Teams>();
+
+                    List<string> koff = new List<string>();
+                    string[] lines = File.ReadAllLines(namefile);
+                    string name1 = null;
+                    string name2 = null;
+                    string coff = null;
+                    string date = null;
+                    bool isDate = false;
+
+                    List<string> countTypeCoff = new List<string>();
+
+                    int i = 0;
+                    int index = 0;
+                    foreach (var line in lines)
+                    {
+                        #region [NameTeams and Date]
+                        if (this.Get(line, forTeam))
+                        {
+                            string findElements = forTeam;
+                            int startIndex = line.LastIndexOf(findElements);
+                            int endIndex = line.LastIndexOf("</");
+                            if (startIndex < endIndex && startIndex != -1 && endIndex != -1)
+                            {
+                                if (name1 == null)
+                                    name1 = line.Substring(findElements.Length + 1, endIndex - findElements.Length - 1);
+                                else name2 = line.Substring(findElements.Length + 1, endIndex - findElements.Length - 1);
+                                i++;
+                            }
+
+                        }
+                        if (isDate)
+                        {
+                            date = line;
+                            isDate = false;
+                        }
+                        if (this.Get(line, forDate))
+                        {
+                            isDate = true;
+                        }
+
+                        #endregion
+
+                        string res = null;
+                        if (line.Contains("data-selection-price=") /*&& line.Contains("Match_Result")*/)
+                        {
+                            int indexStart = line.IndexOf("data-selection-price=") + ("data-selection-price=").Length;
+                            res = line.Substring(indexStart).Trim('\"');
+                            koff.Add(res);
+
+                        }
+
+                        if (name1 != null && name2 != null && date != null && res != null)
+                        {
+                            if (index >= countTypeCoff.Count)
+                                index = 0;
+                            //var a=countTypeCoff[index];
+                            result.Add(new ResultForForks(name1, name2, date, " - ", res));
+                            res = null;
+                            i++;
+                        }
+
+                        if (name1 != null && name2 != null && date != null)
+                        {
+                            if (this.is_Football_Hokey(sportType) && (koff.Count == 10))
+                            {
+                                string win1 = koff[0];
+                                string x = koff[1];
+                                string win2 = koff[2];
+                                string x_win1 = koff[3];
+                                string x_win2 = koff[4];
+                                string win1_win2 = koff[5];
+                                string fora1 = koff[6];
+                                string fora2 = koff[7];
+                                string less = koff[8];
+                                string more = koff[9];
+
+                                teams.Add(new Teams_Football_Hokey(name1, name2, date, win1, x, win2, x_win1, x_win2, win1_win2, fora1, fora2, less, more));
+                                name1 = null;
+                                name2 = null;
+                                date = null;
+                                koff = new List<string>();
+                            }
+                            if (!this.is_Football_Hokey(sportType) && (koff.Count == 6))
+                            {
+                                string win1 = koff[0];
+                                string win2 = koff[1];
+                                string fora1 = koff[2];
+                                string fora2 = koff[3];
+                                string less = koff[4];
+                                string more = koff[5];
+
+                                teams.Add(new Teams_Tenis_Volleyball_Basketball(name1, name2, date, win1, win2, fora1, fora2, less, more));
+                                name1 = null;
+                                name2 = null;
+                                date = null;
+                                koff = new List<string>();
+                            }
+
+                        }
+
+                        if (koff.Count > (is_Football_Hokey(sportType) ? countCoff1 : countCoff2))
+                        {
+                            koff = new List<string>();
+                        }
+
+                        if (teams.Count == (is_Football_Hokey(sportType) ? countCoff1 : countCoff2))
+                        {
+                            i++;
+                        }
+                        this.oldLine = line;
+                    }
                     break;
-                case SportType.Basketball:
-                    namefile = "Basketball.html";
-                    url = "https://www.marathonbet.com/su/popular/Basketball/?menu=true";
+                case Site.PinnacleSports:
+                    result.AddRange(await new PinnacleSportsDataParser().GetAllPinacleEventsForRequestAsync(sportType).ConfigureAwait(false));
                     break;
-                case SportType.Hockey:
-                    namefile = "Hokey.html";
-                    url = "https://www.marathonbet.com/su/popular/Ice+Hockey/?menu=true";
-                    break;
-                case SportType.Tennis:
-                    namefile = "Tenis.html";
-                    url = "https://www.marathonbet.com/su/popular/Tennis/?menu=true";
-                    break;
-                case SportType.Volleyball:
-                    namefile = "Volleyball.html";
-                    url = "https://www.marathonbet.com/su/popular/Volleyball/?menu=true";
-                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(site), site, null);
             }
+
             #endregion
-            await GetHtmlDocumentAsync(url, namefile).ConfigureAwait(false);
-            List<Teams> teams = new List<Teams>();
 
-            List<string> koff = new List<string>();
-            string[] lines = File.ReadAllLines(namefile);
-            string name1 = null;
-            string name2 = null;
-            string coff = null;
-            string date = null;
-            bool isDate = false;
-
-            List<string> countTypeCoff = new List<string>();
-
-            int i = 0;
-            int index = 0;
-            foreach (var line in lines)
-            {
-                #region [NameTeams and Date]
-                if (this.Get(line, forTeam))
-                {
-                    string findElements = forTeam;
-                    int startIndex = line.LastIndexOf(findElements);
-                    int endIndex = line.LastIndexOf("</");
-                    if (startIndex < endIndex && startIndex != -1 && endIndex != -1)
-                    {
-                        if (name1 == null)
-                            name1 = line.Substring(findElements.Length + 1, endIndex - findElements.Length - 1);
-                        else name2 = line.Substring(findElements.Length + 1, endIndex - findElements.Length - 1);
-                        i++;
-                    }
-
-                }
-                if (isDate)
-                {
-                    date = line;
-                    isDate = false;
-                }
-                if (this.Get(line, forDate))
-                {
-                    isDate = true;
-                }
-
-                #endregion
-
-                string res = null;
-                if (line.Contains("data-selection-price=") /*&& line.Contains("Match_Result")*/)
-                {
-                    int indexStart = line.IndexOf("data-selection-price=") + ("data-selection-price=").Length;
-                    res = line.Substring(indexStart).Trim('\"');
-                    koff.Add(res);
-
-                }
-
-                if (name1 != null && name2 != null && date != null && res != null)
-                {
-                    if (index >= countTypeCoff.Count)
-                        index = 0;
-                    //var a=countTypeCoff[index];
-                    result.Add(new ResultForForks(name1, name2, date, " - ", res));
-                    res = null;
-                    i++;
-                }
-
-                if (name1 != null && name2 != null && date != null)
-                {
-                    if (this.is_Football_Hokey(sportType) && (koff.Count == 10))
-                    {
-                        string win1 = koff[0];
-                        string x = koff[1];
-                        string win2 = koff[2];
-                        string x_win1 = koff[3];
-                        string x_win2 = koff[4];
-                        string win1_win2 = koff[5];
-                        string fora1 = koff[6];
-                        string fora2 = koff[7];
-                        string less = koff[8];
-                        string more = koff[9];
-
-                        teams.Add(new Teams_Football_Hokey(name1, name2, date, win1, x, win2, x_win1, x_win2, win1_win2, fora1, fora2, less, more));
-                        name1 = null;
-                        name2 = null;
-                        date = null;
-                        koff = new List<string>();
-                    }
-                    if (!this.is_Football_Hokey(sportType) && (koff.Count == 6))
-                    {
-                        string win1 = koff[0];
-                        string win2 = koff[1];
-                        string fora1 = koff[2];
-                        string fora2 = koff[3];
-                        string less = koff[4];
-                        string more = koff[5];
-
-                        teams.Add(new Teams_Tenis_Volleyball_Basketball(name1, name2, date, win1, win2, fora1, fora2, less, more));
-                        name1 = null;
-                        name2 = null;
-                        date = null;
-                        koff = new List<string>();
-                    }
-
-                }
-
-                if (koff.Count > (is_Football_Hokey(sportType) ? countCoff1 : countCoff2))
-                {
-                    koff = new List<string>();
-                }
-
-                if (teams.Count == (is_Football_Hokey(sportType) ? countCoff1 : countCoff2))
-                {
-                    i++;
-                }
-                this.oldLine = line;
-            }
             return result;
 
         }
@@ -268,6 +282,8 @@ namespace DataParser.MY
         public string Type { get; set; }
         public string Coef { get; set; }
 
+        public ResultForForks()
+        { }
         //  X1 X2 1 2 
         public ResultForForks(string nameTeam1, string nameTeam2, string date, string nameCoff, string value)
         {

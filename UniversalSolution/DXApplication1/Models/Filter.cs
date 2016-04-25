@@ -29,5 +29,7 @@ namespace DXApplication1.Models
         public bool OutCome2 { get; set; }
 
         public bool OutCome3 { get; set; }
+
+        public string LicenseKey { get; set; }
     }
 }

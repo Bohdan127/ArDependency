@@ -5,11 +5,21 @@
     /// </summary>
     public class Fork
     {
+
+        /// <summary>
+        /// ВидСпорту
+        /// </summary>
+        public string Sport { get; set; }
+
         /// <summary>
         /// Default place for Team Names, time of match and other details
         /// </summary>
         public string Event { get; set; }
 
+        /// <summary>
+        /// сайт 1
+        /// </summary>
+        public string SiteFirst;
         /// <summary>
         /// Details for first type of Fork 
         /// </summary>
@@ -20,6 +30,10 @@
         /// </summary>
         public double CoefFirst { get; set; }
 
+        /// <summary>
+        /// сайт 2
+        /// </summary>
+        public string SecondFirst;
         /// <summary>
         /// Details for second type of Fork 
         /// </summary>

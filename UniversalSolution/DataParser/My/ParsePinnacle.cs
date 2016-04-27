@@ -1,6 +1,6 @@
 ﻿
-using DataParser.DefaultRealization;
-using DataParser.Enums;
+//using DataParser.DefaultRealization;
+//using DataParser.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +11,7 @@ namespace DataParser.MY
 {
     public class ParsePinnacle
     {
-
+        enum SportType{Football,Basketball,Hockey,Tennis,Volleyball}
         private const string forTeam = "<div class=\"member-name nowrap \" data-ellipsis='{}'>";
         private const string forDate = "<td class=\"date\">";
         private const int countCoff1 = 10;
@@ -42,9 +42,9 @@ namespace DataParser.MY
             WriteToHtmlDocumentAsync(url, namefile);
             UrlAndNameFile(sportType, out url, out namefile);
             WriteToHtmlDocumentAsync(url, namefile);
-            
-            List<ResultForForks> a = GetNameTeamsAndDateAsync(sportType).Result;
-            this.ShowForks(a);*/
+            */
+            //List<ResultForForks> a = GetNameTeamsAndDateAsync(sportType).Result;
+           // this.ShowForks(a);
             try
             {
                 this.englishNameTeams_Dictionary = this.GetEnglishNameTEams(sportType);
@@ -267,20 +267,12 @@ namespace DataParser.MY
                         }
                         this.oldLine = line;
                     }
-                    break;
-                case Site.PinnacleSports:
-                    result.AddRange(await new PinnacleSportsDataParser().GetAllPinacleEventsForRequestAsync(sportType).ConfigureAwait(false));
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(site), site, null);
-            }
-
-            #endregion
+                    
 
             return result;
 
         }
-
+    
         private bool is_Football_Hokey(SportType sportType)
         {
             if (sportType == SportType.Football || sportType == SportType.Hockey)
@@ -333,7 +325,7 @@ namespace DataParser.MY
             }
         }
 
-        private void ShowForks(List<ResultForForks> forks)
+        public void ShowForks(List<ResultForForks> forks)
         {
             foreach (var fork in forks)
             {
@@ -349,7 +341,7 @@ namespace DataParser.MY
         }*/
         //Total_Goals
     }
-
+}
     public class EnglishNameTeams
         {
             public string eventid;
@@ -449,4 +441,3 @@ namespace DataParser.MY
             }
         }
     
-}

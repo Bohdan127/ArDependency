@@ -46,8 +46,25 @@ namespace License.Logic
 
             if (isMatched)
             {
-                Instance inst = context.Instances
-                    .FirstOrDefault(i => i.Guid == textEdit1.EditValue.ToString());
+                Instance inst = null;
+                bool complete = false;
+
+                for (int j = 0; j < 3; j++)
+                {
+                    if (!complete)
+                    {
+                        try
+                        {
+                            inst = context.Instances
+                                .FirstOrDefault(i => i.Guid == textEdit1.EditValue.ToString());
+                            complete = true;
+                        }
+                        catch
+                        {
+                            //ignored
+                        }
+                    }
+                }
 
                 if (inst != null)
                 {

@@ -1,7 +1,6 @@
 ﻿using DevExpress.XtraEditors;
 using DXApplication1.Models;
 using FormulasCollection.Interfaces;
-using License.Logic;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -34,6 +33,7 @@ namespace DXApplication1
             Closing += XtraForm1_Closing;
 
             _pageManager = new PageManager(this, forkFormulas);
+
             DeserializeAll();
             PrepareData();
 
@@ -42,12 +42,12 @@ namespace DXApplication1
 
             licenseKey = _filter.LicenseKey ?? string.Empty;
             //before payment will be with license
-            LicenseForm licenseForm = new LicenseForm();
-            if (!licenseForm.CheckInstance(licenseKey))
-                licenseForm.ShowDialog();
-            if (!licenseForm.IsRegistered)
-                Close();
-            licenseKey = licenseForm.LicenseKey;
+            //LicenseForm licenseForm = new LicenseForm();
+            //if (!licenseForm.CheckInstance(licenseKey))
+            //    licenseForm.ShowDialog();
+            //if (!licenseForm.IsRegistered)
+            //    Close();
+            //licenseKey = licenseForm.LicenseKey;
         }
 
         #endregion CTOR

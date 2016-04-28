@@ -114,22 +114,24 @@ namespace DXApplication1.Models
 
         }
 
-        private void AccountPage_CalculatorCall(object sender, EventArgs eventArgs)
+        private async void AccountPage_CalculatorCall(object sender, EventArgs eventArgs)
         {
-            if (sender is Fork)
-            {
-                GetCalculatorPage(reload: true).Fork = (Fork)sender;
-                GetCalculatorPage().Show();
-            }
+            await DataManager.GetForksForAllSportsAsync(_filterPage.Filter).ConfigureAwait(false);
+            //if (sender is Fork)
+            //{
+            //    GetCalculatorPage(reload: true).Fork = (Fork)sender;
+            //    GetCalculatorPage().Show();
+            //}
         }
 
         private async void SearchPage_Update(object sender, EventArgs e)
         {
+            _searchPage.StartLoading();
             _searchPage.MainGridControl.DataSource = null;//todo delete this part!!!!!(but maybe we should show to user that data is updated)
-            _searchPage.Refresh();
             _searchPage.MainGridControl.DataSource = (await DataManager.
                   GetForksForAllSportsAsync(_filterPage?.Filter).ConfigureAwait(true)).Take(10);
-            _searchPage.Refresh();
+            _searchPage.MainGridControl.Refresh();
+            _searchPage.EndLoading();
         }
 
         #endregion Events

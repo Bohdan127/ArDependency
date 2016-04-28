@@ -1,6 +1,5 @@
 ﻿using DataParser.Enums;
 using DataParser.Models;
-using DataParser.MY;
 using System;
 using System.Collections.Generic;
 using System.Json;
@@ -39,15 +38,19 @@ namespace DataParser.DefaultRealization
             var evenstWithNames = ParseEventWithNames(teamNamesResp);
             var eventsWithTotal = ParseEventWithTotals(totalResp);
 
-            return (from withNames in evenstWithNames
-                    from withTotal in eventsWithTotal
-                    where withNames.Id == withTotal.Id
-                    select new ResultForForks()
-                    {
-                        Event = withNames.TeamNamesWithDate,
-                        Type = withTotal.TotalType,
-                        Coef = withTotal.TotalValue
-                    }).ToList();
+            List<ResultForForks> list = new List<ResultForForks>();
+            foreach (EventWithTeamName withNames in evenstWithNames)
+                foreach (var withTotal in eventsWithTotal)
+                {
+                    if (withNames.Id == withTotal.Id)
+                        list.Add(new ResultForForks()
+                        {
+                            Event = withNames.TeamNamesWithDate,
+                            Type = withTotal.TotalType,
+                            Coef = withTotal.TotalValue
+                        });
+                }
+            return list;
         }
 
         private List<EventWithTotal> ParseEventWithTotals(HttpWebResponse totalResp)
@@ -55,28 +58,26 @@ namespace DataParser.DefaultRealization
             bool bSwitch = false;
             var resList = new List<EventWithTotal>();
             var sportEvents = (JsonObject)JsonObject.Load(totalResp.GetResponseStream());
-            foreach (var sportEvent in
-                from league in sportEvents["leagues"]
-                from sportEvent in league.Value["events"]
-                where sportEvent.Value != null
-                select sportEvent)
-            {
-                try
+            foreach (KeyValuePair<string, JsonValue> league in sportEvents["leagues"])
+                foreach (var sportEvent in league.Value["events"])
                 {
-                    var type = bSwitch ? "home" : "away";
-                    resList.Add(new EventWithTotal()
-                    {
-                        Id = sportEvent.Value["id"].ConvertToLong(),
-                        TotalType = type,
-                        TotalValue = sportEvent.Value["periods"]?[0]?["teamTotal"]?[type]?["points"].ToString()
-                    });
-                    bSwitch = !bSwitch;
+                    if (sportEvent.Value != null)
+                        try
+                        {
+                            var type = bSwitch ? "home" : "away";
+                            resList.Add(new EventWithTotal()
+                            {
+                                Id = sportEvent.Value["id"].ConvertToLong(),
+                                TotalType = type,
+                                TotalValue = sportEvent.Value["periods"]?[0]?["teamTotal"]?[type]?["points"].ToString()
+                            });
+                            bSwitch = !bSwitch;
+                        }
+                        catch (Exception) //can be when this event without total
+                        {
+                            // ignored
+                        }
                 }
-                catch (Exception)   //can be when this event without total
-                {
-                    // ignored
-                }
-            }
             return resList;
         }
 

@@ -1,4 +1,5 @@
 ﻿using DevExpress.LookAndFeel;
+using DXApplication1.ErrorProvider;
 using FormulasCollection.Realizations;
 using System;
 using System.Globalization;
@@ -35,7 +36,31 @@ namespace DXApplication1
             DevExpress.UserSkins.BonusSkins.Register();
             UserLookAndFeel.Default.SetSkinStyle("DevExpress Style");
 
+            Application.ThreadException += new
+              System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
+
+            // Set the unhandled exception mode to force all Windows Forms 
+            // errors to go through our handler.
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+
+            // Add the event handler for handling non-UI thread exceptions to the event. 
+            AppDomain.CurrentDomain.UnhandledException +=
+                new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
             Application.Run(new XtraForm1(new TwoOutComeForkFormulas()));
         }
+        static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+        {
+            ExceptionHandlerForm.ShowException(e.Exception);
+        }
+
+
+
+        public static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args)
+        {
+            Exception e = (Exception)args.ExceptionObject;
+        }
+
+
     }
 }

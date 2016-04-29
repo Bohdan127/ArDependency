@@ -13,13 +13,13 @@ namespace DataParser.DefaultRealization
 {
     public class PinnacleSportsDataParser
     {
-        private SportType sportType = SportType.NoType;
+        private SportType SportType = SportType.NoType;
 
 
         public async Task<List<ResultForForks>> GetAllPinacleEventsForRequestAsync(SportType sportType)
         {
             var resList = new List<ResultForForks>();
-            this.sportType = sportType;
+            this.SportType = sportType;
             try
             {
                 var totalResp = await GetAllTotalsAsync().ConfigureAwait(false);
@@ -40,58 +40,146 @@ namespace DataParser.DefaultRealization
 
             List<ResultForForks> list = new List<ResultForForks>();
             foreach (EventWithTeamName withNames in evenstWithNames)
-                foreach (var withTotal in eventsWithTotal)
+                foreach (var withTotal in eventsWithTotal.Where(t => t.Id == withNames.Id))
                 {
-                    if (withNames.Id == withTotal.Id)
-                        list.Add(new ResultForForks()
-                        {
-                            Event = withNames.TeamNamesWithDate,
-                            Type = withTotal.TotalType,
-                            Coef = withTotal.TotalValue
-                        });
+                    list.Add(new ResultForForks()
+                    {
+                        Event = withNames.TeamNames,
+                        Type = withTotal.TotalType,
+                        Coef = withTotal.TotalValue,
+                        Remark = withTotal.Remark,
+                        SportType = SportType,
+                        MatchDateTime = withTotal.MatchDateTime
+                    });
                 }
             return list;
         }
 
         private List<EventWithTotal> ParseEventWithTotals(HttpWebResponse totalResp)
         {
-            bool bSwitch = false;
             var resList = new List<EventWithTotal>();
-            var sportEvents = (JsonObject)JsonObject.Load(totalResp.GetResponseStream());
-            foreach (KeyValuePair<string, JsonValue> league in sportEvents["leagues"])
-                foreach (var sportEvent in league.Value["events"])
+            try
+            {
+                var sportEvents = (JsonObject)JsonObject.Load(totalResp.GetResponseStream());
+
+                if (sportEvents?["leagues"] == null) return resList;
+
+                foreach (var league in sportEvents["leagues"])
                 {
-                    if (sportEvent.Value != null)
-                        try
+                    try
+                    {
+                        foreach (var sportEvent in league.Value?["events"])
                         {
-                            var type = bSwitch ? "home" : "away";
-                            resList.Add(new EventWithTotal()
+                            try
                             {
-                                Id = sportEvent.Value["id"].ConvertToLong(),
-                                TotalType = type,
-                                TotalValue = sportEvent.Value["periods"]?[0]?["teamTotal"]?[type]?["points"].ToString()
-                            });
-                            bSwitch = !bSwitch;
+                                foreach (var period in sportEvent.Value?["periods"])
+                                {
+                                    try
+                                    {
+                                        foreach (var spread in period.Value?["spreads"])
+                                        {
+                                            try
+                                            {
+                                                resList.Add(new EventWithTotal()
+                                                {
+                                                    Id = sportEvent.Value["id"].ConvertToLong(),
+                                                    TotalType = spread.Value?["hdp"]?.ToString(),
+                                                    TotalValue = spread.Value?["away"]?.ToString(),
+                                                    Remark = "away",
+                                                    MatchDateTime = period.Value?["cutoff"]?.ToString()
+                                                });
+                                                resList.Add(new EventWithTotal()
+                                                {
+                                                    Id = sportEvent.Value["id"].ConvertToLong(),
+                                                    TotalType = spread.Value?["hdp"]?.ToString(),
+                                                    TotalValue = spread.Value?["home"]?.ToString(),
+                                                    Remark = "home",
+                                                    MatchDateTime = period.Value?["cutoff"]?.ToString()
+                                                });
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                //ignored
+                                            }
+                                        }
+                                        try
+                                        {
+                                            resList.Add(new EventWithTotal()
+                                            {
+                                                Id = sportEvent.Value["id"].ConvertToLong(),
+                                                TotalType = "total away",
+                                                TotalValue = period.Value?["teamTotal"]?["away"]?["points"]?.ToString(),
+                                                Remark = "away",
+                                                MatchDateTime = period.Value?["cutoff"]?.ToString()
+                                            });
+                                            resList.Add(new EventWithTotal()
+                                            {
+                                                Id = sportEvent.Value["id"].ConvertToLong(),
+                                                TotalType = "total home",
+                                                TotalValue = period.Value?["teamTotal"]?["home"]?["points"]?.ToString(),
+                                                Remark = "home",
+                                                MatchDateTime = period.Value?["cutoff"]?.ToString()
+                                            });
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            //ignored
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        // ignored
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                // ignored
+                            }
                         }
-                        catch (Exception) //can be when this event without total
-                        {
-                            // ignored
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // ignored
+                    }
                 }
+            }
+
+            catch
+                (Exception ex)
+            {
+                // ignored
+            }
             return resList;
         }
 
         private List<EventWithTeamName> ParseEventWithNames(HttpWebResponse teamNamesResp)
         {
-            return (from league in ((JsonObject)
-                        JsonObject.Load(teamNamesResp.GetResponseStream()))["league"]
-                    from sportEvent in league.Value["events"]
-                    where sportEvent.Value != null
-                    select new EventWithTeamName()
-                    {
-                        Id = sportEvent.Value["id"].ConvertToLong(),
-                        TeamNamesWithDate = $"home {sportEvent.Value["home"]} - " + $"away {sportEvent.Value["away"]} - " + $"starts {sportEvent.Value["starts"]}"
-                    }).ToList();
+            List<EventWithTeamName> list = new List<EventWithTeamName>();
+            try
+            {
+                foreach (var league in
+                        ((JsonObject)JsonObject.Load(teamNamesResp.GetResponseStream()))?["league"])
+                {
+                    var sportEvents = league.Value?["events"];
+                    if (sportEvents != null)
+                        foreach (var sportEvent in sportEvents)
+                        {
+                            if (sportEvent.Value != null)
+                                list.Add(new EventWithTeamName()
+                                {
+                                    Id = sportEvent.Value["id"].ConvertToLong(),
+                                    TeamNames =
+                                        $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"
+                                });
+                        }
+                }
+            }
+            catch (Exception ex)
+            {
+                //ignored
+            }
+            return list;
         }
 
         /// <summary>
@@ -100,7 +188,7 @@ namespace DataParser.DefaultRealization
         /// <returns></returns>
         protected virtual async Task<HttpWebResponse> GetAllTeamNamesAsync()
         {
-            var request = (HttpWebRequest)WebRequest.Create("https://api.pinnaclesports.com/v1/fixtures?sportid=" + (int)sportType);
+            var request = (HttpWebRequest)WebRequest.Create("https://api.pinnaclesports.com/v1/fixtures?sportid=" + (int)SportType);
             string credentials = String.Format("{0}:{1}", "VB794327", "artem89@");
             byte[] bytes = Encoding.UTF8.GetBytes(credentials);
             string base64 = Convert.ToBase64String(bytes);
@@ -120,7 +208,7 @@ namespace DataParser.DefaultRealization
         /// <returns></returns>
         protected virtual async Task<HttpWebResponse> GetAllTotalsAsync()
         {
-            var request = (HttpWebRequest)WebRequest.Create("https://api.pinnaclesports.com/v1/odds?sportid=" + (int)sportType);
+            var request = (HttpWebRequest)WebRequest.Create("https://api.pinnaclesports.com/v1/odds?sportid=" + (int)SportType);
             string credentials = String.Format("{0}:{1}", "VB794327", "artem89@");
             byte[] bytes = Encoding.UTF8.GetBytes(credentials);
             string base64 = Convert.ToBase64String(bytes);

@@ -1,6 +1,7 @@
 ﻿
 //using DataParser.DefaultRealization;
 //using DataParser.Enums;
+using DataParser.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,7 @@ namespace DataParser.MY
 {
     public class ParsePinnacle
     {
-        enum SportType{Football,Basketball,Hockey,Tennis,Volleyball}
+        enum SportType2 { Football, Basketball, Hockey, Tennis, Volleyball }
         private const string forTeam = "<div class=\"member-name nowrap \" data-ellipsis='{}'>";
         private const string forDate = "<td class=\"date\">";
         private const int countCoff1 = 10;
@@ -44,14 +45,14 @@ namespace DataParser.MY
             WriteToHtmlDocumentAsync(url, namefile);
             */
             //List<ResultForForks> a = GetNameTeamsAndDateAsync(sportType).Result;
-           // this.ShowForks(a);
+            // this.ShowForks(a);
             try
             {
                 this.englishNameTeams_Dictionary = this.GetEnglishNameTEams(sportType);
                 var a = GetNameTeamsAndDateAsync(sportType);
                 this.ShowForks(a);
             }
-            catch{}
+            catch { }
         }
         private static async Task WriteToHtmlDocumentAsync(string url, string namefile)
         {
@@ -161,7 +162,7 @@ namespace DataParser.MY
             string date = null;
             bool isDate = false;
             string _eventid = null;
-                    List<string> countTypeCoff = new List<string>();
+            List<string> countTypeCoff = new List<string>();
 
             int i = 0;
             int index = 0;
@@ -179,14 +180,14 @@ namespace DataParser.MY
                     isDate = true;
                 }
 
-                        string res = null;
-                        if (line.Contains("data-selection-price=") /*&& line.Contains("Match_Result")*/)
-                        {
-                            int indexStart = line.IndexOf("data-selection-price=") + ("data-selection-price=").Length;
-                            res = line.Substring(indexStart).Trim('\"');
-                            koff.Add(res);
+                string res = null;
+                if (line.Contains("data-selection-price=") /*&& line.Contains("Match_Result")*/)
+                {
+                    int indexStart = line.IndexOf("data-selection-price=") + ("data-selection-price=").Length;
+                    res = line.Substring(indexStart).Trim('\"');
+                    koff.Add(res);
 
-                        }
+                }
 
                 if (date != null && res != null && _eventid != null)
                 {
@@ -256,23 +257,23 @@ namespace DataParser.MY
                 }*/
                 #endregion
 
-                        if (koff.Count > (is_Football_Hokey(sportType) ? countCoff1 : countCoff2))
-                        {
-                            koff = new List<string>();
-                        }
+                if (koff.Count > (is_Football_Hokey(sportType) ? countCoff1 : countCoff2))
+                {
+                    koff = new List<string>();
+                }
 
-                        if (teams.Count == (is_Football_Hokey(sportType) ? countCoff1 : countCoff2))
-                        {
-                            i++;
-                        }
-                        this.oldLine = line;
-                    }
-                    
+                if (teams.Count == (is_Football_Hokey(sportType) ? countCoff1 : countCoff2))
+                {
+                    i++;
+                }
+                this.oldLine = line;
+            }
+
 
             return result;
 
         }
-    
+
         private bool is_Football_Hokey(SportType sportType)
         {
             if (sportType == SportType.Football || sportType == SportType.Hockey)
@@ -329,9 +330,9 @@ namespace DataParser.MY
         {
             foreach (var fork in forks)
             {
-                Console.WriteLine(fork._event + "-"
-                    + fork.name_Coff + " - "
-                    + fork.value
+                Console.WriteLine(fork.Event + "-"
+                    + fork.Type + " - "
+                    + fork.Coef
                     );
             }
         }
@@ -342,102 +343,110 @@ namespace DataParser.MY
         //Total_Goals
     }
 }
-    public class EnglishNameTeams
-        {
-            public string eventid;
-            public string name1;
-            public string name2;
-            public EnglishNameTeams() { }
-            public EnglishNameTeams(string _eventid, string _name1, string _name2)
-            {
-                this.eventid = _eventid;
-                this.name1 = _name1;
-                this.name2 = _name2;
-            }
-        }
-        public class ResultForForks
-        {
-            public string _event;
-            public string name_Coff;
-            public string value;
+public class EnglishNameTeams
+{
+    public string eventid;
+    public string name1;
+    public string name2;
+    public EnglishNameTeams() { }
+    public EnglishNameTeams(string _eventid, string _name1, string _name2)
+    {
+        this.eventid = _eventid;
+        this.name1 = _name1;
+        this.name2 = _name2;
+    }
+}
+public class ResultForForks
+{
+    public string Event;
+    public string Type;
+    public string Coef;
 
-            //  X1 X2 1 2 
-            public ResultForForks(string nameTeam1, string nameTeam2, string date, string nameCoff, string value)
-            {
-                this._event = nameTeam1 + "-" + nameTeam2 + "-" + date;
-                this.name_Coff = nameCoff;
-                this.value = value;
-            }
-        }
+    public ResultForForks()
+    {
+    }
 
-        public class Teams
-        {
-            protected string nameTeam1;
-            protected string nameTeam2;
-            protected string date;
+    //  X1 X2 1 2 
+    public ResultForForks(string nameTeam1, string nameTeam2, string date, string nameCoff, string value)
+    {
+        this.Event = nameTeam1 + "-" + nameTeam2 + "-" + date;
+        this.Type = nameCoff;
+        this.Coef = value;
+    }
 
-            public string eventId;
-            public string win1;
-            public string win2;
-            public string fora1;
-            public string fora2;
-            public string less;
-            public string more;
+    public string Remark { get; set; }
+    public object SportType { get; set; }
+    public object MatchDateTime { get; set; }
+}
 
-            public string x;
-            public string x_win1;
-            public string x_win2;
-            public string win1_win2;
-            public Teams() { }
-            public Teams(string _eventid, string nameTeam1, string nameTeam2, string date,
-                string win1, string win2,
-                string fora1, string fora2, string less, string more)
-            {
-                this.eventId = _eventid;
-                this.nameTeam1 = nameTeam1;
-                this.nameTeam2 = nameTeam2;
-                this.date = date;
+public class Teams
+{
+    protected string nameTeam1;
+    protected string nameTeam2;
+    protected string date;
 
-                this.win1 = win1;
-                this.win2 = win2;
-                this.fora1 = fora1;
-                this.fora2 = fora2;
-                this.less = less;
-                this.more = more;
-            }
+    public string eventId;
+    public string win1;
+    public string win2;
+    public string fora1;
+    public string fora2;
+    public string less;
+    public string more;
 
-            public string NameTeame1 { get { return this.nameTeam1; } set { this.nameTeam1 = value; } }
-            public string NameTeame2 { get { return this.nameTeam2; } set { this.nameTeam2 = value; } }
-            public string Date { get { return this.date; } set { this.date = value; } }
-        }
-        public class Teams_Football_Hokey : Teams
-        {
-            public Teams_Football_Hokey() : base() { }
-            public Teams_Football_Hokey(string _eventid, string nameTeam1, string nameTeam2, string date,
-                string win1, string x, string win2,
-                string x_win1, string x_win2, string win1_win2,
-                string fora1, string fora2, string less, string more)
-                : base(_eventid, nameTeam1, nameTeam2, date, win1, win2, fora1, fora2, less, more)
-            {
-                this.x = x;
-                this.x_win1 = x_win1;
-                this.x_win2 = x_win2;
-                this.win1_win2 = win1_win2;
+    public string x;
+    public string x_win1;
+    public string x_win2;
+    public string win1_win2;
+    public Teams() { }
+    public Teams(string _eventid, string nameTeam1, string nameTeam2, string date,
+        string win1, string win2,
+        string fora1, string fora2, string less, string more)
+    {
+        this.eventId = _eventid;
+        this.nameTeam1 = nameTeam1;
+        this.nameTeam2 = nameTeam2;
+        this.date = date;
 
-            }
-        }
-        public class Teams_Tenis_Volleyball_Basketball : Teams
-        {
-            public Teams_Tenis_Volleyball_Basketball() : base() { }
-            public Teams_Tenis_Volleyball_Basketball(string _eventid, string nameTeam1, string nameTeam2, string date,
-                string win1, string win2,
-                string fora1, string fora2, string less, string more)
-                : base(_eventid, nameTeam1, nameTeam2, date, win1, win2, fora1, fora2, less, more)
-            {
-                this.x = null;
-                this.x_win1 = null;
-                this.x_win2 = null;
-                this.win1_win2 = null;
-            }
-        }
-    
+        this.win1 = win1;
+        this.win2 = win2;
+        this.fora1 = fora1;
+        this.fora2 = fora2;
+        this.less = less;
+        this.more = more;
+    }
+
+    public string NameTeame1 { get { return this.nameTeam1; } set { this.nameTeam1 = value; } }
+    public string NameTeame2 { get { return this.nameTeam2; } set { this.nameTeam2 = value; } }
+    public string Date { get { return this.date; } set { this.date = value; } }
+}
+public class Teams_Football_Hokey : Teams
+{
+    public Teams_Football_Hokey() : base() { }
+    public Teams_Football_Hokey(string _eventid, string nameTeam1, string nameTeam2, string date,
+        string win1, string x, string win2,
+        string x_win1, string x_win2, string win1_win2,
+        string fora1, string fora2, string less, string more)
+        : base(_eventid, nameTeam1, nameTeam2, date, win1, win2, fora1, fora2, less, more)
+    {
+        this.x = x;
+        this.x_win1 = x_win1;
+        this.x_win2 = x_win2;
+        this.win1_win2 = win1_win2;
+
+    }
+}
+public class Teams_Tenis_Volleyball_Basketball : Teams
+{
+    public Teams_Tenis_Volleyball_Basketball() : base() { }
+    public Teams_Tenis_Volleyball_Basketball(string _eventid, string nameTeam1, string nameTeam2, string date,
+        string win1, string win2,
+        string fora1, string fora2, string less, string more)
+        : base(_eventid, nameTeam1, nameTeam2, date, win1, win2, fora1, fora2, less, more)
+    {
+        this.x = null;
+        this.x_win1 = null;
+        this.x_win2 = null;
+        this.win1_win2 = null;
+    }
+}
+

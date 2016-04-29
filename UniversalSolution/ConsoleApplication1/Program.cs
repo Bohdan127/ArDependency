@@ -20,8 +20,8 @@ namespace ParseAPI
             var request =
                 (HttpWebRequest)
                     WebRequest.Create(
-                        "https://api.pinnaclesports.com/v1/odds?sportid=" + (int)SportType.Tennis);   //for totals
-                                                                                                      //"https://api.pinnaclesports.com/v1/fixtures?sportid=" + (int)SportType.Tennis); //for team name
+                        // "https://api.pinnaclesports.com/v1/odds?sportid=" + (int)SportType.Volleyball);   //for totals
+                        "https://api.pinnaclesports.com/v1/fixtures?sportid=" + (int)SportType.Tennis); //for team name
             string credentials = String.Format("{0}:{1}", "VB794327", "artem89@");
             byte[] bytes = Encoding.UTF8.GetBytes(credentials);
             string base64 = Convert.ToBase64String(bytes);
@@ -64,34 +64,59 @@ namespace ParseAPI
             //string responseBody;
             //using (var reader = new StreamReader(stream))
             //{
-            //    responseBody = reader.ReadToEnd();
+            //    var s = reader.ReadToEnd();
+            //    new StreamWriter(@"C:\Users\Lenovo-PCv3\Desktop\Totals_Volleyball.txt").Write(s);
             //}
-            bool bSwitch = false;
-            var sportEvents = (JsonObject)JsonObject.Load(response.GetResponseStream());
-            foreach (var league in sportEvents["leagues"])
+            var list = new List<EventWithTeamName>();
+            foreach (var league in
+                        ((JsonObject)JsonObject.Load(response.GetResponseStream()))?["league"])
             {
-                foreach (var sportEvent in league.Value["events"])
-                {
-                    if (sportEvent.Value != null)
+                var sportEvents = league.Value?["events"];
+                if (sportEvents != null)
+                    foreach (var sportEvent in sportEvents)
                     {
-                        try
-                        {
-                            var type = bSwitch ? "home" : "away";
-                            var eventWithTotal = new EventWithTotal()
+                        if (sportEvent.Value != null)
+                            list.Add(new EventWithTeamName()
                             {
                                 Id = sportEvent.Value["id"].ConvertToLong(),
-                                TotalType = type,
-                                TotalValue = sportEvent.Value["periods"]?[0]?["teamTotal"]?[type]?["points"].ToString()
-                            };
-                            bSwitch = !bSwitch;
-                        }
-                        catch (Exception)
-                        {
-                            // ignored
-                        }
+                                TeamNames =
+                                    $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"
+                            });
                     }
-                }
             }
+            var f = new StreamWriter(@"C:\Users\Lenovo-PCv3\Desktop\JustNames_Tennis.txt");
+
+            foreach (var l in list)
+            {
+                f.WriteLine(l.TeamNames);
+            }
+            f.Close();
+            //bool bSwitch = false;
+            //var sportEvents = (JsonObject)JsonObject.Load(response.GetResponseStream());
+            //foreach (var league in sportEvents["leagues"])
+            //{
+            //    foreach (var sportEvent in league.Value["events"])
+            //    {
+            //        if (sportEvent.Value != null)
+            //        {
+            //            try
+            //            {
+            //                var type = bSwitch ? "home" : "away";
+            //                var eventWithTotal = new EventWithTotal()
+            //                {
+            //                    Id = sportEvent.Value["id"].ConvertToLong(),
+            //                    TotalType = type,
+            //                    TotalValue = sportEvent.Value["periods"]?[0]?["teamTotal"]?[type]?["points"].ToString()
+            //                };
+            //                bSwitch = !bSwitch;
+            //            }
+            //            catch (Exception)
+            //            {
+            //                // ignored
+            //            }
+            //        }
+            //    }
+            //}
 
         }
 

@@ -36,6 +36,6 @@ namespace DXApplication1.Models
 
         public string UserPass { get; set; }
 
-        public string ConfirmPass { get; set; }
+        public int? AutoUpdateTime { get; set; }
     }
 }

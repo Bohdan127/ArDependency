@@ -2,7 +2,6 @@
 using FormulasCollection.Interfaces;
 using FormulasCollection.Realizations;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -19,6 +18,7 @@ namespace DXApplication1.Models
         private Form _defaultMdiParent;
         private OpenCalculatorForm _openCalculatorForm;
         public DataManager DataManager { get; set; }
+        private Timer timer;
 
         #endregion Members
 
@@ -28,6 +28,9 @@ namespace DXApplication1.Models
         {
             _defaultMdiParent = mdiParent;
             DataManager = new DataManager(forkFormulas);
+            timer = new Timer();
+            timer.Interval = 20000;//default for 2 minutes
+            timer.Tick += Timer_Tick;
         }
 
         #endregion CTOR
@@ -65,6 +68,8 @@ namespace DXApplication1.Models
                 _filterPage = new FilterPage(_filter);
                 _filterPage.MdiParent = mdiParent ?? _defaultMdiParent;
                 _filterPage.Close = false;
+
+
             }
             return _filterPage;
         }
@@ -102,6 +107,12 @@ namespace DXApplication1.Models
                 _searchPage.Close = false;
                 _searchPage.Update += SearchPage_Update;
                 _searchPage.CalculatorCall += AccountPage_CalculatorCall;//can be the same as for account page
+                if (!timer.Enabled)
+                {
+                    if (_filterPage.Filter.AutoUpdateTime != null)
+                        timer.Interval = _filterPage.Filter.AutoUpdateTime.Value * 10000;
+                    timer.Start();
+                }
             }
             return _searchPage;
         }
@@ -109,6 +120,12 @@ namespace DXApplication1.Models
         #endregion Functions
 
         #region Events
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            SearchPage_Update(sender, e);
+        }
+
         private void AccountPage_Update(object sender, EventArgs e)
         {
 
@@ -127,9 +144,10 @@ namespace DXApplication1.Models
         private async void SearchPage_Update(object sender, EventArgs e)
         {
             _searchPage.StartLoading();
-            _searchPage.MainGridControl.DataSource = null;//todo delete this part!!!!!(but maybe we should show to user that data is updated)
-            _searchPage.MainGridControl.DataSource = (await DataManager.
-                  GetForksForAllSportsAsync(_filterPage?.Filter).ConfigureAwait(true)).Take(10);
+            var resList = await DataManager.
+                GetForksForAllSportsAsync(_filterPage?.Filter).ConfigureAwait(true);
+            _searchPage.MainGridControl.DataSource = null;
+            _searchPage.MainGridControl.DataSource = resList;
             _searchPage.MainGridControl.Refresh();
             _searchPage.EndLoading();
         }

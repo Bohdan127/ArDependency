@@ -32,7 +32,7 @@ namespace DXApplication1.Pages
         {
             for (int i = progressBarControl1.Properties.Minimum; i < progressBarControl1.Properties.Maximum; i++)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(10);
                 progressBarControl1.Invoke(new MethodInvoker(delegate { progressBarControl1.EditValue = i; }));
             }
         }

@@ -22,6 +22,11 @@ namespace DXApplication1.Pages
             : this()
         {
             Filter = filter;
+
+            //New Requirements: parser for this two site only
+            Filter.MarathonBet = true;
+            Filter.PinnacleSports = true;
+
             FirstBind();
             InitializeEvents();
         }
@@ -62,6 +67,9 @@ namespace DXApplication1.Pages
             volleyballToggleSwitch.Toggled += Volleyball_Toggled;
             tennisToggleSwitch.Toggled += Tennis_Toggled;
             hockeyToggleSwitch.Toggled += Hockey_Toggled;
+            textEditUserLogin.EditValueChanging += TextEditUserLogin_EditValueChanging;
+            textEditUserPass.EditValueChanging += TextEditUserPass_EditValueChanging;
+            textEditAutoUpdate.EditValueChanging += TextEditAutoUpdate_EditValueChanging;
         }
 
         public void DeInitializeEvents()
@@ -80,6 +88,33 @@ namespace DXApplication1.Pages
             volleyballToggleSwitch.Toggled -= Volleyball_Toggled;
             tennisToggleSwitch.Toggled -= Tennis_Toggled;
             hockeyToggleSwitch.Toggled -= Hockey_Toggled;
+            textEditUserLogin.EditValueChanging -= TextEditUserLogin_EditValueChanging;
+            textEditUserPass.EditValueChanging -= TextEditUserPass_EditValueChanging;
+            textEditAutoUpdate.EditValueChanging -= TextEditAutoUpdate_EditValueChanging;
+        }
+
+        private void TextEditAutoUpdate_EditValueChanging(object sender, ChangingEventArgs e)
+        {
+            lock (Filter)
+            {
+                Filter.AutoUpdateTime = e.NewValue.ConvertToIntOrNull();
+            }
+        }
+
+        private void TextEditUserPass_EditValueChanging(object sender, ChangingEventArgs e)
+        {
+            lock (Filter)
+            {
+                Filter.UserPass = e.NewValue?.ToString();
+            }
+        }
+
+        private void TextEditUserLogin_EditValueChanging(object sender, ChangingEventArgs e)
+        {
+            lock (Filter)
+            {
+                Filter.UserName = e.NewValue?.ToString();
+            }
         }
 
         private void FilterPage_Closing(object sender, CancelEventArgs e)

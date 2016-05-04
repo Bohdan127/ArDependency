@@ -131,9 +131,10 @@ namespace DataParser.MY
                                                       englishNameTeams_Dictionary[_eventid].name2,
                                                       date,
                                                       countTypeCoff[i],
-                                                      res, sportType.ToString()),
+                                                      res,
+                                                      sportType.ToString(),
                                                       Site.MarathonBet.ToString()
-                                                      );
+                                                      ));
 
                         res = null;
                         i++;

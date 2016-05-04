@@ -2,7 +2,7 @@
 {
     public enum SportType
     {
-        Football = 15,
+        Soccer = 29,
         Basketball = 4,
         Hockey = 19,
         Tennis = 33,

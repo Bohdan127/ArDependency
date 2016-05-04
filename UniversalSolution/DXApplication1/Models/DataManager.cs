@@ -29,7 +29,7 @@ namespace DXApplication1.Models
                     SportType.Basketball, filterPage.UserName, filterPage.UserPass).ConfigureAwait(false));
             if (filterPage.Football)
                 resList.AddRange(await GetForksForSportTypeAsync(
-                    SportType.Football, filterPage.UserName, filterPage.UserPass).ConfigureAwait(false));
+                    SportType.Soccer, filterPage.UserName, filterPage.UserPass).ConfigureAwait(false));
             if (filterPage.Hockey)
                 resList.AddRange(await GetForksForSportTypeAsync(
                     SportType.Hockey, filterPage.UserName, filterPage.UserPass).ConfigureAwait(false));

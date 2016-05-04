@@ -17,6 +17,7 @@ namespace DataParser.DefaultRealization
         private SportType SportType = SportType.NoType;
         private IConverterFormulas _converter;
 
+        public const string Bookmaker = "Pinnacle";
 
 
         public PinnacleSportsDataParser(IConverterFormulas converter)
@@ -56,7 +57,8 @@ namespace DataParser.DefaultRealization
                         Type = withTotal.TotalType,
                         Coef = _converter.ConvertAmericanToDecimal(
                             withTotal.TotalValue.ConvertToIntOrNull()).ToString(),
-                        SportType = SportType,
+                        SportType = SportType.ToString(),
+                        Bookmaker = PinnacleSportsDataParser.Bookmaker,
                         MatchDateTime = withTotal.MatchDateTime
                     }).ToList();
         }

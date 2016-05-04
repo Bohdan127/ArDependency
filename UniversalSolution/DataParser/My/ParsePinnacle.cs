@@ -1,7 +1,6 @@
 ﻿
 //using DataParser.DefaultRealization;
 //using DataParser.Enums;
-using DataParser.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,11 +9,179 @@ using System.Threading.Tasks;
 
 namespace DataParser.MY
 {
+    public static class HelperParse
+    {
+        public static string Substrings(this string line, string start, string end = "</")
+        {
+            string replaceStartElement = "@@";
+            string replaceEndElement = "##";
+            line = line.Replace(start, replaceStartElement).Replace(end, replaceEndElement);
+            int indexStart = line.IndexOf(replaceStartElement) + replaceStartElement.Length;
+            int indexEnd = line.IndexOf(replaceEndElement);
+            return line.Substring(indexStart, indexEnd - indexStart);
+        }
+        public static bool _Contains(this string line, params string[] elements)
+        {
+            foreach (var e in elements)
+                if (!line.Contains(e)) return false;
+            return true;
+        }
+
+        public static string GetEventID(this string line)
+        {
+            string eventid = null;
+            int start = line.IndexOf(Tags.EventID) + Tags.EventID.Length + 2;
+            line = line.Substring(start);
+            eventid = line.Substring(0, line.IndexOf("\""));
+            return eventid;
+        }
+    }
+    public static class Tags
+    {
+        public static readonly string NameTeam = "<div class=\"member-name nowrap \" data-ellipsis='{}'>";
+        public static readonly string Date = "<td class=\"date\">";
+        public static readonly string EventID = "data-event-treeId";
+        public static readonly string Coff = "data-selection-price=\"";
+        public static readonly string TypeCoff = "<span class=\"hint\">";
+    }
+
+
+
     public class ParsePinnacle
     {
-        enum SportType2 { Football, Basketball, Hockey, Tennis, Volleyball }
-        private const string forTeam = "<div class=\"member-name nowrap \" data-ellipsis='{}'>";
-        private const string forDate = "<td class=\"date\">";
+
+        private List<ResultForForks> GetNameTeamsAndDateAsync(SportType sportType)
+        {
+            string url = "";
+            string namefile = "";
+            UrlAndNameFile(sportType, out url, out namefile);
+            //WriteToHtmlDocumentAsync(url, namefile).ConfigureAwait(false);
+            List<Teams> teams = new List<Teams>();
+
+            //<span class="hint">
+
+            List<string> koff = new List<string>();
+            string[] lines = HTML(url).Result.Split('\n');//File.ReadAllLines(namefile);
+
+            string date = null;
+            bool isDate = false;
+            bool isTypeCoff = false;
+            string oldEvent = "";
+
+            string _eventid = null;
+            List<string> countTypeCoff = new List<string>();
+
+            int i = 0;
+            int index = 0;
+            foreach (var line in lines)
+            {
+                if (countTypeCoff.Count < 10)
+                {
+                    if (isTypeCoff)
+                    {
+
+                        countTypeCoff.Add((line.IndexOf('<') != -1) ? line.Replace("<b>", "").Replace("</b>", "") : line);
+                        isTypeCoff = false;
+                    }
+                    if (line._Contains(Tags.TypeCoff))
+                        isTypeCoff = true;
+                }
+                if (line._Contains(Tags.EventID))
+                {
+                    _eventid = line.GetEventID();
+                    oldEvent = _eventid;
+                }
+                
+                if (isDate)
+                {
+                    date = line;
+                    isDate = false;
+                }
+                if (line._Contains(Tags.Date))
+                {
+                    isDate = true;
+                }
+
+                string res = null;
+                if (line.Contains(Tags.Coff) /*&& line.Contains("Match_Result")*/)
+                {
+                    res = line.Substrings(Tags.Coff, "\"");
+                    koff.Add(res);
+                }
+                if (line.Contains("<span>&mdash;</span>"))
+                {
+                    res = "-";
+                    koff.Add(res);
+                }
+
+                if (date != null && res != null && _eventid != null)
+                {
+                    if (index >= countTypeCoff.Count)
+                        index = 0;
+                    try
+                    {
+                        string q1 = englishNameTeams_Dictionary[_eventid].name1;
+                        string q2 = englishNameTeams_Dictionary[_eventid].name2;
+                        if (englishNameTeams_Dictionary[_eventid].name1 == "Denmark")
+                        {
+                             int s = 0;
+                        }
+                        result.Add(new ResultForForks(englishNameTeams_Dictionary[_eventid].name1,
+                                                      englishNameTeams_Dictionary[_eventid].name2,
+                                                      date,
+                                                      countTypeCoff[i],
+                                                      res)
+                                                      );
+                        res = null;
+                        i++;
+                    }
+                    catch { }
+                }
+                if (date != null && _eventid != null && res != null)
+                {
+                    date = null;
+                    res = null;
+                    _eventid = null;
+                }
+
+                if (oldEvent != _eventid)
+                {
+                    koff = new List<string>();
+                    i = 0;
+                }
+                if (koff.Count > (is_Football_Hokey(sportType) ? countCoff1 : countCoff2) - 1)
+                {
+                    koff = new List<string>();
+                    i = 0;
+                }
+
+                /*if (teams.Count == (is_Football_Hokey(sportType) ? countCoff1 : countCoff2))
+                {
+                    i++;
+                }*/
+                this.oldLine = line;
+            }
+
+
+            return result;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        enum SportType { Football, Basketball, Hockey, Tennis, Volleyball }
         private const int countCoff1 = 10;
         private const int countCoff2 = 6;
 
@@ -23,29 +190,16 @@ namespace DataParser.MY
         private Dictionary<string, EnglishNameTeams> englishNameTeams_Dictionary;
         public List<ResultForForks> result;
 
-        string url = "";
-        string namefile = "";
-
         //твоя метода this.GetResult(Type.basketball);
 
         public ParsePinnacle()
         {
             result = new List<ResultForForks>();
-            //this.WriteToFile();
-            //var a = this.GetResult(Type.football);
-            Initi(SportType.Volleyball);
+            Initi(SportType.Football);
         }
 
         private void Initi(SportType sportType)
         {
-
-            /*UrlAndNameFile(sportType, out url, out namefile, true);
-            WriteToHtmlDocumentAsync(url, namefile);
-            UrlAndNameFile(sportType, out url, out namefile);
-            WriteToHtmlDocumentAsync(url, namefile);
-            */
-            //List<ResultForForks> a = GetNameTeamsAndDateAsync(sportType).Result;
-            // this.ShowForks(a);
             try
             {
                 this.englishNameTeams_Dictionary = this.GetEnglishNameTEams(sportType);
@@ -54,7 +208,7 @@ namespace DataParser.MY
             }
             catch { }
         }
-        private static async Task WriteToHtmlDocumentAsync(string url, string namefile)
+        /*private static async Task WriteToHtmlDocumentAsync(string url, string namefile)
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
             HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
@@ -67,7 +221,19 @@ namespace DataParser.MY
             sw.Close();
 
             File.ReadAllLines(namefile);
+        }*/
+
+        private static async Task<string> HTML(string url)
+        {
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+            HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
+            StreamReader reader = new StreamReader(response.GetResponseStream());
+            List<string> result = new List<string>();
+            string HTML = await reader.ReadToEndAsync().ConfigureAwait(false);
+            reader.Close();
+            return HTML;
         }
+
 
         private Dictionary<string, EnglishNameTeams> GetEnglishNameTEams(SportType sportType)
         {
@@ -76,9 +242,7 @@ namespace DataParser.MY
             string namefile = "";
             UrlAndNameFile(sportType, out url, out namefile, true);
 
-            WriteToHtmlDocumentAsync(url, namefile);
-
-            string[] lines = File.ReadAllLines(namefile);
+            string[] lines = HTML(url).Result.Split('\n');
 
             string name1 = null;
             string name2 = null;
@@ -86,28 +250,21 @@ namespace DataParser.MY
 
             foreach (var line in lines)
             {
-                if (line.Contains("data-event-treeId"))
-                    _eventid = this.GetEventID(line);
+                if (line._Contains(Tags.EventID))
+                    _eventid = line.GetEventID();
 
-                if (this.Get(line, forTeam))
+                if (line._Contains(Tags.NameTeam))
                 {
-                    string findElements = forTeam;
-                    int startIndex = line.LastIndexOf(findElements);
-                    int endIndex = line.LastIndexOf("</");
-                    if (startIndex < endIndex && startIndex != -1 && endIndex != -1)
-                    {
-                        if (name1 == null)
-                            name1 = line.Substring(findElements.Length + 1, endIndex - findElements.Length - 1);
-                        else name2 = line.Substring(findElements.Length + 1, endIndex - findElements.Length - 1);
-                    }
-
+                    if (name1 == null)
+                        name1 = line.Substrings(Tags.NameTeam);
+                    else name2 = line.Substrings(Tags.NameTeam);
                 }
                 if (!string.IsNullOrEmpty(name1) && !string.IsNullOrEmpty(name2) && !string.IsNullOrEmpty(_eventid))
                 {
-                    var t = new EnglishNameTeams();
-                    t.name1 = name1;//.Add(name1, name2);
-                    t.name2 = name2;
-                    resultEnglishTeams.Add(_eventid, t);
+                    var teams = new EnglishNameTeams();
+                    teams.name1 = name1;
+                    teams.name2 = name2;
+                    resultEnglishTeams.Add(_eventid, teams);
                     _eventid = null;
                     name1 = null;
                     name2 = null;
@@ -116,7 +273,6 @@ namespace DataParser.MY
 
             return resultEnglishTeams;
         }
-
 
         private void UrlAndNameFile(SportType sportType, out string url, out string namefile, bool isEnglish = false)
         {
@@ -148,132 +304,6 @@ namespace DataParser.MY
                     break;
             }
         }
-        private List<ResultForForks> GetNameTeamsAndDateAsync(SportType sportType)
-        {
-            string url = "";
-            string namefile = "";
-            UrlAndNameFile(sportType, out url, out namefile);
-            WriteToHtmlDocumentAsync(url, namefile).ConfigureAwait(false);
-            List<Teams> teams = new List<Teams>();
-
-            List<string> koff = new List<string>();
-            string[] lines = File.ReadAllLines(namefile);
-
-            string date = null;
-            bool isDate = false;
-            string _eventid = null;
-            List<string> countTypeCoff = new List<string>();
-
-            int i = 0;
-            int index = 0;
-            foreach (var line in lines)
-            {
-                if (line.Contains("data-event-treeId"))
-                    _eventid = this.GetEventID(line);
-                if (isDate)
-                {
-                    date = line;
-                    isDate = false;
-                }
-                if (this.Get(line, forDate))
-                {
-                    isDate = true;
-                }
-
-                string res = null;
-                if (line.Contains("data-selection-price=") /*&& line.Contains("Match_Result")*/)
-                {
-                    int indexStart = line.IndexOf("data-selection-price=") + ("data-selection-price=").Length;
-                    res = line.Substring(indexStart).Trim('\"');
-                    koff.Add(res);
-
-                }
-
-                if (date != null && res != null && _eventid != null)
-                {
-                    if (index >= countTypeCoff.Count)
-                        index = 0;
-                    //var a=countTypeCoff[index];
-                    try
-                    {
-                        string name1 = englishNameTeams_Dictionary[_eventid].name1;
-                        string name2 = englishNameTeams_Dictionary[_eventid].name2;
-                        result.Add(new ResultForForks(name1, name2, date, " - ", res));
-                        res = null;
-                        i++;
-                    }
-                    catch { }
-                }
-                if (date != null && _eventid != null && res != null)
-                {
-                    date = null;
-                    res = null;
-                    _eventid = null;
-                }
-                #region
-                /*if (name1 != null && name2 != null && date != null && _eventid != null)
-                {
-                    if (this.is_Football_Hokey(sportType) && (koff.Count == 10))
-                    {
-                        string win1 = koff[0];
-                        string x = koff[1];
-                        string win2 = koff[2];
-                        string x_win1 = koff[3];
-                        string x_win2 = koff[4];
-                        string win1_win2 = koff[5];
-                        string fora1 = koff[6];
-                        string fora2 = koff[7];
-                        string less = koff[8];
-                        string more = koff[9];
-
-                        name1 = englishNameTeams_Dictionary[_eventid].FirstOrDefault().Key;
-                        name2 = englishNameTeams_Dictionary[_eventid].FirstOrDefault().Value;
-                        teams.Add(new Teams_Football_Hokey(_eventid, name1, name2, date, win1, x, win2, x_win1, x_win2, win1_win2, fora1, fora2, less, more));
-                        name1 = null;
-                        name2 = null;
-                        date = null;
-                        _eventid = null;
-                        koff = new List<string>();
-                    }
-                    if (!this.is_Football_Hokey(sportType) && (koff.Count == 6))
-                    {
-                        string win1 = koff[0];
-                        string win2 = koff[1];
-                        string fora1 = koff[2];
-                        string fora2 = koff[3];
-                        string less = koff[4];
-                        string more = koff[5];
-
-                        name1 = englishNameTeams_Dictionary[_eventid].FirstOrDefault().Key;
-                        name2 = englishNameTeams_Dictionary[_eventid].FirstOrDefault().Value;
-                        teams.Add(new Teams_Tenis_Volleyball_Basketball(_eventid, name1, name2, date, win1, win2, fora1, fora2, less, more));
-                        name1 = null;
-                        name2 = null;
-                        date = null;
-                        _eventid = null;
-                        koff = new List<string>();
-                    }
-
-                }*/
-                #endregion
-
-                if (koff.Count > (is_Football_Hokey(sportType) ? countCoff1 : countCoff2))
-                {
-                    koff = new List<string>();
-                }
-
-                if (teams.Count == (is_Football_Hokey(sportType) ? countCoff1 : countCoff2))
-                {
-                    i++;
-                }
-                this.oldLine = line;
-            }
-
-
-            return result;
-
-        }
-
         private bool is_Football_Hokey(SportType sportType)
         {
             if (sportType == SportType.Football || sportType == SportType.Hockey)
@@ -332,15 +362,10 @@ namespace DataParser.MY
             {
                 Console.WriteLine(fork.Event + "-"
                     + fork.Type + " - "
-                    + fork.Coef
+                    + fork.value
                     );
             }
         }
-
-        /*public List<Teams> PinnacleSports() {
-            //<span class="text"><span class="trigger" назви команд
-        }*/
-        //Total_Goals
     }
 }
 public class EnglishNameTeams
@@ -360,25 +385,16 @@ public class ResultForForks
 {
     public string Event;
     public string Type;
-    public string Coef;
-
-    public ResultForForks()
-    {
-    }
+    public string value;
 
     //  X1 X2 1 2 
     public ResultForForks(string nameTeam1, string nameTeam2, string date, string nameCoff, string value)
     {
         this.Event = nameTeam1 + "-" + nameTeam2 + "-" + date;
         this.Type = nameCoff;
-        this.Coef = value;
+        this.value = value;
     }
-
-    public string Remark { get; set; }
-    public object SportType { get; set; }
-    public object MatchDateTime { get; set; }
 }
-
 public class Teams
 {
     protected string nameTeam1;

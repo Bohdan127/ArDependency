@@ -131,8 +131,9 @@ namespace DataParser.MY
                                                       englishNameTeams_Dictionary[_eventid].name2,
                                                       date,
                                                       countTypeCoff[i],
-                                                      res)
+                                                      res, sportType.ToString())
                                                       );
+                        
                         res = null;
                         i++;
                     }
@@ -387,16 +388,19 @@ public class ResultForForks
     public string Event;
     public string Type;
     public string Coef;
-
+    public string Bookmaker { get; set; }
     //  X1 X2 1 2 
-    public ResultForForks(string nameTeam1, string nameTeam2, string date, string nameCoff, string coef)
+    public ResultForForks() { }
+    public ResultForForks(string nameTeam1, string nameTeam2, string date, string nameCoff, string coef, string type)
     {
-        this.Event = nameTeam1 + "-" + nameTeam2 + "-" + date;
+        this.Event = nameTeam1 + "-" + nameTeam2;
+        this.MatchDateTime = date;
         this.Type = nameCoff;
         this.Coef = coef;
+        SportType = type;
     }
 
-    public SportType SportType { get; set; }
+    public string SportType { get; set; }
     public string MatchDateTime { get; set; }
 }
 public class Teams

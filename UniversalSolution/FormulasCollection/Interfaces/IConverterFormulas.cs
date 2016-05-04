@@ -12,20 +12,20 @@
         /// </summary>
         /// <param name="american">American odds</param>
         /// <returns>Decimal odds or IncorrectAmericanOdds if it's null</returns>
-        double ConvertAmericanToDecimal(int? american);
+        double ConvertAmericanToDecimal(double? american);
 
         /// <summary>
         /// Convert  Only Positive odds from American to Decimal
         /// </summary>
         /// <param name="american">American odds</param>
         /// <returns>Decimal odds or IncorrectAmericanOdds if it's negative</returns>
-        double PositiveConvertationFormula(int american);
+        double PositiveConvertationFormula(double american);
 
         /// <summary>
         /// Convert Only Negative odds from American to Decimal
         /// </summary>
         /// <param name="american">American odds</param>
         /// <returns>Decimal odds or IncorrectAmericanOdds if it's positive</returns>
-        double NegativeConvertationFormula(int american);
+        double NegativeConvertationFormula(double american);
     }
 }

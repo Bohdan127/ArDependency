@@ -17,9 +17,6 @@ namespace DataParser.DefaultRealization
         private SportType SportType = SportType.NoType;
         private IConverterFormulas _converter;
 
-        public const string Bookmaker = "Pinnacle";
-
-
         public PinnacleSportsDataParser(IConverterFormulas converter)
         {
             _converter = converter;
@@ -56,9 +53,9 @@ namespace DataParser.DefaultRealization
                         Event = withNames.TeamNames,
                         Type = withTotal.TotalType,
                         Coef = _converter.ConvertAmericanToDecimal(
-                            withTotal.TotalValue.ConvertToIntOrNull()).ToString(),
+                            withTotal.TotalValue.ConvertToDoubleOrNull()).ToString(),
                         SportType = SportType.ToString(),
-                        Bookmaker = PinnacleSportsDataParser.Bookmaker,
+                        Bookmaker = Site.PinnacleSports.ToString(),
                         MatchDateTime = withTotal.MatchDateTime
                     }).ToList();
         }
@@ -179,9 +176,7 @@ namespace DataParser.DefaultRealization
                     }
                 }
             }
-
-            catch
-                (Exception ex)
+            catch (Exception ex)
             {
                 // ignored
             }
@@ -206,6 +201,7 @@ namespace DataParser.DefaultRealization
                                     Id = sportEvent.Value["id"].ConvertToLong(),
                                     TeamNames =
                                         $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"
+                                        .Replace("\"", "")
                                 });
                         }
                 }

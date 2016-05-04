@@ -44,10 +44,13 @@ namespace DXApplication1.Pages
                 volleyballToggleSwitch.EditValue = Filter.Volleyball;
                 hockeyToggleSwitch.EditValue = Filter.Hockey;
                 tennisToggleSwitch.EditValue = Filter.Tennis;
-                fasterDateTimePicker.EditValue = Filter.FaterThen;//todo ???
-                longerDateTimePicker.EditValue = Filter.LongerThen;//todo ???
+                fasterDateTimePicker.EditValue = Filter.FaterThen;
+                longerDateTimePicker.EditValue = Filter.LongerThen;
                 outCome2ToggleSwitch.EditValue = Filter.OutCome2;
                 outcome3ToggleSwitch.EditValue = Filter.OutCome3;
+                textEditUserLogin.EditValue = Filter.UserName;
+                textEditUserPass.EditValue = Filter.UserPass;
+                textEditAutoUpdate.EditValue = Filter.AutoUpdateTime;
             }
         }
 

@@ -109,6 +109,7 @@ namespace DXApplication1.Models
                 _searchPage.CalculatorCall += AccountPage_CalculatorCall;//can be the same as for account page
                 if (!timer.Enabled)
                 {
+                    SearchPage_Update(null, null);
                     if (_filterPage.Filter.AutoUpdateTime != null)
                         timer.Interval = _filterPage.Filter.AutoUpdateTime.Value * 60 * 1000;
                     timer.Start();

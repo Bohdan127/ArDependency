@@ -14,7 +14,7 @@ namespace DXApplication1
         //todo Later Make this parameter visible from UI with possibility to change
         public const string SettingsPath = "./";
 
-        public const string SettingsFile = "DataSet.xml";
+        public const string SettingsFile = "Configuration.xml";
 
         private Filter _filter;
         private PageManager _pageManager;

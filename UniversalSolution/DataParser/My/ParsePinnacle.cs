@@ -51,7 +51,7 @@ namespace DataParser.MY
     public class ParsePinnacle
     {
 
-        private List<ResultForForks> GetNameTeamsAndDateAsync(SportType sportType)
+        private async Task<List<ResultForForks>> GetNameTeamsAndDateAsync(SportType sportType)
         {
             string url = "";
             string namefile = "";
@@ -62,7 +62,7 @@ namespace DataParser.MY
             //<span class="hint">
 
             List<string> koff = new List<string>();
-            string[] lines = HTML(url).Result.Split('\n');//File.ReadAllLines(namefile);
+            string[] lines = (await HtmlAsync(url).ConfigureAwait(false)).Split('\n');//File.ReadAllLines(namefile);
 
             string date = null;
             bool isDate = false;
@@ -131,9 +131,10 @@ namespace DataParser.MY
                                                       englishNameTeams_Dictionary[_eventid].name2,
                                                       date,
                                                       countTypeCoff[i],
-                                                      res, sportType.ToString())
+                                                      res, sportType.ToString()),
+                                                      Site.MarathonBet.ToString()
                                                       );
-                        
+
                         res = null;
                         i++;
                     }
@@ -183,7 +184,6 @@ namespace DataParser.MY
 
 
 
-        enum SportType { Football, Basketball, Hockey, Tennis, Volleyball }
         private const int countCoff1 = 10;
         private const int countCoff2 = 6;
 
@@ -197,18 +197,19 @@ namespace DataParser.MY
         public ParsePinnacle()
         {
             result = new List<ResultForForks>();
-            Initi(SportType.Football);
+            // Initi(sportType);
         }
 
-        private void Initi(SportType sportType)
+        public async Task<List<ResultForForks>> InitiAsync(SportType sportType)
         {
             try
             {
-                this.englishNameTeams_Dictionary = this.GetEnglishNameTEams(sportType);
-                var a = GetNameTeamsAndDateAsync(sportType);
-                this.ShowForks(a);
+                this.englishNameTeams_Dictionary = await this.GetEnglishNameTEams(sportType).ConfigureAwait(false);
+                return await GetNameTeamsAndDateAsync(sportType).ConfigureAwait(false);
+                //this.ShowForks(a);
             }
             catch { }
+            return new List<ResultForForks>();
         }
         /*private static async Task WriteToHtmlDocumentAsync(string url, string namefile)
         {
@@ -225,7 +226,7 @@ namespace DataParser.MY
             File.ReadAllLines(namefile);
         }*/
 
-        private static async Task<string> HTML(string url)
+        private static async Task<string> HtmlAsync(string url)
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
             HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
@@ -237,14 +238,14 @@ namespace DataParser.MY
         }
 
 
-        private Dictionary<string, EnglishNameTeams> GetEnglishNameTEams(SportType sportType)
+        private async Task<Dictionary<string, EnglishNameTeams>> GetEnglishNameTEams(SportType sportType)
         {
             Dictionary<string, EnglishNameTeams> resultEnglishTeams = new Dictionary<string, EnglishNameTeams>();
             string url = "";
             string namefile = "";
             UrlAndNameFile(sportType, out url, out namefile, true);
 
-            string[] lines = HTML(url).Result.Split('\n');
+            string[] lines = (await HtmlAsync(url).ConfigureAwait(false)).Split('\n');
 
             string name1 = null;
             string name2 = null;
@@ -284,8 +285,8 @@ namespace DataParser.MY
             namefile = "Default.html";
             switch (sportType)
             {
-                case SportType.Football:
-                    namefile = "Football" + en_namefile + ".html";
+                case SportType.Soccer:
+                    namefile = "Soccer" + en_namefile + ".html";
                     url = "https://www.marathonbet.com/" + language + "/popular/Football/?menu=true";
                     break;
                 case SportType.Basketball:
@@ -308,7 +309,7 @@ namespace DataParser.MY
         }
         private bool is_Football_Hokey(SportType sportType)
         {
-            if (sportType == SportType.Football || sportType == SportType.Hockey)
+            if (sportType == SportType.Soccer || sportType == SportType.Hockey)
                 return true;
             return false;
         }
@@ -391,13 +392,14 @@ public class ResultForForks
     public string Bookmaker { get; set; }
     //  X1 X2 1 2 
     public ResultForForks() { }
-    public ResultForForks(string nameTeam1, string nameTeam2, string date, string nameCoff, string coef, string type)
+    public ResultForForks(string nameTeam1, string nameTeam2, string date, string nameCoff, string coef, string type, string bookmaker)
     {
-        this.Event = nameTeam1 + "-" + nameTeam2;
+        this.Event = nameTeam1.Trim() + " - " + nameTeam2.Trim();
         this.MatchDateTime = date;
         this.Type = nameCoff;
         this.Coef = coef;
         SportType = type;
+        Bookmaker = bookmaker;
     }
 
     public string SportType { get; set; }

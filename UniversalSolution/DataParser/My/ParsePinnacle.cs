@@ -1,6 +1,7 @@
 ﻿
 //using DataParser.DefaultRealization;
 //using DataParser.Enums;
+using DataParser.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -91,7 +92,7 @@ namespace DataParser.MY
                     _eventid = line.GetEventID();
                     oldEvent = _eventid;
                 }
-                
+
                 if (isDate)
                 {
                     date = line;
@@ -124,7 +125,7 @@ namespace DataParser.MY
                         string q2 = englishNameTeams_Dictionary[_eventid].name2;
                         if (englishNameTeams_Dictionary[_eventid].name1 == "Denmark")
                         {
-                             int s = 0;
+                            int s = 0;
                         }
                         result.Add(new ResultForForks(englishNameTeams_Dictionary[_eventid].name1,
                                                       englishNameTeams_Dictionary[_eventid].name2,
@@ -362,7 +363,7 @@ namespace DataParser.MY
             {
                 Console.WriteLine(fork.Event + "-"
                     + fork.Type + " - "
-                    + fork.value
+                    + fork.Coef
                     );
             }
         }
@@ -385,15 +386,18 @@ public class ResultForForks
 {
     public string Event;
     public string Type;
-    public string value;
+    public string Coef;
 
     //  X1 X2 1 2 
-    public ResultForForks(string nameTeam1, string nameTeam2, string date, string nameCoff, string value)
+    public ResultForForks(string nameTeam1, string nameTeam2, string date, string nameCoff, string coef)
     {
         this.Event = nameTeam1 + "-" + nameTeam2 + "-" + date;
         this.Type = nameCoff;
-        this.value = value;
+        this.Coef = coef;
     }
+
+    public SportType SportType { get; set; }
+    public string MatchDateTime { get; set; }
 }
 public class Teams
 {

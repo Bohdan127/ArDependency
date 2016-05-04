@@ -10,6 +10,5 @@
 
         public string MatchDateTime { get; set; }
 
-        public string Remark { get; set; }
     }
 }

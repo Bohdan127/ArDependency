@@ -51,10 +51,6 @@
     <Compile Include="Realizations\TwoOutComeForkFormulas.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataParser\DataParser.csproj">
-      <Project>{586A03BB-1702-4143-B370-E1DC6656762A}</Project>
-      <Name>DataParser</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Tools\Tools.csproj">
       <Project>{0C00658F-ECD3-4C88-AC62-6022BF496214}</Project>
       <Name>Tools</Name>

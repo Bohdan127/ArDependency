@@ -55,7 +55,7 @@ namespace DXApplication1.Models
 
         public async Task<List<Fork>> GetForksForSportTypeAsync(SportType sportType, Site site)
         {
-            await new PinnacleSportsDataParser().GetAllPinacleEventsForRequestAsync(sportType).ConfigureAwait(false);
+            await new PinnacleSportsDataParser(new ConverterFormulas()).GetAllPinacleEventsForRequestAsync(sportType).ConfigureAwait(false);
 
             return null;
             //await _forkFormulas.GetAllForksAsync(await new ParsePinnacle().GetNameTeamsAndDateAsync(sportType, site).ConfigureAwait(true)).ConfigureAwait(false);

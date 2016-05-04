@@ -95,6 +95,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FormulasCollection\FormulasCollection.csproj">
+      <Project>{C6982AB9-704A-474F-A303-89B4C4A3D11E}</Project>
+      <Name>FormulasCollection</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tools\Tools.csproj">
       <Project>{0c00658f-ecd3-4c88-ac62-6022bf496214}</Project>
       <Name>Tools</Name>

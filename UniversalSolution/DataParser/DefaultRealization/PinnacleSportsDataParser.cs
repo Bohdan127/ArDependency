@@ -1,5 +1,6 @@
 ﻿using DataParser.Enums;
 using DataParser.Models;
+using FormulasCollection.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Json;
@@ -14,12 +15,13 @@ namespace DataParser.DefaultRealization
     public class PinnacleSportsDataParser
     {
         private SportType SportType = SportType.NoType;
+        private IConverterFormulas _converter;
 
-        public PinnacleSportsDataParser()
+
+        public PinnacleSportsDataParser(IConverterFormulas converter)
         {
-
+            _converter = converter;
         }
-
 
         public async Task<List<ResultForForks>> GetAllPinacleEventsForRequestAsync(SportType sportType)
         {
@@ -43,21 +45,17 @@ namespace DataParser.DefaultRealization
             var evenstWithNames = ParseEventWithNames(teamNamesResp);
             var eventsWithTotal = ParseEventWithTotals(totalResp);
 
-            List<ResultForForks> list = new List<ResultForForks>();
-            foreach (EventWithTeamName withNames in evenstWithNames)
-                foreach (var withTotal in eventsWithTotal.Where(t => t.Id == withNames.Id))
-                {
-                    list.Add(new ResultForForks()
+            return (from withNames in evenstWithNames
+                    from withTotal in eventsWithTotal.Where(t => t.Id == withNames.Id)
+                    select new ResultForForks()
                     {
                         Event = withNames.TeamNames,
                         Type = withTotal.TotalType,
-                        Coef = withTotal.TotalValue,
+                        Coef = _converter.ConvertAmericanToDecimal(withTotal.TotalValue.ConvertToIntOrNull()).ToString(),
                         Remark = withTotal.Remark,
                         SportType = SportType,
                         MatchDateTime = withTotal.MatchDateTime
-                    });
-                }
-            return list;
+                    }).ToList();
         }
 
         private List<EventWithTotal> ParseEventWithTotals(HttpWebResponse totalResp)

@@ -15,6 +15,11 @@ namespace DataParser.DefaultRealization
     {
         private SportType SportType = SportType.NoType;
 
+        public PinnacleSportsDataParser()
+        {
+
+        }
+
 
         public async Task<List<ResultForForks>> GetAllPinacleEventsForRequestAsync(SportType sportType)
         {

@@ -10,13 +10,15 @@ namespace DXApplication1.Models
     public class DataManager
     {
         private IForkFormulas _forkFormulas;
+        private Parser _parser;
 
         public DataManager(IForkFormulas forkFormulas)
         {
             _forkFormulas = forkFormulas;
+            _parser = new Parser();
         }
 
-        public async Task<List<Fork>> GetForksForAllSportsAsync(Filter filterPage, Site site)
+        public async Task<List<Fork>> GetForksForAllSportsAsync(Filter filterPage)
         {
             if (filterPage == null) return new List<Fork>();
 
@@ -24,40 +26,28 @@ namespace DXApplication1.Models
 
             if (filterPage.Basketball)
                 resList.AddRange(await GetForksForSportTypeAsync(
-                    SportType.Basketball, site).ConfigureAwait(false));
-            else if (filterPage.Football)
+                    SportType.Basketball, filterPage.UserName, filterPage.UserPass).ConfigureAwait(false));
+            if (filterPage.Football)
                 resList.AddRange(await GetForksForSportTypeAsync(
-                    SportType.Football, site).ConfigureAwait(false));
-            else if (filterPage.Hockey)
+                    SportType.Football, filterPage.UserName, filterPage.UserPass).ConfigureAwait(false));
+            if (filterPage.Hockey)
                 resList.AddRange(await GetForksForSportTypeAsync(
-                    SportType.Hockey, site).ConfigureAwait(false));
-            else if (filterPage.Tennis)
+                    SportType.Hockey, filterPage.UserName, filterPage.UserPass).ConfigureAwait(false));
+            if (filterPage.Tennis)
                 resList.AddRange(await GetForksForSportTypeAsync(
-                    SportType.Tennis, site).ConfigureAwait(false));
-            else if (filterPage.Volleyball)
+                    SportType.Tennis, filterPage.UserName, filterPage.UserPass).ConfigureAwait(false));
+            if (filterPage.Volleyball)
                 resList.AddRange(await GetForksForSportTypeAsync(
-                    SportType.Volleyball, site).ConfigureAwait(false));
+                    SportType.Volleyball, filterPage.UserName, filterPage.UserPass).ConfigureAwait(false));
 
             return resList;
         }
 
-        public async Task<List<Fork>> GetForksForAllSportsAsync(Filter filterPage)
+        public async Task<List<Fork>> GetForksForSportTypeAsync(SportType sportType, string userLogin, string userPass)
         {
-            var resList = new List<Fork>();
+            // await new PinnacleSportsDataParser(new ConverterFormulas()).GetAllPinacleEventsForRequestAsync(sportType, userLogin, userPass).ConfigureAwait(false);
 
-            if (filterPage.MarathonBet)
-                resList.AddRange(await GetForksForAllSportsAsync(filterPage, Site.MarathonBet).ConfigureAwait(false));
-            if (filterPage.PinnacleSports)
-                resList.AddRange(await GetForksForAllSportsAsync(filterPage, Site.PinnacleSports).ConfigureAwait(false));
-
-            return resList;
-        }
-
-        public async Task<List<Fork>> GetForksForSportTypeAsync(SportType sportType, Site site)
-        {
-            await new PinnacleSportsDataParser(new ConverterFormulas()).GetAllPinacleEventsForRequestAsync(sportType).ConfigureAwait(false);
-
-            return null;
+            return await _parser.GetGetAllForksAsync(sportType, userLogin, userPass).ConfigureAwait(false);
             //await _forkFormulas.GetAllForksAsync(await new ParsePinnacle().GetNameTeamsAndDateAsync(sportType, site).ConfigureAwait(true)).ConfigureAwait(false);
         }
     }

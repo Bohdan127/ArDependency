@@ -20,8 +20,8 @@ namespace ParseAPI
             var request =
                 (HttpWebRequest)
                     WebRequest.Create(
-                        // "https://api.pinnaclesports.com/v1/odds?sportid=" + (int)SportType.Volleyball);   //for totals
-                        "https://api.pinnaclesports.com/v1/fixtures?sportid=" + (int)SportType.Tennis); //for team name
+                         "https://api.pinnaclesports.com/v1/odds?sportid=" + (int)SportType.Volleyball);   //for totals
+                      // "https://api.pinnaclesports.com/v1/fixtures?sportid=" + (int)SportType.Tennis); //for team name
             string credentials = String.Format("{0}:{1}", "VB794327", "artem89@");
             byte[] bytes = Encoding.UTF8.GetBytes(credentials);
             string base64 = Convert.ToBase64String(bytes);
@@ -68,55 +68,131 @@ namespace ParseAPI
             //    new StreamWriter(@"C:\Users\Lenovo-PCv3\Desktop\Totals_Volleyball.txt").Write(s);
             //}
             var list = new List<EventWithTeamName>();
-            foreach (var league in
-                        ((JsonObject)JsonObject.Load(response.GetResponseStream()))?["league"])
-            {
-                var sportEvents = league.Value?["events"];
-                if (sportEvents != null)
-                    foreach (var sportEvent in sportEvents)
-                    {
-                        if (sportEvent.Value != null)
-                            list.Add(new EventWithTeamName()
-                            {
-                                Id = sportEvent.Value["id"].ConvertToLong(),
-                                TeamNames =
-                                    $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"
-                            });
-                    }
-            }
-            var f = new StreamWriter(@"C:\Users\Lenovo-PCv3\Desktop\JustNames_Tennis.txt");
 
-            foreach (var l in list)
+            var resList = new List<EventWithTotal>();
+            try
             {
-                f.WriteLine(l.TeamNames);
+                var sportEvents = (JsonObject)JsonObject.Load(response.GetResponseStream());
+
+
+                foreach (var league in sportEvents["leagues"])
+                {
+                    try
+                    {
+                        foreach (var sportEvent in league.Value?["events"])
+                        {
+                            try
+                            {
+                                foreach (var period in sportEvent.Value?["periods"])
+                                {
+                                    try
+                                    {
+                                        resList.Add(new EventWithTotal()
+                                        {
+                                            Id = sportEvent.Value["id"].ConvertToLong(),
+                                            TotalType = "home",
+                                            TotalValue = period.Value?["moneyline"]?["home"]?.ToString(),
+                                            Remark = "moneyline home",
+                                            MatchDateTime = period.Value?["cutoff"]?.ToString()
+                                        });
+                                        resList.Add(new EventWithTotal()
+                                        {
+                                            Id = sportEvent.Value["id"].ConvertToLong(),
+                                            TotalType = "away",
+                                            TotalValue = period.Value?["moneyline"]?["away"]?.ToString(),
+                                            Remark = "moneyline away",
+                                            MatchDateTime = period.Value?["cutoff"]?.ToString()
+                                        });
+                                        resList.Add(new EventWithTotal()
+                                        {
+                                            Id = sportEvent.Value["id"].ConvertToLong(),
+                                            TotalType = "draw",
+                                            TotalValue = period.Value?["moneyline"]?["draw"]?.ToString(),
+                                            Remark = "moneyline draw",
+                                            MatchDateTime = period.Value?["cutoff"]?.ToString()
+                                        });
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        //ignored
+                                    }
+
+                                    try
+                                    {
+                                        foreach (var spread in period.Value?["spreads"])
+                                        {
+                                            try
+                                            {
+                                                resList.Add(new EventWithTotal()
+                                                {
+                                                    Id = sportEvent.Value["id"].ConvertToLong(),
+                                                    TotalType = spread.Value?["hdp"]?.ToString(),
+                                                    TotalValue = spread.Value?["away"]?.ToString(),
+                                                    Remark = "spreads away",
+                                                    MatchDateTime = period.Value?["cutoff"]?.ToString()
+                                                });
+                                                resList.Add(new EventWithTotal()
+                                                {
+                                                    Id = sportEvent.Value["id"].ConvertToLong(),
+                                                    TotalType = spread.Value?["hdp"]?.ToString(),
+                                                    TotalValue = spread.Value?["home"]?.ToString(),
+                                                    Remark = "spreads home",
+                                                    MatchDateTime = period.Value?["cutoff"]?.ToString()
+                                                });
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                //ignored
+                                            }
+                                        }
+                                        try
+                                        {
+                                            resList.Add(new EventWithTotal()
+                                            {
+                                                Id = sportEvent.Value["id"].ConvertToLong(),
+                                                TotalType = "away",
+                                                TotalValue = period.Value?["teamTotal"]?["away"]?["points"]?.ToString(),
+                                                Remark = "total away",
+                                                MatchDateTime = period.Value?["cutoff"]?.ToString()
+                                            });
+                                            resList.Add(new EventWithTotal()
+                                            {
+                                                Id = sportEvent.Value["id"].ConvertToLong(),
+                                                TotalType = "home",
+                                                TotalValue = period.Value?["teamTotal"]?["home"]?["points"]?.ToString(),
+                                                Remark = "total home",
+                                                MatchDateTime = period.Value?["cutoff"]?.ToString()
+                                            });
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            //ignored
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        // ignored
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                // ignored
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // ignored
+                    }
+                }
             }
-            f.Close();
-            //bool bSwitch = false;
-            //var sportEvents = (JsonObject)JsonObject.Load(response.GetResponseStream());
-            //foreach (var league in sportEvents["leagues"])
-            //{
-            //    foreach (var sportEvent in league.Value["events"])
-            //    {
-            //        if (sportEvent.Value != null)
-            //        {
-            //            try
-            //            {
-            //                var type = bSwitch ? "home" : "away";
-            //                var eventWithTotal = new EventWithTotal()
-            //                {
-            //                    Id = sportEvent.Value["id"].ConvertToLong(),
-            //                    TotalType = type,
-            //                    TotalValue = sportEvent.Value["periods"]?[0]?["teamTotal"]?[type]?["points"].ToString()
-            //                };
-            //                bSwitch = !bSwitch;
-            //            }
-            //            catch (Exception)
-            //            {
-            //                // ignored
-            //            }
-            //        }
-            //    }
-            //}
+
+            catch
+                (Exception ex)
+            {
+                // ignored
+            }
 
         }
 

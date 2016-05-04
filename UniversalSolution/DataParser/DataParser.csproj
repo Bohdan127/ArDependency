@@ -75,6 +75,7 @@
     <Compile Include="DefaultRealization\DefaultDataParser.cs" />
     <Compile Include="DefaultRealization\DefaultEvent.cs" />
     <Compile Include="DefaultRealization\GenericMatch.cs" />
+    <Compile Include="DefaultRealization\Parser.cs" />
     <Compile Include="DefaultRealization\PinnacleSportsDataParser.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Enums\Site.cs" />

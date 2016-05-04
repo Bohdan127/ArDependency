@@ -110,7 +110,7 @@ namespace DXApplication1.Models
                 if (!timer.Enabled)
                 {
                     if (_filterPage.Filter.AutoUpdateTime != null)
-                        timer.Interval = _filterPage.Filter.AutoUpdateTime.Value * 10000;
+                        timer.Interval = _filterPage.Filter.AutoUpdateTime.Value * 60 * 1000;
                     timer.Start();
                 }
             }

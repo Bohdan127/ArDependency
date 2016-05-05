@@ -19,7 +19,7 @@ namespace FormulasCollection.Realizations
 
         public double getRate(double rate, double kof1, double kof2)
         {
-            return (((rate*kof1) + (rate*kof2) / 2 ) - (rate*2));
+            return ((((rate * kof1) + (rate * kof2)) / 2) - (rate * 2));
         }
 
         public List<Fork> GetAllForks(List<ResultForForks> events, int defaultRate)

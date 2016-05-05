@@ -48,7 +48,80 @@ namespace FormulasCollection.Realizations
                     }
             return buffDic;
             }
+        public bool checkForType(string type1, string type2)
+        {
+            if (type1 == "1")
+            {
+                switch (type2)
+                {
+                    case "X2":
+                    case "2":
+                    case"X":
+                        return true;
+                        break;
+                    default:
+                        return false;
+                        break;
+                }
+            }
+            if (type1 == "2")
+            {
+                switch (type2)
+                {
+                    case "X1":
+                    case "1":
+                    case "X":
+                        return true;
+                        break;
+                    default:
+                        return false;
+                        break;
+                }
+            }
+            if (type1 == "X")
+            {
+                switch (type2)
+                {
+                    case "12":
+                    case "2":
+                        return true;
+                        break;
+                    default:
+                        return false;
+                        break;
+                }
+            }
+            if (type1 == "X1")
+            {
+                switch (type2)
+                {
+                    case "2":
+                        return true;
+                        break;
+                    default:
+                        return false;
+                        break;
+                }
+            }
+            if (type1 == "X2")
+            {
+                switch (type2)
+                {
+                    case "1":
+                        return true;
+                        break;
+                    default:
+                        return false;
+                        break;
+                }
+            }
+            if (type1 == "Меньше" && type2 == "Больше")
+                return true;
+            if (type2 == "Меньше" && type1 == "Больше")
+                return true;
+            return false;
 
+        }
         public bool isTheSame(string marafon, string pinacle)
         {
             string name1 = pinacle.Split('-')[0];

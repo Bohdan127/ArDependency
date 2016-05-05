@@ -19,7 +19,7 @@ namespace FormulasCollection.Realizations
 
         public double getRate(double rate, double kof1, double kof2)
         {
-            return ((rate * kof1) / kof2);
+            return (((rate*kof1) + (rate*kof2) / 2 ) - (rate*2));
         }
 
         public List<Fork> GetAllForks(List<ResultForForks> events, int defaultRate)
@@ -33,8 +33,6 @@ namespace FormulasCollection.Realizations
                 {
                     try
                     {
-
-
                         if (isTheSame(buff.Event, buff2.Event) && checkForType(buff.Type.Trim(), buff2.Type.Trim()) && CheckIsFork(buff.Coef.ConvertToDoubleOrNull(), buff2.Coef.ConvertToDoubleOrNull()))
                         {
                             buffDic.Add(new Fork()

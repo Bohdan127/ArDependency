@@ -59,7 +59,6 @@ namespace FormulasCollection.Realizations
                         return true;
                         break;
                     default:
-                        return false;
                         break;
                 }
             }
@@ -71,7 +70,6 @@ namespace FormulasCollection.Realizations
                         return true;
                         break;
                     default:
-                        return false;
                         break;
                 }
             }
@@ -83,7 +81,6 @@ namespace FormulasCollection.Realizations
                         return true;
                         break;
                     default:
-                        return false;
                         break;
                 }
             }
@@ -95,7 +92,50 @@ namespace FormulasCollection.Realizations
                         return true;
                         break;
                     default:
-                        return false;
+                        break;
+                }
+            }
+            if (type2 == "1")
+            {
+                switch (type1)
+                {
+                    case "X2":
+                        return true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (type2 == "2")
+            {
+                switch (type1)
+                {
+                    case "X1":
+                        return true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (type2 == "X1")
+            {
+                switch (type1)
+                {
+                    case "2":
+                        return true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (type2 == "X2")
+            {
+                switch (type1)
+                {
+                    case "1":
+                        return true;
+                        break;
+                    default:
                         break;
                 }
             }

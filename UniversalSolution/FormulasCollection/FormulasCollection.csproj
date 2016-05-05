@@ -45,6 +45,7 @@
     <Compile Include="Interfaces\IConverterFormulas.cs" />
     <Compile Include="Interfaces\IForkFormulas.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Realizations\ResultForForks.cs" />
     <Compile Include="Realizations\ConverterFormulas.cs" />
     <Compile Include="Realizations\Fork.cs" />
     <Compile Include="Realizations\TwoOutComeCalculatorFormulas.cs" />

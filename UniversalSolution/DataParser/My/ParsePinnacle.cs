@@ -2,6 +2,7 @@
 //using DataParser.DefaultRealization;
 //using DataParser.Enums;
 using DataParser.Enums;
+using FormulasCollection.Realizations;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -385,27 +386,7 @@ public class EnglishNameTeams
         this.name2 = _name2;
     }
 }
-public class ResultForForks
-{
-    public string Event;
-    public string Type;
-    public string Coef;
-    public string Bookmaker { get; set; }
-    //  X1 X2 1 2 
-    public ResultForForks() { }
-    public ResultForForks(string nameTeam1, string nameTeam2, string date, string nameCoff, string coef, string type, string bookmaker)
-    {
-        this.Event = nameTeam1.Trim() + " - " + nameTeam2.Trim();
-        this.MatchDateTime = date;
-        this.Type = nameCoff;
-        this.Coef = coef;
-        SportType = type;
-        Bookmaker = bookmaker;
-    }
 
-    public string SportType { get; set; }
-    public string MatchDateTime { get; set; }
-}
 public class Teams
 {
     protected string nameTeam1;

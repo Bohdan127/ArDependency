@@ -33,7 +33,7 @@
         /// <summary>
         /// Site 2
         /// </summary>
-        public string SecondFirst { get; set; }
+        public string SiteSecond { get; set; }
         /// <summary>
         /// Details for second type of Fork 
         /// </summary>
@@ -48,5 +48,6 @@
 
         public string BookmakerFirst { get; set; }
         public string BookmakerSecond { get; set; }
+        public string Profit { get; set; }
     }
 }

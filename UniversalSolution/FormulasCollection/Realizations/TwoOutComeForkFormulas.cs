@@ -22,7 +22,7 @@ namespace FormulasCollection.Realizations
             return ((rate * kof1) / kof2);
         }
 
-        public List<Fork> getAllForks(List<ResultForForks> events)
+        public List<Fork> getAllForks(List<ResultForForks> events, int defaultRate)
         {
             List<Fork> buffDic = new List<Fork>();
             var marafon = events.Where(e => e.Bookmaker == Site.MarathonBet.ToString());
@@ -41,7 +41,8 @@ namespace FormulasCollection.Realizations
                                 Sport = buff.SportType,
                                 MatchDateTime = buff2.MatchDateTime,
                                 BookmakerFirst = buff.Bookmaker,
-                                BookmakerSecond = buff2.Bookmaker
+                                BookmakerSecond = buff2.Bookmaker,
+                                Profit = getRate(defaultRate,buff.Coef.ConvertToDouble(),buff2.Coef.ConvertToDouble()).ToString()
                             });
                         }
                         }

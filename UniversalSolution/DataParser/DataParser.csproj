@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DataParser</RootNamespace>
     <AssemblyName>DataParser</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -78,8 +78,6 @@
     <Compile Include="DefaultRealization\Parser.cs" />
     <Compile Include="DefaultRealization\PinnacleSportsDataParser.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="Enums\Site.cs" />
-    <Compile Include="Enums\SportType.cs" />
     <Compile Include="Forks\ForkSearcher.cs" />
     <Compile Include="Interfaces\IDataEvent.cs" />
     <Compile Include="Interfaces\IDataMatch.cs" />

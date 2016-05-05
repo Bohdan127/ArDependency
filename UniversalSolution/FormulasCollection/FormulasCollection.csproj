@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FormulasCollection</RootNamespace>
     <AssemblyName>FormulasCollection</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\Site.cs" />
+    <Compile Include="Enums\SportType.cs" />
     <Compile Include="Interfaces\ICalculatorFormulas.cs" />
     <Compile Include="Interfaces\IConverterFormulas.cs" />
     <Compile Include="Interfaces\IForkFormulas.cs" />

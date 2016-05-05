@@ -18,7 +18,7 @@
         /// <summary>
         /// Site 1
         /// </summary>
-        public string SiteFirst;
+        public string SiteFirst { get; set; }
 
         /// <summary>
         /// Details for first type of Fork 
@@ -28,12 +28,12 @@
         /// <summary>
         /// Value for first coef of Fork
         /// </summary>
-        public double CoefFirst { get; set; }
+        public string CoefFirst { get; set; }
 
         /// <summary>
         /// Site 2
         /// </summary>
-        public string SecondFirst;
+        public string SecondFirst { get; set; }
         /// <summary>
         /// Details for second type of Fork 
         /// </summary>
@@ -42,6 +42,11 @@
         /// <summary>
         /// Value for second coef of Fork
         /// </summary>
-        public double CoefSecond { get; set; }
+        public string CoefSecond { get; set; }
+
+        public string MatchDateTime { get; set; }
+
+        public string BookmakerFirst { get; set; }
+        public string BookmakerSecond { get; set; }
     }
 }

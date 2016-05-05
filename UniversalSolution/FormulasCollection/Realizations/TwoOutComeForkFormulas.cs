@@ -30,7 +30,7 @@ namespace FormulasCollection.Realizations
                     foreach (var buff in marafon)
                     {
                         foreach (var buff2 in pinacle){
-                        if (isTheSame(buff.Event,buff2.Event) && CheckIsFork(buff.Coef.ConvertToDoubleOrNull(), buff2.Coef.ConvertToDoubleOrNull()))
+                        if (isTheSame(buff.Event,buff2.Event) && checkForType(buff.Type,buff2.Type) && CheckIsFork(buff.Coef.ConvertToDoubleOrNull(), buff2.Coef.ConvertToDoubleOrNull()))
                         {
                             buffDic.Add(new Fork() {
                                 Event = buff2.Event,

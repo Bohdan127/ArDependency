@@ -55,8 +55,6 @@ namespace FormulasCollection.Realizations
                 switch (type2)
                 {
                     case "X2":
-                    case "2":
-                    case"X":
                         return true;
                         break;
                     default:
@@ -69,21 +67,6 @@ namespace FormulasCollection.Realizations
                 switch (type2)
                 {
                     case "X1":
-                    case "1":
-                    case "X":
-                        return true;
-                        break;
-                    default:
-                        return false;
-                        break;
-                }
-            }
-            if (type1 == "X")
-            {
-                switch (type2)
-                {
-                    case "12":
-                    case "2":
                         return true;
                         break;
                     default:

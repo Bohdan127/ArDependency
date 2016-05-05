@@ -37,5 +37,7 @@ namespace DXApplication1.Models
         public string UserPass { get; set; }
 
         public int? AutoUpdateTime { get; set; }
+
+        public int? DefaultRate { get; set; }
     }
 }

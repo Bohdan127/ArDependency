@@ -32,6 +32,10 @@ namespace DXApplication1.Pages
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FilterPage));
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
+            this.spinEditRate = new DevExpress.XtraEditors.SpinEdit();
+            this.textEditAutoUpdate = new DevExpress.XtraEditors.TextEdit();
+            this.textEditUserPass = new DevExpress.XtraEditors.TextEdit();
+            this.textEditUserLogin = new DevExpress.XtraEditors.TextEdit();
             this.fasterDateTimePicker = new DevExpress.XtraEditors.DateEdit();
             this.maxTextEdit = new DevExpress.XtraEditors.TextEdit();
             this.minTextEdit = new DevExpress.XtraEditors.TextEdit();
@@ -64,15 +68,18 @@ namespace DXApplication1.Pages
             this.layoutControlGroupGameTime = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemNotFaster = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemNoLater = new DevExpress.XtraLayout.LayoutControlItem();
-            this.textEditUserLogin = new DevExpress.XtraEditors.TextEdit();
-            this.layoutControlItemUserLogin = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroupOther = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.textEditUserPass = new DevExpress.XtraEditors.TextEdit();
+            this.layoutControlItemUserLogin = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemUserPass = new DevExpress.XtraLayout.LayoutControlItem();
-            this.textEditAutoUpdate = new DevExpress.XtraEditors.TextEdit();
             this.layoutControlItemAutoUpdate = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemRate = new DevExpress.XtraLayout.LayoutControlItem();
+            this.spinEdit1 = new DevExpress.XtraEditors.SpinEdit();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.spinEditRate.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditAutoUpdate.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditUserPass.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditUserLogin.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fasterDateTimePicker.Properties.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fasterDateTimePicker.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.maxTextEdit.Properties)).BeginInit();
@@ -107,17 +114,17 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupGameTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNotFaster)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNoLater)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEditUserLogin.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemUserLogin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupOther)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEditUserPass.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemUserLogin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemUserPass)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEditAutoUpdate.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoUpdate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
             // 
+            this.dataLayoutControl1.Controls.Add(this.spinEditRate);
             this.dataLayoutControl1.Controls.Add(this.textEditAutoUpdate);
             this.dataLayoutControl1.Controls.Add(this.textEditUserPass);
             this.dataLayoutControl1.Controls.Add(this.textEditUserLogin);
@@ -141,6 +148,47 @@ namespace DXApplication1.Pages
             this.dataLayoutControl1.Size = new System.Drawing.Size(600, 394);
             this.dataLayoutControl1.TabIndex = 0;
             this.dataLayoutControl1.Text = "dataLayoutControl1";
+            // 
+            // spinEditRate
+            // 
+            this.spinEditRate.EditValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.spinEditRate.Location = new System.Drawing.Point(413, 302);
+            this.spinEditRate.Name = "spinEditRate";
+            this.spinEditRate.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.spinEditRate.Size = new System.Drawing.Size(163, 20);
+            this.spinEditRate.StyleController = this.dataLayoutControl1;
+            this.spinEditRate.TabIndex = 11;
+            // 
+            // textEditAutoUpdate
+            // 
+            this.textEditAutoUpdate.Location = new System.Drawing.Point(442, 278);
+            this.textEditAutoUpdate.Name = "textEditAutoUpdate";
+            this.textEditAutoUpdate.Properties.Mask.EditMask = "[1-9]";
+            this.textEditAutoUpdate.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx;
+            this.textEditAutoUpdate.Size = new System.Drawing.Size(134, 20);
+            this.textEditAutoUpdate.StyleController = this.dataLayoutControl1;
+            this.textEditAutoUpdate.TabIndex = 10;
+            // 
+            // textEditUserPass
+            // 
+            this.textEditUserPass.Location = new System.Drawing.Point(381, 254);
+            this.textEditUserPass.Name = "textEditUserPass";
+            this.textEditUserPass.Size = new System.Drawing.Size(195, 20);
+            this.textEditUserPass.StyleController = this.dataLayoutControl1;
+            this.textEditUserPass.TabIndex = 9;
+            // 
+            // textEditUserLogin
+            // 
+            this.textEditUserLogin.Location = new System.Drawing.Point(381, 230);
+            this.textEditUserLogin.Name = "textEditUserLogin";
+            this.textEditUserLogin.Size = new System.Drawing.Size(195, 20);
+            this.textEditUserLogin.StyleController = this.dataLayoutControl1;
+            this.textEditUserLogin.TabIndex = 8;
             // 
             // fasterDateTimePicker
             // 
@@ -493,13 +541,17 @@ namespace DXApplication1.Pages
             this.layoutControlItemNoLater.Text = "Игра не позже";
             this.layoutControlItemNoLater.TextSize = new System.Drawing.Size(143, 13);
             // 
-            // textEditUserLogin
+            // layoutControlGroupOther
             // 
-            this.textEditUserLogin.Location = new System.Drawing.Point(381, 230);
-            this.textEditUserLogin.Name = "textEditUserLogin";
-            this.textEditUserLogin.Size = new System.Drawing.Size(195, 20);
-            this.textEditUserLogin.StyleController = this.dataLayoutControl1;
-            this.textEditUserLogin.TabIndex = 8;
+            this.layoutControlGroupOther.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItemUserLogin,
+            this.layoutControlItemUserPass,
+            this.layoutControlItemAutoUpdate,
+            this.layoutControlItemRate});
+            this.layoutControlGroupOther.Location = new System.Drawing.Point(272, 188);
+            this.layoutControlGroupOther.Name = "layoutControlGroupOther";
+            this.layoutControlGroupOther.Size = new System.Drawing.Size(308, 186);
+            this.layoutControlGroupOther.Text = "Дополнительные";
             // 
             // layoutControlItemUserLogin
             // 
@@ -512,25 +564,6 @@ namespace DXApplication1.Pages
             this.layoutControlItemUserLogin.TextSize = new System.Drawing.Size(80, 20);
             this.layoutControlItemUserLogin.TextToControlDistance = 5;
             // 
-            // layoutControlGroupOther
-            // 
-            this.layoutControlGroupOther.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemUserLogin,
-            this.layoutControlItemUserPass,
-            this.layoutControlItemAutoUpdate});
-            this.layoutControlGroupOther.Location = new System.Drawing.Point(272, 188);
-            this.layoutControlGroupOther.Name = "layoutControlGroupOther";
-            this.layoutControlGroupOther.Size = new System.Drawing.Size(308, 186);
-            this.layoutControlGroupOther.Text = "Дополнительные";
-            // 
-            // textEditUserPass
-            // 
-            this.textEditUserPass.Location = new System.Drawing.Point(381, 254);
-            this.textEditUserPass.Name = "textEditUserPass";
-            this.textEditUserPass.Size = new System.Drawing.Size(195, 20);
-            this.textEditUserPass.StyleController = this.dataLayoutControl1;
-            this.textEditUserPass.TabIndex = 9;
-            // 
             // layoutControlItemUserPass
             // 
             this.layoutControlItemUserPass.Control = this.textEditUserPass;
@@ -542,30 +575,46 @@ namespace DXApplication1.Pages
             this.layoutControlItemUserPass.TextSize = new System.Drawing.Size(80, 20);
             this.layoutControlItemUserPass.TextToControlDistance = 5;
             // 
-            // textEditAutoUpdate
-            // 
-            this.textEditAutoUpdate.Location = new System.Drawing.Point(442, 278);
-            this.textEditAutoUpdate.Name = "textEditAutoUpdate";
-            this.textEditAutoUpdate.Properties.Mask.EditMask = "[1-9]";
-            this.textEditAutoUpdate.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx;
-            this.textEditAutoUpdate.Size = new System.Drawing.Size(134, 20);
-            this.textEditAutoUpdate.StyleController = this.dataLayoutControl1;
-            this.textEditAutoUpdate.TabIndex = 10;
-            // 
             // layoutControlItemAutoUpdate
             // 
             this.layoutControlItemAutoUpdate.Control = this.textEditAutoUpdate;
             this.layoutControlItemAutoUpdate.Location = new System.Drawing.Point(0, 48);
             this.layoutControlItemAutoUpdate.Name = "layoutControlItemAutoUpdate";
-            this.layoutControlItemAutoUpdate.Size = new System.Drawing.Size(284, 96);
+            this.layoutControlItemAutoUpdate.Size = new System.Drawing.Size(284, 24);
             this.layoutControlItemAutoUpdate.Text = "Время автообновления(мин)";
             this.layoutControlItemAutoUpdate.TextSize = new System.Drawing.Size(143, 13);
+            // 
+            // layoutControlItemRate
+            // 
+            this.layoutControlItemRate.Control = this.spinEditRate;
+            this.layoutControlItemRate.Location = new System.Drawing.Point(0, 72);
+            this.layoutControlItemRate.Name = "layoutControlItemRate";
+            this.layoutControlItemRate.Size = new System.Drawing.Size(284, 72);
+            this.layoutControlItemRate.Text = "Ставка по умолчанию";
+            this.layoutControlItemRate.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
+            this.layoutControlItemRate.TextSize = new System.Drawing.Size(112, 13);
+            this.layoutControlItemRate.TextToControlDistance = 5;
+            // 
+            // spinEdit1
+            // 
+            this.spinEdit1.EditValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.spinEdit1.Location = new System.Drawing.Point(0, 0);
+            this.spinEdit1.Name = "spinEdit1";
+            this.spinEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.spinEdit1.Size = new System.Drawing.Size(100, 20);
+            this.spinEdit1.TabIndex = 1;
             // 
             // FilterPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(600, 394);
+            this.Controls.Add(this.spinEdit1);
             this.Controls.Add(this.dataLayoutControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FilterPage";
@@ -573,6 +622,10 @@ namespace DXApplication1.Pages
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).EndInit();
             this.dataLayoutControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.spinEditRate.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditAutoUpdate.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditUserPass.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditUserLogin.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fasterDateTimePicker.Properties.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fasterDateTimePicker.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.maxTextEdit.Properties)).EndInit();
@@ -607,13 +660,12 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupGameTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNotFaster)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNoLater)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEditUserLogin.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemUserLogin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupOther)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEditUserPass.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemUserLogin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemUserPass)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEditAutoUpdate.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoUpdate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -660,5 +712,8 @@ namespace DXApplication1.Pages
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemUserLogin;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemUserPass;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemAutoUpdate;
+        private SpinEdit spinEditRate;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemRate;
+        private SpinEdit spinEdit1;
     }
 }

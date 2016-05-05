@@ -51,6 +51,7 @@ namespace DXApplication1.Pages
                 textEditUserLogin.EditValue = Filter.UserName;
                 textEditUserPass.EditValue = Filter.UserPass;
                 textEditAutoUpdate.EditValue = Filter.AutoUpdateTime;
+                spinEditRate.EditValue = Filter.DefaultRate;
             }
         }
 
@@ -73,6 +74,7 @@ namespace DXApplication1.Pages
             textEditUserLogin.EditValueChanging += TextEditUserLogin_EditValueChanging;
             textEditUserPass.EditValueChanging += TextEditUserPass_EditValueChanging;
             textEditAutoUpdate.EditValueChanging += TextEditAutoUpdate_EditValueChanging;
+            spinEditRate.EditValueChanging += SpinEditRate_EditValueChanging;
         }
 
         public void DeInitializeEvents()
@@ -94,6 +96,18 @@ namespace DXApplication1.Pages
             textEditUserLogin.EditValueChanging -= TextEditUserLogin_EditValueChanging;
             textEditUserPass.EditValueChanging -= TextEditUserPass_EditValueChanging;
             textEditAutoUpdate.EditValueChanging -= TextEditAutoUpdate_EditValueChanging;
+            spinEditRate.EditValueChanging -= SpinEditRate_EditValueChanging;
+        }
+
+        private void SpinEditRate_EditValueChanging(object sender, ChangingEventArgs e)
+        {
+            lock (Filter)
+            {
+                if ((e.NewValue?.ToString().EndsWith(".") ?? false) || (e.NewValue?.ToString().EndsWith(",") ?? false))
+                    Filter.DefaultRate = e.NewValue.ToString().TrimEnd(new[] { '.', ',' }).ConvertToIntOrNull();
+                else
+                    e.NewValue.ConvertToIntOrNull();
+            }
         }
 
         private void TextEditAutoUpdate_EditValueChanging(object sender, ChangingEventArgs e)

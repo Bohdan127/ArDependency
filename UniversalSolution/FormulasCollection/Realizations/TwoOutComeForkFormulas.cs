@@ -1,8 +1,8 @@
 ﻿using DataParser.Enums;
 using FormulasCollection.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Tools;
 
 namespace FormulasCollection.Realizations
@@ -10,7 +10,7 @@ namespace FormulasCollection.Realizations
     public class TwoOutComeForkFormulas : IForkFormulas
     {
 
-        private bool CheckIsFork(double? coef1, double? coef2)
+        public bool CheckIsFork(double? coef1, double? coef2)
         {
             if (coef1 == 0 || coef2 == 0)
                 return false;
@@ -22,18 +22,24 @@ namespace FormulasCollection.Realizations
             return ((rate * kof1) / kof2);
         }
 
-        public List<Fork> getAllForks(List<ResultForForks> events, int defaultRate)
+        public List<Fork> GetAllForks(List<ResultForForks> events, int defaultRate)
         {
             List<Fork> buffDic = new List<Fork>();
             var marafon = events.Where(e => e.Bookmaker == Site.MarathonBet.ToString());
             var pinacle = events.Where(e => e.Bookmaker == Site.PinnacleSports.ToString());
-                    foreach (var buff in marafon)
+            foreach (var buff in marafon)
+            {
+                foreach (var buff2 in pinacle)
+                {
+                    try
                     {
-                        foreach (var buff2 in pinacle){
-                        if (isTheSame(buff.Event,buff2.Event) && checkForType(buff.Type,buff2.Type) && CheckIsFork(buff.Coef.ConvertToDoubleOrNull(), buff2.Coef.ConvertToDoubleOrNull()))
+
+
+                        if (isTheSame(buff.Event, buff2.Event) && checkForType(buff.Type.Trim(), buff2.Type.Trim()) && CheckIsFork(buff.Coef.ConvertToDoubleOrNull(), buff2.Coef.ConvertToDoubleOrNull()))
                         {
-                            buffDic.Add(new Fork() {
-                                Event = buff2.Event,
+                            buffDic.Add(new Fork()
+                            {
+                                Event = buff.Event,
                                 TypeFirst = buff.Type,
                                 CoefFirst = buff.Coef,
                                 TypeSecond = buff2.Type,
@@ -42,13 +48,18 @@ namespace FormulasCollection.Realizations
                                 MatchDateTime = buff2.MatchDateTime,
                                 BookmakerFirst = buff.Bookmaker,
                                 BookmakerSecond = buff2.Bookmaker,
-                                Profit = getRate(defaultRate,buff.Coef.ConvertToDouble(),buff2.Coef.ConvertToDouble()).ToString()
+                                Profit = getRate(defaultRate, buff.Coef.ConvertToDouble(), buff2.Coef.ConvertToDouble()).ToString()
                             });
                         }
-                        }
                     }
-            return buffDic;
+                    catch (Exception ex)
+                    {
+                        //ignored
+                    }
+                }
             }
+            return buffDic;
+        }
         public bool checkForType(string type1, string type2)
         {
             if (type1 == "1")
@@ -73,7 +84,7 @@ namespace FormulasCollection.Realizations
                         break;
                 }
             }
-            if (type1 == "X1")
+            if (type1 == "1X")
             {
                 switch (type2)
                 {
@@ -84,7 +95,7 @@ namespace FormulasCollection.Realizations
                         break;
                 }
             }
-            if (type1 == "X2")
+            if (type1 == "2X")
             {
                 switch (type2)
                 {
@@ -99,7 +110,7 @@ namespace FormulasCollection.Realizations
             {
                 switch (type1)
                 {
-                    case "X2":
+                    case "2X":
                         return true;
                         break;
                     default:
@@ -110,14 +121,14 @@ namespace FormulasCollection.Realizations
             {
                 switch (type1)
                 {
-                    case "X1":
+                    case "1X":
                         return true;
                         break;
                     default:
                         break;
                 }
             }
-            if (type2 == "X1")
+            if (type2 == "1X")
             {
                 switch (type1)
                 {
@@ -128,7 +139,7 @@ namespace FormulasCollection.Realizations
                         break;
                 }
             }
-            if (type2 == "X2")
+            if (type2 == "2X")
             {
                 switch (type1)
                 {

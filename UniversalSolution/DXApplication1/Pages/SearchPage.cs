@@ -16,6 +16,7 @@ namespace DXApplication1.Pages
         public bool Close { get; set; }
         public GridControl MainGridControl => gridControl1;
         private List<Fork> dataSource;
+        private bool complete = false;
 
         protected virtual void OnUpdate() => Update?.Invoke(null, null);
 
@@ -32,9 +33,17 @@ namespace DXApplication1.Pages
         {
             for (int i = progressBarControl1.Properties.Minimum; i < progressBarControl1.Properties.Maximum; i++)
             {
-                Thread.Sleep(10);
-                progressBarControl1.Invoke(new MethodInvoker(delegate { progressBarControl1.EditValue = i; }));
+                if (!complete)
+                {
+                    Thread.Sleep(1000);
+                    progressBarControl1.Invoke(new MethodInvoker(delegate { progressBarControl1.EditValue = i; }));
+                }
             }
+            progressBarControl1.Invoke(new MethodInvoker(delegate
+            {
+                progressBarControl1.EditValue =
+                    progressBarControl1.Properties.Minimum;
+            }));
         }
 
         protected virtual void AccountingPage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -75,8 +84,7 @@ namespace DXApplication1.Pages
         {
             if (backgroundWorker1.IsBusy)
                 backgroundWorker1.CancelAsync();
-            progressBarControl1.Invoke(new MethodInvoker(
-                delegate { progressBarControl1.EditValue = progressBarControl1.Properties.Minimum; }));
+            complete = true;
         }
     }
 }

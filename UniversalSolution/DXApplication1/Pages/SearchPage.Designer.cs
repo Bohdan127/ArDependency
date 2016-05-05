@@ -40,6 +40,11 @@
             this.colTeams = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colBookmaker = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colRate1 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colCoef1 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colBookmaker2 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colRate2 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colCoef2 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colProfit = new DevExpress.XtraGrid.Columns.GridColumn();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlGroup3 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
@@ -47,11 +52,6 @@
             this.layoutControlItem9 = new DevExpress.XtraLayout.LayoutControlItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.colCoef1 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colBookmaker2 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colRate2 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colCoef2 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colProfit = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.progressBarControl1.Properties)).BeginInit();
@@ -127,7 +127,7 @@
             // colDateAndTime
             // 
             this.colDateAndTime.Caption = "Дата и время события";
-            this.colDateAndTime.FieldName = "DateAndTime";
+            this.colDateAndTime.FieldName = "MatchDateTime";
             this.colDateAndTime.Name = "colDateAndTime";
             this.colDateAndTime.OptionsColumn.ReadOnly = true;
             this.colDateAndTime.Visible = true;
@@ -136,7 +136,7 @@
             // colSportType
             // 
             this.colSportType.Caption = "Вид спорта";
-            this.colSportType.FieldName = "SportType";
+            this.colSportType.FieldName = "Sport";
             this.colSportType.Name = "colSportType";
             this.colSportType.OptionsColumn.ReadOnly = true;
             this.colSportType.Visible = true;
@@ -145,7 +145,7 @@
             // colTeams
             // 
             this.colTeams.Caption = "Команды и лига";
-            this.colTeams.FieldName = "Teams";
+            this.colTeams.FieldName = "Event";
             this.colTeams.Name = "colTeams";
             this.colTeams.OptionsColumn.ReadOnly = true;
             this.colTeams.Visible = true;
@@ -163,11 +163,51 @@
             // colRate1
             // 
             this.colRate1.Caption = "Тип ставки 1";
-            this.colRate1.FieldName = "RateFirst";
+            this.colRate1.FieldName = "TypeFirst";
             this.colRate1.Name = "colRate1";
             this.colRate1.OptionsColumn.ReadOnly = true;
             this.colRate1.Visible = true;
             this.colRate1.VisibleIndex = 4;
+            // 
+            // colCoef1
+            // 
+            this.colCoef1.Caption = "Коэффициент 1";
+            this.colCoef1.FieldName = "CoefFirst";
+            this.colCoef1.Name = "colCoef1";
+            this.colCoef1.Visible = true;
+            this.colCoef1.VisibleIndex = 5;
+            // 
+            // colBookmaker2
+            // 
+            this.colBookmaker2.Caption = "Букмекер 2";
+            this.colBookmaker2.FieldName = "BookmakerSecond";
+            this.colBookmaker2.Name = "colBookmaker2";
+            this.colBookmaker2.Visible = true;
+            this.colBookmaker2.VisibleIndex = 6;
+            // 
+            // colRate2
+            // 
+            this.colRate2.Caption = "Тип ставки 2";
+            this.colRate2.FieldName = "TypeSecond";
+            this.colRate2.Name = "colRate2";
+            this.colRate2.Visible = true;
+            this.colRate2.VisibleIndex = 7;
+            // 
+            // colCoef2
+            // 
+            this.colCoef2.Caption = "Коэффициент 2";
+            this.colCoef2.FieldName = "CoefSecond";
+            this.colCoef2.Name = "colCoef2";
+            this.colCoef2.Visible = true;
+            this.colCoef2.VisibleIndex = 8;
+            // 
+            // colProfit
+            // 
+            this.colProfit.Caption = "Прибыль";
+            this.colProfit.FieldName = "Profit";
+            this.colProfit.Name = "colProfit";
+            this.colProfit.Visible = true;
+            this.colProfit.VisibleIndex = 9;
             // 
             // layoutControlGroup1
             // 
@@ -225,46 +265,6 @@
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "CalculateSheet_32x32.png");
             this.imageList1.Images.SetKeyName(1, "CalculateNow_32x32.png");
-            // 
-            // colCoef1
-            // 
-            this.colCoef1.Caption = "Коэффициент 1";
-            this.colCoef1.FieldName = "CoefFirst";
-            this.colCoef1.Name = "colCoef1";
-            this.colCoef1.Visible = true;
-            this.colCoef1.VisibleIndex = 5;
-            // 
-            // colBookmaker2
-            // 
-            this.colBookmaker2.Caption = "Букмекер 2";
-            this.colBookmaker2.FieldName = "BookmakerSecond";
-            this.colBookmaker2.Name = "colBookmaker2";
-            this.colBookmaker2.Visible = true;
-            this.colBookmaker2.VisibleIndex = 6;
-            // 
-            // colRate2
-            // 
-            this.colRate2.Caption = "Тип ставки 2";
-            this.colRate2.FieldName = "RateSecond";
-            this.colRate2.Name = "colRate2";
-            this.colRate2.Visible = true;
-            this.colRate2.VisibleIndex = 7;
-            // 
-            // colCoef2
-            // 
-            this.colCoef2.Caption = "Коэффициент 2";
-            this.colCoef2.FieldName = "CoefSecond";
-            this.colCoef2.Name = "colCoef2";
-            this.colCoef2.Visible = true;
-            this.colCoef2.VisibleIndex = 8;
-            // 
-            // colProfit
-            // 
-            this.colProfit.Caption = "Прибыль";
-            this.colProfit.FieldName = "Profit";
-            this.colProfit.Name = "colProfit";
-            this.colProfit.Visible = true;
-            this.colProfit.VisibleIndex = 9;
             // 
             // SearchPage
             // 

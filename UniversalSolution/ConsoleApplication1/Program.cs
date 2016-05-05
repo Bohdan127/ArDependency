@@ -18,7 +18,7 @@ namespace ParseAPI
                 (HttpWebRequest)
                     WebRequest.Create(
                          "https://api.pinnaclesports.com/v1/odds?sportid=" + (int)SportType.Volleyball);   //for totals
-                                                                                                           // "https://api.pinnaclesports.com/v1/fixtures?sportid=" + (int)SportType.Tennis); //for team name
+                        // "https://api.pinnaclesports.com/v1/fixtures?sportid=" + (int)SportType.Tennis); //for team name
             string credentials = String.Format("{0}:{1}", "VB794327", "artem89@");
             byte[] bytes = Encoding.UTF8.GetBytes(credentials);
             string base64 = Convert.ToBase64String(bytes);

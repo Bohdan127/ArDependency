@@ -66,7 +66,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LicenseRegManager.cs" />
+    <Compile Include="LicenseRegManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="LicenseRegManager.Designer.cs">
       <DependentUpon>LicenseRegManager.cs</DependentUpon>
     </Compile>

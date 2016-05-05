@@ -29,7 +29,7 @@ namespace DXApplication1.Models
             _defaultMdiParent = mdiParent;
             DataManager = new DataManager(forkFormulas);
             timer = new Timer();
-            timer.Interval = 20000;//default for 2 minutes
+            timer.Interval = 20 * 1000;//default for 2 minutes
             timer.Tick += Timer_Tick;
         }
 
@@ -134,12 +134,11 @@ namespace DXApplication1.Models
 
         private async void AccountPage_CalculatorCall(object sender, EventArgs eventArgs)
         {
-            await DataManager.GetForksForAllSportsAsync(_filterPage.Filter).ConfigureAwait(false);
-            //if (sender is Fork)
-            //{
-            //    GetCalculatorPage(reload: true).Fork = (Fork)sender;
-            //    GetCalculatorPage().Show();
-            //}
+            if (sender is Fork)
+            {
+                GetCalculatorPage(reload: true).Fork = (Fork)sender;
+                GetCalculatorPage().Show();
+            }
         }
 
         private async void SearchPage_Update(object sender, EventArgs e)

@@ -3,6 +3,7 @@ using DXApplication1.Models;
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
+using DataSaver.Models;
 using Tools;
 
 namespace DXApplication1.Pages

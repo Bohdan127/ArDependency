@@ -4,7 +4,7 @@ using FormulasCollection.Interfaces;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using License.Logic;
+using DataSaver.Models;
 
 namespace DXApplication1
 {
@@ -44,12 +44,12 @@ namespace DXApplication1
 
             licenseKey = _filter.LicenseKey ?? string.Empty;
             //before payment will be with license
-            LicenseForm licenseForm = new LicenseForm();
-            if (!licenseForm.CheckInstance(licenseKey))
-                licenseForm.ShowDialog();
-            if (!licenseForm.IsRegistered)
-                Close();
-            licenseKey = licenseForm.LicenseKey;
+            //LicenseForm licenseForm = new LicenseForm();
+            //if (!licenseForm.CheckInstance(licenseKey))
+            //    licenseForm.ShowDialog();
+            //if (!licenseForm.IsRegistered)
+            //    Close();
+            //licenseKey = licenseForm.LicenseKey;
         }
 
         #endregion CTOR

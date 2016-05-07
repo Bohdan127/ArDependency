@@ -73,7 +73,6 @@ namespace DXApplication1.Pages
             this.layoutControlItemUserPass = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemAutoUpdate = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemRate = new DevExpress.XtraLayout.LayoutControlItem();
-            this.spinEdit1 = new DevExpress.XtraEditors.SpinEdit();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spinEditRate.Properties)).BeginInit();
@@ -119,7 +118,6 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemUserPass)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoUpdate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRate)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
@@ -351,7 +349,6 @@ namespace DXApplication1.Pages
             // layoutControlItemMin
             // 
             this.layoutControlItemMin.Control = this.minTextEdit;
-            this.layoutControlItemMin.Enabled = false;
             this.layoutControlItemMin.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemMin.Name = "layoutControlItemMin";
             this.layoutControlItemMin.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
@@ -362,7 +359,6 @@ namespace DXApplication1.Pages
             // layoutControlItemMax
             // 
             this.layoutControlItemMax.Control = this.maxTextEdit;
-            this.layoutControlItemMax.Enabled = false;
             this.layoutControlItemMax.Location = new System.Drawing.Point(0, 24);
             this.layoutControlItemMax.Name = "layoutControlItemMax";
             this.layoutControlItemMax.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
@@ -595,26 +591,11 @@ namespace DXApplication1.Pages
             this.layoutControlItemRate.TextSize = new System.Drawing.Size(112, 13);
             this.layoutControlItemRate.TextToControlDistance = 5;
             // 
-            // spinEdit1
-            // 
-            this.spinEdit1.EditValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.spinEdit1.Location = new System.Drawing.Point(0, 0);
-            this.spinEdit1.Name = "spinEdit1";
-            this.spinEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.spinEdit1.Size = new System.Drawing.Size(100, 20);
-            this.spinEdit1.TabIndex = 1;
-            // 
             // FilterPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(600, 394);
-            this.Controls.Add(this.spinEdit1);
             this.Controls.Add(this.dataLayoutControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FilterPage";
@@ -665,7 +646,6 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemUserPass)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoUpdate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRate)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -714,6 +694,5 @@ namespace DXApplication1.Pages
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemAutoUpdate;
         private SpinEdit spinEditRate;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemRate;
-        private SpinEdit spinEdit1;
     }
 }

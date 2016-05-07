@@ -77,7 +77,8 @@ namespace DXApplication1.Pages
 
         public void StartLoading()
         {
-            backgroundWorker1.RunWorkerAsync();
+            if (!backgroundWorker1.IsBusy)
+                backgroundWorker1.RunWorkerAsync();
         }
 
         public void EndLoading()

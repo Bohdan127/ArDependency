@@ -1,4 +1,5 @@
-﻿using DXApplication1.Pages;
+﻿using DataSaver.Models;
+using DXApplication1.Pages;
 using FormulasCollection.Interfaces;
 using FormulasCollection.Realizations;
 using System;
@@ -109,6 +110,7 @@ namespace DXApplication1.Models
                 _searchPage.CalculatorCall += AccountPage_CalculatorCall;//can be the same as for account page
                 if (!timer.Enabled)
                 {
+                    //todo just for first time, but this is bad way
                     SearchPage_Update(null, null);
                     if (_filterPage.Filter.AutoUpdateTime != null)
                         timer.Interval = _filterPage.Filter.AutoUpdateTime.Value * 60 * 1000;

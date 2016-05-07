@@ -14,11 +14,20 @@ namespace ParseAPI
         [STAThread]
         static void Main(string[] args)
         {
+
+            //Task
+            //    .Factory
+            //    .StartNew(() =>
+            //    {
+            //        Console.WriteLine(Thread.CurrentThread.IsBackground);
+            //        Thread.Sleep(1000000);
+            //    });
+
             var request =
                 (HttpWebRequest)
                     WebRequest.Create(
                          "https://api.pinnaclesports.com/v1/odds?sportid=" + (int)SportType.Volleyball);   //for totals
-                        // "https://api.pinnaclesports.com/v1/fixtures?sportid=" + (int)SportType.Tennis); //for team name
+                                                                                                           // "https://api.pinnaclesports.com/v1/fixtures?sportid=" + (int)SportType.Tennis); //for team name
             string credentials = String.Format("{0}:{1}", "VB794327", "artem89@");
             byte[] bytes = Encoding.UTF8.GetBytes(credentials);
             string base64 = Convert.ToBase64String(bytes);

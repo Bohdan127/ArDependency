@@ -6,6 +6,11 @@
     public class Fork
     {
         /// <summary>
+        /// Id stored in DB, have auto increment so not required to fill
+        /// </summary>
+        public long Id { get; set; }
+
+        /// <summary>
         /// Sport Type
         /// </summary>
         public string Sport { get; set; }
@@ -14,11 +19,6 @@
         /// Default place for Team Names, time of match and other details
         /// </summary>
         public string Event { get; set; }
-
-        /// <summary>
-        /// Site 1
-        /// </summary>
-        public string SiteFirst { get; set; }
 
         /// <summary>
         /// Details for first type of Fork 
@@ -31,10 +31,6 @@
         public string CoefFirst { get; set; }
 
         /// <summary>
-        /// Site 2
-        /// </summary>
-        public string SiteSecond { get; set; }
-        /// <summary>
         /// Details for second type of Fork 
         /// </summary>
         public string TypeSecond { get; set; }
@@ -44,10 +40,24 @@
         /// </summary>
         public string CoefSecond { get; set; }
 
+        /// <summary>
+        /// Game time
+        /// </summary>
         public string MatchDateTime { get; set; }
 
+        /// <summary>
+        /// First Bookmaker Name
+        /// </summary>
         public string BookmakerFirst { get; set; }
+
+        /// <summary>
+        /// Second Bookmaker Name
+        /// </summary>
         public string BookmakerSecond { get; set; }
+
+        /// <summary>
+        /// Profit from Fork
+        /// </summary>
         public string Profit { get; set; }
     }
 }

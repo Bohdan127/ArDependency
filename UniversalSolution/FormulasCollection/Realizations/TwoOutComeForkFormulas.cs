@@ -23,7 +23,7 @@ namespace FormulasCollection.Realizations
             return (((rate * 2) / (kof1 + kof2)) * (kof1 * kof2));
         }
 
-        public List<Fork> GetAllForks(List<ResultForForks> events, int defaultRate1, int defaultRate2)
+        public List<Fork> GetAllForks(List<ResultForForks> events, int defaultRate)
         {
             Dictionary<string, double> d = new Dictionary<string, double>();
             
@@ -36,7 +36,7 @@ namespace FormulasCollection.Realizations
                 {
                     try
                     {
-                        if (isTheSame(buff.Event, buff2.Event) && checkForType(buff.Type.Trim(), buff2.Type.Trim()) && CheckIsFork(buff.Coef.ConvertToDoubleOrNull(), buff2.Coef.ConvertToDoubleOrNull()))
+                        if (isTheSame(buff.Event, buff2.Event) && checkForType(buff.Type.Trim(), buff2.Type.Trim()) && CheckIsFork(buff.Coef.ConvertToDoubleOrNull, buff2.Coef.ConvertToDoubleOrNull()))
                         {
                             buffDic.Add(new Fork()
                             {
@@ -49,7 +49,7 @@ namespace FormulasCollection.Realizations
                                 MatchDateTime = buff2.MatchDateTime,
                                 BookmakerFirst = buff.Bookmaker,
                                 BookmakerSecond = buff2.Bookmaker,
-                                Profit = getProfit(defaultRate1, defaultRate2, buff.Coef.ConvertToDouble(), buff2.Coef.ConvertToDouble()).ToString()
+                                Profit = getProfit(defaultRate, buff.Coef.ConvertToDouble(), buff2.Coef.ConvertToDouble()).ToString()
                             });
                         }
                     }

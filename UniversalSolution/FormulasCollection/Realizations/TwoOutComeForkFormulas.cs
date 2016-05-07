@@ -10,6 +10,7 @@ namespace FormulasCollection.Realizations
     public class TwoOutComeForkFormulas : IForkFormulas
     {
 
+        public string rate1, rate2;
         public bool CheckIsFork(double? coef1, double? coef2)
         {
             if (coef1 == 0 || coef2 == 0)
@@ -17,13 +18,15 @@ namespace FormulasCollection.Realizations
             return 1 > (1 / coef1.Value + 1 / coef2.Value);
         }
 
-        public double getRate(double rate, double kof1, double kof2)
+        public double getProfit(double rate, double kof1, double kof2)
         {
-            return ((((rate * kof1) + (rate * kof2)) / 2) - (rate * 2));
+            return (((rate * 2) / (kof1 + kof2)) * (kof1 * kof2));
         }
 
-        public List<Fork> GetAllForks(List<ResultForForks> events, int defaultRate)
+        public List<Fork> GetAllForks(List<ResultForForks> events, int defaultRate1, int defaultRate2)
         {
+            Dictionary<string, double> d = new Dictionary<string, double>();
+            
             List<Fork> buffDic = new List<Fork>();
             var marafon = events.Where(e => e.Bookmaker == Site.MarathonBet.ToString());
             var pinacle = events.Where(e => e.Bookmaker == Site.PinnacleSports.ToString());
@@ -46,7 +49,7 @@ namespace FormulasCollection.Realizations
                                 MatchDateTime = buff2.MatchDateTime,
                                 BookmakerFirst = buff.Bookmaker,
                                 BookmakerSecond = buff2.Bookmaker,
-                                Profit = getRate(defaultRate, buff.Coef.ConvertToDouble(), buff2.Coef.ConvertToDouble()).ToString()
+                                Profit = getProfit(defaultRate1, defaultRate2, buff.Coef.ConvertToDouble(), buff2.Coef.ConvertToDouble()).ToString()
                             });
                         }
                     }

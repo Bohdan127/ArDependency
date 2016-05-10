@@ -232,10 +232,24 @@ namespace DataParser.MY
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
             HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
-            StreamReader reader = new StreamReader(response.GetResponseStream());
             List<string> result = new List<string>();
-            string HTML = await reader.ReadToEndAsync().ConfigureAwait(false);
-            reader.Close();
+            string HTML = null;
+            StreamReader reader = null;
+            try
+            {
+                reader = new StreamReader(response.GetResponseStream());
+                HTML = await reader.ReadToEndAsync().ConfigureAwait(false);
+            }
+            catch (FileLoadException ex)
+            {
+                //ignored
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+            }
+        
             return HTML;
         }
 

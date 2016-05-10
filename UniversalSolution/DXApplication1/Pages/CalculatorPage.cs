@@ -75,12 +75,14 @@ namespace DXApplication1.Pages
         protected virtual void textEditRate1_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
             textEditIncome1.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDouble(),textEditRate1.Text.ConvertToDouble(),lbCoef1.Text.ConvertToDouble()).ToString();
+            textEditIncome2.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDouble(),textEditRate1.Text.ConvertToDouble(),lbCoef1.Text.ConvertToDouble()).ToString();
             OnURateChanging();
         }
 
         protected virtual void textEditRate2_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
             textEditIncome2.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDouble(),textEditRate1.Text.ConvertToDouble(),lbCoef1.Text.ConvertToDouble()).ToString();
+            textEditIncome1.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDouble(),textEditRate1.Text.ConvertToDouble(),lbCoef1.Text.ConvertToDouble()).ToString();
             OnURateChanging();
         }
     }

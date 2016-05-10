@@ -10,12 +10,13 @@ namespace FormulasCollection.Realizations
     public class TwoOutComeForkFormulas : IForkFormulas
     {
 
-        public string rate1, rate2;
+        public double defaultRate = 0.0;
+
         public bool CheckIsFork(double? coef1, double? coef2)
         {
             if (coef1 == 0 || coef2 == 0)
                 return false;
-            return 1 > (1 / coef1.Value + 1 / coef2.Value);
+            return 1 > (1 / coef1 + 1 / coef2);
         }
 
         public double getProfit(double rate, double kof1, double kof2)
@@ -23,40 +24,39 @@ namespace FormulasCollection.Realizations
             return (((rate * 2) / (kof1 + kof2)) * (kof1 * kof2));
         }
 
-        public List<Fork> GetAllForks(List<ResultForForks> events, int defaultRate)
+        public Dictionary<string, Fork> GetAllForks(Dictionary<string, ResultForForks> marafon, Dictionary<string, ResultForForks> pinacle)
         {
-            Dictionary<string, double> d = new Dictionary<string, double>();
-            
-            List<Fork> buffDic = new List<Fork>();
-            var marafon = events.Where(e => e.Bookmaker == Site.MarathonBet.ToString());
-            var pinacle = events.Where(e => e.Bookmaker == Site.PinnacleSports.ToString());
-            foreach (var buff in marafon)
+            Dictionary<string, Fork> buffDic = new Dictionary<string, Fork>();
+
+            foreach (KeyValuePair<string, ResultForForks> buff in marafon)
             {
-                foreach (var buff2 in pinacle)
+                try
                 {
-                    try
+                    if (pinacle.ContainsKey(buff.Key))
                     {
-                        if (isTheSame(buff.Event, buff2.Event) && checkForType(buff.Type.Trim(), buff2.Type.Trim()) && CheckIsFork(buff.Coef.ConvertToDoubleOrNull, buff2.Coef.ConvertToDoubleOrNull()))
+                        if (isTheSame(buff.Value.Event, pinacle[buff.Key].Event) &&
+                            checkForType(buff.Value.Type.Trim(), pinacle[buff.Key].Type.Trim()) &&
+                            CheckIsFork(Double.Parse(buff.Value.Coef), Double.Parse(pinacle[buff.Key].Coef)))
                         {
-                            buffDic.Add(new Fork()
-                            {
-                                Event = buff.Event,
-                                TypeFirst = buff.Type,
-                                CoefFirst = buff.Coef,
-                                TypeSecond = buff2.Type,
-                                CoefSecond = buff2.Coef,
-                                Sport = buff.SportType,
-                                MatchDateTime = buff2.MatchDateTime,
-                                BookmakerFirst = buff.Bookmaker,
-                                BookmakerSecond = buff2.Bookmaker,
-                                Profit = getProfit(defaultRate, buff.Coef.ConvertToDouble(), buff2.Coef.ConvertToDouble()).ToString()
+                            buffDic.Add(buff.Key,
+                                new Fork() { 
+                                Event = buff.Value.Event,
+                                TypeFirst = buff.Value.Type,
+                                CoefFirst = buff.Value.Coef,
+                                TypeSecond = pinacle[buff.Key].Type,
+                                CoefSecond = pinacle[buff.Key].Coef,
+                                Sport = buff.Value.SportType,
+                                MatchDateTime = pinacle[buff.Key].MatchDateTime,
+                                BookmakerFirst = buff.Value.Bookmaker,
+                                BookmakerSecond = pinacle[buff.Key].Bookmaker,
+                                Profit = getProfit(defaultRate, Double.Parse(buff.Value.Coef), Double.Parse(pinacle[buff.Key].Coef)).ToString()
                             });
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        //ignored
-                    }
+                }
+                catch (Exception ex)
+                {
+                    //ignored
                 }
             }
             return buffDic;

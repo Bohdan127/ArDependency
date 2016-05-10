@@ -7,6 +7,7 @@ namespace FormulasCollection.Interfaces
     {
         bool CheckIsFork(double? coef1, double? coef2);
         double getRate(double rate, double kof1, double kof2);
-        List<Fork> GetAllForks(List<ResultForForks> events, int defaultRate);
+        public Dictionary<string, Fork> GetAllForks(Dictionary<string, ResultForForks> marafon, Dictionary<string, ResultForForks> pinacle);
+        
     }
 }

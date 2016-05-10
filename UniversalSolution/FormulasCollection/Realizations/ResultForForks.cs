@@ -11,6 +11,7 @@ namespace FormulasCollection.Realizations
         public string Event;
         public string Type;
         public string Coef;
+
         public string Bookmaker { get; set; }
         //  X1 X2 1 2 
         public ResultForForks() { }

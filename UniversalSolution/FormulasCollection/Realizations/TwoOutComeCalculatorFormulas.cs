@@ -18,7 +18,6 @@ namespace FormulasCollection.Realizations
         }
         public List<string> getRates(double rate, double kof1, double kof2)
         {
-            //  1.5   2.5    x = 400/(1.5+2.5) = 100   stawka2 =  x * kof1; stawka1 = x * kof2
             List<string> buff = new List<string>();
             string rate1 = (((rate*2) / (kof1 + kof2)) * kof2).ToString();
             string rate2 = (((rate*2) / (kof1 + kof2)) * kof1).ToString();

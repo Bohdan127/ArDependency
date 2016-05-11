@@ -9,25 +9,20 @@ namespace FormulasCollection.Realizations
 {
     public class TwoOutComeForkFormulas : IForkFormulas
     {
-
-        public double defaultRate = 0.0;
-
         public bool CheckIsFork(double? coef1, double? coef2)
         {
             if (coef1 == 0 || coef2 == 0)
                 return false;
-            return 1 > (1 / coef1 + 1 / coef2);
+            return 1 > (1 / coef1.Value + 1 / coef2.Value);
         }
-
         public double getProfit(double rate, double kof1, double kof2)
         {
-            return (((rate * 2) / (kof1 + kof2)) * (kof1 * kof2));
+            return ((rate / (kof1 + kof2)) * (kof1 * kof2));
         }
 
         public Dictionary<string, Fork> GetAllForks(Dictionary<string, ResultForForks> marafon, Dictionary<string, ResultForForks> pinacle)
         {
             Dictionary<string, Fork> buffDic = new Dictionary<string, Fork>();
-
             foreach (KeyValuePair<string, ResultForForks> buff in marafon)
             {
                 try
@@ -49,8 +44,7 @@ namespace FormulasCollection.Realizations
                                 MatchDateTime = pinacle[buff.Key].MatchDateTime,
                                 BookmakerFirst = buff.Value.Bookmaker,
                                 BookmakerSecond = pinacle[buff.Key].Bookmaker,
-                                Profit = getProfit(defaultRate, Double.Parse(buff.Value.Coef), Double.Parse(pinacle[buff.Key].Coef)).ToString()
-                            });
+                                });
                         }
                     }
                 }

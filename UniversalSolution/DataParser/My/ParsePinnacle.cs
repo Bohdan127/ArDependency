@@ -40,7 +40,7 @@ namespace DataParser.MY
     }
     public static class Tags
     {
-        public static readonly string NameTeam = "<div class=\"member-name nowrap \" data-ellipsis='{}'>";
+        public static readonly string NameTeam = "<div class=\"today-member-name nowrap \" data-ellipsis='{}'>";
         public static readonly string Date = "<td class=\"date\">";
         public static readonly string EventID = "data-event-treeId";
         public static readonly string Coff = "data-selection-price=\"";
@@ -207,7 +207,8 @@ namespace DataParser.MY
             try
             {
                 this.englishNameTeams_Dictionary = await this.GetEnglishNameTEams(sportType).ConfigureAwait(false);
-                return await GetNameTeamsAndDateAsync(sportType).ConfigureAwait(false);
+                var result = await GetNameTeamsAndDateAsync(sportType).ConfigureAwait(false);
+                return result;
                 //this.ShowForks(a);
             }
             catch { }
@@ -228,7 +229,7 @@ namespace DataParser.MY
             File.ReadAllLines(namefile);
         }*/
 
-        private static async Task<string> HtmlAsync(string url)
+        private static async Task<string> HtmlAsync(string url, bool a = true)
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
             HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
@@ -250,6 +251,10 @@ namespace DataParser.MY
                     reader.Close();
             }
         
+
+            if (a)
+                File.WriteAllLines("qwerty2.html", HTML.Split('\n'));
+
             return HTML;
         }
 
@@ -261,7 +266,7 @@ namespace DataParser.MY
             string namefile = "";
             UrlAndNameFile(sportType, out url, out namefile, true);
 
-            string[] lines = (await HtmlAsync(url).ConfigureAwait(false)).Split('\n');
+            string[] lines = (await HtmlAsync(url, false).ConfigureAwait(false)).Split('\n');
 
             string name1 = null;
             string name2 = null;
@@ -303,7 +308,7 @@ namespace DataParser.MY
             {
                 case SportType.Soccer:
                     namefile = "Soccer" + en_namefile + ".html";
-                    url = "https://www.marathonbet.com/" + language + "/popular/Football/?menu=true";
+                    url = "https://www.marathonbet.com/" + language + "/betting/Football/England/Championship/Promotion+Play-Offs/Semi+Final/1st+Leg/";
                     break;
                 case SportType.Basketball:
                     namefile = "Basketball" + en_namefile + ".html";

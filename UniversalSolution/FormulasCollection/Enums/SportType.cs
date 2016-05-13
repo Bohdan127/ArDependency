@@ -7,6 +7,6 @@
         Hockey = 19,
         Tennis = 33,
         Volleyball = 34,
-        NoType = -1
+        NoType = 9999
     }
 }

@@ -1,46 +1,58 @@
-﻿using DataParser.Enums;
-using FormulasCollection.Interfaces;
+﻿using FormulasCollection.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Tools;
 
 namespace FormulasCollection.Realizations
 {
     public class TwoOutComeForkFormulas : IForkFormulas
     {
-        public bool CheckIsFork(double? coef1, double? coef2) => (coef1 == 0 || coef2 == 0) ? false : 1 > (1 / coef1.Value + 1 / coef2.Value);
-        public Dictionary<string, Fork> GetAllForks(Dictionary<string, ResultForForks> marafon, Dictionary<string, ResultForForks> pinacle)
+
+        public string rate1, rate2;
+        public bool CheckIsFork(double? coef1, double? coef2)
         {
-            Dictionary<string, Fork> buffDic = new Dictionary<string, Fork>();
-            foreach (KeyValuePair<string, ResultForForks> buff in marafon)
+            if (coef1 == 0 || coef2 == 0)
+                return false;
+            return 1 > (1 / coef1.Value + 1 / coef2.Value);
+        }
+
+        public double getProfit(double rate, double kof1, double kof2)
+        {
+            return ((rate / (kof1 + kof2)) * (kof1 * kof2));
+        }
+
+        public List<Fork> GetAllForks(List<ResultForForks> marafon, List<ResultForForks> pinacle)
+        {
+            Dictionary<string, double> d = new Dictionary<string, double>();
+
+            List<Fork> buffDic = new List<Fork>();
+            foreach (var buff in marafon)
             {
-                try
+                foreach (var buff2 in pinacle)
                 {
-                    if (pinacle.ContainsKey(buff.Key))
+                    try
                     {
-                        if (isTheSame(buff.Value.Event, pinacle[buff.Key].Event) &&
-                            checkForType(buff.Value.Type.Trim(), pinacle[buff.Key].Type.Trim()) &&
-                            CheckIsFork(buff.Value.Coef.ConvertToDoubleOrNull(), pinacle[buff.Key].Coef.ConvertToDoubleOrNull()))
+                        if (isTheSame(buff.Event, buff2.Event) && checkForType(buff.Type.Trim(), buff2.Type.Trim()) && CheckIsFork(buff.Coef.ConvertToDoubleOrNull(), buff2.Coef.ConvertToDoubleOrNull()))
                         {
-                            buffDic.Add(buff.Key,
-                                new Fork() { 
-                                Event = buff.Value.Event,
-                                TypeFirst = buff.Value.Type,
-                                CoefFirst = buff.Value.Coef,
-                                TypeSecond = pinacle[buff.Key].Type,
-                                CoefSecond = pinacle[buff.Key].Coef,
-                                Sport = buff.Value.SportType,
-                                MatchDateTime = pinacle[buff.Key].MatchDateTime,
-                                BookmakerFirst = buff.Value.Bookmaker,
-                                BookmakerSecond = pinacle[buff.Key].Bookmaker,
-                                });
+                            buffDic.Add(new Fork()
+                            {
+                                Event = buff.Event,
+                                TypeFirst = buff.Type,
+                                CoefFirst = buff.Coef,
+                                TypeSecond = buff2.Type,
+                                CoefSecond = buff2.Coef,
+                                Sport = buff.SportType,
+                                MatchDateTime = buff2.MatchDateTime,
+                                BookmakerFirst = buff.Bookmaker,
+                                BookmakerSecond = buff2.Bookmaker,
+                                // Profit = getProfit(defaultRate, buff.Coef.ConvertToDouble(), buff2.Coef.ConvertToDouble()).ToString()
+                            });
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    //ignored
+                    catch (Exception ex)
+                    {
+                        //ignored
+                    }
                 }
             }
             return buffDic;

@@ -40,7 +40,7 @@ namespace DataParser.MY
     }
     public static class Tags
     {
-        public static readonly string NameTeam = "<div class=\"today-member-name nowrap \" data-ellipsis='{}'>";
+        public static readonly string NameTeam = "<div class=\"member-name nowrap \" data-ellipsis='{}'>";// "<div class=\"today-member-name nowrap \" data-ellipsis='{}'>";
         public static readonly string Date = "<td class=\"date\">";
         public static readonly string EventID = "data-event-treeId";
         public static readonly string Coff = "data-selection-price=\"";
@@ -250,10 +250,10 @@ namespace DataParser.MY
                 if (reader != null)
                     reader.Close();
             }
-        
 
-            if (a)
-                File.WriteAllLines("qwerty2.html", HTML.Split('\n'));
+
+            //if (a)
+            //    File.WriteAllLines("qwerty2.html", HTML.Split('\n'));
 
             return HTML;
         }
@@ -308,7 +308,7 @@ namespace DataParser.MY
             {
                 case SportType.Soccer:
                     namefile = "Soccer" + en_namefile + ".html";
-                    url = "https://www.marathonbet.com/" + language + "/betting/Football/England/Championship/Promotion+Play-Offs/Semi+Final/1st+Leg/";
+                    url = "https://www.marathonbet.com/" + language + "/popular/Football/?menu=true"; //"/betting/Football/England/Championship/Promotion+Play-Offs/Semi+Final/1st+Leg/";
                     break;
                 case SportType.Basketball:
                     namefile = "Basketball" + en_namefile + ".html";

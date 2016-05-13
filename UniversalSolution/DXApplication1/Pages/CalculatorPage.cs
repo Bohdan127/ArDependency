@@ -20,12 +20,13 @@ namespace DXApplication1.Pages
         private Fork _fork;
         public Fork Fork { set { _fork = value; UpdateForm(); } }//todo check what is true way!!!!
 
-        public CalculatorPage(ICalculatorFormulas _calculatorFormulas) // remove Filter filter field, cause never used
+        public CalculatorPage(ICalculatorFormulas _calculatorFormulas, Filter filter)
         {
             InitializeComponent();
             InitializeEvents();
             Shown += CalculatorPage_Shown;
             CalculatorFormulas = _calculatorFormulas;
+            this.filter = filter;
         }
 
         private void CalculatorPage_Shown(object sender, System.EventArgs e) => IsOpen = true;
@@ -74,14 +75,14 @@ namespace DXApplication1.Pages
         protected virtual void textEditRate1_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
             textEditIncome1.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDouble(),textEditRate1.Text.ConvertToDouble(),lbCoef1.Text.ConvertToDouble()).ToString();
-            // todo calculate second TextField
+            textEditIncome2.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDouble(),textEditRate1.Text.ConvertToDouble(),lbCoef1.Text.ConvertToDouble()).ToString();
             OnURateChanging();
         }
 
         protected virtual void textEditRate2_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
             textEditIncome2.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDouble(),textEditRate1.Text.ConvertToDouble(),lbCoef1.Text.ConvertToDouble()).ToString();
-            // todo calculate second TextField
+            textEditIncome1.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDouble(),textEditRate1.Text.ConvertToDouble(),lbCoef1.Text.ConvertToDouble()).ToString();
             OnURateChanging();
         }
     }

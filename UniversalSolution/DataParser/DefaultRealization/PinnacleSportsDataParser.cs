@@ -33,7 +33,8 @@ namespace DataParser.DefaultRealization
                 var teamNamesResp = await GetAllTeamNamesAsync(userLogin, userPass).ConfigureAwait(false);
                 resList.AddRange(GroupResponses(totalResp, teamNamesResp));
                 resList.RemoveAll(r => Math.Abs(r.Coef.ConvertToDouble()) < 0.01 ||
-                                       Math.Abs(r.Coef.ConvertToDouble() - _converter.IncorrectAmericanOdds) < 0.01);
+                                       Math.Abs(r.Coef.ConvertToDouble() - _converter.IncorrectAmericanOdds) < 0.01 ||
+                                       r.Coef.ConvertToDouble() > 10.0);
             }
             catch (Exception ex)
             {
@@ -139,20 +140,20 @@ namespace DataParser.DefaultRealization
                                         }
                                         try
                                         {
-                                            resList.Add(new EventWithTotal()
-                                            {
-                                                Id = sportEvent.Value["id"].ConvertToLong(),
-                                                TotalType = "Больше",
-                                                TotalValue = period.Value?["teamTotal"]?["away"]?["points"]?.ToString(),
-                                                MatchDateTime = period.Value?["cutoff"]?.ToString()
-                                            });
-                                            resList.Add(new EventWithTotal()
-                                            {
-                                                Id = sportEvent.Value["id"].ConvertToLong(),
-                                                TotalType = "Меньше",
-                                                TotalValue = period.Value?["teamTotal"]?["home"]?["points"]?.ToString(),
-                                                MatchDateTime = period.Value?["cutoff"]?.ToString()
-                                            });
+                                            //resList.Add(new EventWithTotal()
+                                            //{
+                                            //    Id = sportEvent.Value["id"].ConvertToLong(),
+                                            //    TotalType = "Больше",
+                                            //    TotalValue = period.Value?["teamTotal"]?["away"]?["points"]?.ToString(),
+                                            //    MatchDateTime = period.Value?["cutoff"]?.ToString()
+                                            //});
+                                            //resList.Add(new EventWithTotal()
+                                            //{
+                                            //    Id = sportEvent.Value["id"].ConvertToLong(),
+                                            //    TotalType = "Меньше",
+                                            //    TotalValue = period.Value?["teamTotal"]?["home"]?["points"]?.ToString(),
+                                            //    MatchDateTime = period.Value?["cutoff"]?.ToString()
+                                            //});
                                         }
                                         catch (Exception ex)
                                         {

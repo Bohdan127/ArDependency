@@ -2,6 +2,7 @@
 using DataSaver.Models;
 using FormulasCollection.Interfaces;
 using FormulasCollection.Realizations;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tools;
@@ -27,14 +28,25 @@ namespace DXApplication1.Models
         {
             if (filterPage == null) return new List<Fork>();
 
-            List<Fork> buffs = await localSaver.GetForksAsync(filterPage).ConfigureAwait(false);
+            var forks = await localSaver.GetForksAsync(filterPage).ConfigureAwait(false);
 
-            foreach(Fork fk in buffs)
+            if (filterPage.DefaultRate != null)
             {
-                if(filterPage.DefaultRate != null)
-                fk.Profit = getProfit(filterPage.DefaultRate.Value.ConvertToDouble(), fk.CoefFirst.ConvertToDouble(), fk.CoefSecond.ConvertToDouble()).ToString();
+                foreach (var fork in forks)
+                {
+                    fork.Profit = getProfit(
+                        Convert.ToDouble(filterPage.DefaultRate.Value),
+                        fork.CoefFirst.ConvertToDouble(),
+                        fork.CoefSecond.ConvertToDouble());
+                }
             }
-            return await localSaver.GetForksAsync(filterPage).ConfigureAwait(false);
+
+            if (filterPage.Min != null)
+                forks.RemoveAll(f => f.Profit <= filterPage.Min.Value);
+            if (filterPage.Max != null)
+                forks.RemoveAll(f => f.Profit >= filterPage.Max.Value);
+
+            return forks;
         }
     }
 }

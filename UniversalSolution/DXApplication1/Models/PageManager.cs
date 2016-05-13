@@ -30,7 +30,7 @@ namespace DXApplication1.Models
             _defaultMdiParent = mdiParent;
             DataManager = new DataManager(forkFormulas);
             timer = new Timer();
-            timer.Interval = 20 * 1000;//default for 2 minutes
+            timer.Interval = 20 * 1000;//default for 20 seconds
             timer.Tick += Timer_Tick;
         }
 
@@ -79,7 +79,7 @@ namespace DXApplication1.Models
         {
             if (_calculatorPage == null)
             {
-                _calculatorPage = new CalculatorPage(new TwoOutComeCalculatorFormulas());
+                _calculatorPage = new CalculatorPage(new TwoOutComeCalculatorFormulas(), _filterPage?.Filter);
                 _calculatorPage.MdiParent = mdiParent ?? _defaultMdiParent;
                 _calculatorPage.Close = false;
             }
@@ -108,15 +108,17 @@ namespace DXApplication1.Models
                 _searchPage.Close = false;
                 _searchPage.Update += SearchPage_Update;
                 _searchPage.CalculatorCall += AccountPage_CalculatorCall;//can be the same as for account page
-                if (!timer.Enabled)
-                {
-                    //todo just for first time, but this is bad way
-                    SearchPage_Update(null, null);
-                    if (_filterPage.Filter.AutoUpdateTime != null)
-                        timer.Interval = _filterPage.Filter.AutoUpdateTime.Value * 60 * 1000;
-                    timer.Start();
-                }
             }
+
+            if (!timer.Enabled)
+            {
+                //todo just for first time, but this is bad way
+                SearchPage_Update(null, null);
+                if (_filterPage.Filter.AutoUpdateTime != null)
+                    timer.Interval = _filterPage.Filter.AutoUpdateTime.Value * 1000;
+                timer.Start();
+            }
+
             return _searchPage;
         }
 

@@ -30,8 +30,8 @@
     <ProductName>Parser #8</ProductName>
     <PublisherName>Bohdan Benetskyi</PublisherName>
     <SuiteName>DxApplication1</SuiteName>
-    <ApplicationRevision>13</ApplicationRevision>
-    <ApplicationVersion>0.0.3.%2a</ApplicationVersion>
+    <ApplicationRevision>37</ApplicationRevision>
+    <ApplicationVersion>0.0.4.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -2907,6 +2907,7 @@
     </PublishFile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\BO_Skull_32x32.ico" />
     <Content Include="Images\CalculateNow_32x32.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

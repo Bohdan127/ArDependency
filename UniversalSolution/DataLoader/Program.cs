@@ -1,8 +1,12 @@
 ﻿using DataParser.DefaultRealization;
 using DataParser.Enums;
+using DataParser.MY;
+using DataSaver;
 using FormulasCollection.Realizations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Tools;
 
 namespace DataLoader
 {
@@ -12,11 +16,17 @@ namespace DataLoader
         public static string UserPass { get; set; }
 
         private static PinnacleSportsDataParser pinnacle;
+        private static ParsePinnacle marathon;
+        private static TwoOutComeForkFormulas forkFormulas;
+        private static LocalSaver localSaver;
 
         static void Main(string[] args)
         {
             Console.WriteLine("DataLoader Start");
             pinnacle = new PinnacleSportsDataParser(new ConverterFormulas());
+            marathon = new ParsePinnacle();
+            localSaver = new LocalSaver();
+            forkFormulas = new TwoOutComeForkFormulas();
             GetUserData();
             StartLoad();
         }
@@ -38,32 +48,92 @@ namespace DataLoader
                 Console.WriteLine($"User Login = '{UserLogin}'");
                 Console.WriteLine($"User Password = '{UserPass}'");
 
+                List<ResultForForks> pinSoc;
+                List<ResultForForks> marSoc;
+                List<Fork> forks = new List<Fork>();
 
-                var piSoc = LoadPinacleSoccers();
-                var marSoc = LoadMarathonSoccers();
-                var forks = GetSoccersForks();
+                var sportsToLoading = new[]
+                {SportType.Basketball, SportType.Hockey, SportType.Soccer, SportType.Tennis, SportType.Volleyball,};
 
+                foreach (var sportType in sportsToLoading)
+                {
+                    pinSoc = LoadPinacle(sportType);
+                    marSoc = LoadMarathon(sportType);
+                    forks = GetForks(sportType, pinSoc, marSoc);
+                    try
+                    {
+                        var TooBig = pinSoc.Where(f => f.Coef.ConvertToDouble() > 10.0 && forks.Any(fr => f.Coef.ConvertToDouble() - fr.CoefSecond.ConvertToDouble() < 0.1 && f.Coef.ConvertToDouble() - fr.CoefSecond.ConvertToDouble() > -0.1));
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+
+
+                    //todo this is just for test in Release we need to delete it
+                    //foreach (var ev in pinSoc)
+                    //{
+                    //    forks.Add(new Fork()
+                    //    {
+                    //        Event = ev.Event,
+                    //        TypeFirst = ev.Type,
+                    //        Sport = ev.SportType,
+                    //        CoefFirst = ev.Event,
+                    //        MatchDateTime = ev.MatchDateTime,
+                    //        TypeSecond = ev.Type,
+                    //        CoefSecond = ev.Coef,
+                    //        BookmakerFirst = "P",
+                    //        BookmakerSecond = "M"
+                    //    });
+                    //}
+                    SaveNewForks(forks, sportType); pinSoc.Clear();
+                    marSoc.Clear();
+                    forks.Clear();
+                }
             }
         }
 
-        private static List<Fork> GetSoccersForks()
+        private static void SaveNewForks(List<Fork> forks, SportType sportType)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"Start Saving Forks for {sportType} sport type");
+
+            localSaver.ClearAndInsertForks(forks, sportType);
+
+            Console.WriteLine($"End Saving. {forks.Count} forks was saved");
         }
 
-        private static List<ResultForForks> LoadMarathonSoccers()
+        private static List<Fork> GetForks(SportType sportType, List<ResultForForks> pinnacle, List<ResultForForks> marathon)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"Start Calculate Forks for {sportType} sport type");
+
+            var resList = forkFormulas.GetAllForks(pinnacle, marathon);
+
+            Console.WriteLine("Calculate finished");
+            Console.WriteLine($"Was founded {resList.Count} {sportType} Forks");
+
+            return resList;
         }
 
-        private static List<ResultForForks> LoadPinacleSoccers()
+        private static List<ResultForForks> LoadMarathon(SportType sportType)
         {
-            Console.WriteLine("Start Loading Soccer Events");
+            Console.WriteLine($"Start Loading {sportType} Events from Marathon");
 
-            var resList = pinnacle.GetAllPinacleEventsForRequestAsync(SportType.Soccer, UserLogin, UserPass).Result;
+            var resList = marathon.InitiAsync(sportType).Result;
 
             Console.WriteLine("Loading finished");
-            Console.WriteLine($"Was founded {resList.Count} Soccers Events");
+            Console.WriteLine($"Was founded {resList.Count} {sportType} Events from Marathon");
+
+            return resList;
+        }
+
+        private static List<ResultForForks> LoadPinacle(SportType sportType)
+        {
+            Console.WriteLine($"Start Loading {sportType} Events from Pinnacle");
+
+            var resList = pinnacle.GetAllPinacleEventsForRequestAsync(sportType, UserLogin, UserPass).Result;
+
+            Console.WriteLine("Loading finished");
+            Console.WriteLine($"Was founded {resList.Count} {sportType} Events from Pinnacle");
 
             return resList;
         }

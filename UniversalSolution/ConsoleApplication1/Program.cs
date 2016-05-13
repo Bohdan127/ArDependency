@@ -1,6 +1,8 @@
 ﻿using DataParser.Enums;
+using DataSaver.RavenDB;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Raven.Client.Document;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +15,44 @@ namespace ParseAPI
     {
         [STAThread]
         static void Main(string[] args)
+        {
+            //var store = new DocumentStore { Url = "http://localhost:8765", DefaultDatabase = "ParserTest2" };
+            //store.Initialize();
+            //store.DatabaseCommands.DisableAllCaching();
+
+            //using (var session = store.OpenSession())
+            //{
+            //    var product = new Product
+            //    {
+            //        Cost = 3.99m,
+            //        Name = "Milk",
+            //    };
+            //    session.Store(product);
+            //    session.SaveChanges();
+
+            //    session.Store(new Order
+            //    {
+            //        Customer = "customers/ayende",
+            //        OrderLines = new List<OrderLine>
+            //        {
+            //            new OrderLine
+            //            {
+            //                ProductId = product.Id,
+            //                Quantity = 3
+            //            },
+            //        }
+            //    });
+            //    session.SaveChanges();
+            //}
+
+            //using (var session = store.OpenSession())
+            //{
+            //    var list = session.Query<Product>().GetAllRecords(128);
+            //}
+        }
+
+        [STAThread]
+        static void Main2(string[] args)
         {
 
             //Task
@@ -98,6 +138,27 @@ namespace ParseAPI
             return "";
         }
     }
+
+    internal class OrderLine
+    {
+        public object ProductId { get; set; }
+        public int Quantity { get; set; }
+    }
+
+    internal class Order
+    {
+        public string Id { get; set; }
+        public string Customer { get; set; }
+        public IEnumerable<OrderLine> OrderLines { get; set; }
+    }
+
+    internal class Product
+    {
+        public decimal Cost { get; set; }
+        public string Name { get; set; }
+        public string Id { get; set; }
+    }
+
     public static class ScoreModel
     {
         public static List<string> SportTypes { get; set; }

@@ -58,6 +58,6 @@
         /// <summary>
         /// Profit from Fork
         /// </summary>
-        public string Profit { get; set; }
+        public double Profit { get; set; }
     }
 }

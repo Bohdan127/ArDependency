@@ -3,6 +3,7 @@ using DXApplication1.Models;
 using FormulasCollection.Interfaces;
 using FormulasCollection.Realizations;
 using System;
+using System.Globalization;
 using System.Windows.Forms;
 using Tools;
 
@@ -19,12 +20,12 @@ namespace DXApplication1.Pages
         private Fork _fork;
         public Fork Fork { set { _fork = value; UpdateForm(); } }//todo check what is true way!!!!
 
-        public CalculatorPage(ICalculatorFormulas _calculatorFormulas)
+        public CalculatorPage(ICalculatorFormulas calculatorFormulas)
         {
             InitializeComponent();
             InitializeEvents();
             Shown += CalculatorPage_Shown;
-            CalculatorFormulas = _calculatorFormulas;
+            CalculatorFormulas = calculatorFormulas;
         }
 
         private void CalculatorPage_Shown(object sender, System.EventArgs e) => IsOpen = true;
@@ -33,9 +34,9 @@ namespace DXApplication1.Pages
         {
             lbMain.Text = _fork?.Event;
             lbType1.Text = _fork?.TypeFirst;
-            lbCoef1.Text = _fork?.CoefFirst.ToString();
+            lbCoef1.Text = _fork?.CoefFirst;
             lbType2.Text = _fork?.TypeSecond;
-            lbCoef2.Text = _fork?.CoefSecond.ToString();
+            lbCoef2.Text = _fork?.CoefSecond;
         }
 
         public void InitializeEvents()
@@ -47,13 +48,13 @@ namespace DXApplication1.Pages
         private void AccountingPage_RateChanging(object sender, EventArgs e)
         {
             textEditAllIncome.Text = CalculatorFormulas.CalculateSummaryIncome(
-                    textEditIncome1.Text,
-                    textEditIncome2.Text
-                ).ToString();
+                textEditIncome1.Text,
+                textEditIncome2.Text
+                );
             textEditAllRate.Text = CalculatorFormulas.CalculateSummaryRate(
-                    textEditRate1.Text.ConvertToDouble(),
-                    textEditRate2.Text.ConvertToDouble()
-                ).ToString();
+                textEditRate1.Text.ConvertToDouble(),
+                textEditRate2.Text.ConvertToDouble()
+                );
         }
 
         public void DeInitializeEvents()
@@ -72,15 +73,24 @@ namespace DXApplication1.Pages
 
         protected virtual void textEditRate1_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
-            textEditIncome1.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDouble(),textEditRate1.Text.ConvertToDouble(),lbCoef1.Text.ConvertToDouble()).ToString();
-            textEditIncome2.Text = ((((textEditAllRate.Text.ConvertToDouble()) - (textEditIncome1.Text.ConvertToDouble())) * lbCoef2.Text.ConvertToDouble()) - textEditAllRate.Text.ConvertToDouble()).ToString();
+            textEditIncome1.Text = CalculatorFormulas.CalculateRate(
+                textEditAllRate.Text.ConvertToDouble(),
+                textEditRate1.Text.ConvertToDouble(),
+                lbCoef1.Text.ConvertToDouble());
+            textEditIncome2.Text = (
+                (textEditAllRate.Text.ConvertToDouble() - textEditIncome1.Text.ConvertToDouble()) * 
+                lbCoef2.Text.ConvertToDouble() - textEditAllRate.Text.ConvertToDouble()).ToString(CultureInfo.CurrentCulture);
             OnURateChanging();
         }
 
         protected virtual void textEditRate2_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
-            textEditIncome2.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDouble(), textEditRate2.Text.ConvertToDouble(), lbCoef2.Text.ConvertToDouble()).ToString();
-            textEditIncome1.Text = ((((textEditAllRate.Text.ConvertToDouble()) - (textEditIncome2.Text.ConvertToDouble())) * lbCoef1.Text.ConvertToDouble()) - textEditAllRate.Text.ConvertToDouble()).ToString();
+            textEditIncome2.Text = CalculatorFormulas.CalculateRate(
+                textEditAllRate.Text.ConvertToDouble(),
+                textEditRate2.Text.ConvertToDouble(), 
+                lbCoef2.Text.ConvertToDouble());
+            textEditIncome1.Text = ((textEditAllRate.Text.ConvertToDouble() - textEditIncome2.Text.ConvertToDouble()) *
+                lbCoef1.Text.ConvertToDouble() - textEditAllRate.Text.ConvertToDouble()).ToString(CultureInfo.CurrentCulture);
             OnURateChanging();
         }
     }

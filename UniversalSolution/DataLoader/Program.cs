@@ -52,6 +52,7 @@ namespace DataLoader
                 List<ResultForForks> marSoc;
                 List<Fork> forks = new List<Fork>();
 
+                //always loading all sports
                 var sportsToLoading = new[]
                 {SportType.Basketball, SportType.Hockey, SportType.Soccer, SportType.Tennis, SportType.Volleyball,};
 
@@ -59,34 +60,11 @@ namespace DataLoader
                 {
                     pinSoc = LoadPinacle(sportType);
                     marSoc = LoadMarathon(sportType);
-                    forks = GetForks(sportType, pinSoc, marSoc);
-                    try
-                    {
-                        var TooBig = pinSoc.Where(f => f.Coef.ConvertToDouble() > 10.0 && forks.Any(fr => f.Coef.ConvertToDouble() - fr.CoefSecond.ConvertToDouble() < 0.1 && f.Coef.ConvertToDouble() - fr.CoefSecond.ConvertToDouble() > -0.1));
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
+                    forks = GetForks(sportType, pinSoc, marSoc);    
+                                 
+                    SaveNewForks(forks, sportType);
 
-
-                    //todo this is just for test in Release we need to delete it
-                    //foreach (var ev in pinSoc)
-                    //{
-                    //    forks.Add(new Fork()
-                    //    {
-                    //        Event = ev.Event,
-                    //        TypeFirst = ev.Type,
-                    //        Sport = ev.SportType,
-                    //        CoefFirst = ev.Event,
-                    //        MatchDateTime = ev.MatchDateTime,
-                    //        TypeSecond = ev.Type,
-                    //        CoefSecond = ev.Coef,
-                    //        BookmakerFirst = "P",
-                    //        BookmakerSecond = "M"
-                    //    });
-                    //}
-                    SaveNewForks(forks, sportType); pinSoc.Clear();
+                    pinSoc.Clear();
                     marSoc.Clear();
                     forks.Clear();
                 }

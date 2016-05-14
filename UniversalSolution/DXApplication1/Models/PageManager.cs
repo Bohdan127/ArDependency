@@ -79,7 +79,7 @@ namespace DXApplication1.Models
         {
             if (_calculatorPage == null)
             {
-                _calculatorPage = new CalculatorPage(new TwoOutComeCalculatorFormulas(), _filterPage?.Filter);
+                _calculatorPage = new CalculatorPage(new TwoOutComeCalculatorFormulas());
                 _calculatorPage.MdiParent = mdiParent ?? _defaultMdiParent;
                 _calculatorPage.Close = false;
             }

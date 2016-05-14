@@ -8,12 +8,17 @@ namespace FormulasCollection.Realizations
     public class TwoOutComeForkFormulas : IForkFormulas
     {
 
-        public bool CheckIsFork(double? coef1, double? coef2) => (coef1 == 0 || coef2 == 0) ? false : 1 > (1 / coef1.Value + 1 / coef2.Value);
+        public bool CheckIsFork(double? coef1, double? coef2) => 
+            coef1 != null && 
+            coef2 != null && 
+            Math.Abs(coef1.Value) > 0.01 && 
+            Math.Abs(coef2.Value) > 0.01 && 
+            1 > 1 / coef1.Value + 1 / coef2.Value;
 
 
         public double getProfit(double rate, double kof1, double kof2)
         {
-            return ((rate / (kof1 + kof2)) * (kof1 * kof2));
+            return rate / (kof1 + kof2) * (kof1 * kof2);
         }
 
         public List<Fork> GetAllForks(List<ResultForForks> marafon, List<ResultForForks> pinacle)
@@ -38,7 +43,6 @@ namespace FormulasCollection.Realizations
                                 MatchDateTime = buff2.MatchDateTime,
                                 BookmakerFirst = buff.Bookmaker,
                                 BookmakerSecond = buff2.Bookmaker,
-                                // Profit = getProfit(defaultRate, buff.Coef.ConvertToDouble(), buff2.Coef.ConvertToDouble()).ToString()
                             });
                         }
                     }
@@ -140,10 +144,10 @@ namespace FormulasCollection.Realizations
                         break;
                 }
             }
-            if (type1 == "Меньше" && type2 == "Больше")
-                return true;
-            if (type2 == "Меньше" && type1 == "Больше")
-                return true;
+            //if (type1 == "Меньше" && type2 == "Больше")
+            //    return true;
+            //if (type2 == "Меньше" && type1 == "Больше")
+            //    return true;
             return false;
 
         }

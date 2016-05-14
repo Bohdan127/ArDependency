@@ -33,8 +33,7 @@ namespace DataParser.DefaultRealization
                 var teamNamesResp = await GetAllTeamNamesAsync(userLogin, userPass).ConfigureAwait(false);
                 resList.AddRange(GroupResponses(totalResp, teamNamesResp));
                 resList.RemoveAll(r => Math.Abs(r.Coef.ConvertToDouble()) < 0.01 ||
-                                       Math.Abs(r.Coef.ConvertToDouble() - _converter.IncorrectAmericanOdds) < 0.01 ||
-                                       r.Coef.ConvertToDouble() > 10.0);
+                                       Math.Abs(r.Coef.ConvertToDouble() - _converter.IncorrectAmericanOdds) < 0.01);
             }
             catch (Exception ex)
             {

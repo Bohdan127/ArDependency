@@ -14,7 +14,7 @@ namespace FormulasCollection.Realizations
         public string CalculateIncome(double coef, double rate) => (coef * rate).ToString();
 
         public string CalculateRate(double rateMain, double rateCurrent ,double kof){
-            return string.Format("Profit of rate {0} is {1} ", rateCurrent, ((rateCurrent*kof) - rateMain));
+            return $"Profit of rate {rateCurrent} is {((rateCurrent * kof) - rateMain)}" ;
         }
         public List<string> getRates(double rate, double kof1, double kof2)
         {

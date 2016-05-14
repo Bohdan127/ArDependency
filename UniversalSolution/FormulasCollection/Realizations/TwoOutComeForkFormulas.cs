@@ -8,13 +8,8 @@ namespace FormulasCollection.Realizations
     public class TwoOutComeForkFormulas : IForkFormulas
     {
 
-        public string rate1, rate2;
-        public bool CheckIsFork(double? coef1, double? coef2)
-        {
-            if (coef1 == 0 || coef2 == 0)
-                return false;
-            return 1 > (1 / coef1.Value + 1 / coef2.Value);
-        }
+        public bool CheckIsFork(double? coef1, double? coef2) => (coef1 == 0 || coef2 == 0) ? false : 1 > (1 / coef1.Value + 1 / coef2.Value);
+
 
         public double getProfit(double rate, double kof1, double kof2)
         {
@@ -23,8 +18,6 @@ namespace FormulasCollection.Realizations
 
         public List<Fork> GetAllForks(List<ResultForForks> marafon, List<ResultForForks> pinacle)
         {
-            Dictionary<string, double> d = new Dictionary<string, double>();
-
             List<Fork> buffDic = new List<Fork>();
             foreach (var buff in marafon)
             {

@@ -15,18 +15,16 @@ namespace DXApplication1.Pages
         public bool Close { get; set; }
         public bool IsOpen { get; set; }
         public EventHandler RateChanging;
-        private Filter filter;
         protected virtual void OnURateChanging() => RateChanging?.Invoke(null, null);
         private Fork _fork;
         public Fork Fork { set { _fork = value; UpdateForm(); } }//todo check what is true way!!!!
 
-        public CalculatorPage(ICalculatorFormulas _calculatorFormulas, Filter filter)
+        public CalculatorPage(ICalculatorFormulas _calculatorFormulas)
         {
             InitializeComponent();
             InitializeEvents();
             Shown += CalculatorPage_Shown;
             CalculatorFormulas = _calculatorFormulas;
-            this.filter = filter;
         }
 
         private void CalculatorPage_Shown(object sender, System.EventArgs e) => IsOpen = true;
@@ -75,14 +73,14 @@ namespace DXApplication1.Pages
         protected virtual void textEditRate1_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
             textEditIncome1.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDouble(),textEditRate1.Text.ConvertToDouble(),lbCoef1.Text.ConvertToDouble()).ToString();
-            textEditIncome2.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDouble(),textEditRate1.Text.ConvertToDouble(),lbCoef1.Text.ConvertToDouble()).ToString();
+            textEditIncome2.Text = ((((textEditAllRate.Text.ConvertToDouble()) - (textEditIncome1.Text.ConvertToDouble())) * lbCoef2.Text.ConvertToDouble()) - textEditAllRate.Text.ConvertToDouble()).ToString();
             OnURateChanging();
         }
 
         protected virtual void textEditRate2_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
-            textEditIncome2.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDouble(),textEditRate1.Text.ConvertToDouble(),lbCoef1.Text.ConvertToDouble()).ToString();
-            textEditIncome1.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDouble(),textEditRate1.Text.ConvertToDouble(),lbCoef1.Text.ConvertToDouble()).ToString();
+            textEditIncome2.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDouble(), textEditRate2.Text.ConvertToDouble(), lbCoef2.Text.ConvertToDouble()).ToString();
+            textEditIncome1.Text = ((((textEditAllRate.Text.ConvertToDouble()) - (textEditIncome2.Text.ConvertToDouble())) * lbCoef1.Text.ConvertToDouble()) - textEditAllRate.Text.ConvertToDouble()).ToString();
             OnURateChanging();
         }
     }

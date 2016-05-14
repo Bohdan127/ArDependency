@@ -32,8 +32,11 @@ namespace DataParser.DefaultRealization
                 var totalResp = await GetAllTotalsAsync(userLogin, userPass).ConfigureAwait(false);
                 var teamNamesResp = await GetAllTeamNamesAsync(userLogin, userPass).ConfigureAwait(false);
                 resList.AddRange(GroupResponses(totalResp, teamNamesResp));
-                resList.RemoveAll(r => Math.Abs(r.Coef.ConvertToDouble()) < 0.01 ||
-                                       Math.Abs(r.Coef.ConvertToDouble() - _converter.IncorrectAmericanOdds) < 0.01);
+                resList.RemoveAll(r =>
+                {
+                    var d = r.Coef.ConvertToDoubleOrNull();
+                    return d != null && (Math.Abs(d.Value) < 0.01 || Math.Abs(d.Value - _converter.IncorrectAmericanOdds) < 0.01);
+                });
             }
             catch (Exception ex)
             {
@@ -48,7 +51,7 @@ namespace DataParser.DefaultRealization
             var eventsWithTotal = ParseEventWithTotals(totalResp);
 
             return (from withNames in evenstWithNames
-                    from withTotal in eventsWithTotal.Where(t => t.Id == withNames.Id)
+                    from withTotal in eventsWithTotal.Where(t => withNames.Id != null && t.Id != null && t.Id.Value == withNames.Id.Value)
                     select new ResultForForks()
                     {
                         Event = withNames.TeamNames,
@@ -84,21 +87,21 @@ namespace DataParser.DefaultRealization
                                     {
                                         resList.Add(new EventWithTotal()
                                         {
-                                            Id = sportEvent.Value["id"].ConvertToLong(),
+                                            Id = sportEvent.Value["id"].ConvertToLongOrNull(),
                                             TotalType = "1",
                                             TotalValue = period.Value?["moneyline"]?["home"]?.ToString(),
                                             MatchDateTime = period.Value?["cutoff"]?.ToString()
                                         });
                                         resList.Add(new EventWithTotal()
                                         {
-                                            Id = sportEvent.Value["id"].ConvertToLong(),
+                                            Id = sportEvent.Value["id"].ConvertToLongOrNull(),
                                             TotalType = "2",
                                             TotalValue = period.Value?["moneyline"]?["away"]?.ToString(),
                                             MatchDateTime = period.Value?["cutoff"]?.ToString()
                                         });
                                         resList.Add(new EventWithTotal()
                                         {
-                                            Id = sportEvent.Value["id"].ConvertToLong(),
+                                            Id = sportEvent.Value["id"].ConvertToLongOrNull(),
                                             TotalType = "X",
                                             TotalValue = period.Value?["moneyline"]?["draw"]?.ToString(),
                                             MatchDateTime = period.Value?["cutoff"]?.ToString()
@@ -117,7 +120,7 @@ namespace DataParser.DefaultRealization
                                             {
                                                 resList.Add(new EventWithTotal()
                                                 {
-                                                    Id = sportEvent.Value["id"].ConvertToLong(),
+                                                    Id = sportEvent.Value["id"].ConvertToLongOrNull(),
                                                     TotalType = spread.Value?["hdp"]?.ToString(),
                                                     TotalValue = spread.Value?["away"]?.ToString(),
                                                     //  Remark = "spreads away",
@@ -125,7 +128,7 @@ namespace DataParser.DefaultRealization
                                                 });
                                                 resList.Add(new EventWithTotal()
                                                 {
-                                                    Id = sportEvent.Value["id"].ConvertToLong(),
+                                                    Id = sportEvent.Value["id"].ConvertToLongOrNull(),
                                                     TotalType = spread.Value?["hdp"]?.ToString(),
                                                     TotalValue = spread.Value?["home"]?.ToString(),
                                                     //  Remark = "spreads home",
@@ -199,7 +202,7 @@ namespace DataParser.DefaultRealization
                             if (sportEvent.Value != null)
                                 list.Add(new EventWithTeamName()
                                 {
-                                    Id = sportEvent.Value["id"].ConvertToLong(),
+                                    Id = sportEvent.Value["id"].ConvertToLongOrNull(),
                                     TeamNames =
                                         $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"
                                         .Replace("\"", "")

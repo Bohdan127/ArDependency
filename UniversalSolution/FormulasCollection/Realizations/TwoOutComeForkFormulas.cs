@@ -16,9 +16,11 @@ namespace FormulasCollection.Realizations
             1 > 1 / coef1.Value + 1 / coef2.Value;
 
 
-        public double getProfit(double rate, double kof1, double kof2)
+        public double GetProfit(double rate, double? kof1, double? kof2)
         {
-            return rate / (kof1 + kof2) * (kof1 * kof2);
+            if (kof2 != null && kof1 != null)
+                return rate / (kof1.Value + kof2.Value) * (kof1.Value * kof2.Value);
+            return 0d;
         }
 
         public List<Fork> GetAllForks(List<ResultForForks> marafon, List<ResultForForks> pinacle)

@@ -2,7 +2,7 @@
 {
     public class EventWithTeamName
     {
-        public long Id { get; set; }
+        public long? Id { get; set; }
 
         /// <summary>
         /// First home, Second away              

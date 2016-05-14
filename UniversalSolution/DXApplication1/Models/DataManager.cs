@@ -11,17 +11,13 @@ namespace DXApplication1.Models
 {
     public class DataManager
     {
+        private readonly IForkFormulas _forkFormulas;
         private LocalSaver localSaver;
-
 
         public DataManager(IForkFormulas forkFormulas)
         {
+            _forkFormulas = forkFormulas;
             localSaver = new LocalSaver();
-        }
-
-        public double getProfit(double rate, double kof1, double kof2)
-        {
-            return ((rate / (kof1 + kof2)) * (kof1 * kof2));
         }
 
         public async Task<List<Fork>> GetForksForAllSportsAsync(Filter filterPage)
@@ -34,10 +30,10 @@ namespace DXApplication1.Models
             {
                 foreach (var fork in forks)
                 {
-                    fork.Profit = getProfit(
+                    fork.Profit = _forkFormulas.GetProfit(
                         Convert.ToDouble(filterPage.DefaultRate.Value),
-                        fork.CoefFirst.ConvertToDouble(),
-                        fork.CoefSecond.ConvertToDouble());
+                        fork.CoefFirst.ConvertToDoubleOrNull(),
+                        fork.CoefSecond.ConvertToDoubleOrNull());
                 }
             }
 

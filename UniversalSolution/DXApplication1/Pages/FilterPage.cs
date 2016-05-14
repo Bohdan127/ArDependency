@@ -213,8 +213,8 @@ namespace DXApplication1.Pages
         private void Faster_Changing(object sender, ChangingEventArgs e)
         {
             lock (Filter)
-            {
-                Filter.FaterThen = DBTools.ConvertToDateTime(e.NewValue);
+            {                                                                         
+                Filter.FaterThen = Extentions.ConvertStringToDateTime(e.NewValue?.ToString());
             }
         }
 
@@ -222,7 +222,7 @@ namespace DXApplication1.Pages
         {
             lock (Filter)
             {
-                Filter.LongerThen = DBTools.ConvertToDateTime(e.NewValue);
+                Filter.LongerThen = Extentions.ConvertStringToDateTime(e.NewValue?.ToString());
             }
         }
 

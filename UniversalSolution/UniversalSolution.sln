@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataParser", "DataParser\DataParser.csproj", "{586A03BB-1702-4143-B370-E1DC6656762A}"
 EndProject
@@ -12,8 +12,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "License", "License\License.csproj", "{F2608D24-A0E2-4BF8-8E58-C3B931DF08A6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LicenseManager", "LicenseManager\LicenseManager.csproj", "{DAE60826-53C1-4E80-BFD1-D0B3E5F9553B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools", "Tools\Tools.csproj", "{0C00658F-ECD3-4C88-AC62-6022BF496214}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormulasCollection", "FormulasCollection\FormulasCollection.csproj", "{C6982AB9-704A-474F-A303-89B4C4A3D11E}"
 EndProject
@@ -113,22 +111,6 @@ Global
 		{DAE60826-53C1-4E80-BFD1-D0B3E5F9553B}.Release|x64.Build.0 = Release|Any CPU
 		{DAE60826-53C1-4E80-BFD1-D0B3E5F9553B}.Release|x86.ActiveCfg = Release|Any CPU
 		{DAE60826-53C1-4E80-BFD1-D0B3E5F9553B}.Release|x86.Build.0 = Release|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Debug|ARM.Build.0 = Debug|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Debug|x64.Build.0 = Debug|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Debug|x86.Build.0 = Debug|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Release|ARM.ActiveCfg = Release|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Release|ARM.Build.0 = Release|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Release|x64.ActiveCfg = Release|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Release|x64.Build.0 = Release|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Release|x86.ActiveCfg = Release|Any CPU
-		{0C00658F-ECD3-4C88-AC62-6022BF496214}.Release|x86.Build.0 = Release|Any CPU
 		{C6982AB9-704A-474F-A303-89B4C4A3D11E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C6982AB9-704A-474F-A303-89B4C4A3D11E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6982AB9-704A-474F-A303-89B4C4A3D11E}.Debug|ARM.ActiveCfg = Debug|Any CPU

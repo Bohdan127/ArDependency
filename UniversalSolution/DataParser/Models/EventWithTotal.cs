@@ -2,7 +2,7 @@
 {
     public class EventWithTotal
     {
-        public long Id { get; set; }
+        public long? Id { get; set; }
 
         public string TotalType { get; set; }
 

@@ -2,7 +2,7 @@
 using DataParser.DefaultRealization;
 using DevExpress.XtraBars.Helpers;
 using DevExpress.XtraEditors;
-using License.Logic;
+//using License.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -41,11 +41,11 @@ namespace DXApplication1
 
             DefaultData();
 
-            LicenseForm licenseForm = new LicenseForm();
-            if (!licenseForm.CheckInstance(licenseKey))
-                licenseForm.ShowDialog();
-            if (!licenseForm.IsRegistered)
-                Close();
+            //LicenseForm licenseForm = new LicenseForm();
+            //if (!licenseForm.CheckInstance(licenseKey))
+            //    licenseForm.ShowDialog();
+            //if (!licenseForm.IsRegistered)
+            //    Close();
 
             DefaultEvents();
 

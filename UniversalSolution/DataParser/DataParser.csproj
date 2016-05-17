@@ -90,6 +90,7 @@
     <Compile Include="DefaultRealization\DefaultMatch.cs" />
     <Compile Include="Models\EventWithTeamName.cs" />
     <Compile Include="Models\EventWithTotal.cs" />
+    <Compile Include="Models\EventWithTotalDictionary.cs" />
     <Compile Include="My\ParsePinnacle.cs" />
     <Compile Include="My\Vitia.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

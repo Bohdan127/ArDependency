@@ -8,9 +8,9 @@ namespace FormulasCollection.Realizations
 {
     public class ResultForForks
     {
-        public string Event;
-        public string Type;
-        public string Coef;
+        public string Event { get; set; }
+        public string Type { get; set; }
+        public string Coef { get; set; }
 
         public string Bookmaker { get; set; }
         //  X1 X2 1 2 

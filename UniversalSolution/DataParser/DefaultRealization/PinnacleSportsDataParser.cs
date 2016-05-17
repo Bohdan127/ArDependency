@@ -57,7 +57,7 @@ namespace DataParser.DefaultRealization
                         Event = withNames.TeamNames,
                         Type = withTotal.TotalType,
                         Coef = _converter.ConvertAmericanToDecimal(
-                            withTotal.TotalValue.ConvertToDoubleOrNull()).ToString(),
+                           withTotal.TotalValue.ConvertToDoubleOrNull()).ToString(),
                         SportType = SportType.ToString(),
                         Bookmaker = Site.PinnacleSports.ToString(),
                         MatchDateTime = withTotal.MatchDateTime

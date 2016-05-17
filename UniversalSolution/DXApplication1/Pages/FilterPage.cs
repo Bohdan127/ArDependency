@@ -52,6 +52,7 @@ namespace DXApplication1.Pages
                 textEditUserPass.EditValue = Filter.UserPass;
                 textEditAutoUpdate.EditValue = Filter.AutoUpdateTime;
                 textEditRate.EditValue = Filter.DefaultRate;
+                
             }
         }
 
@@ -98,7 +99,7 @@ namespace DXApplication1.Pages
             textEditAutoUpdate.EditValueChanging -= TextEditAutoUpdate_EditValueChanging;
             textEditRate.EditValueChanging -= SpinEditRate_EditValueChanging;
         }
-
+        
         private void SpinEditRate_EditValueChanging(object sender, ChangingEventArgs e)
         {
             lock (Filter)

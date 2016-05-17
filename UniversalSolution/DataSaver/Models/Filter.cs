@@ -39,5 +39,7 @@ namespace DataSaver.Models
         public int? AutoUpdateTime { get; set; }
 
         public int? DefaultRate { get; set; }
+        public int? RecommendedRate1 { get; set; }
+        public int? RecommendedRate2 { get; set; }
     }
 }

@@ -48,12 +48,12 @@ namespace DXApplication1.Pages
         private void AccountingPage_RateChanging(object sender, EventArgs e)
         {
             textEditAllIncome.Text = CalculatorFormulas.CalculateSummaryIncome(
-                textEditIncome1.Text,
-                textEditIncome2.Text
+                textEditIncome1.Text.Trim(),
+                textEditIncome2.Text.Trim()
                 );
             textEditAllRate.Text = CalculatorFormulas.CalculateSummaryRate(
-                textEditRate1.Text.ConvertToDoubleOrNull(),
-                textEditRate2.Text.ConvertToDoubleOrNull()
+                textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
+                textEditRate2.Text.Trim().ConvertToDoubleOrNull()
                 );
         }
 
@@ -73,25 +73,31 @@ namespace DXApplication1.Pages
 
         protected virtual void textEditRate1_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
+            OnURateChanging();
+
             textEditIncome1.Text = CalculatorFormulas.CalculateRate(
                 textEditAllRate.Text.ConvertToDoubleOrNull(),
                 textEditRate1.Text.ConvertToDoubleOrNull(),
-                lbCoef1.Text.ConvertToDoubleOrNull());
-            textEditIncome2.Text = (
-                (textEditAllRate.Text.ConvertToDoubleOrNull() - textEditIncome1.Text.ConvertToDoubleOrNull()) * 
-                lbCoef2.Text.ConvertToDoubleOrNull() - textEditAllRate.Text.ConvertToDoubleOrNull()).ToString();
-            OnURateChanging();
+                lbCoef1.Text.Trim().Replace('.',',').ConvertToDoubleOrNull()).ToString();// replace because dont working in my comp
+
+                textEditIncome2.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDoubleOrNull(),
+                    (textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate1.Text.ConvertToDoubleOrNull()),
+                    lbCoef2.Text.Trim().Replace('.', ',').ConvertToDoubleOrNull());
+                
         }
 
         protected virtual void textEditRate2_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
+            OnURateChanging();
+
             textEditIncome2.Text = CalculatorFormulas.CalculateRate(
                 textEditAllRate.Text.ConvertToDoubleOrNull(),
                 textEditRate2.Text.ConvertToDoubleOrNull(), 
-                lbCoef2.Text.ConvertToDoubleOrNull());
-            textEditIncome1.Text = ((textEditAllRate.Text.ConvertToDoubleOrNull() - textEditIncome2.Text.ConvertToDoubleOrNull()) *
-                lbCoef1.Text.ConvertToDoubleOrNull() - textEditAllRate.Text.ConvertToDoubleOrNull()).ToString();
-            OnURateChanging();
+                lbCoef2.Text.Trim().Replace('.',',').ConvertToDoubleOrNull()).ToString();
+
+            textEditIncome1.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDoubleOrNull(),
+                     (textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate2.Text.ConvertToDoubleOrNull()),
+                     lbCoef1.Text.Trim().Replace('.', ',').ConvertToDoubleOrNull()).ToString();
         }
     }
 }

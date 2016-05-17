@@ -25,7 +25,9 @@ namespace FormulasCollection.Interfaces
         /// <returns>Summary Income like a string</returns>
         string CalculateSummaryIncome(params string[] incomes);
 
-        List<string> GetRates(double rate, double kof1, double kof2);
+        List<string> GetRecommendedRates(double? rate, double? kof1, double? kof2);
+
+        string CalculateAverageProfit(params double?[] profit);
 
         string CalculateRate(double? rateMain, double? rateCurrent, double? kof);
         /// <summary>

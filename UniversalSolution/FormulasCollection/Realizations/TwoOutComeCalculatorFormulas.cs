@@ -24,8 +24,8 @@ namespace FormulasCollection.Realizations
         {
             if ((rate != null) && (kof1 != null) && (kof2 != null))
             {
-                string rate1 = $"{((rate.Value / (kof1.Value + kof2.Value)) * kof2.Value)} рекумендуемая ставка на кофф {kof1.Value}";
-                string rate2 = $"{((rate.Value / (kof1.Value + kof2.Value)) * kof1.Value)} рекумендуемая ставка на кофф {kof2.Value}";
+                string rate1 = $". рекоменд. ставка {((rate.Value / (kof1.Value + kof2.Value)) * kof2.Value)}";
+                string rate2 = $". рекоменд. ставка {((rate.Value / (kof1.Value + kof2.Value)) * kof1.Value)}";
                 return new List<string>(new[] { rate1, rate2 });
             }
             return new List<string>(new [] { "Нет рекомендуемых ставок" });

@@ -78,11 +78,11 @@ namespace DXApplication1.Pages
             textEditIncome1.Text = CalculatorFormulas.CalculateRate(
                 textEditAllRate.Text.ConvertToDoubleOrNull(),
                 textEditRate1.Text.ConvertToDoubleOrNull(),
-                lbCoef1.Text.Trim().Replace('.',',').ConvertToDoubleOrNull()).ToString();// replace because dont working in my comp
+                lbCoef1.Text.Trim().ConvertToDoubleOrNull()).ToString();
 
                 textEditIncome2.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDoubleOrNull(),
                     (textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate1.Text.ConvertToDoubleOrNull()),
-                    lbCoef2.Text.Trim().Replace('.', ',').ConvertToDoubleOrNull());
+                    lbCoef2.Text.Trim().ConvertToDoubleOrNull()).ToString();
                 
         }
 
@@ -93,11 +93,11 @@ namespace DXApplication1.Pages
             textEditIncome2.Text = CalculatorFormulas.CalculateRate(
                 textEditAllRate.Text.ConvertToDoubleOrNull(),
                 textEditRate2.Text.ConvertToDoubleOrNull(), 
-                lbCoef2.Text.Trim().Replace('.',',').ConvertToDoubleOrNull()).ToString();
+                lbCoef2.Text.Trim().ConvertToDoubleOrNull()).ToString();
 
             textEditIncome1.Text = CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDoubleOrNull(),
                      (textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate2.Text.ConvertToDoubleOrNull()),
-                     lbCoef1.Text.Trim().Replace('.', ',').ConvertToDoubleOrNull()).ToString();
+                     lbCoef1.Text.Trim().ConvertToDoubleOrNull()).ToString();
         }
     }
 }

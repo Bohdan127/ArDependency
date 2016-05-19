@@ -102,7 +102,7 @@ namespace DXApplication1.Pages
         protected virtual void textEditRate2_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
             OnURateChanging();
-
+           
                 textEditIncome2.Text = (CalculatorFormulas.CalculateRate(
                     textEditAllRate.Text.ConvertToDoubleOrNull(),
                     textEditRate2.Text.ConvertToDoubleOrNull(), 

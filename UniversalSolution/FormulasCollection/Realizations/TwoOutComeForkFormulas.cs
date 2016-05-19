@@ -16,6 +16,24 @@ namespace FormulasCollection.Realizations
             Math.Abs(coef2.Value) > 0.01 &&
             1 > 1/coef1.Value + 1/coef2.Value;
 
+        private bool CheckIsTheSameEvents(string eventMarafon, string eventPinacle)
+        {
+            string evP1 = eventPinacle.Split('-')[0];
+            string evP2 = eventPinacle.Split('-')[1];
+            string evM1 = eventMarafon.Split('-')[0];
+            string evM2 = eventMarafon.Split('-')[1];
+            evP1 = evP1.Split(' ')[0];
+            evP2 = evP2.Split(' ')[1];
+            evM1 = evM1.Split(' ')[0];
+            evM2 = evM2.Split(' ')[1];
+            if (evP1.Equals(evM1) && evP2.Equals(evM2))
+                return false;
+            else if (evP1.Equals(evM2) && evP2.Equals(evM1))
+            {
+                return true;
+            }
+            else return false;
+        }
 
         public double GetProfit(double rate, double? kof1, double? kof2) => (kof2 != null && kof1 != null)
             ? rate/(kof1.Value + kof2.Value)*(kof1.Value*kof2.Value)
@@ -211,7 +229,7 @@ namespace FormulasCollection.Realizations
                 {
                     if (marEvent.Type == "12" && pinEvent.TypeCoefDictionary.ContainsKey("X") &&
                         CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["X"]))
-                        return "X";
+                            return "X";
                 }
                 catch (Exception ex)
                 {
@@ -223,6 +241,14 @@ namespace FormulasCollection.Realizations
                     if (marEvent.Type == "X2" && pinEvent.TypeCoefDictionary.ContainsKey("1") &&
                         CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["1"]))
                         return "1";
+                    //{
+                    //    if (!CheckIsTheSameEvents(marEvent.Event, pinEvent.TeamNames)) // in working
+                    //        return "1";
+                    //    else if (CheckIsTheSameEvents(marEvent.Event, pinEvent.TeamNames))
+                    //    {
+                    //        marEvent.Type = "1X";
+                    //    }
+                    //}
                 }
                 catch (Exception ex)
                 {

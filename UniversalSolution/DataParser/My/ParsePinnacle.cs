@@ -45,6 +45,8 @@ namespace DataParser.MY
         public static readonly string EventID = "data-event-treeId";
         public static readonly string Coff = "data-selection-price=\"";
         public static readonly string TypeCoff = "<span class=\"hint\">";
+        public static readonly string Fora = "data-market-type=\"HANDICAP\"";
+        public static readonly string Total = "data-market-type=\"TOTAL\"";
     }
 
 
@@ -68,7 +70,17 @@ namespace DataParser.MY
             string date = null;
             bool isDate = false;
             bool isTypeCoff = false;
+
+            bool isFora = false;
+            bool isTotal = false;
+
             string oldEvent = "";
+
+            string foraName1 = null;
+            bool isForaforteam1 = true;
+
+            string totalName = null;
+            bool isTotalUnder = true;
 
             string _eventid = null;
             List<string> countTypeCoff = new List<string>();
@@ -77,6 +89,30 @@ namespace DataParser.MY
             int index = 0;
             foreach (var line in lines)
             {
+                if (isFora)
+                {
+                    
+                    foraName1 = (isForaforteam1?"F1(":"F2(")+ line.Substrings("(",")")+ ")";
+                    isFora = false;
+                    isForaforteam1 = !isForaforteam1;
+                }
+                    if (line.Contains(Tags.Fora))
+                {
+                    isFora = true;
+                }
+
+                if (isTotal)
+                {
+                    totalName = (isTotalUnder?"TU(":"TO(")+ line.Substrings("(", ")") + ")";
+                    isTotalUnder = !isTotalUnder;
+                    isTotal = false;
+                }
+                if (line.Contains(Tags.Total))
+                {
+                    isTotal = true;
+                }
+
+
                 if (countTypeCoff.Count < 10)
                 {
                     if (isTypeCoff)
@@ -124,21 +160,21 @@ namespace DataParser.MY
                     {
                         string q1 = englishNameTeams_Dictionary[_eventid].name1;
                         string q2 = englishNameTeams_Dictionary[_eventid].name2;
-                        if (englishNameTeams_Dictionary[_eventid].name1 == "Denmark")
-                        {
-                            int s = 0;
-                        }
+                        
                         result.Add(new ResultForForks(englishNameTeams_Dictionary[_eventid].name1,
                                                       englishNameTeams_Dictionary[_eventid].name2,
                                                       date,
-                                                      countTypeCoff[i],
-                                                      res,
+                                                      (!String.IsNullOrEmpty(totalName) || !String.IsNullOrEmpty(foraName1)) ? (!String.IsNullOrEmpty(totalName) ? totalName : foraName1) : countTypeCoff[i],  //  Type coff
+                                                      res,                //   znaczenia
                                                       sportType.ToString(),
                                                       Site.MarathonBet.ToString()
                                                       ));
-
-                        res = null;
-                        i++;
+                        if(String.IsNullOrEmpty(totalName) || String.IsNullOrEmpty(foraName1))
+                            i++;
+                        totalName = null;
+                        foraName1 = null;
+           res = null;
+                        
                     }
                     catch { }
                 }

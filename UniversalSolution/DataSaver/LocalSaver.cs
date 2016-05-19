@@ -89,6 +89,7 @@ namespace DataSaver
         {
             if (forkList == null)
                 throw new ArgumentNullException();
+            if (forkList.Count == 0) return;
 
             ClearForks(sportType);
             InsertForks(forkList);

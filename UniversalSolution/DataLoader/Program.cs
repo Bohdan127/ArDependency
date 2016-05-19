@@ -41,6 +41,7 @@ namespace DataLoader
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 StartLoad();
             }
         }
@@ -108,10 +109,6 @@ namespace DataLoader
                     forks = GetForksDictionary(sportType, pinSport, marSport);
 
                     SaveNewForks(forks, sportType);
-
-                    pinSport.Clear();
-                    marSport.Clear();
-                    forks.Clear();
                 }
             }
         }

@@ -435,7 +435,7 @@ namespace DataParser.DefaultRealization
             totalType = totalType.Remove(0, 3);
             totalType = totalType.Remove(totalType.Length-1, 1);
 
-            return prefix + _converter.ConvertAmericanToDecimal(totalType.ConvertToDoubleOrNull()) + ")";
+            return prefix + Extentions.Round(_converter.ConvertAmericanToDecimal(totalType.ConvertToDoubleOrNull())) + ")";
         }
 
         public async Task<Dictionary<string, ResultForForksDictionary>> GetAllPinacleEventsForRequestDictionaryAsync(SportType sportType, string userLogin, string userPass)

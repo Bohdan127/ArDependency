@@ -3,7 +3,7 @@ using DevExpress.XtraEditors.Controls;
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using Tools;
+using ToolsPortable;
 
 namespace DXApplication1.Pages
 {

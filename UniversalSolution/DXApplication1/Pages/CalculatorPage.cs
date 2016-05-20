@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
-using Tools;
+using ToolsPortable;
 
 namespace DXApplication1.Pages
 {

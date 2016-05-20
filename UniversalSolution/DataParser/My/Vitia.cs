@@ -58,11 +58,13 @@ namespace DataParser.My
                     {
                         WylkaPodijaKofy.Add(tmp.Key, GetNewWylka("1", "X2"));
                     }
+
                     if (marafon.ContainsKey("X") && pinacl.ContainsKey("12") &&
                                                 checkIsWylka(marafon["X"], pinacl["12"]))
                     {
                         WylkaPodijaKofy.Add(tmp.Key, GetNewWylka("X", "12"));
                     }
+
                     if (marafon.ContainsKey("2") && pinacl.ContainsKey("1X") &&
                                                 checkIsWylka(marafon["2"], pinacl["1X"]))
                     {

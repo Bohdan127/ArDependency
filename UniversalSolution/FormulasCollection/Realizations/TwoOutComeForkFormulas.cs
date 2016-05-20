@@ -10,7 +10,7 @@ namespace FormulasCollection.Realizations
     {
 
         public bool CheckIsFork(double? coef1, double? coef2) =>
-            coef1 != null &&
+            coef1 != null &&                                                                               
             coef2 != null &&
             Math.Abs(coef1.Value) > 0.01 &&
             Math.Abs(coef2.Value) > 0.01 &&
@@ -241,15 +241,7 @@ namespace FormulasCollection.Realizations
                 {
                     if (marEvent.Type == "X2" && pinEvent.TypeCoefDictionary.ContainsKey("1") &&
                         CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["1"]))
-                        return "1";
-                    //{
-                    //    if (!CheckIsTheSameEvents(marEvent.Event, pinEvent.TeamNames)) // in working
-                    //        return "1";
-                    //    else if (CheckIsTheSameEvents(marEvent.Event, pinEvent.TeamNames))
-                    //    {
-                    //        marEvent.Type = "1X";
-                    //    }
-                    //}
+                        return "1";                             
                 }
                 catch (Exception ex)
                 {

@@ -56,6 +56,7 @@ namespace DataParser.MY
 
         private async Task<List<ResultForForks>> GetNameTeamsAndDateAsync(SportType sportType)
         {
+            result.Clear();
             string url = "";
             string namefile = "";
             UrlAndNameFile(sportType, out url, out namefile);

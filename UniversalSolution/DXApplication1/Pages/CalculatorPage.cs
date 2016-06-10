@@ -81,42 +81,100 @@ namespace DXApplication1.Pages
         {
             OnURateChanging();
 
+            try
+            {
                 textEditIncome1.Text = (CalculatorFormulas.CalculateRate(
                     textEditAllRate.Text.ConvertToDoubleOrNull(),
                     textEditRate1.Text.ConvertToDoubleOrNull(),
                     lbCoef1.Text.Trim().ConvertToDoubleOrNull()).ToString() +
                     (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
                     textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
-                    , lbCoef1.Text.Trim().ConvertToDoubleOrNull(), lbCoef2.Text.Trim().ConvertToDoubleOrNull()))[0]);
+                    , lbCoef1.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull(),
+                    lbCoef2.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull()))[0]);
+            }
+            catch (Exception ex)
+            {
+                textEditIncome1.Text = (CalculatorFormulas.CalculateRate(
+                    textEditAllRate.Text.ConvertToDoubleOrNull(),
+                    textEditRate1.Text.ConvertToDoubleOrNull(),
+                    lbCoef1.Text.Trim().ConvertToDoubleOrNull()).ToString() +
+                    (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
+                    textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
+                    , lbCoef1.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull(),
+                    lbCoef2.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull()))[0]);
+            }
 
+            try
+            {
                 textEditIncome2.Text = (CalculatorFormulas.CalculateRate(
                     textEditAllRate.Text.ConvertToDoubleOrNull(),
                     (textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate1.Text.ConvertToDoubleOrNull()),
                     lbCoef2.Text.Trim().ConvertToDoubleOrNull()).ToString() +
                     (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
                     textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
-                    , lbCoef1.Text.Trim().ConvertToDoubleOrNull(), lbCoef2.Text.Trim().ConvertToDoubleOrNull()))[1]);
-                
+                    , lbCoef1.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull(),
+                    lbCoef2.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull()))[1]);
+            }
+            catch (Exception ex)
+            {
+                textEditIncome2.Text = (CalculatorFormulas.CalculateRate(
+                    textEditAllRate.Text.ConvertToDoubleOrNull(),
+                    (textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate1.Text.ConvertToDoubleOrNull()),
+                    lbCoef2.Text.Trim().ConvertToDoubleOrNull()).ToString() +
+                    (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
+                    textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
+                    , lbCoef1.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull(),
+                    lbCoef2.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull()))[1]);
+            }
         }
 
         protected virtual void textEditRate2_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
             OnURateChanging();
-           
+
+            try
+            {
                 textEditIncome2.Text = (CalculatorFormulas.CalculateRate(
                     textEditAllRate.Text.ConvertToDoubleOrNull(),
-                    textEditRate2.Text.ConvertToDoubleOrNull(), 
+                    textEditRate2.Text.ConvertToDoubleOrNull(),
                     lbCoef2.Text.Trim().ConvertToDoubleOrNull()).ToString() +
                     (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
                     textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
-                    , lbCoef1.Text.Trim().ConvertToDoubleOrNull(), lbCoef2.Text.Trim().ConvertToDoubleOrNull()))[1]);
+                    , lbCoef1.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull(),
+                    lbCoef2.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull()))[1]);
+            }
+            catch (Exception ex)
+            {
+                textEditIncome2.Text = (CalculatorFormulas.CalculateRate(
+                    textEditAllRate.Text.ConvertToDoubleOrNull(),
+                    textEditRate2.Text.ConvertToDoubleOrNull(),
+                    lbCoef2.Text.Trim().ConvertToDoubleOrNull()).ToString() +
+                    (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
+                    textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
+                    , lbCoef1.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull(),
+                    lbCoef2.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull()))[1]);
+            }
 
+            try
+            {
                 textEditIncome1.Text = (CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDoubleOrNull(),
                     (textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate2.Text.ConvertToDoubleOrNull()),
                     lbCoef1.Text.Trim().ConvertToDoubleOrNull()).ToString() +
                     (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
                     textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
-                    , lbCoef1.Text.Trim().ConvertToDoubleOrNull(), lbCoef2.Text.Trim().ConvertToDoubleOrNull()))[0]);
+                    , lbCoef1.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull(),
+                    lbCoef2.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull()))[0]);
+            }
+            catch (Exception ex)
+            {
+                textEditIncome1.Text = (CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDoubleOrNull(),
+                    (textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate2.Text.ConvertToDoubleOrNull()),
+                    lbCoef1.Text.Trim().ConvertToDoubleOrNull()).ToString() +
+                    (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
+                    textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
+                    , lbCoef1.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull(),
+                    lbCoef2.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull()))[0]);
+            }
         }
     }
 }

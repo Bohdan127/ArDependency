@@ -1,4 +1,5 @@
 ﻿using FormulasCollection.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,6 +29,7 @@ namespace FormulasCollection.Realizations
                 string rate2 = $". рекоменд. ставка {((rate.Value / (kof1.Value + kof2.Value)) * kof1.Value)}";
                 return new List<string>(new[] { rate1, rate2 });
             }
+            throw new Exception();
             return new List<string>(new [] { "Нет рекомендуемых ставок" });
         }
         public string CalculateSummaryRate(params double?[] rates) => rates.Sum().ToString();

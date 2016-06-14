@@ -42,7 +42,6 @@ namespace DataLoader
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                StartLoad();
             }
         }
 
@@ -100,7 +99,7 @@ namespace DataLoader
 
                 //always loading all sports
                 var sportsToLoading = new[]
-                {SportType.Basketball, SportType.Hockey, SportType.Soccer, SportType.Tennis, SportType.Volleyball,};
+                {SportType.Basketball, SportType.Hockey, SportType.Soccer, SportType.Tennis, SportType.Volleyball};
 
                 foreach (var sportType in sportsToLoading)
                 {

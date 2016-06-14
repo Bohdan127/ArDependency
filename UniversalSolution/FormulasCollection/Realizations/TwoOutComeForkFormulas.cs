@@ -16,23 +16,15 @@ namespace FormulasCollection.Realizations
             Math.Abs(coef2.Value) > 0.01 &&
             1 > 1 / coef1.Value + 1 / coef2.Value;
 
-        private bool CheckIsTheSameEvents(string eventMarafon, string eventPinacle)
+        private bool CheckIsMustToBeRevert(string eventMarafon, string eventPinacle)
         {
-            string evP1 = eventPinacle.Split('-')[0];
-            string evP2 = eventPinacle.Split('-')[1];
-            string evM1 = eventMarafon.Split('-')[0];
-            string evM2 = eventMarafon.Split('-')[1];
-            evP1 = evP1.Split(' ')[0];
-            evP2 = evP2.Split(' ')[1];
-            evM1 = evM1.Split(' ')[0];
-            evM2 = evM2.Split(' ')[1];
-            if (evP1.Equals(evM1) && evP2.Equals(evM2))
-                return false;
-            else if (evP1.Equals(evM2) && evP2.Equals(evM1))
+            if (Extentions.GetStringSimilarityInPercent(eventMarafon.Split('-')[0],
+                eventPinacle.Split('-')[0], true) >= 90)
             {
-                return true;
+                return false;
             }
-            else return false;
+            else
+                return true;
         }
 
         public double GetProfit(double rate, double? kof1, double? kof2) => (kof2 != null && kof1 != null)
@@ -48,7 +40,7 @@ namespace FormulasCollection.Realizations
                 {
                     try
                     {
-                        if (isTheSame(buff.Event, buff2.Event) && (!CheckIsTheSameEvents(buff.Event, buff2.Event))
+                        if (isTheSame(buff.Event, buff2.Event)
                             && checkForType(buff.Type.Trim(), buff2.Type.Trim()) &&
                             CheckIsFork(buff.Coef.ConvertToDoubleOrNull(), buff2.Coef.ConvertToDoubleOrNull()))
                         {
@@ -192,7 +184,7 @@ namespace FormulasCollection.Realizations
             List<ResultForForks> marathon)
         {
             var resList = new List<Fork>();
-
+            //marathon = AddAsian(marathon);
             foreach (var eventItem in marathon)
             {
                 var pinKey = pinnacle.Keys.FirstOrDefault(key =>
@@ -201,26 +193,25 @@ namespace FormulasCollection.Realizations
                 {
                     try
                     {
-                        var pinEventKey = Enumerable.Empty<string>();
-                        while (pinEventKey != null)
+                        var pinEventKey = String.Empty;
+                        if (CheckIsMustToBeRevert(eventItem.Event, pinKey))
                         {
-                            pinEventKey = IsAnyFork(eventItem, pinnacle[pinKey]);
-                            if (pinEventKey.ToString().IsNotBlank())
-                                resList.Add(new Fork
-                                {
-                                    Event = pinnacle[pinKey].TeamNames,
-                                    TypeFirst = eventItem.Type,
-                                    CoefFirst = eventItem.Coef,
-                                    TypeSecond = pinEventKey.ConvertToStringOrNull(),
-                                    CoefSecond = pinnacle[pinKey].TypeCoefDictionary[pinEventKey.ConvertToStringOrNull()].ConvertToStringOrNull(),
-                                    Sport = eventItem.SportType,
-                                    MatchDateTime = eventItem.MatchDateTime,
-                                    BookmakerFirst = "https://www.marathonbet.com/",
-                                    BookmakerSecond = "http://www.pinnaclesports.com/"
-                                });
-                            else
-                                continue;
+                            continue;
                         }
+                        pinEventKey = IsAnyFork(eventItem, pinnacle[pinKey]);
+                        if (pinEventKey.ToString().IsNotBlank())
+                            resList.Add(new Fork
+                            {
+                                Event = pinnacle[pinKey].TeamNames,
+                                TypeFirst = eventItem.Type,
+                                CoefFirst = eventItem.Coef,
+                                TypeSecond = pinEventKey.ConvertToStringOrNull(),
+                                CoefSecond = pinnacle[pinKey].TypeCoefDictionary[pinEventKey.ConvertToStringOrNull()].ConvertToStringOrNull(),
+                                Sport = eventItem.SportType,
+                                MatchDateTime = eventItem.MatchDateTime,
+                                BookmakerFirst = "https://www.marathonbet.com/",
+                                BookmakerSecond = "http://www.pinnaclesports.com/"
+                            }); 
                     }
                     catch (Exception ex)
                     {
@@ -232,56 +223,75 @@ namespace FormulasCollection.Realizations
             return resList;
         }
 
-        private IEnumerable<string> IsAnyFork(ResultForForks marEvent, ResultForForksDictionary pinEvent)
+        private List<ResultForForks> AddAsian(List<ResultForForks> marathon)
+        {
+            var result = new List<ResultForForks>();
+            ResultForForks zero = null;
+            ResultForForks five = null;
+            bool isZero = false;
+            foreach (var r in marathon)
+            {
+                result.Add(r);
+                if (r.Type.EndsWith("0)"))
+                {
+                    isZero = true;
+                    zero = r;
+                }
+                if (r.Type.EndsWith("5)"))
+                {
+                    isZero = false;
+                    five = r;
+                }
+                if (zero != null && five != null)
+                {
+                    if (zero.Event == five.Event)
+                    {
+                        if (isZero)
+                            zero.Type = zero.Type.Remove(zero.Type.Length - 2) + "75)";
+                        else
+                            zero.Type = zero.Type.Remove(zero.Type.Length - 2) + "25)";
+                        zero.Coef = ((zero.Coef.ConvertToDoubleOrNull() + five.Coef.ConvertToDoubleOrNull()) / 2).ToString();
+                        result.Add(zero);
+                    }
+                }
+            }
+            return result;
+        }
+
+        private string IsAnyFork(ResultForForks marEvent, ResultForForksDictionary pinEvent)
         {
             marEvent.Type = marEvent.Type.Trim();
-
-            if (CheckIsTheSameEvents(marEvent.Event.ConvertToStringOrNull(),
-                pinEvent.TeamNames.ConvertToStringOrNull())) // todo insert team second pinacle
-            {
-                var buff = pinEvent.TypeCoefDictionary["1"];
-                pinEvent.TypeCoefDictionary["1"] = pinEvent.TypeCoefDictionary["2"];
-                pinEvent.TypeCoefDictionary["2"] = buff;
-            }
 
             #region Wins
             /**************************************************************************************/
 
             if (marEvent.Type == "12" && pinEvent.TypeCoefDictionary.ContainsKey("X") &&
                 CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["X"]))
-                yield return "X";
+                return "X";
 
             if (marEvent.Type == "X2" && pinEvent.TypeCoefDictionary.ContainsKey("1") &&
                 CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["1"]))
-                yield return "1";
-            //{
-            //    if (!CheckIsTheSameEvents(marEvent.Event, pinEvent.TeamNames)) // in working
-            //        return "1";
-            //    else if (CheckIsTheSameEvents(marEvent.Event, pinEvent.TeamNames))
-            //    {
-            //        marEvent.Type = "1X";
-            //    }
-            //}
+                return "1";
 
-                if (marEvent.Type == "1X" && pinEvent.TypeCoefDictionary.ContainsKey("2") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["2"]))
-                    yield return "2";
+            if (marEvent.Type == "1X" && pinEvent.TypeCoefDictionary.ContainsKey("2") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["2"]))
+                return "2";
             /**************************************************************************************/
 
 
 
             /**************************************************************************************/
-                if (marEvent.Type == "X" && pinEvent.TypeCoefDictionary.ContainsKey("12") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["12"]))
-                    yield return "12";
-                
-                if (marEvent.Type == "1" && pinEvent.TypeCoefDictionary.ContainsKey("X2") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["X2"]))
-                    yield return "X2";
-                
-                if (marEvent.Type == "2" && pinEvent.TypeCoefDictionary.ContainsKey("1X") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["1X"]))
-                    yield return "1X";
+            if (marEvent.Type == "X" && pinEvent.TypeCoefDictionary.ContainsKey("12") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["12"]))
+                return "12";
+
+            if (marEvent.Type == "1" && pinEvent.TypeCoefDictionary.ContainsKey("X2") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["X2"]))
+                return "X2";
+
+            if (marEvent.Type == "2" && pinEvent.TypeCoefDictionary.ContainsKey("1X") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["1X"]))
+                return "1X";
 
             /**************************************************************************************/
             #endregion
@@ -290,470 +300,438 @@ namespace FormulasCollection.Realizations
 
             #region 0 to 0
             /**************************************************************************************/
-                if (marEvent.Type == "F1(0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(0)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(0)"]))
-                    yield return "F2(0)";
-                
-                if (marEvent.Type == "F2(0)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(0)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(0)"]))
-                    yield return "F1(0)";
+            if (marEvent.Type == "F1(0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(0)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(0)"]))
+                return "F2(0)";
+
+            if (marEvent.Type == "F2(0)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(0)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(0)"]))
+                return "F1(0)";
             /**************************************************************************************/
             #endregion
 
             #region  -0.25 to 0.25
             /**************************************************************************************/
-            
-                if (marEvent.Type == "F1(0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(0.25)"]))
-                    yield return "F2(0.25)";
-            
-                if (marEvent.Type == "F1(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(0.25)"]))
-                    yield return "F2(0.25)";
-            
-                if (marEvent.Type == "F2(0)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-0.25)"]))
-                    yield return "F1(-0.25)";
-            
-                if (marEvent.Type == "F2(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-0.25)"]))
-                    yield return "F1(-0.25)";
-           
-                if (marEvent.Type == "F1(0)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(0.25)"]))
-                    yield return "F1(0.25)";
-            
-                if (marEvent.Type == "F2(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(0.25)"]))
-                    yield return "F1(0.25)";
-            
-                if (marEvent.Type == "F1(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-0.25)"]))
-                    yield return "F2(-0.25)";
-            
-                if (marEvent.Type == "F1(0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-0.25)"]))
-                    yield return "F2(-0.25)";
-           
+
+            if (marEvent.Type == "F1(-0.25)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(0.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(0.25)"]))
+                return "F2(0.25)";
+
+            if (marEvent.Type == "F2(0.25)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-0.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-0.25)"]))
+                return "F1(-0.25)";
+
+            if (marEvent.Type == "F1(0.25)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-0.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-0.25)"]))
+                return "F2(-0.25)";
+
+            if (marEvent.Type == "F2(-0.25)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(0.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(0.25)"]))
+                return "F1(0.25)";
+
             /**************************************************************************************/
             #endregion
 
             #region -0.5 to 0.5
             /**************************************************************************************/
-            
-                if (marEvent.Type == "F1(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(0.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(0.5)"]))
-                    yield return "F2(0.5)";
-            
-                if (marEvent.Type == "F2(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-0.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-0.5)"]))
-                    yield return "F1(-0.5)";
-            
-                if (marEvent.Type == "F2(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(0.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(0.5)"]))
-                    yield return "F1(0.5)";
-            
-                if (marEvent.Type == "F1(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-0.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-0.5)"]))
-                    yield return "F2(-0.5)";
-            
+
+            if (marEvent.Type == "F1(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(0.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(0.5)"]))
+                return "F2(0.5)";
+
+            if (marEvent.Type == "F2(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-0.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-0.5)"]))
+                return "F1(-0.5)";
+
+            if (marEvent.Type == "F2(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(0.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(0.5)"]))
+                return "F1(0.5)";
+
+            if (marEvent.Type == "F1(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-0.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-0.5)"]))
+                return "F2(-0.5)";
+
             /**************************************************************************************/
             #endregion
 
             #region -0.75 to 0.75
             /**************************************************************************************/
-           
-                if (marEvent.Type == "F1(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(0.75)"]))
-                    yield return "F2(0.75)";
-            
-                if (marEvent.Type == "F1(-1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(0.75)"]))
-                    yield return "F2(0.75)";
-            
-                if (marEvent.Type == "F2(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-0.75)"]))
-                    yield return "F1(-0.75)";
-           
-                if (marEvent.Type == "F2(1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-0.75)"]))
-                    yield return "F1(-0.75)";
-            
-                if (marEvent.Type == "F2(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(0.75)"]))
-                    yield return "F1(0.75)";
-           
-                if (marEvent.Type == "F2(-1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(0.75)"]))
-                    yield return "F1(0.75)";
-            
-                if (marEvent.Type == "F1(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-0.75)"]))
-                    yield return "F2(-0.75)";
-            
-                if (marEvent.Type == "F1(1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-0.75)"]))
-                    yield return "F2(-0.75)";
-            
+
+            if (marEvent.Type == "F1(-0.75)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(0.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(0.75)"]))
+                return "F2(0.75)";
+
+            if (marEvent.Type == "F2(0.75)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-0.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-0.75)"]))
+                return "F1(-0.75)";
+
+            if (marEvent.Type == "F2(-0.75)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(0.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(0.75)"]))
+                return "F1(0.75)";
+
+            if (marEvent.Type == "F1(0.75)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-0.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-0.75)"]))
+                return "F2(-0.75)";
+
             /**************************************************************************************/
             #endregion
 
             #region -1 to 1
             /**************************************************************************************/
-            
-                if (marEvent.Type == "F1(-1)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(1)"]))
-                    yield return "F2(1)";
-           
-                if (marEvent.Type == "F2(1)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-1)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-1)"]))
-                    yield return "F1(-1)";
-           
-                if (marEvent.Type == "F2(-1)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(1)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(1)"]))
-                    yield return "F1(1)";
-            
-                if (marEvent.Type == "F1(1)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-1)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-1)"]))
-                    yield return "F2(-1)";
-           
+
+            if (marEvent.Type == "F1(-1)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(1)"]))
+                return "F2(1)";
+
+            if (marEvent.Type == "F2(1)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-1)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-1)"]))
+                return "F1(-1)";
+
+            if (marEvent.Type == "F2(-1)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(1)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(1)"]))
+                return "F1(1)";
+
+            if (marEvent.Type == "F1(1)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-1)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-1)"]))
+                return "F2(-1)";
+
             /**************************************************************************************/
             #endregion
 
             #region -1.25 to 1.25
             /**************************************************************************************/
-           
-                if (marEvent.Type == "F1(-1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(1.25)"]))
-                    yield return "F2(1.25)";
-           
-                if (marEvent.Type == "F1(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(1.25)"]))
-                    yield return "F2(1.25)";
-            
-                if (marEvent.Type == "F2(1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-1.25)"]))
-                    yield return "F1(-1.25)";
-           
-                if (marEvent.Type == "F2(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-1.25)"]))
-                    yield return "F1(-1.25)";
-            
-                if (marEvent.Type == "F2(-1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(1.25)"]))
-                    yield return "F1(1.25)";
-            
-                if (marEvent.Type == "F2(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(1.25)"]))
-                    yield return "F1(1.25)";
-            
-                if (marEvent.Type == "F1(1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-1.25)"]))
-                    yield return "F2(-1.25)";
-           
-                if (marEvent.Type == "F1(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-1.25)"]))
-                    yield return "F2(-1.25)";
-            
+
+            if (marEvent.Type == "F1(-1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(1.25)"]))
+                return "F2(1.25)";
+
+            if (marEvent.Type == "F1(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(1.25)"]))
+                return "F2(1.25)";
+
+            if (marEvent.Type == "F2(1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-1.25)"]))
+                return "F1(-1.25)";
+
+            if (marEvent.Type == "F2(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-1.25)"]))
+                return "F1(-1.25)";
+
+            if (marEvent.Type == "F2(-1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(1.25)"]))
+                return "F1(1.25)";
+
+            if (marEvent.Type == "F2(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(1.25)"]))
+                return "F1(1.25)";
+
+            if (marEvent.Type == "F1(1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-1.25)"]))
+                return "F2(-1.25)";
+
+            if (marEvent.Type == "F1(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-1.25)"]))
+                return "F2(-1.25)";
+
             /**************************************************************************************/
             #endregion
 
             #region -1.5 to 1.5
             /**************************************************************************************/
-           
-                if (marEvent.Type == "F1(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(1.5)"]))
-                    yield return "F2(1.5)";
-            
-                if (marEvent.Type == "F2(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-1.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-1.5)"]))
-                    yield return "F1(-1.5)";
-           
-                if (marEvent.Type == "F2(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(1.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(1.5)"]))
-                    yield return "F1(1.5)";
-           
-                if (marEvent.Type == "F1(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-1.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-1.5)"]))
-                   yield return "F2(-1.5)";
-           
+
+            if (marEvent.Type == "F1(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(1.5)"]))
+                return "F2(1.5)";
+
+            if (marEvent.Type == "F2(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-1.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-1.5)"]))
+                return "F1(-1.5)";
+
+            if (marEvent.Type == "F2(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(1.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(1.5)"]))
+                return "F1(1.5)";
+
+            if (marEvent.Type == "F1(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-1.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-1.5)"]))
+                return "F2(-1.5)";
+
             /**************************************************************************************/
             #endregion
 
             #region -1.75 to 1.75
             /**************************************************************************************/
-           
-                if (marEvent.Type == "F1(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(1.75)"]))
-                    yield return "F2(1.75)";
-           
-                if (marEvent.Type == "F1(-2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(1.75)"]))
-                    yield return "F2(1.75)";
-           
-                if (marEvent.Type == "F2(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-1.75)"]))
-                    yield return "F1(-1.75)";
-           
-                if (marEvent.Type == "F2(2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-1.75)"]))
-                    yield return "F1(-1.75)";
-            
-                if (marEvent.Type == "F2(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(1.75)"]))
-                     yield return "F1(1.75)";
-           
-                if (marEvent.Type == "F2(-2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(1.75)"]))
-                    yield return "F1(1.75)";
-           
-                if (marEvent.Type == "F1(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-1.75)"]))
-                    yield return "F2(-1.75)";
-           
-                if (marEvent.Type == "F1(2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-1.75)"]))
-                    yield return "F2(-1.75)";
-           
+
+            if (marEvent.Type == "F1(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(1.75)"]))
+                return "F2(1.75)";
+
+            if (marEvent.Type == "F1(-2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(1.75)"]))
+                return "F2(1.75)";
+
+            if (marEvent.Type == "F2(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-1.75)"]))
+                return "F1(-1.75)";
+
+            if (marEvent.Type == "F2(2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(-1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(-1.75)"]))
+                return "F1(-1.75)";
+
+            if (marEvent.Type == "F2(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(1.75)"]))
+                return "F1(1.75)";
+
+            if (marEvent.Type == "F2(-2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F1(1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(1.75)"]))
+                return "F1(1.75)";
+
+            if (marEvent.Type == "F1(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-1.75)"]))
+                return "F2(-1.75)";
+
+            if (marEvent.Type == "F1(2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-1.75)"]))
+                return "F2(-1.75)";
+
             /**************************************************************************************/
             #endregion
 
             #region -2 to 2
             /**************************************************************************************/
-            
-                if (marEvent.Type == "F2(-2)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2)"]))
-                    yield return "F2(2)";
-            
-                if (marEvent.Type == "F2(2)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2)"]))
-                    yield return "F2(-2)";
-            
-                if (marEvent.Type == "F2(-2)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2)"]))
-                    yield return "F2(2)";
-            
-                if (marEvent.Type == "F2(2)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2)"]))
-                    yield return "F2(-2)";
-           
+
+            if (marEvent.Type == "F2(-2)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2)"]))
+                return "F2(2)";
+
+            if (marEvent.Type == "F2(2)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2)"]))
+                return "F2(-2)";
+
+            if (marEvent.Type == "F2(-2)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2)"]))
+                return "F2(2)";
+
+            if (marEvent.Type == "F2(2)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2)"]))
+                return "F2(-2)";
+
             /**************************************************************************************/
             #endregion
 
             #region -2.25 to 2.25
             /**************************************************************************************/
-           
-                if (marEvent.Type == "F2(-2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.25)"]))
-                    yield return "F2(2.25)";
-            
-                if (marEvent.Type == "F2(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.25)"]))
-                    yield return "F2(2.25)";
-            
-                if (marEvent.Type == "F2(2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.25)"]))
-                    yield return "F2(-2.25)";
 
-                if (marEvent.Type == "F2(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.25)"]))
-                    yield return "F2(-2.25)";
+            if (marEvent.Type == "F2(-2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.25)"]))
+                return "F2(2.25)";
 
-                if (marEvent.Type == "F2(-2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.25)"]))
-                    yield return "F2(2.25)";
-            
-                if (marEvent.Type == "F2(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.25)"]))
-                    yield return "F2(2.25)";
-            
-                if (marEvent.Type == "F2(2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.25)"]))
-                    yield return "F2(-2.25)";
-           
-                if (marEvent.Type == "F2(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.25)"]))
-                    yield return "F2(-2.25)";
-            
+            if (marEvent.Type == "F2(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.25)"]))
+                return "F2(2.25)";
+
+            if (marEvent.Type == "F2(2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.25)"]))
+                return "F2(-2.25)";
+
+            if (marEvent.Type == "F2(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.25)"]))
+                return "F2(-2.25)";
+
+            if (marEvent.Type == "F2(-2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.25)"]))
+                return "F2(2.25)";
+
+            if (marEvent.Type == "F2(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.25)"]))
+                return "F2(2.25)";
+
+            if (marEvent.Type == "F2(2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.25)"]))
+                return "F2(-2.25)";
+
+            if (marEvent.Type == "F2(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.25)"]))
+                return "F2(-2.25)";
+
             /**************************************************************************************/
             #endregion
 
             #region -2.5 to 2.5
             /**************************************************************************************/
-            
-                if (marEvent.Type == "F2(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.5)"]))
-                    yield return "F2(2.5)";
-            
-                if (marEvent.Type == "F2(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.5)"]))
-                    yield return "F2(-2.5)";
-            
-                if (marEvent.Type == "F2(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.5)"]))
-                    yield return "F2(2.5)";
-           
-                if (marEvent.Type == "F2(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.5)"]))
-                    yield return "F2(-2.5)";
-            
+
+            if (marEvent.Type == "F2(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.5)"]))
+                return "F2(2.5)";
+
+            if (marEvent.Type == "F2(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.5)"]))
+                return "F2(-2.5)";
+
+            if (marEvent.Type == "F2(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.5)"]))
+                return "F2(2.5)";
+
+            if (marEvent.Type == "F2(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.5)"]))
+                return "F2(-2.5)";
+
             /**************************************************************************************/
             #endregion
 
             #region -2.75 to 2.75
             /**************************************************************************************/
-            
-                if (marEvent.Type == "F2(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.75)"]))
-                    yield return "F2(2.75)";
-           
-                if (marEvent.Type == "F2(-2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.75)"]))
-                    yield return "F2(2.75)";
-            
-                if (marEvent.Type == "F2(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.75)"]))
-                    yield return "F2(-2.75)";
-           
-                if (marEvent.Type == "F2(2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.75)"]))
-                    yield return "F2(-2.75)";
-           
-                if (marEvent.Type == "F2(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.75)"]))
-                    yield return "F2(2.75)";
-            
-                if (marEvent.Type == "F2(-2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.75)"]))
-                    yield return "F2(2.75)";
-           
-                if (marEvent.Type == "F2(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.75)"]))
-                    yield return "F2(-2.75)";
-           
-                if (marEvent.Type == "F2(2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.75)"]))
-                    yield return "F2(-2.75)";
-           
+
+            if (marEvent.Type == "F2(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.75)"]))
+                return "F2(2.75)";
+
+            if (marEvent.Type == "F2(-2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.75)"]))
+                return "F2(2.75)";
+
+            if (marEvent.Type == "F2(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.75)"]))
+                return "F2(-2.75)";
+
+            if (marEvent.Type == "F2(2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.75)"]))
+                return "F2(-2.75)";
+
+            if (marEvent.Type == "F2(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.75)"]))
+                return "F2(2.75)";
+
+            if (marEvent.Type == "F2(-2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(2.75)"]))
+                return "F2(2.75)";
+
+            if (marEvent.Type == "F2(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.75)"]))
+                return "F2(-2.75)";
+
+            if (marEvent.Type == "F2(2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(-2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(-2.75)"]))
+                return "F2(-2.75)";
+
             /**************************************************************************************/
             #endregion
 
             #region -3 to 3
             /**************************************************************************************/
-           
-                if (marEvent.Type == "F3(-3)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3)"]))
-                    yield return "F3(3)";
-            
-                if (marEvent.Type == "F3(3)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3)"]))
-                    yield return "F3(-3)";
-           
-                if (marEvent.Type == "F3(-3)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3)"]))
-                    yield return "F3(3)";
-           
-                if (marEvent.Type == "F3(3)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3)"]))
-                    yield return "F3(-3)";
-           
+
+            if (marEvent.Type == "F3(-3)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3)"]))
+                return "F3(3)";
+
+            if (marEvent.Type == "F3(3)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3)"]))
+                return "F3(-3)";
+
+            if (marEvent.Type == "F3(-3)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3)"]))
+                return "F3(3)";
+
+            if (marEvent.Type == "F3(3)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3)"]))
+                return "F3(-3)";
+
             /**************************************************************************************/
             #endregion
 
             #region -3.25 to 3.25
             /**************************************************************************************/
-            
-                if (marEvent.Type == "F3(-3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.25)"]))
-                    yield return "F3(3.25)";
-            
-                if (marEvent.Type == "F3(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.25)"]))
-                    yield return "F3(3.25)";
-            
-                if (marEvent.Type == "F3(3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.25)"]))
-                    yield return "F3(-3.25)";
-           
-                if (marEvent.Type == "F3(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.25)"]))
-                    yield return "F3(-3.25)";
-           
-                if (marEvent.Type == "F3(-3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.25)"]))
-                    yield return "F3(3.25)";
-          
-                if (marEvent.Type == "F3(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.25)"]))
-                    yield return "F3(3.25)";
-          
-                if (marEvent.Type == "F3(3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.25)"]))
-                    yield return "F3(-3.25)";
-            
-                if (marEvent.Type == "F3(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.25)"]))
-                    yield return "F3(-3.25)";
+
+            if (marEvent.Type == "F3(-3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.25)"]))
+                return "F3(3.25)";
+
+            if (marEvent.Type == "F3(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.25)"]))
+                return "F3(3.25)";
+
+            if (marEvent.Type == "F3(3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.25)"]))
+                return "F3(-3.25)";
+
+            if (marEvent.Type == "F3(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.25)"]))
+                return "F3(-3.25)";
+
+            if (marEvent.Type == "F3(-3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.25)"]))
+                return "F3(3.25)";
+
+            if (marEvent.Type == "F3(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.25)"]))
+                return "F3(3.25)";
+
+            if (marEvent.Type == "F3(3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.25)"]))
+                return "F3(-3.25)";
+
+            if (marEvent.Type == "F3(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.25)"]))
+                return "F3(-3.25)";
             /**************************************************************************************/
             #endregion
 
             #region -3.5 to 3.5
             /**************************************************************************************/
-         
-                if (marEvent.Type == "F3(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.5)"]))
-                    yield return "F3(3.5)";
-          
-                if (marEvent.Type == "F3(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.5)"]))
-                    yield return "F3(-3.5)";
-          
-                if (marEvent.Type == "F3(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.5)"]))
-                    yield return "F3(3.5)";
-          
-                if (marEvent.Type == "F3(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.5)"]))
-                    yield return "F3(-3.5)";
-           
+
+            if (marEvent.Type == "F3(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.5)"]))
+                return "F3(3.5)";
+
+            if (marEvent.Type == "F3(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.5)"]))
+                return "F3(-3.5)";
+
+            if (marEvent.Type == "F3(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.5)"]))
+                return "F3(3.5)";
+
+            if (marEvent.Type == "F3(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.5)"]))
+                return "F3(-3.5)";
+
             /**************************************************************************************/
             #endregion
 
             #region -3.75 to 3.75
             /**************************************************************************************/
-           
-                if (marEvent.Type == "F3(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.75)"]))
-                    yield return "F3(3.75)";
-         
-                if (marEvent.Type == "F3(-3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.75)"]))
-                    yield return "F3(3.75)";
 
-                if (marEvent.Type == "F3(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.75)"]))
-                    yield return "F3(-3.75)";
-          
-                if (marEvent.Type == "F3(3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.75)"]))
-                    yield return "F3(-3.75)";
-           
-                if (marEvent.Type == "F3(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.75)"]))
-                    yield return "F3(3.75)";
-          
-                if (marEvent.Type == "F3(-3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.75)"]))
-                    yield return "F3(3.75)";
-           
-                if (marEvent.Type == "F3(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.75)"]))
-                    yield return "F3(-3.75)";
-           
-                if (marEvent.Type == "F3(3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.75)"]))
-                    yield return "F3(-3.75)";
-         
+            if (marEvent.Type == "F3(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.75)"]))
+                return "F3(3.75)";
+
+            if (marEvent.Type == "F3(-3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.75)"]))
+                return "F3(3.75)";
+
+            if (marEvent.Type == "F3(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.75)"]))
+                return "F3(-3.75)";
+
+            if (marEvent.Type == "F3(3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.75)"]))
+                return "F3(-3.75)";
+
+            if (marEvent.Type == "F3(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.75)"]))
+                return "F3(3.75)";
+
+            if (marEvent.Type == "F3(-3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(3.75)"]))
+                return "F3(3.75)";
+
+            if (marEvent.Type == "F3(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.75)"]))
+                return "F3(-3.75)";
+
+            if (marEvent.Type == "F3(3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(-3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.75)"]))
+                return "F3(-3.75)";
+
             /**************************************************************************************/
             #endregion
 
@@ -763,479 +741,479 @@ namespace FormulasCollection.Realizations
 
             #region 0 to 0
             /**************************************************************************************/
-         
-                if (marEvent.Type == "TO(0)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(0)"]))
-                    yield return "TU(0)";
-           
-                if (marEvent.Type == "TU(0)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(0)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(0)"]))
-                    yield return "TO(0)";
-           
+
+            if (marEvent.Type == "TO(0)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(0)"]))
+                return "TU(0)";
+
+            if (marEvent.Type == "TU(0)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(0)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(0)"]))
+                return "TO(0)";
+
             /**************************************************************************************/
             #endregion
 
             #region -0.25 to 0.25
             /**************************************************************************************/
-           
-                if (marEvent.Type == "TO(0)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(0.25)"]))
-                    yield return "TU(0.25)";
-          
-                if (marEvent.Type == "TO(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(0.25)"]))
-                    yield return "TU(0.25)";
-           
-                if (marEvent.Type == "TU(0)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-0.25)"]))
-                    yield return "TO(-0.25)";
-           
-                if (marEvent.Type == "TU(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-0.25)"]))
-                    yield return "TO(-0.25)";
-           
-                if (marEvent.Type == "TU(0)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(0.25)"]))
-                    yield return "TO(0.25)";
-          
-                if (marEvent.Type == "TU(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(0.25)"]))
-                    yield return "TO(0.25)";
-          
-                if (marEvent.Type == "TO(0)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-0.25)"]))
-                    yield return "TU(-0.25)";
-          
-                if (marEvent.Type == "TO(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-0.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-0.25)"]))
-                    yield return "TU(-0.25)";
-          
+
+            if (marEvent.Type == "TO(0)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(0.25)"]))
+                return "TU(0.25)";
+
+            if (marEvent.Type == "TO(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(0.25)"]))
+                return "TU(0.25)";
+
+            if (marEvent.Type == "TU(0)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-0.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-0.25)"]))
+                return "TO(-0.25)";
+
+            if (marEvent.Type == "TU(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-0.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-0.25)"]))
+                return "TO(-0.25)";
+
+            if (marEvent.Type == "TU(0)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(0.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(0.25)"]))
+                return "TO(0.25)";
+
+            if (marEvent.Type == "TU(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(0.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(0.25)"]))
+                return "TO(0.25)";
+
+            if (marEvent.Type == "TO(0)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-0.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-0.25)"]))
+                return "TU(-0.25)";
+
+            if (marEvent.Type == "TO(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-0.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-0.25)"]))
+                return "TU(-0.25)";
+
             /**************************************************************************************/
             #endregion
 
             #region -0.5 to 0.5
             /**************************************************************************************/
-           
-                if (marEvent.Type == "TO(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(0.5)"]))
-                    yield return "TU(0.5)";
-          
-                if (marEvent.Type == "TU(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-0.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-0.5)"]))
-                    yield return "TO(-0.5)";
-           
-                if (marEvent.Type == "TU(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(0.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(0.5)"]))
-                    yield return "TO(0.5)";
 
-                if (marEvent.Type == "TO(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-0.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-0.5)"]))
-                    yield return "TU(-0.5)";
-           
+            if (marEvent.Type == "TO(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(0.5)"]))
+                return "TU(0.5)";
+
+            if (marEvent.Type == "TU(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-0.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-0.5)"]))
+                return "TO(-0.5)";
+
+            if (marEvent.Type == "TU(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(0.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(0.5)"]))
+                return "TO(0.5)";
+
+            if (marEvent.Type == "TO(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-0.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-0.5)"]))
+                return "TU(-0.5)";
+
             /**************************************************************************************/
             #endregion
 
             #region -0.75 to 0.75
             /**************************************************************************************/
-            
-                if (marEvent.Type == "TO(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(0.75)"]))
-                    yield return "TU(0.75)";
-           
-                if (marEvent.Type == "TO(-1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(0.75)"]))
-                    yield return "TU(0.75)";
-           
-                if (marEvent.Type == "TU(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-0.75)"]))
-                    yield return "TO(-0.75)";
-         
-                if (marEvent.Type == "TU(1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-0.75)"]))
-                    yield return "TO(-0.75)";
 
-                if (marEvent.Type == "TU(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(0.75)"]))
-                    yield return "TO(0.75)";
-       
-                if (marEvent.Type == "TU(-1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(0.75)"]))
-                    yield return "TO(0.75)";
-          
-                if (marEvent.Type == "TO(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-0.75)"]))
-                    yield return "TU(-0.75)";
-          
-                if (marEvent.Type == "TO(1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-0.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-0.75)"]))
-                    yield return "TU(-0.75)";
-           
+            if (marEvent.Type == "TO(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(0.75)"]))
+                return "TU(0.75)";
+
+            if (marEvent.Type == "TO(-1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(0.75)"]))
+                return "TU(0.75)";
+
+            if (marEvent.Type == "TU(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-0.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-0.75)"]))
+                return "TO(-0.75)";
+
+            if (marEvent.Type == "TU(1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-0.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-0.75)"]))
+                return "TO(-0.75)";
+
+            if (marEvent.Type == "TU(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(0.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(0.75)"]))
+                return "TO(0.75)";
+
+            if (marEvent.Type == "TU(-1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(0.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(0.75)"]))
+                return "TO(0.75)";
+
+            if (marEvent.Type == "TO(0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-0.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-0.75)"]))
+                return "TU(-0.75)";
+
+            if (marEvent.Type == "TO(1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-0.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-0.75)"]))
+                return "TU(-0.75)";
+
             /**************************************************************************************/
             #endregion
 
             #region -1 to 1
             /**************************************************************************************/
-           
-                if (marEvent.Type == "TO(-1)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(1)"]))
-                    yield return "TU(1)";
-         
-                if (marEvent.Type == "TU(1)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-1)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-1)"]))
-                    yield return "TO(-1)";
-          
-                if (marEvent.Type == "TU(-1)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(1)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(1)"]))
-                    yield return "TO(1)";
-           
-                if (marEvent.Type == "TO(1)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-1)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-1)"]))
-                    yield return "TU(-1)";
-           
+
+            if (marEvent.Type == "TO(-1)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(1)"]))
+                return "TU(1)";
+
+            if (marEvent.Type == "TU(1)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-1)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-1)"]))
+                return "TO(-1)";
+
+            if (marEvent.Type == "TU(-1)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(1)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(1)"]))
+                return "TO(1)";
+
+            if (marEvent.Type == "TO(1)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-1)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-1)"]))
+                return "TU(-1)";
+
             /**************************************************************************************/
             #endregion
 
             #region -1.25 to 1.25
             /**************************************************************************************/
-           
-                if (marEvent.Type == "TO(1)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(1.25)"]))
-                    yield return "TU(1.25)";
-          
-                if (marEvent.Type == "TO(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(1.25)"]))
-                    yield return "TU(1.25)";
-           
-                if (marEvent.Type == "TU(1)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-1.25)"]))
-                    yield return "TO(-1.25)";
-         
-                if (marEvent.Type == "TU(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-1.25)"]))
-                    yield return "TO(-1.25)";
-         
-                if (marEvent.Type == "TU(1)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(1.25)"]))
-                    yield return "TO(1.25)";
-          
-                if (marEvent.Type == "TU(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(1.25)"]))
-                    yield return "TO(1.25)";
-          
-                if (marEvent.Type == "TO(1)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-1.25)"]))
-                    yield return "TU(-1.25)";
-        
-                if (marEvent.Type == "TO(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-1.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-1.25)"]))
-                    yield return "TU(-1.25)";
-           
+
+            if (marEvent.Type == "TO(1)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(1.25)"]))
+                return "TU(1.25)";
+
+            if (marEvent.Type == "TO(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(1.25)"]))
+                return "TU(1.25)";
+
+            if (marEvent.Type == "TU(1)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-1.25)"]))
+                return "TO(-1.25)";
+
+            if (marEvent.Type == "TU(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-1.25)"]))
+                return "TO(-1.25)";
+
+            if (marEvent.Type == "TU(1)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(1.25)"]))
+                return "TO(1.25)";
+
+            if (marEvent.Type == "TU(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(1.25)"]))
+                return "TO(1.25)";
+
+            if (marEvent.Type == "TO(1)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-1.25)"]))
+                return "TU(-1.25)";
+
+            if (marEvent.Type == "TO(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-1.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-1.25)"]))
+                return "TU(-1.25)";
+
             /**************************************************************************************/
             #endregion
 
             #region -1.5 to 1.5
             /**************************************************************************************/
-          
-                if (marEvent.Type == "TO(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(1.5)"]))
-                    yield return "TU(1.5)";
-          
-                if (marEvent.Type == "TU(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-1.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-1.5)"]))
-                    yield return "TO(-1.5)";
-        
-                if (marEvent.Type == "TU(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(1.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(1.5)"]))
-                    yield return "TO(1.5)";
-         
-                if (marEvent.Type == "TO(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-1.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-1.5)"]))
-                    yield return "TU(-1.5)";
-          
+
+            if (marEvent.Type == "TO(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(1.5)"]))
+                return "TU(1.5)";
+
+            if (marEvent.Type == "TU(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-1.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-1.5)"]))
+                return "TO(-1.5)";
+
+            if (marEvent.Type == "TU(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(1.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(1.5)"]))
+                return "TO(1.5)";
+
+            if (marEvent.Type == "TO(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-1.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-1.5)"]))
+                return "TU(-1.5)";
+
             /**************************************************************************************/
             #endregion
 
             #region -1.75 to 1.75
             /**************************************************************************************/
-           
-                if (marEvent.Type == "TO(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(1.75)"]))
-                    yield return "TU(1.75)";
-           
-                if (marEvent.Type == "TO(-1.1)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(1.75)"]))
-                    yield return "TU(1.75)";
-           
-                if (marEvent.Type == "TU(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-1.75)"]))
-                    yield return "TO(-1.75)";
-           
-                if (marEvent.Type == "TU(1.1)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-1.75)"]))
-                    yield return "TO(-1.75)";
-            
-                if (marEvent.Type == "TU(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(1.75)"]))
-                    yield return "TO(1.75)";
-           
-                if (marEvent.Type == "TU(-1.1)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(1.75)"]))
-                    yield return "TO(1.75)";
-          
-                if (marEvent.Type == "TO(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-1.75)"]))
-                    yield return "TU(-1.75)";
-          
-                if (marEvent.Type == "TO(1.1)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-1.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-1.75)"]))
-                    yield return "TU(-1.75)";
-           
+
+            if (marEvent.Type == "TO(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(1.75)"]))
+                return "TU(1.75)";
+
+            if (marEvent.Type == "TO(-1.1)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(1.75)"]))
+                return "TU(1.75)";
+
+            if (marEvent.Type == "TU(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-1.75)"]))
+                return "TO(-1.75)";
+
+            if (marEvent.Type == "TU(1.1)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-1.75)"]))
+                return "TO(-1.75)";
+
+            if (marEvent.Type == "TU(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(1.75)"]))
+                return "TO(1.75)";
+
+            if (marEvent.Type == "TU(-1.1)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(1.75)"]))
+                return "TO(1.75)";
+
+            if (marEvent.Type == "TO(1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-1.75)"]))
+                return "TU(-1.75)";
+
+            if (marEvent.Type == "TO(1.1)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-1.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-1.75)"]))
+                return "TU(-1.75)";
+
             /**************************************************************************************/
             #endregion
 
             #region -2 to 2
             /**************************************************************************************/
-           
-                if (marEvent.Type == "TO(-2)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(2)"]))
-                    yield return "TU(2)";
-           
-                if (marEvent.Type == "TU(2)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-2)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-2)"]))
-                    yield return "TO(-2)";
-           
-                if (marEvent.Type == "TU(-2)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(2)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(2)"]))
-                    yield return "TO(2)";
-           
-                if (marEvent.Type == "TO(2)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-2)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-2)"]))
-                    yield return "TU(-2)";
-            
+
+            if (marEvent.Type == "TO(-2)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(2)"]))
+                return "TU(2)";
+
+            if (marEvent.Type == "TU(2)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-2)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-2)"]))
+                return "TO(-2)";
+
+            if (marEvent.Type == "TU(-2)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(2)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(2)"]))
+                return "TO(2)";
+
+            if (marEvent.Type == "TO(2)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-2)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-2)"]))
+                return "TU(-2)";
+
             /**************************************************************************************/
             #endregion
 
             #region -2.25 to 2.25
             /**************************************************************************************/
-           
-                if (marEvent.Type == "TO(2)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(2.25)"]))
-                    yield return "TU(2.25)";
 
-                if (marEvent.Type == "TO(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(2.25)"]))
-                    yield return "TU(2.25)";
-           
-                if (marEvent.Type == "TU(2)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-2.25)"]))
-                    yield return "TO(-2.25)";
-           
-                if (marEvent.Type == "TU(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-2.25)"]))
-                    yield return "TO(-2.25)";
-            
-                if (marEvent.Type == "TU(2)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(2.25)"]))
-                    yield return "TO(2.25)";
-          
-                if (marEvent.Type == "TU(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(2.25)"]))
-                    yield return "TO(2.25)";
-           
-                if (marEvent.Type == "TO(2)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-2.25)"]))
-                    yield return "TU(-2.25)";
-           
-                if (marEvent.Type == "TO(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-2.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-2.25)"]))
-                    yield return "TU(-2.25)";
-            
+            if (marEvent.Type == "TO(2)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(2.25)"]))
+                return "TU(2.25)";
+
+            if (marEvent.Type == "TO(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(2.25)"]))
+                return "TU(2.25)";
+
+            if (marEvent.Type == "TU(2)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-2.25)"]))
+                return "TO(-2.25)";
+
+            if (marEvent.Type == "TU(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-2.25)"]))
+                return "TO(-2.25)";
+
+            if (marEvent.Type == "TU(2)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(2.25)"]))
+                return "TO(2.25)";
+
+            if (marEvent.Type == "TU(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(2.25)"]))
+                return "TO(2.25)";
+
+            if (marEvent.Type == "TO(2)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-2.25)"]))
+                return "TU(-2.25)";
+
+            if (marEvent.Type == "TO(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-2.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-2.25)"]))
+                return "TU(-2.25)";
+
             /**************************************************************************************/
             #endregion
 
             #region -2.5 to 2.5
             /**************************************************************************************/
-           
-                if (marEvent.Type == "TO(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(2.5)"]))
-                    yield return "TU(2.5)";
-           
-                if (marEvent.Type == "TU(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-2.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-2.5)"]))
-                    yield return "TO(-2.5)";
-           
-                if (marEvent.Type == "TU(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(2.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(2.5)"]))
-                    yield return "TO(2.5)";
-            
-                if (marEvent.Type == "TO(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-2.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-2.5)"]))
-                    yield return "TU(-2.5)";
-           
+
+            if (marEvent.Type == "TO(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(2.5)"]))
+                return "TU(2.5)";
+
+            if (marEvent.Type == "TU(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-2.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-2.5)"]))
+                return "TO(-2.5)";
+
+            if (marEvent.Type == "TU(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(2.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(2.5)"]))
+                return "TO(2.5)";
+
+            if (marEvent.Type == "TO(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-2.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-2.5)"]))
+                return "TU(-2.5)";
+
             /**************************************************************************************/
             #endregion
 
             #region -2.75 to 2.75
             /**************************************************************************************/
-           
-                if (marEvent.Type == "TO(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(2.75)"]))
-                    yield return "TU(2.75)";
-           
-                if (marEvent.Type == "TO(-2.2)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(2.75)"]))
-                    yield return "TU(2.75)";
-           
-                if (marEvent.Type == "TU(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-2.75)"]))
-                    yield return "TO(-2.75)";
 
-                if (marEvent.Type == "TU(2.2)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-2.75)"]))
-                    yield return "TO(-2.75)";
-           
-                if (marEvent.Type == "TU(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(2.75)"]))
-                    yield return "TO(2.75)";
-            
-                if (marEvent.Type == "TU(-2.2)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(2.75)"]))
-                    yield return "TO(2.75)";
-           
-                if (marEvent.Type == "TO(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-2.75)"]))
-                    yield return "TU(-2.75)";
-           
-                if (marEvent.Type == "TO(2.2)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-2.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-2.75)"]))
-                    yield return "TU(-2.75)";
-           
+            if (marEvent.Type == "TO(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(2.75)"]))
+                return "TU(2.75)";
+
+            if (marEvent.Type == "TO(-2.2)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(2.75)"]))
+                return "TU(2.75)";
+
+            if (marEvent.Type == "TU(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-2.75)"]))
+                return "TO(-2.75)";
+
+            if (marEvent.Type == "TU(2.2)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-2.75)"]))
+                return "TO(-2.75)";
+
+            if (marEvent.Type == "TU(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(2.75)"]))
+                return "TO(2.75)";
+
+            if (marEvent.Type == "TU(-2.2)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(2.75)"]))
+                return "TO(2.75)";
+
+            if (marEvent.Type == "TO(2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-2.75)"]))
+                return "TU(-2.75)";
+
+            if (marEvent.Type == "TO(2.2)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-2.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-2.75)"]))
+                return "TU(-2.75)";
+
             /**************************************************************************************/
             #endregion
 
             #region -3 to 3
             /**************************************************************************************/
-          
-                if (marEvent.Type == "TO(-3)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(3)"]))
-                    yield return "TU(3)";
-          
-                if (marEvent.Type == "TU(3)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-3)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-3)"]))
-                    yield return "TO(-3)";
-           
-                if (marEvent.Type == "TU(-3)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(3)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(3)"]))
-                    yield return "TO(3)";
-          
-                if (marEvent.Type == "TO(3)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-3)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-3)"]))
-                    yield return "TU(-3)";
-           
+
+            if (marEvent.Type == "TO(-3)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(3)"]))
+                return "TU(3)";
+
+            if (marEvent.Type == "TU(3)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-3)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-3)"]))
+                return "TO(-3)";
+
+            if (marEvent.Type == "TU(-3)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(3)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(3)"]))
+                return "TO(3)";
+
+            if (marEvent.Type == "TO(3)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-3)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-3)"]))
+                return "TU(-3)";
+
             /**************************************************************************************/
             #endregion
 
             #region -3.25 to 3.25
             /**************************************************************************************/
-           
-                if (marEvent.Type == "TO(3)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(3.25)"]))
-                    yield return "TU(3.25)";
-          
-                if (marEvent.Type == "TO(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(3.25)"]))
-                    yield return "TU(3.25)";
-            
-                if (marEvent.Type == "TU(3)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-3.25)"]))
-                    yield return "TO(-3.25)";
-           
-                if (marEvent.Type == "TU(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-3.25)"]))
-                    yield return "TO(-3.25)";
-          
-                if (marEvent.Type == "TU(3)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(3.25)"]))
-                    yield return "TO(3.25)";
-          
-                if (marEvent.Type == "TU(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(3.25)"]))
-                    yield return "TO(3.25)";
-           
-                if (marEvent.Type == "TO(3)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-3.25)"]))
-                    yield return "TU(-3.25)";
-           
-                if (marEvent.Type == "TO(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-3.25)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-3.25)"]))
-                    yield return "TU(-3.25)";
-          
+
+            if (marEvent.Type == "TO(3)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(3.25)"]))
+                return "TU(3.25)";
+
+            if (marEvent.Type == "TO(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(3.25)"]))
+                return "TU(3.25)";
+
+            if (marEvent.Type == "TU(3)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-3.25)"]))
+                return "TO(-3.25)";
+
+            if (marEvent.Type == "TU(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-3.25)"]))
+                return "TO(-3.25)";
+
+            if (marEvent.Type == "TU(3)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(3.25)"]))
+                return "TO(3.25)";
+
+            if (marEvent.Type == "TU(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(3.25)"]))
+                return "TO(3.25)";
+
+            if (marEvent.Type == "TO(3)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-3.25)"]))
+                return "TU(-3.25)";
+
+            if (marEvent.Type == "TO(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-3.25)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-3.25)"]))
+                return "TU(-3.25)";
+
             /**************************************************************************************/
             #endregion
 
             #region -3.5 to 3.5
             /**************************************************************************************/
-          
-                if (marEvent.Type == "TO(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(3.5)"]))
-                    yield return "TU(3.5)";
-           
-                if (marEvent.Type == "TU(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-3.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-3.5)"]))
-                    yield return "TO(-3.5)";
-           
-                if (marEvent.Type == "TU(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(3.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(3.5)"]))
-                    yield return "TO(3.5)";
-           
-                if (marEvent.Type == "TO(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-3.5)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-3.5)"]))
-                    yield return "TU(-3.5)";
-          
+
+            if (marEvent.Type == "TO(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(3.5)"]))
+                return "TU(3.5)";
+
+            if (marEvent.Type == "TU(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-3.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-3.5)"]))
+                return "TO(-3.5)";
+
+            if (marEvent.Type == "TU(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(3.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(3.5)"]))
+                return "TO(3.5)";
+
+            if (marEvent.Type == "TO(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-3.5)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-3.5)"]))
+                return "TU(-3.5)";
+
             /**************************************************************************************/
             #endregion
 
             #region -3.75 to 3.75
             /**************************************************************************************/
-           
-                if (marEvent.Type == "TO(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(3.75)"]))
-                    yield return "TU(3.75)";
-           
-                if (marEvent.Type == "TO(-3.3)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(3.75)"]))
-                    yield return "TU(3.75)";
-           
-                if (marEvent.Type == "TU(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-3.75)"]))
-                    yield return "TO(-3.75)";
-          
-                if (marEvent.Type == "TU(3.3)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-3.75)"]))
-                    yield return "TO(-3.75)";
-           
-                if (marEvent.Type == "TU(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(3.75)"]))
-                    yield return "TO(3.75)";
-           
-                if (marEvent.Type == "TU(-3.3)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(3.75)"]))
-                    yield return "TO(3.75)";
-          
-                if (marEvent.Type == "TO(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-3.75)"]))
-                    yield return "TU(-3.75)";
-           
-                if (marEvent.Type == "TO(3.3)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-3.75)") &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-3.75)"]))
-                    yield return "TU(-3.75)";
-           
+
+            if (marEvent.Type == "TO(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(3.75)"]))
+                return "TU(3.75)";
+
+            if (marEvent.Type == "TO(-3.3)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(3.75)"]))
+                return "TU(3.75)";
+
+            if (marEvent.Type == "TU(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-3.75)"]))
+                return "TO(-3.75)";
+
+            if (marEvent.Type == "TU(3.3)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(-3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(-3.75)"]))
+                return "TO(-3.75)";
+
+            if (marEvent.Type == "TU(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(3.75)"]))
+                return "TO(3.75)";
+
+            if (marEvent.Type == "TU(-3.3)" && pinEvent.TypeCoefDictionary.ContainsKey("TO(3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TO(3.75)"]))
+                return "TO(3.75)";
+
+            if (marEvent.Type == "TO(3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-3.75)"]))
+                return "TU(-3.75)";
+
+            if (marEvent.Type == "TO(3.3)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(-3.75)") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["TU(-3.75)"]))
+                return "TU(-3.75)";
+
             /**************************************************************************************/
             #endregion
 
             #endregion
 
-           yield return null;
+            return null;
         }
     }
 }

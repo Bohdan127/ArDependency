@@ -72,6 +72,7 @@ namespace DXApplication1.Models
 
 
             }
+            timer?.Stop();
             return _filterPage;
         }
 
@@ -83,6 +84,7 @@ namespace DXApplication1.Models
                 _calculatorPage.MdiParent = mdiParent ?? _defaultMdiParent;
                 _calculatorPage.Close = false;
             }
+            timer?.Stop();
             return _calculatorPage;
         }
 
@@ -96,6 +98,7 @@ namespace DXApplication1.Models
                 _accountingPage.Update += AccountPage_Update;
                 _accountingPage.CalculatorCall += AccountPage_CalculatorCall;
             }
+            timer?.Stop();
             return _accountingPage;
         }
 
@@ -110,12 +113,13 @@ namespace DXApplication1.Models
                 _searchPage.CalculatorCall += AccountPage_CalculatorCall;//can be the same as for account page
             }
 
+            if (_filterPage.Filter.AutoUpdateTime != null)
+                timer.Interval = _filterPage.Filter.AutoUpdateTime.Value * 1000;
+
             if (!timer.Enabled)
             {
                 //todo just for first time, but this is bad way
                 SearchPage_Update(null, null);
-                if (_filterPage.Filter.AutoUpdateTime != null)
-                    timer.Interval = _filterPage.Filter.AutoUpdateTime.Value * 1000;
                 timer.Start();
             }
 

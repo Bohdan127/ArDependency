@@ -8,7 +8,6 @@ namespace FormulasCollection.Realizations
 {
     public class TwoOutComeForkFormulas : IForkFormulas
     {
-
         public bool CheckIsFork(double? coef1, double? coef2) =>
             coef1 != null &&
             coef2 != null &&
@@ -76,6 +75,7 @@ namespace FormulasCollection.Realizations
                     case "X2":
                         return true;
                         break;
+
                     default:
                         break;
                 }
@@ -87,6 +87,7 @@ namespace FormulasCollection.Realizations
                     case "X1":
                         return true;
                         break;
+
                     default:
                         break;
                 }
@@ -98,6 +99,7 @@ namespace FormulasCollection.Realizations
                     case "2":
                         return true;
                         break;
+
                     default:
                         break;
                 }
@@ -109,6 +111,7 @@ namespace FormulasCollection.Realizations
                     case "1":
                         return true;
                         break;
+
                     default:
                         break;
                 }
@@ -120,6 +123,7 @@ namespace FormulasCollection.Realizations
                     case "2X":
                         return true;
                         break;
+
                     default:
                         break;
                 }
@@ -131,6 +135,7 @@ namespace FormulasCollection.Realizations
                     case "1X":
                         return true;
                         break;
+
                     default:
                         break;
                 }
@@ -142,6 +147,7 @@ namespace FormulasCollection.Realizations
                     case "2":
                         return true;
                         break;
+
                     default:
                         break;
                 }
@@ -153,6 +159,7 @@ namespace FormulasCollection.Realizations
                     case "1":
                         return true;
                         break;
+
                     default:
                         break;
                 }
@@ -162,7 +169,6 @@ namespace FormulasCollection.Realizations
             //if (type2 == "Меньше" && type1 == "Больше")
             //    return true;
             return false;
-
         }
 
         public bool isTheSame(string marafon, string pinacle)
@@ -211,7 +217,7 @@ namespace FormulasCollection.Realizations
                                 MatchDateTime = eventItem.MatchDateTime,
                                 BookmakerFirst = "https://www.marathonbet.com/",
                                 BookmakerSecond = "http://www.pinnaclesports.com/"
-                            }); 
+                            });
                     }
                     catch (Exception ex)
                     {
@@ -263,6 +269,7 @@ namespace FormulasCollection.Realizations
             marEvent.Type = marEvent.Type.Trim();
 
             #region Wins
+
             /**************************************************************************************/
 
             if (marEvent.Type == "12" && pinEvent.TypeCoefDictionary.ContainsKey("X") &&
@@ -278,8 +285,6 @@ namespace FormulasCollection.Realizations
                 return "2";
             /**************************************************************************************/
 
-
-
             /**************************************************************************************/
             if (marEvent.Type == "X" && pinEvent.TypeCoefDictionary.ContainsKey("12") &&
                 CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["12"]))
@@ -294,11 +299,13 @@ namespace FormulasCollection.Realizations
                 return "1X";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion Wins
 
             #region Odds
 
             #region 0 to 0
+
             /**************************************************************************************/
             if (marEvent.Type == "F1(0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(0)") &&
                 CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F2(0)"]))
@@ -308,9 +315,11 @@ namespace FormulasCollection.Realizations
                 CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F1(0)"]))
                 return "F1(0)";
             /**************************************************************************************/
-            #endregion
 
-            #region  -0.25 to 0.25
+            #endregion 0 to 0
+
+            #region -0.25 to 0.25
+
             /**************************************************************************************/
 
             if (marEvent.Type == "F1(-0.25)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(0.25)") &&
@@ -330,9 +339,11 @@ namespace FormulasCollection.Realizations
                 return "F1(0.25)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -0.25 to 0.25
 
             #region -0.5 to 0.5
+
             /**************************************************************************************/
 
             if (marEvent.Type == "F1(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(0.5)") &&
@@ -352,9 +363,11 @@ namespace FormulasCollection.Realizations
                 return "F2(-0.5)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -0.5 to 0.5
 
             #region -0.75 to 0.75
+
             /**************************************************************************************/
 
             if (marEvent.Type == "F1(-0.75)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(0.75)") &&
@@ -374,9 +387,11 @@ namespace FormulasCollection.Realizations
                 return "F2(-0.75)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -0.75 to 0.75
 
             #region -1 to 1
+
             /**************************************************************************************/
 
             if (marEvent.Type == "F1(-1)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1)") &&
@@ -396,9 +411,11 @@ namespace FormulasCollection.Realizations
                 return "F2(-1)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -1 to 1
 
             #region -1.25 to 1.25
+
             /**************************************************************************************/
 
             if (marEvent.Type == "F1(-1.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1.25)") &&
@@ -434,9 +451,11 @@ namespace FormulasCollection.Realizations
                 return "F2(-1.25)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -1.25 to 1.25
 
             #region -1.5 to 1.5
+
             /**************************************************************************************/
 
             if (marEvent.Type == "F1(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1.5)") &&
@@ -456,9 +475,11 @@ namespace FormulasCollection.Realizations
                 return "F2(-1.5)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -1.5 to 1.5
 
             #region -1.75 to 1.75
+
             /**************************************************************************************/
 
             if (marEvent.Type == "F1(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(1.75)") &&
@@ -494,9 +515,11 @@ namespace FormulasCollection.Realizations
                 return "F2(-1.75)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -1.75 to 1.75
 
             #region -2 to 2
+
             /**************************************************************************************/
 
             if (marEvent.Type == "F2(-2)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2)") &&
@@ -516,9 +539,11 @@ namespace FormulasCollection.Realizations
                 return "F2(-2)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -2 to 2
 
             #region -2.25 to 2.25
+
             /**************************************************************************************/
 
             if (marEvent.Type == "F2(-2.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.25)") &&
@@ -554,9 +579,11 @@ namespace FormulasCollection.Realizations
                 return "F2(-2.25)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -2.25 to 2.25
 
             #region -2.5 to 2.5
+
             /**************************************************************************************/
 
             if (marEvent.Type == "F2(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.5)") &&
@@ -576,9 +603,11 @@ namespace FormulasCollection.Realizations
                 return "F2(-2.5)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -2.5 to 2.5
 
             #region -2.75 to 2.75
+
             /**************************************************************************************/
 
             if (marEvent.Type == "F2(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F2(2.75)") &&
@@ -614,9 +643,11 @@ namespace FormulasCollection.Realizations
                 return "F2(-2.75)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -2.75 to 2.75
 
             #region -3 to 3
+
             /**************************************************************************************/
 
             if (marEvent.Type == "F3(-3)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3)") &&
@@ -636,9 +667,11 @@ namespace FormulasCollection.Realizations
                 return "F3(-3)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -3 to 3
 
             #region -3.25 to 3.25
+
             /**************************************************************************************/
 
             if (marEvent.Type == "F3(-3.0)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.25)") &&
@@ -673,9 +706,11 @@ namespace FormulasCollection.Realizations
                 CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["F3(-3.25)"]))
                 return "F3(-3.25)";
             /**************************************************************************************/
-            #endregion
+
+            #endregion -3.25 to 3.25
 
             #region -3.5 to 3.5
+
             /**************************************************************************************/
 
             if (marEvent.Type == "F3(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.5)") &&
@@ -695,9 +730,11 @@ namespace FormulasCollection.Realizations
                 return "F3(-3.5)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -3.5 to 3.5
 
             #region -3.75 to 3.75
+
             /**************************************************************************************/
 
             if (marEvent.Type == "F3(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("F3(3.75)") &&
@@ -733,13 +770,15 @@ namespace FormulasCollection.Realizations
                 return "F3(-3.75)";
 
             /**************************************************************************************/
-            #endregion
 
-            #endregion
+            #endregion -3.75 to 3.75
+
+            #endregion Odds
 
             #region Totals
 
             #region 0 to 0
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(0)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0)") &&
@@ -751,9 +790,11 @@ namespace FormulasCollection.Realizations
                 return "TO(0)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion 0 to 0
 
             #region -0.25 to 0.25
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(0)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0.25)") &&
@@ -789,9 +830,11 @@ namespace FormulasCollection.Realizations
                 return "TU(-0.25)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -0.25 to 0.25
 
             #region -0.5 to 0.5
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0.5)") &&
@@ -811,9 +854,11 @@ namespace FormulasCollection.Realizations
                 return "TU(-0.5)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -0.5 to 0.5
 
             #region -0.75 to 0.75
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(-0.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(0.75)") &&
@@ -849,9 +894,11 @@ namespace FormulasCollection.Realizations
                 return "TU(-0.75)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -0.75 to 0.75
 
             #region -1 to 1
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(-1)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1)") &&
@@ -871,9 +918,11 @@ namespace FormulasCollection.Realizations
                 return "TU(-1)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -1 to 1
 
             #region -1.25 to 1.25
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(1)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1.25)") &&
@@ -909,9 +958,11 @@ namespace FormulasCollection.Realizations
                 return "TU(-1.25)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -1.25 to 1.25
 
             #region -1.5 to 1.5
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1.5)") &&
@@ -931,9 +982,11 @@ namespace FormulasCollection.Realizations
                 return "TU(-1.5)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -1.5 to 1.5
 
             #region -1.75 to 1.75
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(-1.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(1.75)") &&
@@ -969,9 +1022,11 @@ namespace FormulasCollection.Realizations
                 return "TU(-1.75)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -1.75 to 1.75
 
             #region -2 to 2
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(-2)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2)") &&
@@ -991,9 +1046,11 @@ namespace FormulasCollection.Realizations
                 return "TU(-2)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -2 to 2
 
             #region -2.25 to 2.25
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(2)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2.25)") &&
@@ -1029,9 +1086,11 @@ namespace FormulasCollection.Realizations
                 return "TU(-2.25)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -2.25 to 2.25
 
             #region -2.5 to 2.5
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2.5)") &&
@@ -1051,9 +1110,11 @@ namespace FormulasCollection.Realizations
                 return "TU(-2.5)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -2.5 to 2.5
 
             #region -2.75 to 2.75
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(-2.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(2.75)") &&
@@ -1089,9 +1150,11 @@ namespace FormulasCollection.Realizations
                 return "TU(-2.75)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -2.75 to 2.75
 
             #region -3 to 3
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(-3)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3)") &&
@@ -1111,9 +1174,11 @@ namespace FormulasCollection.Realizations
                 return "TU(-3)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -3 to 3
 
             #region -3.25 to 3.25
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(3)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3.25)") &&
@@ -1149,9 +1214,11 @@ namespace FormulasCollection.Realizations
                 return "TU(-3.25)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -3.25 to 3.25
 
             #region -3.5 to 3.5
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3.5)") &&
@@ -1171,9 +1238,11 @@ namespace FormulasCollection.Realizations
                 return "TU(-3.5)";
 
             /**************************************************************************************/
-            #endregion
+
+            #endregion -3.5 to 3.5
 
             #region -3.75 to 3.75
+
             /**************************************************************************************/
 
             if (marEvent.Type == "TO(-3.5)" && pinEvent.TypeCoefDictionary.ContainsKey("TU(3.75)") &&
@@ -1209,9 +1278,10 @@ namespace FormulasCollection.Realizations
                 return "TU(-3.75)";
 
             /**************************************************************************************/
-            #endregion
 
-            #endregion
+            #endregion -3.75 to 3.75
+
+            #endregion Totals
 
             return null;
         }

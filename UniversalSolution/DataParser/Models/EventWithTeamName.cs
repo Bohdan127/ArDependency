@@ -5,7 +5,7 @@
         public long? Id { get; set; }
 
         /// <summary>
-        /// First home, Second away              
+        /// First home, Second away
         /// </summary>
         public string TeamNames { get; set; }
     }

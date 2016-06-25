@@ -77,22 +77,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefaultRealization\DefaultDataParser.cs" />
-    <Compile Include="DefaultRealization\DefaultEvent.cs" />
-    <Compile Include="DefaultRealization\GenericMatch.cs" />
-    <Compile Include="DefaultRealization\Parser.cs" />
     <Compile Include="DefaultRealization\PinnacleSportsDataParser.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Extensions\HelperParse.cs" />
+    <Compile Include="Extensions\Tags.cs" />
     <Compile Include="Forks\ForkSearcher.cs" />
-    <Compile Include="Interfaces\IDataEvent.cs" />
-    <Compile Include="Interfaces\IDataMatch.cs" />
-    <Compile Include="Interfaces\IDataParser.cs" />
-    <Compile Include="DefaultRealization\DefaultMatch.cs" />
+    <Compile Include="Models\EnglishNameTeams.cs" />
     <Compile Include="Models\EventWithTeamName.cs" />
     <Compile Include="Models\EventWithTotal.cs" />
     <Compile Include="Models\EventWithTotalDictionary.cs" />
-    <Compile Include="My\ParsePinnacle.cs" />
-    <Compile Include="My\Vitia.cs" />
+    <Compile Include="DefaultRealization\MarathonParser.cs" />
+    <Compile Include="Models\Teams.cs" />
+    <Compile Include="Models\Teams_Football_Hokey.cs" />
+    <Compile Include="Models\Teams_Tenis_Volleyball_Basketball.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -8,7 +8,7 @@
         double IncorrectAmericanOdds { get; }
 
         /// <summary>
-        /// Converting from all American odds to Decimal odds 
+        /// Converting from all American odds to Decimal odds
         /// </summary>
         /// <param name="american">American odds</param>
         /// <returns>Decimal odds or IncorrectAmericanOdds if it's null</returns>

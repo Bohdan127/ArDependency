@@ -1,10 +1,7 @@
-﻿using DataSaver.Models;
-using DXApplication1.Models;
-using FormulasCollection.Interfaces;
+﻿using FormulasCollection.Interfaces;
 using FormulasCollection.Realizations;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Windows.Forms;
 using ToolsPortable;
 
@@ -17,7 +14,9 @@ namespace DXApplication1.Pages
         public bool Close { get; set; }
         public bool IsOpen { get; set; }
         public EventHandler RateChanging;
+
         protected virtual void OnURateChanging() => RateChanging?.Invoke(null, null);
+
         private Fork _fork;
         private List<string> recommendedRates = new List<string>();
         public Fork Fork { set { _fork = value; UpdateForm(); } }//todo check what is true way!!!!
@@ -28,7 +27,7 @@ namespace DXApplication1.Pages
             InitializeEvents();
             Shown += CalculatorPage_Shown;
             CalculatorFormulas = calculatorFormulas;
-            }
+        }
 
         private void CalculatorPage_Shown(object sender, System.EventArgs e) => IsOpen = true;
 

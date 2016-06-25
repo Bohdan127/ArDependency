@@ -1,4 +1,3 @@
-
 /****************************************************************/
 /****************************************************************/
 /*************        RavenDB example            ****************/
@@ -14,7 +13,6 @@
 //        Console.WriteLine("Product: {0} x {1}", orderLine.ProductId, orderLine.Quantity);
 //    }
 //}
-
 
 //using (var session = store.OpenSession())
 //{

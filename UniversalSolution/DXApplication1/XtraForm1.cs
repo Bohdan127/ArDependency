@@ -1,11 +1,10 @@
-﻿using DevExpress.XtraEditors;
+﻿using DataSaver.Models;
+using DevExpress.XtraEditors;
 using DXApplication1.Models;
 using FormulasCollection.Interfaces;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using DataSaver.Models;
-using License.Logic;
 
 namespace DXApplication1
 {
@@ -28,7 +27,6 @@ namespace DXApplication1
 
         public XtraForm1(IForkFormulas forkFormulas)
         {
-
             InitializeComponent();
 
             IsMdiContainer = true;
@@ -40,39 +38,12 @@ namespace DXApplication1
             DeserializeAll();
             PrepareData();
 
-            //todo this is bad and illogic crutch
-            _pageManager.GetFilterPage(_filter);//default preload filter page
-
-            licenseKey = _filter.LicenseKey ?? string.Empty;
-            //before payment will be with license
-            //LicenseForm licenseForm = new LicenseForm();
-            //if (!licenseForm.CheckInstance(licenseKey))
-            //    licenseForm.ShowDialog();
-            //if (!licenseForm.IsRegistered)
-            //    Close();
-            //licenseKey = licenseForm.LicenseKey;
+            _pageManager.GetFilterPage(_filter);
         }
 
         #endregion CTOR
 
         #region Events
-
-        /// <summary>
-        /// Function with dead code for opening calculation after search form if calculator wasn't open before
-        /// </summary>
-        public async void OpenSearchForCalculator()
-        {
-            if (!_pageManager.GetCalculatorPage().IsOpen)
-            {
-                var openForm = await _pageManager.CreateCalculatorForm().ConfigureAwait(true);
-                if (openForm.ShowDialog() != DialogResult.OK)
-                    return;
-                _pageManager.GetCalculatorPage(reload: true).Fork = openForm.SelectedEvent;
-            }
-
-            _pageManager.GetCalculatorPage().Hide();//if already shown right now
-            _pageManager.GetCalculatorPage().Show();
-        }
 
         private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {

@@ -5,26 +5,24 @@ using DataSaver;
 using FormulasCollection.Realizations;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using ToolsPortable;
 
 namespace DataLoader
 {
-    class Program
+    internal class Program
     {
         public static string UserLogin { get; set; }
         public static string UserPass { get; set; }
 
         private static PinnacleSportsDataParser pinnacle;
-        private static ParsePinnacle marathon;
+        private static MarathonParser marathon;
         private static TwoOutComeForkFormulas forkFormulas;
         private static LocalSaver localSaver;
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine("DataLoader Start");
             pinnacle = new PinnacleSportsDataParser(new ConverterFormulas());
-            marathon = new ParsePinnacle();
+            marathon = new MarathonParser();
             localSaver = new LocalSaver();
             forkFormulas = new TwoOutComeForkFormulas();
             GetUserData();
@@ -74,8 +72,8 @@ namespace DataLoader
                 {
                     pinSport = LoadPinacle(sportType);
                     marSport = LoadMarathon(sportType);
-                    forks = GetForks(sportType, pinSport, marSport);    
-                                 
+                    forks = GetForks(sportType, pinSport, marSport);
+
                     SaveNewForks(forks, sportType);
 
                     pinSport.Clear();
@@ -137,7 +135,7 @@ namespace DataLoader
         {
             Console.WriteLine($"Start Calculate Forks for {sportType} sport type");
 
-            var resList = forkFormulas.GetAllForks( marathon, pinnacle);
+            var resList = forkFormulas.GetAllForks(marathon, pinnacle);
 
             Console.WriteLine("Calculate finished");
             Console.WriteLine($"Was founded {resList.Count} {sportType} Forks");
@@ -169,7 +167,7 @@ namespace DataLoader
             return resList;
         }
 
-        private static Dictionary<string,ResultForForksDictionary> LoadPinacleDictionary(SportType sportType)
+        private static Dictionary<string, ResultForForksDictionary> LoadPinacleDictionary(SportType sportType)
         {
             Console.WriteLine($"Start Loading {sportType} Events from Pinnacle");
 

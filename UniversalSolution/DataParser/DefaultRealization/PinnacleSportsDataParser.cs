@@ -4,7 +4,6 @@ using FormulasCollection.Interfaces;
 using FormulasCollection.Realizations;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Json;
 using System.Linq;
 using System.Net;
@@ -377,7 +376,7 @@ namespace DataParser.DefaultRealization
             return resList;
         }
 
-        private Dictionary<string,ResultForForksDictionary> GroupResponsesDictionary(HttpWebResponse totalResp, HttpWebResponse teamNamesResp)
+        private Dictionary<string, ResultForForksDictionary> GroupResponsesDictionary(HttpWebResponse totalResp, HttpWebResponse teamNamesResp)
         {
             var eventsWithNames = ParseEventWithNamesDictionary(teamNamesResp);
             var eventsWithTotal = ParseEventWithTotalsDictionaty(totalResp);
@@ -430,10 +429,10 @@ namespace DataParser.DefaultRealization
 
         private string ParseTotalType(string totalType)
         {
-            var prefix = totalType.Substring(0,3);
+            var prefix = totalType.Substring(0, 3);
 
             totalType = totalType.Remove(0, 3);
-            totalType = totalType.Remove(totalType.Length-1, 1);
+            totalType = totalType.Remove(totalType.Length - 1, 1);
 
             return prefix + Extentions.Round(_converter.ConvertAmericanToDecimal(totalType.ConvertToDoubleOrNull())) + ")";
         }

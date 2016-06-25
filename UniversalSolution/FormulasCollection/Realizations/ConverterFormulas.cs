@@ -18,7 +18,6 @@ namespace FormulasCollection.Realizations
                     ? PositiveConvertationFormula(american.Value)
                     : NegativeConvertationFormula(american.Value));
 
-
         public double PositiveConvertationFormula(double american)
         {
             var r = american <= 0

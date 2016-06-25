@@ -18,19 +18,18 @@ namespace DXApplication1
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            // Create a new object, representing the German culture.  
+            // Create a new object, representing the German culture.
             CultureInfo culture = new CultureInfo("ru-RU");
 
-            // The following line provides localization for the application's user interface.  
+            // The following line provides localization for the application's user interface.
             Thread.CurrentThread.CurrentUICulture = culture;
 
-            // The following line provides localization for data formats.  
+            // The following line provides localization for data formats.
             Thread.CurrentThread.CurrentCulture = culture;
 
-            // Set this culture as the default culture for all threads in this application.  
+            // Set this culture as the default culture for all threads in this application.
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
-
 
             DevExpress.Skins.SkinManager.EnableFormSkins();
             DevExpress.UserSkins.BonusSkins.Register();
@@ -39,28 +38,25 @@ namespace DXApplication1
             Application.ThreadException += new
               System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
 
-            // Set the unhandled exception mode to force all Windows Forms 
+            // Set the unhandled exception mode to force all Windows Forms
             // errors to go through our handler.
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 
-            // Add the event handler for handling non-UI thread exceptions to the event. 
+            // Add the event handler for handling non-UI thread exceptions to the event.
             AppDomain.CurrentDomain.UnhandledException +=
                 new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
             Application.Run(new XtraForm1(new TwoOutComeForkFormulas()));
         }
-        static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+
+        private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
             ExceptionHandlerForm.ShowException(e.Exception);
         }
-
-
 
         public static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args)
         {
             Exception e = (Exception)args.ExceptionObject;
         }
-
-
     }
 }

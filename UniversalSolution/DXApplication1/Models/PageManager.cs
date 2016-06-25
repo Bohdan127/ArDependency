@@ -69,8 +69,6 @@ namespace DXApplication1.Models
                 _filterPage = new FilterPage(_filter);
                 _filterPage.MdiParent = mdiParent ?? _defaultMdiParent;
                 _filterPage.Close = false;
-
-
             }
             timer?.Stop();
             return _filterPage;
@@ -137,7 +135,6 @@ namespace DXApplication1.Models
 
         private void AccountPage_Update(object sender, EventArgs e)
         {
-
         }
 
         private async void AccountPage_CalculatorCall(object sender, EventArgs eventArgs)

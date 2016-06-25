@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+
 namespace FormulasCollection.Interfaces
 {
     public interface ICalculatorFormulas
     {
         /// <summary>
-        /// Calculate Income with default logic for 
+        /// Calculate Income with default logic for
         /// </summary>
         /// <param name="coef"></param>
         /// <param name="rate"></param>
@@ -12,7 +13,7 @@ namespace FormulasCollection.Interfaces
         string CalculateIncome(double coef, double rate);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="rates"></param>
         /// <returns></returns>
@@ -30,6 +31,7 @@ namespace FormulasCollection.Interfaces
         string CalculateAverageProfit(params double?[] profit);
 
         string CalculateRate(double? rateMain, double? rateCurrent, double? kof);
+
         /// <summary>
         /// Thing which used to join income values for total
         /// </summary>

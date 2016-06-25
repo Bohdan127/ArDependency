@@ -11,7 +11,6 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-
 namespace DataSaver
 {
     public class LocalSaver
@@ -19,6 +18,7 @@ namespace DataSaver
         //internal ForkTableAdapter TableAdapter;
         //internal ForksDataSet DataSet;
         internal DocumentStore _store;
+
         private IDocumentSession _session;
 
         public const int PageSize = 128;
@@ -83,7 +83,6 @@ namespace DataSaver
             await Task.Delay(1).ConfigureAwait(false);
             ClearAndInsertForks(forkList, sportType);
         }
-
 
         public virtual void ClearAndInsertForks(List<Fork> forkList, SportType sportType)
         {
@@ -166,6 +165,3 @@ namespace DataSaver
         }
     }
 }
-
-
-

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FormulasCollection.Realizations
+﻿namespace FormulasCollection.Realizations
 {
     public class ResultForForks
     {
@@ -13,8 +7,10 @@ namespace FormulasCollection.Realizations
         public string Coef { get; set; }
 
         public string Bookmaker { get; set; }
-        //  X1 X2 1 2 
+
+        //  X1 X2 1 2
         public ResultForForks() { }
+
         public ResultForForks(string nameTeam1, string nameTeam2, string date, string nameCoff, string coef, string type, string bookmaker)
         {
             this.Event = nameTeam1.Trim() + " - " + nameTeam2.Trim();

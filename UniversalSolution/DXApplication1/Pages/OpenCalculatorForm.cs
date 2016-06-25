@@ -60,7 +60,6 @@ namespace DXApplication1.Pages
                 resList = resList.Where(f => f.TypeSecond.Contains(typeSecondCriteria)).ToList();
 
             return resList;
-
         }
 
         private void buttonClear_Click(object sender, EventArgs e)

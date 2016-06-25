@@ -21,7 +21,7 @@
         public string Event { get; set; }
 
         /// <summary>
-        /// Details for first type of Fork 
+        /// Details for first type of Fork
         /// </summary>
         public string TypeFirst { get; set; }
 
@@ -31,7 +31,7 @@
         public string CoefFirst { get; set; }
 
         /// <summary>
-        /// Details for second type of Fork 
+        /// Details for second type of Fork
         /// </summary>
         public string TypeSecond { get; set; }
 

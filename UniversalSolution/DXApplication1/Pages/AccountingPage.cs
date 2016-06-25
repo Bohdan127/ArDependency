@@ -1,17 +1,15 @@
-﻿using DevExpress.XtraGrid;
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace DXApplication1.Pages
 {
     public partial class AccountingPage : Form
     {
-        public EventHandler Update;
+        public EventHandler UpdateEvent;
         public EventHandler CalculatorCall;
-        public bool Close { get; set; }
-        public GridControl MainGridControl => gridControl1;
+        public bool ToClose { get; set; }
 
-        protected virtual void OnUpdate() => Update?.Invoke(null, null);
+        protected virtual void OnUpdate() => UpdateEvent?.Invoke(null, null);
 
         protected virtual void OnCalculatorCall() => CalculatorCall?.Invoke(gridView1.GetFocusedRow(), null);
 
@@ -33,8 +31,8 @@ namespace DXApplication1.Pages
 
         protected virtual void AccountingPage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            e.Cancel = !Close;
-            if (!Close)
+            e.Cancel = !ToClose;
+            if (!ToClose)
                 Hide();
         }
 

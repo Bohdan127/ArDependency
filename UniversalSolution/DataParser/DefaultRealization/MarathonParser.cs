@@ -6,6 +6,7 @@ using DataParser.Models;
 using FormulasCollection.Realizations;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -17,37 +18,37 @@ namespace DataParser.MY
         private async Task<List<ResultForForks>> GetNameTeamsAndDateAsync(SportType sportType)
         {
             result.Clear();
-            string url = "";
-            string namefile = "";
-            UrlAndNameFile(sportType, out url, out namefile);
-            //WriteToHtmlDocumentAsync(url, namefile).ConfigureAwait(false);
-            List<Teams> teams = new List<Teams>();
 
-            //<span class="hint">
-
-            List<string> koff = new List<string>();
-            string[] lines = (await HtmlAsync(url).ConfigureAwait(false)).Split('\n');//File.ReadAllLines(namefile);
-
+            //strings
+            var url = "";
+            var namefile = "";
+            var oldEvent = "";
             string date = null;
-            bool isDate = false;
-            bool isTypeCoff = false;
-
-            bool isFora = false;
-            bool isTotal = false;
-
-            string oldEvent = "";
-
             string foraName1 = null;
-            bool isForaforteam1 = true;
-
-            string totalName = null;
-            bool isTotalUnder = true;
-
             string _eventid = null;
-            List<string> countTypeCoff = new List<string>();
+            string totalName = null;
 
-            int i = 0;
-            int index = 0;
+            //Boolean
+            var isDate = false;
+            var isTypeCoff = false;
+            var isFora = false;
+            var isTotal = false;
+            var isForaforteam1 = true;
+            var isTotalUnder = true;
+
+            //List<string>
+            var koff = new List<string>();
+            var countTypeCoff = new List<string>();
+
+            //Integer
+            var i = 0;
+            var index = 0;
+
+
+            UrlAndNameFile(sportType, out url, out namefile);
+            var lines = (await HtmlAsync(url).ConfigureAwait(false)).Split('\n');
+
+
             foreach (var line in lines)
             {
                 if (isFora)
@@ -122,12 +123,12 @@ namespace DataParser.MY
                         result.Add(new ResultForForks(englishNameTeams_Dictionary[_eventid].name1,
                                                       englishNameTeams_Dictionary[_eventid].name2,
                                                       date,
-                                                      (!String.IsNullOrEmpty(totalName) || !String.IsNullOrEmpty(foraName1)) ? (!String.IsNullOrEmpty(totalName) ? totalName : foraName1) : countTypeCoff[i],  //  Type coff
+                                                      (!string.IsNullOrEmpty(totalName) || !string.IsNullOrEmpty(foraName1)) ? (!string.IsNullOrEmpty(totalName) ? totalName : foraName1) : countTypeCoff[i],  //  Type coff
                                                       res,                //   znaczenia
                                                       sportType.ToString(),
                                                       Site.MarathonBet.ToString()
                                                       ));
-                        if (String.IsNullOrEmpty(totalName) || String.IsNullOrEmpty(foraName1))
+                        if (string.IsNullOrEmpty(totalName) || string.IsNullOrEmpty(foraName1))
                             i++;
                         totalName = null;
                         foraName1 = null;
@@ -191,21 +192,6 @@ namespace DataParser.MY
             return new List<ResultForForks>();
         }
 
-        /*private static async Task WriteToHtmlDocumentAsync(string url, string namefile)
-        {
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
-            HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
-            StreamReader reader = new StreamReader(response.GetResponseStream());
-            List<string> result = new List<string>();
-            string HTML = await reader.ReadToEndAsync().ConfigureAwait(false);
-            reader.Close();
-            StreamWriter sw = new StreamWriter(namefile);
-            sw.WriteLine(HTML);
-            sw.Close();
-
-            File.ReadAllLines(namefile);
-        }*/
-
         private static async Task<string> HtmlAsync(string url, bool a = true)
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
@@ -215,37 +201,35 @@ namespace DataParser.MY
             StreamReader reader = null;
             try
             {
+                Debug.Assert(response != null, "response != null");
                 reader = new StreamReader(response.GetResponseStream());
                 HTML = await reader.ReadToEndAsync().ConfigureAwait(false);
             }
-            catch (FileLoadException ex)
+            catch (FileLoadException)
             {
                 //ignored
             }
             finally
             {
-                if (reader != null)
-                    reader.Close();
+                reader?.Close();
             }
-
-            //if (a)
-            //    File.WriteAllLines("qwerty2.html", HTML.Split('\n'));
 
             return HTML;
         }
 
         private async Task<Dictionary<string, EnglishNameTeams>> GetEnglishNameTEams(SportType sportType)
         {
-            Dictionary<string, EnglishNameTeams> resultEnglishTeams = new Dictionary<string, EnglishNameTeams>();
-            string url = "";
-            string namefile = "";
-            UrlAndNameFile(sportType, out url, out namefile, true);
-
-            string[] lines = (await HtmlAsync(url, false).ConfigureAwait(false)).Split('\n');
-
+            var resultEnglishTeams = new Dictionary<string, EnglishNameTeams>();
+            var url = "";
+            var namefile = "";
             string name1 = null;
             string name2 = null;
             string _eventid = null;
+
+
+            UrlAndNameFile(sportType, out url, out namefile, true);
+            var lines = (await HtmlAsync(url, false).ConfigureAwait(false)).Split('\n');
+
 
             foreach (var line in lines)
             {

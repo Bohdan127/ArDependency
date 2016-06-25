@@ -38,7 +38,7 @@ namespace DataParser.DefaultRealization
                     return d != null && (Math.Abs(d.Value) < 0.01 || Math.Abs(d.Value - _converter.IncorrectAmericanOdds) < 0.01);
                 });
             }
-            catch (Exception ex)
+            catch
             {
                 // ignored
             }
@@ -107,7 +107,7 @@ namespace DataParser.DefaultRealization
                                             MatchDateTime = period.Value?["cutoff"]?.ToString()
                                         });
                                     }
-                                    catch (Exception ex)
+                                    catch
                                     {
                                         //ignored
                                     }
@@ -135,7 +135,7 @@ namespace DataParser.DefaultRealization
                                                     MatchDateTime = period.Value?["cutoff"]?.ToString()
                                                 });
                                             }
-                                            catch (Exception ex)
+                                            catch
                                             {
                                                 //ignored
                                             }
@@ -157,30 +157,30 @@ namespace DataParser.DefaultRealization
                                             //    MatchDateTime = period.Value?["cutoff"]?.ToString()
                                             //});
                                         }
-                                        catch (Exception ex)
+                                        catch
                                         {
                                             //ignored
                                         }
                                     }
-                                    catch (Exception ex)
+                                    catch
                                     {
                                         // ignored
                                     }
                                 }
                             }
-                            catch (Exception ex)
+                            catch
                             {
                                 // ignored
                             }
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         // ignored
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 // ignored
             }
@@ -210,7 +210,7 @@ namespace DataParser.DefaultRealization
                         }
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 //ignored
             }
@@ -264,7 +264,7 @@ namespace DataParser.DefaultRealization
                                             MatchDateTime = matchDateTime
                                         });
                                     }
-                                    catch (Exception ex)
+                                    catch
                                     {
                                         //ignored
                                     }
@@ -288,7 +288,7 @@ namespace DataParser.DefaultRealization
                                                     MatchDateTime = matchDateTime
                                                 });
                                             }
-                                            catch (Exception ex)
+                                            catch
                                             {
                                                 //ignored
                                             }
@@ -310,31 +310,31 @@ namespace DataParser.DefaultRealization
                                                     MatchDateTime = matchDateTime
                                                 });
                                             }
-                                            catch (Exception ex)
+                                            catch
                                             {
                                                 //ignored
                                             }
                                         }
                                     }
-                                    catch (Exception ex)
+                                    catch
                                     {
                                         // ignored
                                     }
                                 }
                             }
-                            catch (Exception ex)
+                            catch
                             {
                                 // ignored
                             }
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         // ignored
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 // ignored
             }
@@ -363,13 +363,13 @@ namespace DataParser.DefaultRealization
                                 Console.Write("*******************Duplicate Id for ParseEventWithNames**********************"); //todo tmp need for checking
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         //ignored
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 //ignored
             }
@@ -418,7 +418,7 @@ namespace DataParser.DefaultRealization
                                         eventWithTotal.TotalValue.ConvertToDoubleOrNull()));
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         //ignored
                     }
@@ -464,7 +464,7 @@ namespace DataParser.DefaultRealization
                         resDic[key].TypeCoefDictionary.Remove(keyForRemove);
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 // ignored
             }

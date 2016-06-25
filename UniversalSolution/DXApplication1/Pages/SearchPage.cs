@@ -1,23 +1,18 @@
 ﻿using DevExpress.XtraGrid;
-using FormulasCollection.Realizations;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using ToolsPortable;
 
 namespace DXApplication1.Pages
 {
     public partial class SearchPage : Form
     {
-        public EventHandler Update;
+        public EventHandler UpdateEvent;
         public EventHandler CalculatorCall;
-        public bool Close { get; set; }
+        public bool ToClose { get; set; }
         public GridControl MainGridControl => gridControl1;
-        private List<Fork> dataSource;
 
-        protected virtual void OnUpdate() => Update?.Invoke(null, null);
+        protected virtual void OnUpdate() => UpdateEvent?.Invoke(null, null);
 
         protected virtual void OnCalculatorCall() => CalculatorCall?.Invoke(gridView1.GetFocusedRow(), null);
 
@@ -39,8 +34,8 @@ namespace DXApplication1.Pages
 
         protected virtual void AccountingPage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            e.Cancel = !Close;
-            if (!Close)
+            e.Cancel = !ToClose;
+            if (!ToClose)
                 Hide();
         }
 
@@ -50,21 +45,6 @@ namespace DXApplication1.Pages
         }
 
         protected virtual void simpleButton1_Click(object sender, EventArgs e) => OnCalculatorCall();
-
-        private List<Fork> MakeSearch(string eventCriteria, string typeFirstCriteria, string typeSecondCriteria)
-        {
-            var resList = new List<Fork>();
-            resList.AddRange(dataSource);
-
-            if (eventCriteria.IsNotBlank())
-                resList = resList.Where(f => f.Event.Contains(eventCriteria)).ToList();
-            if (typeFirstCriteria.IsNotBlank())
-                resList = resList.Where(f => f.TypeFirst.Contains(typeFirstCriteria)).ToList();
-            if (typeSecondCriteria.IsNotBlank())
-                resList = resList.Where(f => f.TypeSecond.Contains(typeSecondCriteria)).ToList();
-
-            return resList;
-        }
 
         public void StartLoading()
         {

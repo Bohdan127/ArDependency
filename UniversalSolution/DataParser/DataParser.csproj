@@ -81,7 +81,6 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\HelperParse.cs" />
     <Compile Include="Extensions\Tags.cs" />
-    <Compile Include="Forks\ForkSearcher.cs" />
     <Compile Include="Models\EnglishNameTeams.cs" />
     <Compile Include="Models\EventWithTeamName.cs" />
     <Compile Include="Models\EventWithTotal.cs" />

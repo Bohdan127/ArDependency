@@ -1,7 +1,4 @@
-﻿using FormulasCollection.Realizations;
-using System.Collections.Generic;
-
-namespace FormulasCollection.Interfaces
+﻿namespace FormulasCollection.Interfaces
 {
     public interface IForkFormulas
     {
@@ -9,10 +6,5 @@ namespace FormulasCollection.Interfaces
 
         double GetProfit(double rate, double? kof1, double? kof2);
 
-        bool checkForType(string type1, string type2);
-
-        bool isTheSame(string marafon, string pinacle);
-
-        List<Fork> GetAllForks(List<ResultForForks> marafon, List<ResultForForks> pinacle);
     }
 }

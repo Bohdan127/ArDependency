@@ -68,7 +68,7 @@ namespace DXApplication1.Models
             {
                 _filterPage = new FilterPage(_filter);
                 _filterPage.MdiParent = mdiParent ?? _defaultMdiParent;
-                _filterPage.Close = false;
+                _filterPage.ToClose = false;
             }
             timer?.Stop();
             return _filterPage;
@@ -80,7 +80,7 @@ namespace DXApplication1.Models
             {
                 _calculatorPage = new CalculatorPage(new TwoOutComeCalculatorFormulas());
                 _calculatorPage.MdiParent = mdiParent ?? _defaultMdiParent;
-                _calculatorPage.Close = false;
+                _calculatorPage.ToClose = false;
             }
             timer?.Stop();
             return _calculatorPage;
@@ -92,8 +92,8 @@ namespace DXApplication1.Models
             {
                 _accountingPage = new AccountingPage();
                 _accountingPage.MdiParent = mdiParent ?? _defaultMdiParent;
-                _accountingPage.Close = false;
-                _accountingPage.Update += AccountPage_Update;
+                _accountingPage.ToClose = false;
+                _accountingPage.UpdateEvent += AccountPage_Update;
                 _accountingPage.CalculatorCall += AccountPage_CalculatorCall;
             }
             timer?.Stop();
@@ -106,8 +106,8 @@ namespace DXApplication1.Models
             {
                 _searchPage = new SearchPage();
                 _searchPage.MdiParent = mdiParent ?? _defaultMdiParent;
-                _searchPage.Close = false;
-                _searchPage.Update += SearchPage_Update;
+                _searchPage.ToClose = false;
+                _searchPage.UpdateEvent += SearchPage_Update;
                 _searchPage.CalculatorCall += AccountPage_CalculatorCall;//can be the same as for account page
             }
 
@@ -137,13 +137,11 @@ namespace DXApplication1.Models
         {
         }
 
-        private async void AccountPage_CalculatorCall(object sender, EventArgs eventArgs)
+        private void AccountPage_CalculatorCall(object sender, EventArgs eventArgs)
         {
-            if (sender is Fork)
-            {
-                GetCalculatorPage(reload: true).Fork = (Fork)sender;
-                GetCalculatorPage().Show();
-            }
+            if (!(sender is Fork)) return;
+            GetCalculatorPage(reload: true).Fork = (Fork)sender;
+            GetCalculatorPage().Show();
         }
 
         private async void SearchPage_Update(object sender, EventArgs e)

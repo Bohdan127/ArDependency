@@ -11,7 +11,7 @@ namespace DXApplication1.Pages
     {
         public Filter Filter { get; private set; }
 
-        public bool Close { get; set; }
+        public bool ToClose { get; set; }
 
         public FilterPage()
         {
@@ -31,7 +31,7 @@ namespace DXApplication1.Pages
             InitializeEvents();
         }
 
-        protected virtual void FirstBind()
+        protected void FirstBind()
         {
             lock (Filter)
             {
@@ -133,8 +133,8 @@ namespace DXApplication1.Pages
 
         private void FilterPage_Closing(object sender, CancelEventArgs e)
         {
-            e.Cancel = !Close;
-            if (!Close)
+            e.Cancel = !ToClose;
+            if (!ToClose)
                 Hide();
         }
 

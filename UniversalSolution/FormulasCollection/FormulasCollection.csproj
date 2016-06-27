@@ -47,9 +47,6 @@
   <ItemGroup>
     <Compile Include="Enums\Site.cs" />
     <Compile Include="Enums\SportType.cs" />
-    <Compile Include="Interfaces\ICalculatorFormulas.cs" />
-    <Compile Include="Interfaces\IConverterFormulas.cs" />
-    <Compile Include="Interfaces\IForkFormulas.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Realizations\ResultForForks.cs" />
     <Compile Include="Realizations\ConverterFormulas.cs" />

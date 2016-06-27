@@ -1,6 +1,5 @@
 ﻿using DataSaver.Models;
 using DXApplication1.Pages;
-using FormulasCollection.Interfaces;
 using FormulasCollection.Realizations;
 using System;
 using System.Threading.Tasks;
@@ -25,12 +24,14 @@ namespace DXApplication1.Models
 
         #region CTOR
 
-        public PageManager(Form mdiParent, IForkFormulas forkFormulas)
+        public PageManager(Form mdiParent, TwoOutComeForkFormulas forkFormulas)
         {
             _defaultMdiParent = mdiParent;
             DataManager = new DataManager(forkFormulas);
-            timer = new Timer();
-            timer.Interval = 20 * 1000;//default for 20 seconds
+            timer = new Timer
+            {
+                Interval = 20 * 1000 //default for 20 seconds
+            };
             timer.Tick += Timer_Tick;
         }
 
@@ -60,15 +61,17 @@ namespace DXApplication1.Models
             return _openCalculatorForm;
         }
 
-        public FilterPage GetFilterPage(Filter _filter, Form mdiParent = null, bool reload = false)
+        public FilterPage GetFilterPage(Filter filter, Form mdiParent = null, bool reload = false)
         {
-            if (_filter == null) _filter = new Filter();
+            if (filter == null) filter = new Filter();
 
             if (_filterPage == null)
             {
-                _filterPage = new FilterPage(_filter);
-                _filterPage.MdiParent = mdiParent ?? _defaultMdiParent;
-                _filterPage.ToClose = false;
+                _filterPage = new FilterPage(filter)
+                {
+                    MdiParent = mdiParent ?? _defaultMdiParent,
+                    ToClose = false
+                };
             }
             timer?.Stop();
             return _filterPage;
@@ -78,9 +81,11 @@ namespace DXApplication1.Models
         {
             if (_calculatorPage == null)
             {
-                _calculatorPage = new CalculatorPage(new TwoOutComeCalculatorFormulas());
-                _calculatorPage.MdiParent = mdiParent ?? _defaultMdiParent;
-                _calculatorPage.ToClose = false;
+                _calculatorPage = new CalculatorPage
+                {
+                    MdiParent = mdiParent ?? _defaultMdiParent,
+                    ToClose = false
+                };
             }
             timer?.Stop();
             return _calculatorPage;
@@ -90,9 +95,11 @@ namespace DXApplication1.Models
         {
             if (_accountingPage == null || reload)
             {
-                _accountingPage = new AccountingPage();
-                _accountingPage.MdiParent = mdiParent ?? _defaultMdiParent;
-                _accountingPage.ToClose = false;
+                _accountingPage = new AccountingPage
+                {
+                    MdiParent = mdiParent ?? _defaultMdiParent,
+                    ToClose = false
+                };
                 _accountingPage.UpdateEvent += AccountPage_Update;
                 _accountingPage.CalculatorCall += AccountPage_CalculatorCall;
             }
@@ -104,9 +111,11 @@ namespace DXApplication1.Models
         {
             if (_searchPage == null || reload)
             {
-                _searchPage = new SearchPage();
-                _searchPage.MdiParent = mdiParent ?? _defaultMdiParent;
-                _searchPage.ToClose = false;
+                _searchPage = new SearchPage
+                {
+                    MdiParent = mdiParent ?? _defaultMdiParent,
+                    ToClose = false
+                };
                 _searchPage.UpdateEvent += SearchPage_Update;
                 _searchPage.CalculatorCall += AccountPage_CalculatorCall;//can be the same as for account page
             }
@@ -116,7 +125,6 @@ namespace DXApplication1.Models
 
             if (!timer.Enabled)
             {
-                //todo just for first time, but this is bad way
                 SearchPage_Update(null, null);
                 timer.Start();
             }
@@ -140,7 +148,13 @@ namespace DXApplication1.Models
         private void AccountPage_CalculatorCall(object sender, EventArgs eventArgs)
         {
             if (!(sender is Fork)) return;
-            GetCalculatorPage(reload: true).Fork = (Fork)sender;
+
+            var fork = (Fork)sender;
+            fork.Profit = _filterPage.Filter.DefaultRate != null
+                ? (double)_filterPage.Filter.DefaultRate
+                : 0;
+
+            GetCalculatorPage(reload: true).Fork = fork;
             GetCalculatorPage().Show();
         }
 

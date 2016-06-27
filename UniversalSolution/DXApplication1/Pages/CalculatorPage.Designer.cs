@@ -146,7 +146,6 @@
             this.textEditRate2.Size = new System.Drawing.Size(231, 20);
             this.textEditRate2.StyleController = this.layoutControl1;
             this.textEditRate2.TabIndex = 10;
-            this.textEditRate2.EditValueChanging += new DevExpress.XtraEditors.Controls.ChangingEventHandler(this.textEditRate2_EditValueChanging);
             // 
             // textEditRate1
             // 
@@ -155,7 +154,6 @@
             this.textEditRate1.Size = new System.Drawing.Size(231, 20);
             this.textEditRate1.StyleController = this.layoutControl1;
             this.textEditRate1.TabIndex = 9;
-            this.textEditRate1.EditValueChanging += new DevExpress.XtraEditors.Controls.ChangingEventHandler(this.textEditRate1_EditValueChanging);
             // 
             // lbCoef2
             // 

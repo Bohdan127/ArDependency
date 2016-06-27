@@ -1,7 +1,5 @@
-﻿using FormulasCollection.Interfaces;
-using FormulasCollection.Realizations;
+﻿using FormulasCollection.Realizations;
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using ToolsPortable;
 
@@ -9,45 +7,76 @@ namespace DXApplication1.Pages
 {
     public partial class CalculatorPage : Form
     {
-        protected ICalculatorFormulas CalculatorFormulas;
+        protected TwoOutComeCalculatorFormulas CalculatorFormulas;
 
         public bool ToClose { get; set; }
         public bool IsOpen { get; set; }
         public EventHandler RateChanging;
+        public EventHandler UpdateForm;
+
+
+        private void OnUpdateForm() => UpdateForm?.Invoke(null, null);
 
         protected virtual void OnURateChanging() => RateChanging?.Invoke(null, null);
 
         private Fork _fork;
-        private List<string> _recommendedRates = new List<string>();
-        public Fork Fork { set { _fork = value; UpdateForm(); } }//todo check what is true way!!!!
+        private Tuple<string, string> _recommendedRates;
 
-        public CalculatorPage(ICalculatorFormulas calculatorFormulas)
+        public Fork Fork
+        {
+            set
+            {
+                _fork = value;
+                OnUpdateForm();
+            }
+        }
+
+        public CalculatorPage()
         {
             InitializeComponent();
             InitializeEvents();
-            Shown += CalculatorPage_Shown;
-            CalculatorFormulas = calculatorFormulas;
+            CalculatorFormulas = new TwoOutComeCalculatorFormulas();
         }
 
-        private void CalculatorPage_Shown(object sender, System.EventArgs e) => IsOpen = true;
-
-        private void UpdateForm()
+        ~CalculatorPage()
         {
+            DeInitializeEvents();
+        }
+
+        private void CalculatorPage_UpdateForm(object sender, EventArgs eventArgs)
+        {
+            DeInitializeEvents();
+
+
             lbMain.Text = _fork?.Event;
             lbType1.Text = _fork?.TypeFirst;
             lbCoef1.Text = _fork?.CoefFirst;
             lbType2.Text = _fork?.TypeSecond;
             lbCoef2.Text = _fork?.CoefSecond;
-            _recommendedRates = CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(), textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
-                , lbCoef1.Text.Trim().ConvertToDoubleOrNull(), lbCoef2.Text.Trim().ConvertToDoubleOrNull());
-            textEditRate1.Text = _recommendedRates[0];
-            textEditRate2.Text = _recommendedRates[1];
+            _recommendedRates =
+                CalculatorFormulas.GetRecommendedRates(
+                    CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
+                        textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
+                    , lbCoef1.Text?.Trim().ConvertToDoubleOrNull(), lbCoef2.Text?.Trim().ConvertToDoubleOrNull());
+            textEditRate1.Text = _recommendedRates.Item1;
+            textEditRate2.Text = _recommendedRates.Item2;
+
+
+            InitializeEvents();
         }
+
+        private void CalculatorPage_Shown(object sender, System.EventArgs e) => IsOpen = true;
+
 
         public void InitializeEvents()
         {
             Closing += AccountingPage_Closing;
+            Shown += CalculatorPage_Shown;
+            UpdateForm += CalculatorPage_UpdateForm;
             RateChanging += AccountingPage_RateChanging;
+            textEditRate2.EditValueChanging += textEditRate1_EditValueChanging;
+            textEditRate1.EditValueChanging += textEditRate1_EditValueChanging;
+
         }
 
         private void AccountingPage_RateChanging(object sender, EventArgs e)
@@ -65,7 +94,11 @@ namespace DXApplication1.Pages
         public void DeInitializeEvents()
         {
             Closing -= AccountingPage_Closing;
+            Shown -= CalculatorPage_Shown;
             RateChanging -= AccountingPage_RateChanging;
+            UpdateForm -= CalculatorPage_UpdateForm;
+            textEditRate2.EditValueChanging -= textEditRate1_EditValueChanging;
+            textEditRate1.EditValueChanging -= textEditRate1_EditValueChanging;
         }
 
         private void AccountingPage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -76,104 +109,33 @@ namespace DXApplication1.Pages
                 Hide();
         }
 
-        protected virtual void textEditRate1_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
+        protected virtual void textEditRate1_EditValueChanging(object sender,
+            DevExpress.XtraEditors.Controls.ChangingEventArgs e)
         {
+            var recomendedRates =
+                CalculatorFormulas.GetRecommendedRates(
+                    CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
+                        textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
+                    , ConvertToRate(lbCoef1.Text),
+                    ConvertToRate(lbCoef2.Text));
+
+            textEditIncome1.Text = CalculatorFormulas.CalculateRate(
+                ConvertToRate(textEditAllRate.Text),
+                ConvertToRate(textEditRate1.Text),
+                ConvertToRate(lbCoef1.Text)) +
+                                   recomendedRates.Item1;
+            textEditIncome2.Text = CalculatorFormulas.CalculateRate(
+                ConvertToRate(textEditAllRate.Text),
+                ConvertToRate(textEditAllRate.Text) - ConvertToRate(textEditRate1.Text),
+                ConvertToRate(lbCoef2.Text)) +
+                                   recomendedRates.Item2;
+
             OnURateChanging();
-
-            try
-            {
-                textEditIncome1.Text = (CalculatorFormulas.CalculateRate(
-                    textEditAllRate.Text.ConvertToDoubleOrNull(),
-                    textEditRate1.Text.ConvertToDoubleOrNull(),
-                    lbCoef1.Text.Trim().ConvertToDoubleOrNull()) +
-                    (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
-                    textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
-                    , lbCoef1.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull(),
-                    lbCoef2.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull()))[0]);
-            }
-            catch
-            {
-                textEditIncome1.Text = (CalculatorFormulas.CalculateRate(
-                    textEditAllRate.Text.ConvertToDoubleOrNull(),
-                    textEditRate1.Text.ConvertToDoubleOrNull(),
-                    lbCoef1.Text.Trim().ConvertToDoubleOrNull()) +
-                    (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
-                    textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
-                    , lbCoef1.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull(),
-                    lbCoef2.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull()))[0]);
-            }
-
-            try
-            {
-                textEditIncome2.Text = (CalculatorFormulas.CalculateRate(
-                    textEditAllRate.Text.ConvertToDoubleOrNull(),
-                    (textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate1.Text.ConvertToDoubleOrNull()),
-                    lbCoef2.Text.Trim().ConvertToDoubleOrNull()) +
-                    (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
-                    textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
-                    , lbCoef1.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull(),
-                    lbCoef2.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull()))[1]);
-            }
-            catch
-            {
-                textEditIncome2.Text = (CalculatorFormulas.CalculateRate(
-                    textEditAllRate.Text.ConvertToDoubleOrNull(),
-                    (textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate1.Text.ConvertToDoubleOrNull()),
-                    lbCoef2.Text.Trim().ConvertToDoubleOrNull()) +
-                    (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
-                    textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
-                    , lbCoef1.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull(),
-                    lbCoef2.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull()))[1]);
-            }
         }
 
-        protected virtual void textEditRate2_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
+        public static double? ConvertToRate(string value)
         {
-            OnURateChanging();
-
-            try
-            {
-                textEditIncome2.Text = (CalculatorFormulas.CalculateRate(
-                    textEditAllRate.Text.ConvertToDoubleOrNull(),
-                    textEditRate2.Text.ConvertToDoubleOrNull(),
-                    lbCoef2.Text.Trim().ConvertToDoubleOrNull()) +
-                    (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
-                    textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
-                    , lbCoef1.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull(),
-                    lbCoef2.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull()))[1]);
-            }
-            catch
-            {
-                textEditIncome2.Text = (CalculatorFormulas.CalculateRate(
-                    textEditAllRate.Text.ConvertToDoubleOrNull(),
-                    textEditRate2.Text.ConvertToDoubleOrNull(),
-                    lbCoef2.Text.Trim().ConvertToDoubleOrNull()) +
-                    (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
-                    textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
-                    , lbCoef1.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull(),
-                    lbCoef2.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull()))[1]);
-            }
-
-            try
-            {
-                textEditIncome1.Text = (CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDoubleOrNull(),
-                    (textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate2.Text.ConvertToDoubleOrNull()),
-                    lbCoef1.Text.Trim().ConvertToDoubleOrNull()) +
-                    (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
-                    textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
-                    , lbCoef1.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull(),
-                    lbCoef2.Text.Trim().Replace(".", ",").ConvertToDoubleOrNull()))[0]);
-            }
-            catch
-            {
-                textEditIncome1.Text = (CalculatorFormulas.CalculateRate(textEditAllRate.Text.ConvertToDoubleOrNull(),
-                    (textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate2.Text.ConvertToDoubleOrNull()),
-                    lbCoef1.Text.Trim().ConvertToDoubleOrNull()) +
-                    (CalculatorFormulas.GetRecommendedRates(CalculatorFormulas.CalculateSummaryRate(textEditRate1.Text.Trim().ConvertToDoubleOrNull(),
-                    textEditRate2.Text.Trim().ConvertToDoubleOrNull()).ConvertToDoubleOrNull()
-                    , lbCoef1.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull(),
-                    lbCoef2.Text.Trim().Replace(",", ".").ConvertToDoubleOrNull()))[0]);
-            }
+            return value?.Trim().Replace(".", ",").ConvertToDoubleOrNull();
         }
     }
 }

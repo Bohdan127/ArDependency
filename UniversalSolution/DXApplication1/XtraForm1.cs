@@ -1,7 +1,7 @@
 ﻿using DataSaver.Models;
 using DevExpress.XtraEditors;
 using DXApplication1.Models;
-using FormulasCollection.Interfaces;
+using FormulasCollection.Realizations;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -12,9 +12,7 @@ namespace DXApplication1
     {
         #region Members
 
-        //todo Later Make this parameter visible from UI with possibility to change
         public const string SettingsPath = "./";
-
         public const string SettingsFile = "Configuration.xml";
 
         private Filter _filter;
@@ -25,7 +23,7 @@ namespace DXApplication1
 
         #region CTOR
 
-        public XtraForm1(IForkFormulas forkFormulas)
+        public XtraForm1(TwoOutComeForkFormulas forkFormulas)
         {
             InitializeComponent();
 

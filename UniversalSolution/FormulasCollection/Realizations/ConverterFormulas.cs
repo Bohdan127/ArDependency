@@ -1,10 +1,9 @@
-﻿using FormulasCollection.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FormulasCollection.Realizations
 {
-    public class ConverterFormulas : IConverterFormulas
+    public class ConverterFormulas
     {
         public double IncorrectAmericanOdds => -127;
 

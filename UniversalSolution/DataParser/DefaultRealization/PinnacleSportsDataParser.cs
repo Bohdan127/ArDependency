@@ -1,6 +1,5 @@
 ﻿using DataParser.Enums;
 using DataParser.Models;
-using FormulasCollection.Interfaces;
 using FormulasCollection.Realizations;
 using System;
 using System.Collections.Generic;
@@ -16,9 +15,9 @@ namespace DataParser.DefaultRealization
     public class PinnacleSportsDataParser
     {
         private SportType SportType = SportType.NoType;
-        private IConverterFormulas _converter;
+        private ConverterFormulas _converter;
 
-        public PinnacleSportsDataParser(IConverterFormulas converter)
+        public PinnacleSportsDataParser(ConverterFormulas converter)
         {
             _converter = converter;
         }

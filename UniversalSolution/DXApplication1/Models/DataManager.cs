@@ -1,6 +1,5 @@
 ﻿using DataSaver;
 using DataSaver.Models;
-using FormulasCollection.Interfaces;
 using FormulasCollection.Realizations;
 using System;
 using System.Collections.Generic;
@@ -11,10 +10,10 @@ namespace DXApplication1.Models
 {
     public class DataManager
     {
-        private readonly IForkFormulas _forkFormulas;
+        private readonly TwoOutComeForkFormulas _forkFormulas;
         private LocalSaver localSaver;
 
-        public DataManager(IForkFormulas forkFormulas)
+        public DataManager(TwoOutComeForkFormulas forkFormulas)
         {
             _forkFormulas = forkFormulas;
             localSaver = new LocalSaver();

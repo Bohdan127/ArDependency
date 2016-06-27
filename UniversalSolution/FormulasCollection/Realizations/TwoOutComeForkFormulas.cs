@@ -1,12 +1,11 @@
-﻿using FormulasCollection.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToolsPortable;
 
 namespace FormulasCollection.Realizations
 {
-    public class TwoOutComeForkFormulas : IForkFormulas
+    public class TwoOutComeForkFormulas
     {
         public bool CheckIsFork(double? coef1, double? coef2) =>
             coef1 != null &&
@@ -25,7 +24,6 @@ namespace FormulasCollection.Realizations
             else
                 return true;
         }
-
         public double GetProfit(double rate, double? kof1, double? kof2) => (kof2 != null && kof1 != null)
             ? rate / (kof1.Value + kof2.Value) * (kof1.Value * kof2.Value)
             : 0d;

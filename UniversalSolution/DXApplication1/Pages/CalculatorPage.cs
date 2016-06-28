@@ -74,19 +74,44 @@ namespace DXApplication1.Pages
             Closing += AccountingPage_Closing;
             Shown += CalculatorPage_Shown; UpdateForm += CalculatorPage_UpdateForm;
             RateChanging += AccountingPage_RateChanging;
-            textEditRate2.EditValueChanging += textEditRate1_EditValueChanging;
-            textEditRate1.EditValueChanging += textEditRate1_EditValueChanging;
+            textEditRate2.EditValueChanged += TextEditRate2_EditValueChanged;
+            textEditRate1.EditValueChanged += TextEditRate2_EditValueChanged;
 
         }
 
         private void AccountingPage_RateChanging(object sender, EventArgs e)
         {
-            textEditAllIncome.Text = _calculatorFormulas.CalculateSummaryIncome(
-                textEditIncome1.Text.Trim(),
-                textEditIncome2.Text.Trim());
+            //Update all inserted rate
             textEditAllRate.Text = _calculatorFormulas.CalculateSummaryRate(
+               _calculatorFormulas.ConvertToRate(textEditRate1.Text),
+               _calculatorFormulas.ConvertToRate(textEditRate2.Text))?.ToString();
+
+            //Get first Income
+            textEditIncome1.Text = _calculatorFormulas.CalculateRate(
+                _calculatorFormulas.ConvertToRate(textEditAllRate.Text),
                 _calculatorFormulas.ConvertToRate(textEditRate1.Text),
-                _calculatorFormulas.ConvertToRate(textEditRate2.Text))?.ToString();
+                _calculatorFormulas.ConvertToRate(lbCoef1.Text));
+
+            //Get second Income
+            textEditIncome2.Text = _calculatorFormulas.CalculateRate(
+                _calculatorFormulas.ConvertToRate(textEditAllRate.Text),
+                _calculatorFormulas.ConvertToRate(textEditAllRate.Text) - _calculatorFormulas.ConvertToRate(textEditRate1.Text),
+                _calculatorFormulas.ConvertToRate(lbCoef2.Text));
+
+            //Get clear income for first one
+            textEditIncome3.Text = _calculatorFormulas.CalculateClearRate(
+                _calculatorFormulas.ConvertToRate(textEditRate2.Text),
+                _calculatorFormulas.ConvertToRate(textEditIncome1.Text));
+
+            //get clear income for second one
+            textEditIncome4.Text = _calculatorFormulas.CalculateClearRate(
+                _calculatorFormulas.ConvertToRate(textEditRate1.Text),
+                _calculatorFormulas.ConvertToRate(textEditIncome2.Text));
+
+            //get summary income
+            textEditAllIncome.Text = _calculatorFormulas.CalculateSummaryIncome(
+               _calculatorFormulas.ConvertToRate(textEditIncome3.Text),
+               _calculatorFormulas.ConvertToRate(textEditIncome4.Text));
         }
 
         public void DeInitializeEvents()
@@ -95,8 +120,8 @@ namespace DXApplication1.Pages
             Shown -= CalculatorPage_Shown;
             RateChanging -= AccountingPage_RateChanging;
             UpdateForm -= CalculatorPage_UpdateForm;
-            textEditRate2.EditValueChanging -= textEditRate1_EditValueChanging;
-            textEditRate1.EditValueChanging -= textEditRate1_EditValueChanging;
+            textEditRate2.EditValueChanged -= TextEditRate2_EditValueChanged;
+            textEditRate1.EditValueChanged -= TextEditRate2_EditValueChanged;
         }
 
         private void AccountingPage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -107,30 +132,9 @@ namespace DXApplication1.Pages
                 Hide();
         }
 
-        protected virtual void textEditRate1_EditValueChanging(object sender,
-            DevExpress.XtraEditors.Controls.ChangingEventArgs e)
+        protected virtual void TextEditRate2_EditValueChanged(object sender, EventArgs e)
         {
-            //var recomendedRates =
-            //    CalculatorFormulas.GetRecommendedRates(
-            //        CalculatorFormulas.CalculateSummaryRate(CalculatorFormulas.ConvertToRate(textEditRate1.Text),
-            //            CalculatorFormulas.ConvertToRate(textEditRate2.Text)),
-            //        CalculatorFormulas.ConvertToRate(lbCoef1.Text),
-            //        CalculatorFormulas.ConvertToRate(lbCoef2.Text));
-
             OnURateChanging();
-
-
-            textEditIncome1.Text = _calculatorFormulas.CalculateRate(
-                _calculatorFormulas.ConvertToRate(textEditAllRate.Text),
-                _calculatorFormulas.ConvertToRate(textEditRate1.Text),
-                _calculatorFormulas.ConvertToRate(lbCoef1.Text));
-            textEditIncome2.Text = _calculatorFormulas.CalculateRate(
-                _calculatorFormulas.ConvertToRate(textEditAllRate.Text),
-                _calculatorFormulas.ConvertToRate(textEditAllRate.Text) - _calculatorFormulas.ConvertToRate(textEditRate1.Text),
-                _calculatorFormulas.ConvertToRate(lbCoef2.Text));
-            textEditAllIncome.Text = _calculatorFormulas.CalculateSummaryIncome(
-              textEditIncome1.Text.Trim(),
-              textEditIncome2.Text.Trim());
         }
     }
 }

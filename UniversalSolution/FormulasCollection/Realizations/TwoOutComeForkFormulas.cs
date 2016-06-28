@@ -25,7 +25,7 @@ namespace FormulasCollection.Realizations
                 return true;
         }
         public double GetProfit(double rate, double? kof1, double? kof2) => (kof2 != null && kof1 != null)
-            ? rate / (kof1.Value + kof2.Value) * (kof1.Value * kof2.Value)
+            ? Math.Round(rate / (kof1.Value + kof2.Value) * (kof1.Value * kof2.Value), 2)
             : 0d;
 
         public List<Fork> GetAllForksDictionary(Dictionary<string, ResultForForksDictionary> pinnacle,
@@ -37,34 +37,32 @@ namespace FormulasCollection.Realizations
             {
                 var pinKey = pinnacle.Keys.FirstOrDefault(key =>
                     Extentions.GetStringSimilarityInPercent(eventItem.Event, key, true) >= 90);
-                if (pinKey != null)
+                if (pinKey == null) continue;
+
+                try
                 {
-                    try
+                    if (CheckIsMustToBeRevert(eventItem.Event, pinKey))
                     {
-                        var pinEventKey = String.Empty;
-                        if (CheckIsMustToBeRevert(eventItem.Event, pinKey))
+                        continue;
+                    }
+                    var pinEventKey = IsAnyFork(eventItem, pinnacle[pinKey]);
+                    if (pinEventKey.IsNotBlank())
+                        resList.Add(new Fork
                         {
-                            continue;
-                        }
-                        pinEventKey = IsAnyFork(eventItem, pinnacle[pinKey]);
-                        if (pinEventKey.ToString().IsNotBlank())
-                            resList.Add(new Fork
-                            {
-                                Event = pinnacle[pinKey].TeamNames,
-                                TypeFirst = eventItem.Type,
-                                CoefFirst = eventItem.Coef,
-                                TypeSecond = pinEventKey.ConvertToStringOrNull(),
-                                CoefSecond = pinnacle[pinKey].TypeCoefDictionary[pinEventKey.ConvertToStringOrNull()].ConvertToStringOrNull(),
-                                Sport = eventItem.SportType,
-                                MatchDateTime = eventItem.MatchDateTime,
-                                BookmakerFirst = "https://www.marathonbet.com/",
-                                BookmakerSecond = "http://www.pinnaclesports.com/"
-                            });
-                    }
-                    catch
-                    {
-                        // ingored
-                    }
+                            Event = pinnacle[pinKey].TeamNames,
+                            TypeFirst = eventItem.Type,
+                            CoefFirst = eventItem.Coef,
+                            TypeSecond = pinEventKey.ConvertToStringOrNull(),
+                            CoefSecond = pinnacle[pinKey].TypeCoefDictionary[pinEventKey.ConvertToStringOrNull()].ConvertToStringOrNull(),
+                            Sport = eventItem.SportType,
+                            MatchDateTime = eventItem.MatchDateTime,
+                            BookmakerFirst = "https://www.marathonbet.com/",
+                            BookmakerSecond = "http://www.pinnaclesports.com/"
+                        });
+                }
+                catch
+                {
+                    // ingored
                 }
             }
             return resList;

@@ -18,7 +18,7 @@ namespace FormulasCollection.Realizations
         {
             var rate = rateCurrent * kof - rateMain;
             if (rate != null)
-                return decimal.Round((decimal)rate, 2, MidpointRounding.AwayFromZero).
+                return Math.Round(rate.Value, 2).
                     ToString(CultureInfo.CurrentCulture);
             return null;
         }
@@ -27,16 +27,18 @@ namespace FormulasCollection.Realizations
         {
             if ((rate == null) || (kof1 == null) || (kof2 == null)) return null;
 
-            string rate1 = $"{rate.Value / (kof1.Value + kof2.Value) * kof2.Value}";
-            string rate2 = $"{rate.Value / (kof1.Value + kof2.Value) * kof1.Value}";
-            return new Tuple<string, string>(rate1, rate2);
+            var rate1 = Math.Round(rate.Value / (kof1.Value + kof2.Value) * kof2.Value, 2);
+            var rate2 = Math.Round(rate.Value / (kof1.Value + kof2.Value) * kof1.Value, 2);
+            return new Tuple<string, string>(
+                rate1.ToString(CultureInfo.CurrentCulture),
+                rate2.ToString(CultureInfo.CurrentCulture));
         }
 
         public double? CalculateSummaryRate(params double?[] rates) => rates?.Sum();
 
         public string CalculateAverageProfit(params double?[] profit) => (profit?.Sum() / 2).ToString();
 
-        public string CalculateSummaryIncome(params string[] incomes) => incomes?.Aggregate((a, b) => a + Formatter + b);
+        public string CalculateSummaryIncome(params double?[] incomes) => incomes?.Sum().ToString();
 
         public double? ConvertToRate(string value)
         {
@@ -44,5 +46,10 @@ namespace FormulasCollection.Realizations
         }
 
         public string Formatter { get; set; }
+
+        public string CalculateClearRate(double? v1, double? v2)
+        {
+            return (v1 + v2).ToString();
+        }
     }
 }

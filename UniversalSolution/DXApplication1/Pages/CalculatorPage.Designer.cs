@@ -40,6 +40,8 @@
             this.lbType2 = new System.Windows.Forms.Label();
             this.lbType1 = new System.Windows.Forms.Label();
             this.lbMain = new System.Windows.Forms.Label();
+            this.textEditIncome3 = new DevExpress.XtraEditors.TextEdit();
+            this.textEditIncome4 = new DevExpress.XtraEditors.TextEdit();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlGroupSetup = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemType1 = new DevExpress.XtraLayout.LayoutControlItem();
@@ -50,6 +52,8 @@
             this.layoutControlItemIncome2 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemRate1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemRate2 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemIncome4 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemIncome3 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroupResult = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemAllRate = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemAllIncome = new DevExpress.XtraLayout.LayoutControlItem();
@@ -64,6 +68,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.textEditIncome1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditRate2.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditRate1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditIncome3.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditIncome4.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupSetup)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemType1)).BeginInit();
@@ -74,6 +80,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemIncome2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRate1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRate2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemIncome4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemIncome3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupResult)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAllRate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAllIncome)).BeginInit();
@@ -95,6 +103,8 @@
             this.layoutControl1.Controls.Add(this.lbType2);
             this.layoutControl1.Controls.Add(this.lbType1);
             this.layoutControl1.Controls.Add(this.lbMain);
+            this.layoutControl1.Controls.Add(this.textEditIncome3);
+            this.layoutControl1.Controls.Add(this.textEditIncome4);
             this.layoutControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl1.Location = new System.Drawing.Point(0, 0);
             this.layoutControl1.Name = "layoutControl1";
@@ -123,19 +133,19 @@
             // 
             // textEditIncome2
             // 
-            this.textEditIncome2.Location = new System.Drawing.Point(400, 104);
+            this.textEditIncome2.Location = new System.Drawing.Point(512, 104);
             this.textEditIncome2.Name = "textEditIncome2";
             this.textEditIncome2.Properties.ReadOnly = true;
-            this.textEditIncome2.Size = new System.Drawing.Size(226, 20);
+            this.textEditIncome2.Size = new System.Drawing.Size(114, 20);
             this.textEditIncome2.StyleController = this.layoutControl1;
             this.textEditIncome2.TabIndex = 12;
             // 
             // textEditIncome1
             // 
-            this.textEditIncome1.Location = new System.Drawing.Point(400, 80);
+            this.textEditIncome1.Location = new System.Drawing.Point(512, 80);
             this.textEditIncome1.Name = "textEditIncome1";
             this.textEditIncome1.Properties.ReadOnly = true;
-            this.textEditIncome1.Size = new System.Drawing.Size(226, 20);
+            this.textEditIncome1.Size = new System.Drawing.Size(114, 20);
             this.textEditIncome1.StyleController = this.layoutControl1;
             this.textEditIncome1.TabIndex = 11;
             // 
@@ -205,6 +215,24 @@
             this.lbMain.Text = "Example text for checking Font";
             this.lbMain.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // textEditIncome3
+            // 
+            this.textEditIncome3.Location = new System.Drawing.Point(400, 80);
+            this.textEditIncome3.Name = "textEditIncome3";
+            this.textEditIncome3.Properties.ReadOnly = true;
+            this.textEditIncome3.Size = new System.Drawing.Size(108, 20);
+            this.textEditIncome3.StyleController = this.layoutControl1;
+            this.textEditIncome3.TabIndex = 11;
+            // 
+            // textEditIncome4
+            // 
+            this.textEditIncome4.Location = new System.Drawing.Point(400, 104);
+            this.textEditIncome4.Name = "textEditIncome4";
+            this.textEditIncome4.Properties.ReadOnly = true;
+            this.textEditIncome4.Size = new System.Drawing.Size(108, 20);
+            this.textEditIncome4.StyleController = this.layoutControl1;
+            this.textEditIncome4.TabIndex = 11;
+            // 
             // layoutControlGroup1
             // 
             this.layoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
@@ -229,7 +257,9 @@
             this.layoutControlItemIncome1,
             this.layoutControlItemIncome2,
             this.layoutControlItemRate1,
-            this.layoutControlItemRate2});
+            this.layoutControlItemRate2,
+            this.layoutControlItemIncome4,
+            this.layoutControlItemIncome3});
             this.layoutControlGroupSetup.Location = new System.Drawing.Point(0, 56);
             this.layoutControlGroupSetup.Name = "layoutControlGroupSetup";
             this.layoutControlGroupSetup.Size = new System.Drawing.Size(685, 72);
@@ -282,10 +312,10 @@
             // layoutControlItemIncome1
             // 
             this.layoutControlItemIncome1.Control = this.textEditIncome1;
-            this.layoutControlItemIncome1.Location = new System.Drawing.Point(376, 0);
+            this.layoutControlItemIncome1.Location = new System.Drawing.Point(488, 0);
             this.layoutControlItemIncome1.Name = "layoutControlItemIncome1";
             this.layoutControlItemIncome1.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 10, 2, 2);
-            this.layoutControlItemIncome1.Size = new System.Drawing.Size(285, 24);
+            this.layoutControlItemIncome1.Size = new System.Drawing.Size(173, 24);
             this.layoutControlItemIncome1.Text = "Доход 1";
             this.layoutControlItemIncome1.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
             this.layoutControlItemIncome1.TextLocation = DevExpress.Utils.Locations.Right;
@@ -295,10 +325,10 @@
             // layoutControlItemIncome2
             // 
             this.layoutControlItemIncome2.Control = this.textEditIncome2;
-            this.layoutControlItemIncome2.Location = new System.Drawing.Point(376, 24);
+            this.layoutControlItemIncome2.Location = new System.Drawing.Point(488, 24);
             this.layoutControlItemIncome2.Name = "layoutControlItemIncome2";
             this.layoutControlItemIncome2.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 10, 2, 2);
-            this.layoutControlItemIncome2.Size = new System.Drawing.Size(285, 24);
+            this.layoutControlItemIncome2.Size = new System.Drawing.Size(173, 24);
             this.layoutControlItemIncome2.Text = "Доход 2";
             this.layoutControlItemIncome2.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
             this.layoutControlItemIncome2.TextLocation = DevExpress.Utils.Locations.Right;
@@ -326,6 +356,34 @@
             this.layoutControlItemRate2.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
             this.layoutControlItemRate2.TextSize = new System.Drawing.Size(46, 13);
             this.layoutControlItemRate2.TextToControlDistance = 5;
+            // 
+            // layoutControlItemIncome4
+            // 
+            this.layoutControlItemIncome4.Control = this.textEditIncome4;
+            this.layoutControlItemIncome4.CustomizationFormText = "Доход 2`";
+            this.layoutControlItemIncome4.Location = new System.Drawing.Point(376, 24);
+            this.layoutControlItemIncome4.Name = "layoutControlItemIncome4";
+            this.layoutControlItemIncome4.Size = new System.Drawing.Size(112, 24);
+            this.layoutControlItemIncome4.Text = " ";
+            this.layoutControlItemIncome4.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
+            this.layoutControlItemIncome4.TextLocation = DevExpress.Utils.Locations.Right;
+            this.layoutControlItemIncome4.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItemIncome4.TextToControlDistance = 0;
+            this.layoutControlItemIncome4.TextVisible = false;
+            // 
+            // layoutControlItemIncome3
+            // 
+            this.layoutControlItemIncome3.Control = this.textEditIncome3;
+            this.layoutControlItemIncome3.CustomizationFormText = "Доход 1`";
+            this.layoutControlItemIncome3.Location = new System.Drawing.Point(376, 0);
+            this.layoutControlItemIncome3.Name = "layoutControlItemIncome3";
+            this.layoutControlItemIncome3.Size = new System.Drawing.Size(112, 24);
+            this.layoutControlItemIncome3.Text = " ";
+            this.layoutControlItemIncome3.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
+            this.layoutControlItemIncome3.TextLocation = DevExpress.Utils.Locations.Right;
+            this.layoutControlItemIncome3.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItemIncome3.TextToControlDistance = 0;
+            this.layoutControlItemIncome3.TextVisible = false;
             // 
             // layoutControlGroupResult
             // 
@@ -408,6 +466,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.textEditIncome1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditRate2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditRate1.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditIncome3.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditIncome4.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupSetup)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemType1)).EndInit();
@@ -418,6 +478,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemIncome2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRate1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRate2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemIncome4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemIncome3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupResult)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAllRate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAllIncome)).EndInit();
@@ -458,5 +520,9 @@
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemRate1;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemRate2;
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem1;
+        private DevExpress.XtraEditors.TextEdit textEditIncome3;
+        private DevExpress.XtraEditors.TextEdit textEditIncome4;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemIncome4;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemIncome3;
     }
 }

@@ -28,6 +28,11 @@ namespace DataParser.MY
             string _eventid = null;
             string totalName = null;
 
+            string old_team_name_1 = null;
+            string old_team_name_2 = null;
+
+            bool is_correct_type = true;
+
             //Boolean
             var isDate = false;
             var isTypeCoff = false;
@@ -105,7 +110,7 @@ namespace DataParser.MY
                     res = line.Substrings(Tags.Coff, "\"");
                     koff.Add(res);
                 }
-                if (line.Contains("<span>&mdash;</span>"))
+                if (line.Contains("<span>&mdash;</span>")|| line.Contains("—"))
                 {
                     res = "-";
                     koff.Add(res);
@@ -115,12 +120,26 @@ namespace DataParser.MY
                 {
                     if (index >= countTypeCoff.Count)
                         index = 0;
+
                     try
                     {
+
                         string q1 = englishNameTeams_Dictionary[_eventid].name1;
                         string q2 = englishNameTeams_Dictionary[_eventid].name2;
+                       
+                            if (!string.IsNullOrEmpty(old_team_name_1) && !string.IsNullOrEmpty(old_team_name_2))
+                        {
+                            if (q1 != old_team_name_1 && q2 != old_team_name_2) {
+                                i = 0;
+                                is_correct_type = true;
+                            }
 
-                        result.Add(new ResultForForks(englishNameTeams_Dictionary[_eventid].name1,
+                        }
+
+                       
+                            //Belgium, Germany
+
+                            result.Add(new ResultForForks(englishNameTeams_Dictionary[_eventid].name1,
                                                       englishNameTeams_Dictionary[_eventid].name2,
                                                       date,
                                                       (!string.IsNullOrEmpty(totalName) || !string.IsNullOrEmpty(foraName1)) ? (!string.IsNullOrEmpty(totalName) ? totalName : foraName1) : countTypeCoff[i],  //  Type coff
@@ -128,11 +147,18 @@ namespace DataParser.MY
                                                       sportType.ToString(),
                                                       Site.MarathonBet.ToString()
                                                       ));
+                        
                         if (string.IsNullOrEmpty(totalName) || string.IsNullOrEmpty(foraName1))
                             i++;
                         totalName = null;
                         foraName1 = null;
                         res = null;
+                        if (is_correct_type) {
+                            old_team_name_1 = q1;
+                            old_team_name_2 = q2;
+                            is_correct_type = false;
+                            i = 0;
+                        }
                     }
                     catch { }
                 }

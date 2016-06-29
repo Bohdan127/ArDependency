@@ -1,5 +1,6 @@
 ﻿using DataSaver.Models;
 using DXApplication1.Pages;
+using FormulasCollection.Models;
 using FormulasCollection.Realizations;
 using System;
 using System.Threading.Tasks;

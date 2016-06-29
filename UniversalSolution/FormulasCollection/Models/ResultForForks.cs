@@ -1,4 +1,4 @@
-﻿namespace FormulasCollection.Realizations
+﻿namespace FormulasCollection.Models
 {
     public class ResultForForks
     {

@@ -1,7 +1,9 @@
 ﻿using DataParser.Enums;
 using DataSaver.Models;
 using DataSaver.RavenDB;
-using FormulasCollection.Realizations;
+using FormulasCollection.Enums;
+using FormulasCollection.Models;
+using Raven.Abstractions.Extensions;
 using Raven.Client;
 using Raven.Client.Document;
 using Raven.Client.Linq;
@@ -53,16 +55,9 @@ namespace DataSaver
             }
         }
 
-        public virtual async Task InsertForksAsync(List<Fork> forkList)
-        {
-            await Task.Delay(1).ConfigureAwait(false);
-            InsertForks(forkList);
-        }
-
         public virtual void InsertForks(List<Fork> forkList)
         {
-            if (forkList == null)
-                throw new ArgumentNullException();
+            if (forkList == null) return;
 
             foreach (var fork in forkList)
             {
@@ -78,29 +73,28 @@ namespace DataSaver
             Session.SaveChanges();
         }
 
-        public virtual async Task ClearAndInsertForksAsync(List<Fork> forkList, SportType sportType)
-        {
-            await Task.Delay(1).ConfigureAwait(false);
-            ClearAndInsertForks(forkList, sportType);
-        }
-
         public virtual void ClearAndInsertForks(List<Fork> forkList, SportType sportType)
         {
-            if (forkList == null)
-                throw new ArgumentNullException();
-            if (forkList.Count == 0) return;
+            if (forkList == null || forkList.Count == 0) return;
 
+            MoveForks(forkList, sportType);
             ClearForks(sportType);
             InsertForks(forkList);
         }
 
+        private void MoveForks(List<Fork> forkList, SportType sportType)
+        {
+            //GetAllForkRows().Where(fBase => fBase.Sport == sportType.ToString() &&
+            //                                forkList.Any(fNew => fNew.Event == fBase.Event) &&
+            //                                forkList.Any(fNew => fNew.MatchDateTime == fBase.MatchDateTime)).
+            //ForEach(fBase => _store.DatabaseCommands.UpdateAttachmentMetadata(fBase.Id, Etag.Empty, RavenJObject.FromObject(fBase)));
+        }
+
         private void ClearForks(SportType sportType)
         {
-            var delList = GetAllForkRows().Where(f => f.Sport == sportType.ToString());
-            foreach (var forkRow in delList)
-            {
-                _store.DatabaseCommands.Delete(forkRow.Id, null);
-            }
+            GetAllForkRows().Where(f => f.Sport == sportType.ToString() &&
+                f.Type == ForkType.Current).
+                ForEach(f => _store.DatabaseCommands.Delete(f.Id, null));
         }
 
         private List<ForkRow> GetAllForkRows()
@@ -113,55 +107,49 @@ namespace DataSaver
             return resList;
         }
 
-        public virtual async Task<List<Fork>> GetForksAsync(Filter searchCriteria)
+        public virtual async Task<List<Fork>> GetForksAsync(Filter searchCriteria, ForkType forkType)
         {
-            await Task.Delay(1).ConfigureAwait(false);
-            return GetForks(searchCriteria);
+            return await Task.Run(() => GetForks(searchCriteria, forkType));
         }
 
-        public virtual List<Fork> GetForks(Filter searchCriteria)
+        public virtual List<Fork> GetForks(Filter searchCriteria, ForkType forkType)
         {
-            return GetAllForkRows().Where(f =>
-                (searchCriteria.Basketball && f.Sport == SportType.Basketball.ToString()) ||
+            return GetAllForkRows().Where(f => f.Type == forkType &&
+                ((searchCriteria.Basketball && f.Sport == SportType.Basketball.ToString()) ||
                 (searchCriteria.Football && f.Sport == SportType.Soccer.ToString()) ||
                 (searchCriteria.Hockey && f.Sport == SportType.Hockey.ToString()) ||
                 (searchCriteria.Volleyball && f.Sport == SportType.Volleyball.ToString()) ||
-                (searchCriteria.Tennis && f.Sport == SportType.Tennis.ToString()))
+                (searchCriteria.Tennis && f.Sport == SportType.Tennis.ToString())))
                 .Select(MapForkRowToFork).ToList();
         }
 
-        protected virtual ForkRow MapForkToForkRow(Fork fork)
+        protected virtual ForkRow MapForkToForkRow(Fork fork) => new ForkRow
         {
-            ForkRow resRow = new ForkRow();
+            BookmakerFirst = fork.BookmakerFirst,
+            BookmakerSecond = fork.BookmakerSecond,
+            CoefFirst = fork.CoefFirst,
+            CoefSecond = fork.CoefSecond,
+            Event = fork.Event,
+            MatchDateTime = fork.MatchDateTime,
+            Sport = fork.Sport,
+            TypeFirst = fork.TypeFirst,
+            TypeSecond = fork.TypeSecond,
+            Type = fork.Type
+        };
 
-            resRow.BookmakerFirst = fork.BookmakerFirst;
-            resRow.BookmakerSecond = fork.BookmakerSecond;
-            resRow.CoefFirst = fork.CoefFirst;
-            resRow.CoefSecond = fork.CoefSecond;
-            resRow.Event = fork.Event;
-            resRow.MatchDateTime = fork.MatchDateTime;
-            resRow.Sport = fork.Sport;
-            resRow.TypeFirst = fork.TypeFirst;
-            resRow.TypeSecond = fork.TypeSecond;
 
-            return resRow;
-        }
-
-        protected virtual Fork MapForkRowToFork(ForkRow forkRow)
+        protected virtual Fork MapForkRowToFork(ForkRow forkRow) => new Fork
         {
-            var fork = new Fork();
-
-            fork.BookmakerFirst = forkRow.BookmakerFirst;
-            fork.BookmakerSecond = forkRow.BookmakerSecond;
-            fork.CoefFirst = forkRow.CoefFirst;
-            fork.CoefSecond = forkRow.CoefSecond;
-            fork.Event = forkRow.Event;
-            fork.MatchDateTime = forkRow.MatchDateTime;
-            fork.Sport = forkRow.Sport;
-            fork.TypeFirst = forkRow.TypeFirst;
-            fork.TypeSecond = forkRow.TypeSecond;
-
-            return fork;
-        }
+            BookmakerFirst = forkRow.BookmakerFirst,
+            BookmakerSecond = forkRow.BookmakerSecond,
+            CoefFirst = forkRow.CoefFirst,
+            CoefSecond = forkRow.CoefSecond,
+            Event = forkRow.Event,
+            MatchDateTime = forkRow.MatchDateTime,
+            Sport = forkRow.Sport,
+            TypeFirst = forkRow.TypeFirst,
+            TypeSecond = forkRow.TypeSecond,
+            Type = forkRow.Type
+        };
     }
 }

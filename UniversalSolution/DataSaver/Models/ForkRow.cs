@@ -1,4 +1,6 @@
-﻿namespace DataSaver.Models
+﻿using FormulasCollection.Enums;
+
+namespace DataSaver.Models
 {
     /// <summary>
     ///Represents strongly named DataRow class.
@@ -54,5 +56,10 @@
         /// Second Bookmaker Name
         /// </summary>
         public string BookmakerSecond { get; set; }
+
+        /// <summary>
+        /// Type of Fork
+        /// </summary>
+        public ForkType Type { get; set; }
     }
 }

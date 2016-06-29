@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FormulasCollection.Realizations
+namespace FormulasCollection.Models
 {
     public class ResultForForksDictionary
     {

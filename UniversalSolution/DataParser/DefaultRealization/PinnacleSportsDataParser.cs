@@ -1,5 +1,6 @@
 ﻿using DataParser.Enums;
 using DataParser.Models;
+using FormulasCollection.Models;
 using FormulasCollection.Realizations;
 using System;
 using System.Collections.Generic;

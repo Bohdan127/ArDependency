@@ -1,4 +1,5 @@
-﻿using FormulasCollection.Realizations;
+﻿using FormulasCollection.Models;
+using FormulasCollection.Realizations;
 using System;
 using System.Windows.Forms;
 

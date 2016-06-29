@@ -1,4 +1,6 @@
-﻿namespace FormulasCollection.Realizations
+﻿using FormulasCollection.Enums;
+
+namespace FormulasCollection.Models
 {
     /// <summary>
     /// Class contains fork details
@@ -59,5 +61,10 @@
         /// Profit from Fork
         /// </summary>
         public double Profit { get; set; }
+
+        /// <summary>
+        /// Type of Fork
+        /// </summary>
+        public ForkType Type { get; set; }
     }
 }

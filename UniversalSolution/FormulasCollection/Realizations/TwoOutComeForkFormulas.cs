@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FormulasCollection.Enums;
+using FormulasCollection.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToolsPortable;
@@ -57,7 +59,8 @@ namespace FormulasCollection.Realizations
                             Sport = eventItem.SportType,
                             MatchDateTime = eventItem.MatchDateTime,
                             BookmakerFirst = "https://www.marathonbet.com/",
-                            BookmakerSecond = "http://www.pinnaclesports.com/"
+                            BookmakerSecond = "http://www.pinnaclesports.com/",
+                            Type = ForkType.Current
                         });
                 }
                 catch

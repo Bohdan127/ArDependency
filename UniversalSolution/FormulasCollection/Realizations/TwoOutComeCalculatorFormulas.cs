@@ -12,7 +12,7 @@ namespace FormulasCollection.Realizations
             Formatter = "-";
         }
 
-        public string CalculateIncome(double coef, double rate) => (coef * rate).ToString(); // dont use in code
+        public string CalculateIncome(double coef, double rate) => (coef * rate).ToString(CultureInfo.CurrentCulture); //todo check and delete because it's don't used in code
 
         public string CalculateRate(double? rateMain, double? rateCurrent, double? kof)
         {

@@ -9,12 +9,24 @@ namespace FormulasCollection.Realizations
 {
     public class TwoOutComeForkFormulas
     {
-        public bool CheckIsFork(double? coef1, double? coef2) =>
-            coef1 != null &&
+        public bool CheckIsFork(double? coef1, double? coef2/*, ResultForForks marEvent, ResultForForksDictionary pinEvent*/)
+        {
+            //if (CheckIsMustToBeRevert(marEvent.Event, pinEvent.TeamNames))
+            //{
+            //    coef2 = pinEvent?.TypeCoefDictionary[marEvent.Type];
+            //}
+            return coef1 != null &&
             coef2 != null &&
             Math.Abs(coef1.Value) > 0.01 &&
             Math.Abs(coef2.Value) > 0.01 &&
-            1 > 1 / coef1.Value + 1 / coef2.Value;
+            1 > 1 / coef1.Value + 1 / coef2.Value &&
+            1 / coef1.Value + 1 / coef2.Value > 0.8d;
+        } // I think to return type string like '1X' 'X2' etc cause in method IsAnyForkSoccer after this check
+        // dont return true coef.
+        // For example the rate must be Revert and we have '1' and 'X2' with coefs 3.43 and 3.45
+        // At this moment I revert coef but in any case it will return coef which wont be
+        // if we return type like 'X2' this method will be use in method IsAnyForkSoccer like a return
+        // so we can remove field "return X2" in this method 
 
         private bool CheckIsMustToBeRevert(string eventMarafon, string eventPinacle)
         {
@@ -42,12 +54,8 @@ namespace FormulasCollection.Realizations
                 if (pinKey == null) continue;
 
                 try
-                {
-                    if (CheckIsMustToBeRevert(eventItem.Event, pinKey))
-                    {
-                        continue;
-                    }
-                    var pinEventKey = IsAnyFork(eventItem, pinnacle[pinKey]);
+                { 
+                    var pinEventKey = IsAnyForkSoccer(eventItem, pinnacle[pinKey]);
                     if (pinEventKey.IsNotBlank())
                         resList.Add(new Fork
                         {
@@ -106,16 +114,23 @@ namespace FormulasCollection.Realizations
             return result;
         }
 
-        private string IsAnyFork(ResultForForks marEvent, ResultForForksDictionary pinEvent)
+        private string IsAnyForkSoccer(ResultForForks marEvent, ResultForForksDictionary pinEvent)
         {
             marEvent.Type = marEvent.Type.Trim();
+
+            //foreach (var tup in SportTypes.TypeList)
+            //{
+            //    if (marEvent.Type == tup.Item1 && pinEvent.TypeCoefDictionary.ContainsKey(tup.Item2) &&
+            //        CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[tup.Item2], marEvent, pinEvent))
+            //        return tup.Item2;
+            //}
 
             #region Wins
 
             /**************************************************************************************/
 
             if (marEvent.Type == "12" && pinEvent.TypeCoefDictionary.ContainsKey("X") &&
-                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["X"]))
+            CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["X"]))
                 return "X";
 
             if (marEvent.Type == "X2" && pinEvent.TypeCoefDictionary.ContainsKey("1") &&
@@ -1124,6 +1139,20 @@ namespace FormulasCollection.Realizations
             #endregion -3.75 to 3.75
 
             #endregion Totals
+
+            return null;
+        }
+
+        private string IsAnyForkTennis(ResultForForks marEvent, ResultForForksDictionary pinEvent)
+        {
+            marEvent.Type = marEvent.Type.Trim();
+
+            if (marEvent.Type == "П1" && pinEvent.TypeCoefDictionary.ContainsKey("П2") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["П2"]))
+                return "П2";
+            if (marEvent.Type == "П2" && pinEvent.TypeCoefDictionary.ContainsKey("П1") &&
+                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary["П1"]))
+                return "П1";
 
             return null;
         }

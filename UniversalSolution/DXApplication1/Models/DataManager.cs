@@ -1,5 +1,6 @@
 ﻿using DataSaver;
 using DataSaver.Models;
+using FormulasCollection.Enums;
 using FormulasCollection.Models;
 using FormulasCollection.Realizations;
 using System;
@@ -25,7 +26,7 @@ namespace DXApplication1.Models
         {
             if (filterPage == null) return new List<Fork>();
 
-            var forks = await localSaver.GetForksAsync(filterPage).ConfigureAwait(false);
+            var forks = await localSaver.GetForksAsync(filterPage, ForkType.Current).ConfigureAwait(false);
 
             if (filterPage.DefaultRate != null)
             {

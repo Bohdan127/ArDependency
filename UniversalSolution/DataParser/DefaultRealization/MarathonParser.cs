@@ -19,6 +19,7 @@ namespace DataParser.MY
         {
             result.Clear();
 
+            
             //strings
             var url = "";
             var namefile = "";
@@ -48,95 +49,95 @@ namespace DataParser.MY
             //Integer
             var i = 0;
             var index = 0;
+            try {
+
+                UrlAndNameFile(sportType, out url, out namefile);
+                var lines = (await HtmlAsync(url).ConfigureAwait(false)).Split('\n');
 
 
-            UrlAndNameFile(sportType, out url, out namefile);
-            var lines = (await HtmlAsync(url).ConfigureAwait(false)).Split('\n');
-
-
-            foreach (var line in lines)
-            {
-                if (isFora)
+                foreach (var line in lines)
                 {
-                    foraName1 = (isForaforteam1 ? "F1(" : "F2(") + line.Substrings("(", ")") + ")";
-                    isFora = false;
-                    isForaforteam1 = !isForaforteam1;
-                }
-                if (line.Contains(Tags.Fora))
-                {
-                    isFora = true;
-                }
-
-                if (isTotal)
-                {
-                    totalName = (isTotalUnder ? "TU(" : "TO(") + line.Substrings("(", ")") + ")";
-                    isTotalUnder = !isTotalUnder;
-                    isTotal = false;
-                }
-                if (line.Contains(Tags.Total))
-                {
-                    isTotal = true;
-                }
-
-                if (countTypeCoff.Count < 10)
-                {
-                    if (isTypeCoff)
+                    if (isFora)
                     {
-                        countTypeCoff.Add((line.IndexOf('<') != -1) ? line.Replace("<b>", "").Replace("</b>", "") : line);
-                        isTypeCoff = false;
+                        foraName1 = (isForaforteam1 ? "F1(" : "F2(") + line.Substrings("(", ")") + ")";
+                        isFora = false;
+                        isForaforteam1 = !isForaforteam1;
                     }
-                    if (line._Contains(Tags.TypeCoff))
-                        isTypeCoff = true;
-                }
-                if (line._Contains(Tags.EventID))
-                {
-                    _eventid = line.GetEventID();
-                    oldEvent = _eventid;
-                }
-
-                if (isDate)
-                {
-                    date = line;
-                    isDate = false;
-                }
-                if (line._Contains(Tags.Date))
-                {
-                    isDate = true;
-                }
-
-                string res = null;
-                if (line.Contains(Tags.Coff) /*&& line.Contains("Match_Result")*/)
-                {
-                    res = line.Substrings(Tags.Coff, "\"");
-                    koff.Add(res);
-                }
-                if (line.Contains("<span>&mdash;</span>")|| line.Contains("—"))
-                {
-                    res = "-";
-                    koff.Add(res);
-                }
-
-                if (date != null && res != null && _eventid != null)
-                {
-                    if (index >= countTypeCoff.Count)
-                        index = 0;
-
-                    try
+                    if (line.Contains(Tags.Fora))
                     {
+                        isFora = true;
+                    }
 
-                        string q1 = englishNameTeams_Dictionary[_eventid].name1;
-                        string q2 = englishNameTeams_Dictionary[_eventid].name2;
-                       
-                            if (!string.IsNullOrEmpty(old_team_name_1) && !string.IsNullOrEmpty(old_team_name_2))
+                    if (isTotal)
+                    {
+                        totalName = (isTotalUnder ? "TU(" : "TO(") + line.Substrings("(", ")") + ")";
+                        isTotalUnder = !isTotalUnder;
+                        isTotal = false;
+                    }
+                    if (line.Contains(Tags.Total))
+                    {
+                        isTotal = true;
+                    }
+
+                    if (countTypeCoff.Count < 10)
+                    {
+                        if (isTypeCoff)
                         {
-                            if (q1 != old_team_name_1 && q2 != old_team_name_2) {
-                                i = 0;
-                                is_correct_type = true;
+                            countTypeCoff.Add((line.IndexOf('<') != -1) ? line.Replace("<b>", "").Replace("</b>", "") : line);
+                            isTypeCoff = false;
+                        }
+                        if (line._Contains(Tags.TypeCoff))
+                            isTypeCoff = true;
+                    }
+                    if (line._Contains(Tags.EventID))
+                    {
+                        _eventid = line.GetEventID();
+                        oldEvent = _eventid;
+                    }
+
+                    if (isDate)
+                    {
+                        date = line;
+                        isDate = false;
+                    }
+                    if (line._Contains(Tags.Date))
+                    {
+                        isDate = true;
+                    }
+
+                    string res = null;
+                    if (line.Contains(Tags.Coff) /*&& line.Contains("Match_Result")*/)
+                    {
+                        res = line.Substrings(Tags.Coff, "\"");
+                        koff.Add(res);
+                    }
+                    if (line.Contains("<span>&mdash;</span>") || line.Contains("—"))
+                    {
+                        res = "-";
+                        koff.Add(res);
+                    }
+
+                    if (date != null && res != null && _eventid != null)
+                    {
+                        if (index >= countTypeCoff.Count)
+                            index = 0;
+
+                        try
+                        {
+
+                            string q1 = englishNameTeams_Dictionary[_eventid].name1;
+                            string q2 = englishNameTeams_Dictionary[_eventid].name2;
+
+                            if (!string.IsNullOrEmpty(old_team_name_1) && !string.IsNullOrEmpty(old_team_name_2))
+                            {
+                                if (q1 != old_team_name_1 && q2 != old_team_name_2)
+                                {
+                                    i = 0;
+                                    is_correct_type = true;
+                                }
+
                             }
 
-                        }
-
-                       
                             //Belgium, Germany
 
                             result.Add(new ResultForForks(englishNameTeams_Dictionary[_eventid].name1,
@@ -147,46 +148,54 @@ namespace DataParser.MY
                                                       sportType.ToString(),
                                                       Site.MarathonBet.ToString()
                                                       ));
-                        
-                        if (string.IsNullOrEmpty(totalName) || string.IsNullOrEmpty(foraName1))
-                            i++;
-                        totalName = null;
-                        foraName1 = null;
-                        res = null;
-                        if (is_correct_type) {
-                            old_team_name_1 = q1;
-                            old_team_name_2 = q2;
-                            is_correct_type = false;
-                            i = 0;
+
+                            if (string.IsNullOrEmpty(totalName) || string.IsNullOrEmpty(foraName1))
+                                i++;
+                            totalName = null;
+                            foraName1 = null;
+                            res = null;
+                            if (is_correct_type)
+                            {
+                                old_team_name_1 = q1;
+                                old_team_name_2 = q2;
+                                is_correct_type = false;
+                                i = 0;
+                            }
+
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                            if (sportType == SportType.Tennis)
+                                Console.ReadKey();
                         }
                     }
-                    catch { }
-                }
-                if (date != null && _eventid != null && res != null)
-                {
-                    date = null;
-                    res = null;
-                    _eventid = null;
-                }
+                    if (date != null && _eventid != null && res != null)
+                    {
+                        date = null;
+                        res = null;
+                        _eventid = null;
+                    }
 
-                if (oldEvent != _eventid)
-                {
-                    koff = new List<string>();
-                    i = 0;
-                }
-                if (koff.Count > (is_Football_Hokey(sportType) ? countCoff1 : countCoff2) - 1)
-                {
-                    koff = new List<string>();
-                    i = 0;
-                }
+                    if (oldEvent != _eventid)
+                    {
+                        koff = new List<string>();
+                        i = 0;
+                    }
+                    if (koff.Count > (is_Football_Hokey(sportType) ? countCoff1 : countCoff2) - 1)
+                    {
+                        koff = new List<string>();
+                        i = 0;
+                    }
 
-                /*if (teams.Count == (is_Football_Hokey(sportType) ? countCoff1 : countCoff2))
-                {
-                    i++;
-                }*/
-                this.oldLine = line;
+                    /*if (teams.Count == (is_Football_Hokey(sportType) ? countCoff1 : countCoff2))
+                    {
+                        i++;
+                    }*/
+                    this.oldLine = line;
+                }
             }
-
+            catch { }
             return result;
         }
 
@@ -214,7 +223,12 @@ namespace DataParser.MY
                 return result;
                 //this.ShowForks(a);
             }
-            catch { }
+            catch(Exception e) {
+                Console.WriteLine(e.Message);
+                if (sportType == SportType.Tennis)
+                    Console.ReadKey();
+
+            }
             return new List<ResultForForks>();
         }
 

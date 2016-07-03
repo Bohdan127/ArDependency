@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FormulasCollection.Models
 {
     public static class SportTypes
     {
-        private static Dictionary<string,List<Tuple<string, string>>> _listSoccer;
-        private static Dictionary<string,List<Tuple<string, string>>> _listBasketBall;
-        private static Dictionary<string,List<Tuple<string, string>>> _listVolleyBall;
-        private static Dictionary<string,List<Tuple<string, string>>> _listHockey;
-        private static Dictionary<string,List<Tuple<string, string>>> _listTennis;
+        private static Dictionary<string, List<Tuple<string, string>>> _listSoccer;
+        private static Dictionary<string, List<Tuple<string, string>>> _listBasketBall;
+        private static Dictionary<string, List<Tuple<string, string>>> _listVolleyBall;
+        private static Dictionary<string, List<Tuple<string, string>>> _listHockey;
+        private static Dictionary<string, List<Tuple<string, string>>> _listTennis;
 
         public static Dictionary<string, List<Tuple<string, string>>> TypeListSoccer => _listSoccer;
         public static Dictionary<string, List<Tuple<string, string>>> TypeListBasketBall => _listBasketBall;
@@ -24,7 +21,7 @@ namespace FormulasCollection.Models
         {
             _listSoccer = new Dictionary<string, List<Tuple<string, string>>>
             {
-                #region Wins
+                //#region Wins
                 //new Tuple<string, string>("12","X"),
                 //new Tuple<string, string>("X2","1"),
                 //new Tuple<string, string>("1X","2"),

@@ -19,15 +19,16 @@ namespace DXApplication1.Models
         {
             _forkFormulas = forkFormulas;
             localSaver = new LocalSaver();
-            _calculatorFormulas = new TwoOutComeCalculatorFormulas(); ;
+            _calculatorFormulas = new TwoOutComeCalculatorFormulas();
         }
 
         public async Task<List<Fork>> GetForksForAllSportsAsync(Filter filterPage)
         {
             if (filterPage == null) return new List<Fork>();
-
+            //todo load Merged also, before Current
             var forks = await localSaver.GetForksAsync(filterPage, ForkType.Current).ConfigureAwait(false);
 
+            
             if (filterPage.DefaultRate != null)
             {
                 foreach (var fork in forks)
@@ -38,7 +39,6 @@ namespace DXApplication1.Models
                         _calculatorFormulas.ConvertToRate(fork.CoefSecond));
                 }
             }
-
             if (filterPage.Min != null)
                 forks.RemoveAll(f => f.Profit <= filterPage.Min.Value);
             if (filterPage.Max != null)

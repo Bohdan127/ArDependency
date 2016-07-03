@@ -1,11 +1,13 @@
 ﻿using DataParser.Enums;
+using FormulasCollection.Enums;
+using FormulasCollection.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataParser.DefaultRealization
@@ -50,7 +52,7 @@ namespace DataParser.DefaultRealization
     }
     public class Parse
     {
-        public List<TwoBooker> GetForks(SportType sportType)
+        public List<Fork> GetForks(SportType sportType)
         {
             List<TwoBooker> forks = new List<TwoBooker>();
             string url = UrlAndNameFile(sportType);
@@ -105,7 +107,25 @@ namespace DataParser.DefaultRealization
                     marathon = null;
                 }
             }
-            return forks;
+            return ConvertToForks(forks, sportType);
+        }
+
+
+        private List<Fork> ConvertToForks(List<TwoBooker> listToConcert, SportType sportType)
+        {
+            return listToConcert.Select(twoBooker => new Fork
+            {
+                Event = twoBooker.Pinnacle.Event,
+                TypeFirst = twoBooker.Marathon.Coeff,
+                CoefFirst = twoBooker.Marathon.Value,
+                TypeSecond = twoBooker.Pinnacle.Coeff,
+                CoefSecond = twoBooker.Pinnacle.Value,
+                Sport = sportType.ToString(),
+                MatchDateTime = DateTime.Parse(twoBooker.Marathon.Time, CultureInfo.CurrentCulture, DateTimeStyles.NoCurrentDateDefault).ToString(CultureInfo.CurrentCulture),
+                BookmakerFirst = "https://www.marathonbet.com/",
+                BookmakerSecond = "http://www.pinnaclesports.com/",
+                Type = ForkType.Current
+            }).ToList();
         }
 
         public void Show(List<TwoBooker> forks)

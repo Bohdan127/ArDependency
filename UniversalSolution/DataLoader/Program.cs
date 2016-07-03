@@ -6,6 +6,8 @@ using FormulasCollection.Models;
 using FormulasCollection.Realizations;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
 
 namespace DataLoader
 {
@@ -22,6 +24,19 @@ namespace DataLoader
         private static void Main()
         {
             Console.WriteLine("DataLoader Start");
+            // Create a new object, representing the German culture.
+            CultureInfo culture = new CultureInfo("ru-RU");
+
+            // The following line provides localization for the application's user interface.
+            Thread.CurrentThread.CurrentUICulture = culture;
+
+            // The following line provides localization for data formats.
+            Thread.CurrentThread.CurrentCulture = culture;
+
+            // Set this culture as the default culture for all threads in this application.
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+
             _pinnacle = new PinnacleSportsDataParser(new ConverterFormulas());
             _marathon = new MarathonParser();
             _localSaver = new LocalSaver();
@@ -48,19 +63,31 @@ namespace DataLoader
                 Console.WriteLine($"User Password = '{UserPass}'");
 
                 //always loading all sports
-                var sportsToLoading = new[]
-                {SportType.Basketball, SportType.Hockey, SportType.Soccer, SportType.Tennis, SportType.Volleyball};
+                var sportsToLoading = new[] { SportType.Basketball, SportType.Hockey, SportType.Soccer, SportType.Tennis, SportType.Volleyball };
 
                 foreach (var sportType in sportsToLoading)
                 {
                     var pinSport = LoadPinacleDictionary(sportType);
                     var marSport = LoadMarathon(sportType);
                     var forks = GetForksDictionary(sportType, pinSport, marSport);
+                    forks.AddRange(LoadSureBet(sportType));
 
                     SaveNewForks(forks, sportType);
                 }
+
             }
             // ReSharper disable once FunctionNeverReturns
+        }
+
+        private static List<Fork> LoadSureBet(SportType sportType)
+        {
+            Console.WriteLine($"Start Search and Load additional Forks for {sportType} sport type");
+
+            var resList = new Parse().GetForks(sportType);
+
+            Console.WriteLine($"Was founded {resList.Count} {sportType} Forks");
+
+            return resList;
         }
 
         private static List<Fork> GetForksDictionary(SportType sportType, Dictionary<string, ResultForForksDictionary> pinSport, List<ResultForForks> marSport)

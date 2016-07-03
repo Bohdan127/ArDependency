@@ -19,7 +19,7 @@ namespace DataParser.MY
         {
             result.Clear();
 
-            
+
             //strings
             var url = "";
             var namefile = "";
@@ -49,7 +49,8 @@ namespace DataParser.MY
             //Integer
             var i = 0;
             var index = 0;
-            try {
+            try
+            {
 
                 UrlAndNameFile(sportType, out url, out namefile);
                 var lines = (await HtmlAsync(url).ConfigureAwait(false)).Split('\n');
@@ -163,11 +164,9 @@ namespace DataParser.MY
                             }
 
                         }
-                        catch (Exception e)
+                        catch
                         {
-                            Console.WriteLine(e.Message);
-                            if (sportType == SportType.Tennis)
-                                Console.ReadKey();
+                            // ignored
                         }
                     }
                     if (date != null && _eventid != null && res != null)
@@ -223,11 +222,9 @@ namespace DataParser.MY
                 return result;
                 //this.ShowForks(a);
             }
-            catch(Exception e) {
-                Console.WriteLine(e.Message);
-                if (sportType == SportType.Tennis)
-                    Console.ReadKey();
-
+            catch
+            {
+                // ignored
             }
             return new List<ResultForForks>();
         }

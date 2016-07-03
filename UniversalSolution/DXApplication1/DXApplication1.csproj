@@ -30,7 +30,7 @@
     <ProductName>Parser #8</ProductName>
     <PublisherName>Bohdan Benetskyi</PublisherName>
     <SuiteName>DxApplication1</SuiteName>
-    <ApplicationRevision>12</ApplicationRevision>
+    <ApplicationRevision>27</ApplicationRevision>
     <ApplicationVersion>0.0.5.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>

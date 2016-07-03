@@ -3,10 +3,12 @@ using DataSaver.Models;
 using DataSaver.RavenDB;
 using FormulasCollection.Enums;
 using FormulasCollection.Models;
+using Raven.Abstractions.Data;
 using Raven.Abstractions.Extensions;
 using Raven.Client;
 using Raven.Client.Document;
 using Raven.Client.Linq;
+using Raven.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -77,17 +79,17 @@ namespace DataSaver
         {
             if (forkList == null || forkList.Count == 0) return;
 
-            MoveForks(forkList, sportType);
+            //MoveForks(forkList, sportType);
             ClearForks(sportType);
             InsertForks(forkList);
         }
 
         private void MoveForks(List<Fork> forkList, SportType sportType)
         {
-            //GetAllForkRows().Where(fBase => fBase.Sport == sportType.ToString() &&
-            //                                forkList.Any(fNew => fNew.Event == fBase.Event) &&
-            //                                forkList.Any(fNew => fNew.MatchDateTime == fBase.MatchDateTime)).
-            //ForEach(fBase => _store.DatabaseCommands.UpdateAttachmentMetadata(fBase.Id, Etag.Empty, RavenJObject.FromObject(fBase)));
+            GetAllForkRows().Where(fBase => fBase.Sport == sportType.ToString() &&
+                                            forkList.Any(fNew => fNew.Event == fBase.Event) &&
+                                            forkList.Any(fNew => fNew.MatchDateTime == fBase.MatchDateTime)).
+            ForEach(fBase => _store.DatabaseCommands.UpdateAttachmentMetadata(fBase.Id, Etag.Empty, RavenJObject.FromObject(fBase)));
         }
 
         private void ClearForks(SportType sportType)

@@ -74,7 +74,7 @@ namespace DataParser.DefaultRealization
                 if (line.Contains(Tags.BOOKER))
                     booker = GetAttribut(line);
                 else if (line.Contains(Tags.TIME))
-                    time = GetAttribut(line);
+                    time = GetAttribut(line,true);
                 else if (line.Contains(Tags.EVENT))
                     _event = GetAttribut(line);
                 else if (line.Contains(Tags.COEFF))
@@ -121,7 +121,7 @@ namespace DataParser.DefaultRealization
                 TypeSecond = twoBooker.Pinnacle.Coeff,
                 CoefSecond = twoBooker.Pinnacle.Value,
                 Sport = sportType.ToString(),
-                MatchDateTime = DateTime.ParseExact(twoBooker.Marathon.Time, "dd/MM/yyyy hh:mm", CultureInfo.InvariantCulture).ToString(CultureInfo.CurrentCulture),
+                MatchDateTime = twoBooker.Marathon.Time,
                 BookmakerFirst = "https://www.marathonbet.com/",
                 BookmakerSecond = "http://www.pinnaclesports.com/",
                 Type = ForkType.Current
@@ -190,7 +190,7 @@ namespace DataParser.DefaultRealization
             }
             return HTML;
         }
-        private static string GetAttribut(string line)
+        private static string GetAttribut(string line, bool date = false)
         {
             bool isStartTag = false;
             bool isFinish = false;
@@ -206,11 +206,15 @@ namespace DataParser.DefaultRealization
                 if (String.IsNullOrEmpty(result.Trim()) && !isStartTag)
                     result = "";
                 if (!String.IsNullOrEmpty(result.Trim()) && !isStartTag)
+                {
                     isFinish = true;
-                if (isFinish)
+                    result += (date && !result.Contains("/2016") )? "/2016 ":"";
+                    
+                }
+                if (isFinish && !date)
                     return result;
             }
-            return "";
+            return !date?"":result;
         }
 
         private string UrlAndNameFile(SportType sportType)

@@ -68,7 +68,7 @@ namespace FormulasCollection.Realizations
                             TypeSecond = pinEventKey.ConvertToStringOrNull(),
                             CoefSecond = pinnacle[pinKey].TypeCoefDictionary[pinEventKey.ConvertToStringOrNull()].ConvertToStringOrNull(),
                             Sport = eventItem.SportType,
-                            MatchDateTime = eventItem.MatchDateTime,
+                            MatchDateTime = pinnacle[pinKey].MatchDateTime.ToString(),
                             BookmakerFirst = "https://www.marathonbet.com/",
                             BookmakerSecond = "http://www.pinnaclesports.com/",
                             Type = ForkType.Current

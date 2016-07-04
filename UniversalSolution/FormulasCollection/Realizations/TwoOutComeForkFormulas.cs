@@ -1,4 +1,5 @@
-﻿using FormulasCollection.Enums;
+﻿using DataParser.Enums;
+using FormulasCollection.Enums;
 using FormulasCollection.Models;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,8 @@ namespace FormulasCollection.Realizations
         {
             //if (CheckIsMustToBeRevert(marEvent.Event, pinEvent.TeamNames))
             //{
-            //    coef2 = pinEvent?.TypeCoefDictionary[marEvent.Type];
+            //    coef2 = SportTypes.TypeListSoccer[SportType.Soccer.ToString()]
+            //        .Where(l => l.Item1 == l.Item1).Select(m => m.Item2).ConvertToDoubleOrNull();
             //}
             return coef1 != null &&
             coef2 != null &&
@@ -21,13 +23,8 @@ namespace FormulasCollection.Realizations
             Math.Abs(coef2.Value) > 0.01 &&
             1 > 1 / coef1.Value + 1 / coef2.Value &&
             1 / coef1.Value + 1 / coef2.Value > 0.8d;
-        } // I think to return type string like '1X' 'X2' etc cause in method IsAnyForkSoccer after this check
-        // dont return true coef.
-        // For example the rate must be Revert and we have '1' and 'X2' with coefs 3.43 and 3.45
-        // At this moment I revert coef but in any case it will return coef which wont be
-        // if we return type like 'X2' this method will be use in method IsAnyForkSoccer like a return
-        // so we can remove field "return X2" in this method 
 
+        }
         private bool CheckIsMustToBeRevert(string eventMarafon, string eventPinacle)
         {
             if (Extentions.GetStringSimilarityInPercent(eventMarafon.Split('-')[0],
@@ -121,11 +118,12 @@ namespace FormulasCollection.Realizations
         {
             marEvent.Type = marEvent.Type.Trim();
 
-            //foreach (var tup in SportTypes.TypeList)
+            //var listAllSoccer = SportTypes.TypeListAll[SportType.Soccer.ToString()];
+            //foreach (var list in listAllSoccer[SportType.Soccer.ToString()])
             //{
-            //    if (marEvent.Type == tup.Item1 && pinEvent.TypeCoefDictionary.ContainsKey(tup.Item2) &&
-            //        CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[tup.Item2], marEvent, pinEvent))
-            //        return tup.Item2;
+            //    if (marEvent.Type == list.Item1 && pinEvent.TypeCoefDictionary.ContainsKey(list.Item2) &&
+            //        CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[list.Item2]))
+            //        return list.Item2;
             //}
 
             #region Wins

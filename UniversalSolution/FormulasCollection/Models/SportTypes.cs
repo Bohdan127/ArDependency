@@ -30,7 +30,7 @@ namespace FormulasCollection.Models
         {
             _listSoccer = new Dictionary<string, List<Tuple<string, string>>>
             {
-                //#region Wins
+                #region Wins
                 { SportType.Soccer.ToString() , new List<Tuple<string,string>>()
                 { new Tuple<string,string>("12", "X" ) } },
                 { SportType.Soccer.ToString() , new List<Tuple<string,string>>()
@@ -336,9 +336,9 @@ namespace FormulasCollection.Models
             {
                 #region Wins
                 { SportType.Tennis.ToString() , new List<Tuple<string,string>>()
-                { new Tuple<string,string>("П1", "П2" ) } },
+                { new Tuple<string,string>("1", "2" ) } },
                 { SportType.Tennis.ToString() , new List<Tuple<string,string>>()
-                { new Tuple<string,string>("П2", "П1" ) } },
+                { new Tuple<string,string>("2", "1" ) } },
                 #endregion Wins
             };
         }

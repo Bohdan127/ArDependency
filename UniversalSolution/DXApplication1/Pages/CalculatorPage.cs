@@ -91,13 +91,13 @@ namespace DXApplication1.Pages
             //Get first Income
             textEditIncome1.Text = _calculatorFormulas.CalculateRate(
                  textEditAllRate.Text.ConvertToDoubleOrNull(),
-                 textEditRate1.Text.ConvertToDoubleOrNull(),
+                 textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate2?.Text.ConvertToDoubleOrNull() ?? 0d,
                  lbCoef1.Text.ConvertToDoubleOrNull());
 
             //Get second Income
             textEditIncome2.Text = _calculatorFormulas.CalculateRate(
                  textEditAllRate.Text.ConvertToDoubleOrNull(),
-                 textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate1.Text.ConvertToDoubleOrNull(),
+                 textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate1?.Text.ConvertToDoubleOrNull() ?? 0d,
                  lbCoef2.Text.ConvertToDoubleOrNull());
 
             //Get clear income for first one

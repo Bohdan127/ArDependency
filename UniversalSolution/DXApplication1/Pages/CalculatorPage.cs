@@ -2,6 +2,7 @@
 using FormulasCollection.Realizations;
 using System;
 using System.Windows.Forms;
+using ToolsPortable;
 
 namespace DXApplication1.Pages
 {
@@ -58,8 +59,8 @@ namespace DXApplication1.Pages
 
             _recommendedRates = _calculatorFormulas.GetRecommendedRates(
                     _fork?.Profit,
-                    _calculatorFormulas.ConvertToRate(lbCoef1.Text),
-                    _calculatorFormulas.ConvertToRate(lbCoef2.Text));
+                     lbCoef1.Text.ConvertToDoubleOrNull(),
+                     lbCoef2.Text.ConvertToDoubleOrNull());
             textEditRate1.Text = _recommendedRates.Item1;
             textEditRate2.Text = _recommendedRates.Item2;
             OnURateChanging();
@@ -84,35 +85,35 @@ namespace DXApplication1.Pages
         {
             //Update all inserted rate
             textEditAllRate.Text = _calculatorFormulas.CalculateSummaryRate(
-               _calculatorFormulas.ConvertToRate(textEditRate1.Text),
-               _calculatorFormulas.ConvertToRate(textEditRate2.Text))?.ToString();
+                textEditRate1.Text.ConvertToDoubleOrNull(),
+                textEditRate2.Text.ConvertToDoubleOrNull())?.ToString();
 
             //Get first Income
             textEditIncome1.Text = _calculatorFormulas.CalculateRate(
-                _calculatorFormulas.ConvertToRate(textEditAllRate.Text),
-                _calculatorFormulas.ConvertToRate(textEditRate1.Text),
-                _calculatorFormulas.ConvertToRate(lbCoef1.Text));
+                 textEditAllRate.Text.ConvertToDoubleOrNull(),
+                 textEditRate1.Text.ConvertToDoubleOrNull(),
+                 lbCoef1.Text.ConvertToDoubleOrNull());
 
             //Get second Income
             textEditIncome2.Text = _calculatorFormulas.CalculateRate(
-                _calculatorFormulas.ConvertToRate(textEditAllRate.Text),
-                _calculatorFormulas.ConvertToRate(textEditAllRate.Text) - _calculatorFormulas.ConvertToRate(textEditRate1.Text),
-                _calculatorFormulas.ConvertToRate(lbCoef2.Text));
+                 textEditAllRate.Text.ConvertToDoubleOrNull(),
+                 textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate1.Text.ConvertToDoubleOrNull(),
+                 lbCoef2.Text.ConvertToDoubleOrNull());
 
             //Get clear income for first one
             textEditIncome3.Text = _calculatorFormulas.CalculateClearRate(
-                _calculatorFormulas.ConvertToRate(textEditRate2.Text),
-                _calculatorFormulas.ConvertToRate(textEditIncome1.Text));
+                 textEditRate2.Text.ConvertToDoubleOrNull(),
+                 textEditIncome1.Text.ConvertToDoubleOrNull());
 
             //get clear income for second one
             textEditIncome4.Text = _calculatorFormulas.CalculateClearRate(
-                _calculatorFormulas.ConvertToRate(textEditRate1.Text),
-                _calculatorFormulas.ConvertToRate(textEditIncome2.Text));
+                 textEditRate1.Text.ConvertToDoubleOrNull(),
+                 textEditIncome2.Text.ConvertToDoubleOrNull());
 
             //get summary income
             textEditAllIncome.Text = _calculatorFormulas.CalculateSummaryIncome(
-               _calculatorFormulas.ConvertToRate(textEditIncome3.Text),
-               _calculatorFormulas.ConvertToRate(textEditIncome4.Text));
+                textEditIncome3.Text.ConvertToDoubleOrNull(),
+                textEditIncome4.Text.ConvertToDoubleOrNull());
         }
 
         public void DeInitializeEvents()

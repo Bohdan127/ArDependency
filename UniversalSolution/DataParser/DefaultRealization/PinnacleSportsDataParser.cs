@@ -4,6 +4,7 @@ using FormulasCollection.Models;
 using FormulasCollection.Realizations;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Json;
 using System.Linq;
 using System.Net;
@@ -57,7 +58,7 @@ namespace DataParser.DefaultRealization
                         Event = withNames.TeamNames,
                         Type = withTotal.TotalType,
                         Coef = _converter.ConvertAmericanToDecimal(
-                           withTotal.TotalValue.ConvertToDoubleOrNull()).ToString(),
+                           withTotal.TotalValue.ConvertToDoubleOrNull()).ToString(CultureInfo.CurrentCulture),
                         SportType = SportType.ToString(),
                         Bookmaker = Site.PinnacleSports.ToString(),
                         MatchDateTime = withTotal.MatchDateTime

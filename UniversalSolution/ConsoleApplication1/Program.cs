@@ -4,27 +4,64 @@ using Raven.Client;
 using Raven.Client.Document;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
+using ToolsPortable;
 
 namespace ParseAPI
 {
+    public static class ext
+    {
+        public static double? ConvertToDoubleOrNull2(this object data)
+        {
+            if (Extentions.IsBlank(data != null ? data.ToString() : (string)null))
+                return new double?();
+            double result;
+            if (double.TryParse(data != null ? data.ToString() : (string)null, NumberStyles.Any, (IFormatProvider)CultureInfo.CurrentCulture, out result))
+                return new double?(result);
+            return new double?();
+        }
+    }
+
     internal class Program
     {
         [STAThread]
         private static void Main(string[] args)
         {
-            _store = new DocumentStore
-            {
-                Url = "http://localhost:8765",
-                DefaultDatabase = "Parser"
-            };
-            _store.Initialize();
-            _store.DatabaseCommands.DisableAllCaching();
+
+            var res = "-144.0".ConvertToDoubleOrNull2();
+
+            // Create a new object, representing the German culture.
+            CultureInfo culture = new CultureInfo("en-US");
+
+            // The following line provides localization for the application's user interface.
+            Thread.CurrentThread.CurrentUICulture = culture;
+
+            // The following line provides localization for data formats.
+            Thread.CurrentThread.CurrentCulture = culture;
+
+            // Set this culture as the default culture for all threads in this application.
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+            res = "-144.0".ConvertToDoubleOrNull2();
+
+            //_store = new DocumentStore
+            //{
+            //    Url = "http://localhost:8765",
+            //    DefaultDatabase = "Parser"
+            //};
+            //_store.Initialize();
+            //_store.DatabaseCommands.DisableAllCaching();
             //MarathonParser p = new MarathonParser();
             //p.ShowForks(p.InitiAsync(SportType.Basketball).Result);
             //Console.ReadKey();
             // GetAllForkRows().
             //ForEach(fBase => _store.DatabaseCommands.UpdateAttachmentMetadata(fBase.Id, Etag.Empty, RavenJObject.FromObject(fBase)));
         }
+
+       
+        
 
         private static List<ForkRow> GetAllForkRows()
         {

@@ -121,7 +121,7 @@ namespace DataParser.DefaultRealization
                 TypeSecond = twoBooker.Pinnacle.Coeff,
                 CoefSecond = twoBooker.Pinnacle.Value,
                 Sport = sportType.ToString(),
-                MatchDateTime = DateTime.Parse(twoBooker.Marathon.Time, CultureInfo.CurrentCulture, DateTimeStyles.NoCurrentDateDefault).ToString(CultureInfo.CurrentCulture),
+                MatchDateTime = DateTime.ParseExact(twoBooker.Marathon.Time, "dd/MM/yyyy hh:mm", CultureInfo.InvariantCulture).ToString(CultureInfo.CurrentCulture),
                 BookmakerFirst = "https://www.marathonbet.com/",
                 BookmakerSecond = "http://www.pinnaclesports.com/",
                 Type = ForkType.Current

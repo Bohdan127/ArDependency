@@ -38,8 +38,8 @@ namespace FormulasCollection.Realizations
             else
                 return true;
         }
-        public double GetProfit(double rate, double? kof1, double? kof2) => (kof2 != null && kof1 != null)
-            ? Math.Round(rate / (kof1.Value + kof2.Value) * (kof1.Value * kof2.Value), 2)
+        public double GetProfit(double? rate, double? kof1, double? kof2) => (rate != null && kof2 != null && kof1 != null)
+            ? Math.Round(rate.Value / (kof1.Value + kof2.Value) * (kof1.Value * kof2.Value), 2)
             : 0d;
 
         public List<Fork> GetAllForksDictionary(Dictionary<string, ResultForForksDictionary> pinnacle,
@@ -53,8 +53,11 @@ namespace FormulasCollection.Realizations
                     Extentions.GetStringSimilarityInPercent(eventItem.Event, key, true) >= 90);
                 if (pinKey == null) continue;
 
+                if (CheckIsMustToBeRevert(eventItem.Event, pinKey))
+                    continue;
+
                 try
-                { 
+                {
                     var pinEventKey = IsAnyForkSoccer(eventItem, pinnacle[pinKey]);
                     if (pinEventKey.IsNotBlank())
                         resList.Add(new Fork

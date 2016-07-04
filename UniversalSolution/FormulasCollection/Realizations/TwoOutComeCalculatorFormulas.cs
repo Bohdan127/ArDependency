@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using ToolsPortable;
 
 namespace FormulasCollection.Realizations
 {
@@ -39,11 +38,6 @@ namespace FormulasCollection.Realizations
         public string CalculateAverageProfit(params double?[] profit) => (profit?.Sum() / 2).ToString();
 
         public string CalculateSummaryIncome(params double?[] incomes) => incomes?.Sum().ToString();
-
-        public double? ConvertToRate(string value)
-        {
-            return value?.Trim().Replace(".", ",").ConvertToDoubleOrNull();
-        }
 
         public string Formatter { get; set; }
 

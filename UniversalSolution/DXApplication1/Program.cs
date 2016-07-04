@@ -19,7 +19,7 @@ namespace DXApplication1
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             // Create a new object, representing the German culture.
-            CultureInfo culture = new CultureInfo("ru-RU");
+            CultureInfo culture = new CultureInfo("en-US");//en-US or ru-RU
 
             // The following line provides localization for the application's user interface.
             Thread.CurrentThread.CurrentUICulture = culture;

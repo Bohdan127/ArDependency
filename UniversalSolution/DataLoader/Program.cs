@@ -25,7 +25,7 @@ namespace DataLoader
         {
             Console.WriteLine("DataLoader Start");
             // Create a new object, representing the German culture.
-            CultureInfo culture = new CultureInfo("ru-RU");
+            CultureInfo culture = new CultureInfo("en-US");
 
             // The following line provides localization for the application's user interface.
             Thread.CurrentThread.CurrentUICulture = culture;

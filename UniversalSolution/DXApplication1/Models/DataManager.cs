@@ -3,9 +3,9 @@ using DataSaver.Models;
 using FormulasCollection.Enums;
 using FormulasCollection.Models;
 using FormulasCollection.Realizations;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ToolsPortable;
 
 namespace DXApplication1.Models
 {
@@ -28,15 +28,15 @@ namespace DXApplication1.Models
             //todo load Merged also, before Current
             var forks = await localSaver.GetForksAsync(filterPage, ForkType.Current).ConfigureAwait(false);
 
-            
+
             if (filterPage.DefaultRate != null)
             {
                 foreach (var fork in forks)
                 {
                     fork.Profit = _forkFormulas.GetProfit(
-                        Convert.ToDouble(filterPage.DefaultRate.Value),
-                        _calculatorFormulas.ConvertToRate(fork.CoefFirst),
-                        _calculatorFormulas.ConvertToRate(fork.CoefSecond));
+                        filterPage.DefaultRate.Value.ConvertToDoubleOrNull(),
+                        fork.CoefFirst.ConvertToDoubleOrNull(),
+                        fork.CoefSecond.ConvertToDoubleOrNull());
                 }
             }
             if (filterPage.Min != null)

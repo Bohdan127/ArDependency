@@ -153,20 +153,25 @@ namespace DataParser.DefaultRealization
         private static string ClearCoeff(string line)
         {
             if (line.Contains(' '))
-                return line.Split(' ')[0];
+                line =  line.Split(' ')[0];
             if (line.Contains("&minus;"))
-                return line.Replace("&minus;", "-");
+                line = line.Replace("&minus;", "-");
             if (line.Contains("&plus;"))
-                return line.Replace("&plus;", "+");
+                line = line.Replace("&plus;", "+");
             if (line.Contains("&nbsp;/&nbsp;DNB"))
-                return line.Replace("&nbsp;/&nbsp;DNB", "");
+                line = line.Replace("&nbsp;/&nbsp;DNB", "");
             if (line.Contains("Тм"))
-                return line.Replace("Тм", "TU");
+                line = line.Replace("Тм", "TU");
             if (line.Contains("Тб"))
-                return line.Replace("Тб", "TO");
+                line = line.Replace("Тб", "TO");
+            if (line.Contains("Ф"))
+                line = line.Replace("Ф", "F");
+            if (line.Contains("П"))
+                line = line.Replace("П", "");
             var index = line.IndexOf(')');
+
             if (index != -1)
-                return line.Substring(0, index - 1);
+                line = line.Substring(0, index + 1);
             return line;
         }
         private static async Task<string> HtmlAsync(string url, bool a = true)

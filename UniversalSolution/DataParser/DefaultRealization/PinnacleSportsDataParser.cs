@@ -53,7 +53,7 @@ namespace DataParser.DefaultRealization
 
             return (from withNames in eventsWithNames
                     from withTotal in eventsWithTotal.Where(t => withNames.Id != null && t.Id != null && t.Id.Value == withNames.Id.Value)
-                    select new ResultForForks()
+                    select new ResultForForks
                     {
                         Event = withNames.TeamNames,
                         Type = withTotal.TotalType,
@@ -61,8 +61,21 @@ namespace DataParser.DefaultRealization
                            withTotal.TotalValue.ConvertToDoubleOrNull()).ToString(CultureInfo.CurrentCulture),
                         SportType = SportType.ToString(),
                         Bookmaker = Site.PinnacleSports.ToString(),
-                        MatchDateTime = withTotal.MatchDateTime
+                        MatchDateTime = FormatStringDateTime(withTotal.MatchDateTime)
                     }).ToList();
+        }
+
+        private string FormatStringDateTime(string date)
+        {
+            var splitOne = date.Split(' ');
+
+            var splitDate = splitOne[0].Split('/');
+
+            var splitTime = splitOne[1].Split(':');
+
+            var time = splitOne[2][0] == 'A' ? splitOne[1] : $"{Convert.ToInt16(splitTime[0]) + 12}:{splitTime[1]}";
+
+            return $"{splitDate[1]}/{splitDate[0]}/{splitDate[2]} {time}";
         }
 
         private List<EventWithTotal> ParseEventWithTotals(HttpWebResponse totalResp)
@@ -352,16 +365,22 @@ namespace DataParser.DefaultRealization
                 {
                     try
                     {
-                        foreach (var sportEvent in league.Value?["events"])
+                        var sportEvents = league.Value?["events"];
+
+                        if (sportEvents == null) continue;
+
+                        foreach (var sportEvent in sportEvents)
                         {
                             //if id null - all ok will be exception and we go to the next item in foreach
-                            var id = sportEvent.Value["id"].ConvertToLongOrNull().Value;
+                            var convertToLongOrNull = sportEvent.Value["id"].ConvertToLongOrNull();
+                            if (convertToLongOrNull != null)
+                            {
+                                var id = convertToLongOrNull.Value;
 
-                            if (!resList.ContainsKey(id))
-                                resList.Add(id, $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"//todo change here
-                                    .Replace("\"", ""));
-                            else
-                                Console.Write("*******************Duplicate Id for ParseEventWithNames**********************"); //todo tmp need for checking
+                                if (!resList.ContainsKey(id))
+                                    resList.Add(id, $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"
+                                        .Replace("\"", ""));
+                            }
                         }
                     }
                     catch

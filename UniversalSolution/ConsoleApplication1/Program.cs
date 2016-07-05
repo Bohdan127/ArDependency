@@ -5,7 +5,6 @@ using Raven.Client.Document;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
 using ToolsPortable;
 
 namespace ParseAPI
@@ -28,23 +27,35 @@ namespace ParseAPI
         [STAThread]
         private static void Main(string[] args)
         {
+            var start = "7/10/2016 5:30:00 AM"; //10/07/2016 16:30
 
-            var res = "-144.0".ConvertToDoubleOrNull2();
+            var splitOne = start.Split(' ');
 
-            // Create a new object, representing the German culture.
-            CultureInfo culture = new CultureInfo("en-US");
+            var splitDate = splitOne[0].Split('/');
 
-            // The following line provides localization for the application's user interface.
-            Thread.CurrentThread.CurrentUICulture = culture;
+            var splitTime = splitOne[1].Split(':');
 
-            // The following line provides localization for data formats.
-            Thread.CurrentThread.CurrentCulture = culture;
+            var time = splitOne[2][0] == 'A' ? splitOne[1] : $"{Convert.ToInt16(splitTime[0]) + 12}:{splitTime[1]}";
 
-            // Set this culture as the default culture for all threads in this application.
-            CultureInfo.DefaultThreadCurrentCulture = culture;
-            CultureInfo.DefaultThreadCurrentUICulture = culture;
+            var res = $"{splitDate[1]}/{splitDate[0]}/{splitDate[2]} {time}";
 
-            res = "-144.0".ConvertToDoubleOrNull2();
+
+            //var res = "-144.0".ConvertToDoubleOrNull2();
+
+            //// Create a new object, representing the German culture.
+            //CultureInfo culture = new CultureInfo("en-US");
+
+            //// The following line provides localization for the application's user interface.
+            //Thread.CurrentThread.CurrentUICulture = culture;
+
+            //// The following line provides localization for data formats.
+            //Thread.CurrentThread.CurrentCulture = culture;
+
+            //// Set this culture as the default culture for all threads in this application.
+            //CultureInfo.DefaultThreadCurrentCulture = culture;
+            //CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+            //res = "-144.0".ConvertToDoubleOrNull2();
 
             //_store = new DocumentStore
             //{
@@ -60,8 +71,8 @@ namespace ParseAPI
             //ForEach(fBase => _store.DatabaseCommands.UpdateAttachmentMetadata(fBase.Id, Etag.Empty, RavenJObject.FromObject(fBase)));
         }
 
-       
-        
+
+
 
         private static List<ForkRow> GetAllForkRows()
         {

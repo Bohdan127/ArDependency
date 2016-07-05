@@ -70,7 +70,6 @@ namespace DataLoader
                     var pinSport = LoadPinacleDictionary(sportType);
                     var marSport = LoadMarathon(sportType);
                     var forks = GetForksDictionary(sportType, pinSport, marSport);
-                    forks.AddRange(LoadSureBet(sportType));
 
                     SaveNewForks(forks, sportType);
                 }
@@ -79,23 +78,14 @@ namespace DataLoader
             // ReSharper disable once FunctionNeverReturns
         }
 
-        private static List<Fork> LoadSureBet(SportType sportType)
-        {
-            Console.WriteLine($"Start Search and Load additional Forks for {sportType} sport type");
-
-            var resList = new Parse().GetForks(sportType);
-
-            Console.WriteLine($"Was founded {resList.Count} {sportType} Forks");
-
-            return resList;
-        }
+        private static List<Fork> LoadSureBet(SportType sportType) => new Parse().GetForks(sportType);
 
         private static List<Fork> GetForksDictionary(SportType sportType, Dictionary<string, ResultForForksDictionary> pinSport, List<ResultForForks> marSport)
         {
             Console.WriteLine($"Start Calculate Forks for {sportType} sport type");
 
             var resList = _forkFormulas.GetAllForksDictionary(pinSport, marSport);
-
+            resList.AddRange(LoadSureBet(sportType));
             Console.WriteLine("Calculate finished");
             Console.WriteLine($"Was founded {resList.Count} {sportType} Forks");
 

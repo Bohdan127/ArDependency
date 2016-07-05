@@ -54,6 +54,7 @@
     <Compile Include="Realizations\ConverterFormulas.cs" />
     <Compile Include="Models\Fork.cs" />
     <Compile Include="Models\ResultForForksDictionary.cs" />
+    <Compile Include="Realizations\ConverterHelper.cs" />
     <Compile Include="Realizations\TwoOutComeCalculatorFormulas.cs" />
     <Compile Include="Realizations\TwoOutComeForkFormulas.cs" />
   </ItemGroup>

@@ -14,13 +14,13 @@ namespace FormulasCollection.Realizations
         {
             if (CheckIsMustToBeRevert(marEvent.Event, pinEvent.TeamNames))
             {
-                if(list.Item1.Equals(marEvent.Type))
-                coef2 = pinEvent.TypeCoefDictionary[list.Item2];
+                if (list.Item1.Equals(marEvent.Type))
+                    coef2 = pinEvent.TypeCoefDictionary[list.Item2];
                 else
                     coef2 = pinEvent.TypeCoefDictionary[list.Item1];
             }
             if (SportTypes.TypeCoefs.ContainsKey(list.Item1) && !SportTypes.TypeCoefs[list.Item1].Equals(list.Item2))
-            coef2 = pinEvent.TypeCoefDictionary[SportTypes.TypeCoefs[list.Item1]];
+                coef2 = pinEvent.TypeCoefDictionary[SportTypes.TypeCoefs[list.Item1]];
 
             return coef1 != null &&
             coef2 != null &&
@@ -57,7 +57,7 @@ namespace FormulasCollection.Realizations
 
                 try
                 {
-                    var pinEventKey = IsAnyForkSoccer(eventItem, pinnacle[pinKey]);
+                    var pinEventKey = IsAnyForkSoccer(eventItem, pinnacle[pinKey], eventItem.SportType.EnumParse<SportType>());
                     if (pinEventKey.IsNotBlank())
                         resList.Add(new Fork
                         {
@@ -116,23 +116,34 @@ namespace FormulasCollection.Realizations
             return result;
         }
 
-        private string IsAnyForkSoccer(ResultForForks marEvent, ResultForForksDictionary pinEvent)
+        private string IsAnyForkSoccer(ResultForForks marEvent, ResultForForksDictionary pinEvent, SportType st)
         {
             marEvent.Type = marEvent.Type.Trim();
 
-            foreach (var list in SportTypes.TypeListSoccer)
+            switch (st)
             {
-                if (marEvent.Type == list.Item1 && pinEvent.TypeCoefDictionary.ContainsKey(list.Item2) &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[list.Item2], marEvent, pinEvent, list))
-                    return list.Item2;
-            }
+                case SportType.Soccer:
+                        foreach (var list in SportTypes.TypeListSoccer)
+                        {
+                            if (marEvent.Type == list.Item1 && pinEvent.TypeCoefDictionary.ContainsKey(list.Item2) &&
+                                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[list.Item2], marEvent, pinEvent, list))
+                                return list.Item2;
+                        }
+                    break;
 
-            foreach (var list in SportTypes.TypeListTennis)
-            {
-                if (marEvent.Type == list.Item1 && pinEvent.TypeCoefDictionary.ContainsKey(list.Item2) &&
-                    CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[list.Item2], marEvent, pinEvent, list))
-                    return list.Item2;
-            }
+                case SportType.Tennis:
+                        foreach (var list in SportTypes.TypeListTennis)
+                        {
+                            if (marEvent.Type == list.Item1 && pinEvent.TypeCoefDictionary.ContainsKey(list.Item2) &&
+                                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[list.Item2], marEvent, pinEvent, list))
+                                return list.Item2;
+                        }
+                    break;
+
+                default:
+                    SportType.NoType.ToString();
+                    break;
+        }
 
             //#region Wins
 

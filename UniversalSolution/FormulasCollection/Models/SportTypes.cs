@@ -26,6 +26,7 @@ namespace FormulasCollection.Models
             initCoefs();
             initListSoccer();
             initListTennis();
+            initListBasketball();
         }
         private static void initCoefs()
         {
@@ -246,6 +247,16 @@ namespace FormulasCollection.Models
         private static void initListTennis()
         {
             _listTennis = new List<Tuple<string, string>>
+            {
+                #region Wins
+                { new Tuple<string,string>("1", "2" ) },
+                { new Tuple<string,string>("2", "1" ) },
+                #endregion Wins
+            };
+        }
+        private static void initListBasketball()
+        {
+            _listBasketBall = new List<Tuple<string, string>>
             {
                 #region Wins
                 { new Tuple<string,string>("1", "2" ) },

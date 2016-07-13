@@ -48,6 +48,7 @@
     <Compile Include="Enums\ForkType.cs" />
     <Compile Include="Enums\Site.cs" />
     <Compile Include="Enums\SportType.cs" />
+    <Compile Include="Helpers\SportsConverterTypes.cs" />
     <Compile Include="Models\CoefsWhichMustBeRevert.cs" />
     <Compile Include="Models\SportTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -14,13 +14,8 @@ namespace FormulasCollection.Realizations
         {
             if (CheckIsMustToBeRevert(marEvent.Event, pinEvent.TeamNames))
             {
-                if (list.Item1.Equals(marEvent.Type))
-                    coef2 = pinEvent.TypeCoefDictionary[list.Item2];
-                else
-                    coef2 = pinEvent.TypeCoefDictionary[list.Item1];
+                coef2 = pinEvent.TypeCoefDictionary[CoefsWhichMustBeRevert.revertCoefs[marEvent.Type]];
             }
-            if (SportTypes.TypeCoefs.ContainsKey(list.Item1) && !SportTypes.TypeCoefs[list.Item1].Equals(list.Item2))
-                coef2 = pinEvent.TypeCoefDictionary[SportTypes.TypeCoefs[list.Item1]];
 
             return coef1 != null &&
             coef2 != null &&
@@ -33,7 +28,7 @@ namespace FormulasCollection.Realizations
         private bool CheckIsMustToBeRevert(string eventMarafon, string eventPinacle)
         {
             if (Extentions.GetStringSimilarityInPercent(eventMarafon.Split('-')[0],
-                eventPinacle.Split('-')[0], true) >= 90)
+                eventPinacle.Split('-')[0], true) >= 80)
             {
                 return false;
             }

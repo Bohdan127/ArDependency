@@ -11,7 +11,7 @@ namespace FormulasCollection.Realizations
 {
     public class TwoOutComeForkFormulas
     {
-        public bool CheckIsFork(double? coef1, double? coef2, ResultForForks marEvent, ResultForForksDictionary pinEvent, Tuple<string,string> list)
+        public bool CheckIsFork(double? coef1, double? coef2, ResultForForks marEvent, ResultForForksDictionary pinEvent)
         {
             if (CheckIsMustToBeRevert(marEvent.Event, pinEvent.TeamNames))
             {
@@ -120,36 +120,43 @@ namespace FormulasCollection.Realizations
             switch (st)
             {
                 case SportType.Soccer:
-                        foreach (var list in SportTypes.TypeListSoccer)
-                        {
-                            if (marEvent.Type == list.Item1 && pinEvent.TypeCoefDictionary.ContainsKey(list.Item2) &&
-                                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[list.Item2], marEvent, pinEvent, list))
-                                return list.Item2;
-                        }
+                        string buffSoccer = SportsConverterTypes.TypeParseAll(marEvent.Type,st);
+                            if (pinEvent.TypeCoefDictionary.ContainsKey(buffSoccer) &&
+                                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffSoccer], marEvent, pinEvent))
+                                return buffSoccer;
                     break;
 
                 case SportType.Basketball:
-                        foreach (var list in SportTypes.TypeListBasketBall)
-                        {
-                        /*
-                        if (marEvent.Type == list.Item1 && pinEvent.TypeCoefDictionary.ContainsKey(list.Item2) && move to 
-                        pinEvent.TypeCoefDictionary.ContainsKey(SportsConverterTypes.TypeParseBasketball(marEvent.Type))
-                        not checked but should be true, easer than write so many strings code
-                        */
-
-                        if (marEvent.Type == list.Item1 && pinEvent.TypeCoefDictionary.ContainsKey(list.Item2) &&
-                                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[list.Item2], marEvent, pinEvent, list))
-                                return list.Item2;
-                        }
+                    /*
+                    if (marEvent.Type == list.Item1 && pinEvent.TypeCoefDictionary.ContainsKey(list.Item2) && move to 
+                    pinEvent.TypeCoefDictionary.ContainsKey(SportsConverterTypes.TypeParseBasketball(marEvent.Type))
+                    not checked but should be true, easer than write so many strings code
+                    */
+                    string buffBasketBall = SportsConverterTypes.TypeParseAll(marEvent.Type,st);
+                    if (pinEvent.TypeCoefDictionary.ContainsKey(buffBasketBall) &&
+                                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffBasketBall], marEvent, pinEvent))
+                                return buffBasketBall;
                     break;
 
                 case SportType.Tennis:
-                    foreach (var list in SportTypes.TypeListTennis)
-                    {
-                        if (marEvent.Type == list.Item1 && pinEvent.TypeCoefDictionary.ContainsKey(list.Item2) &&
-                            CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[list.Item2], marEvent, pinEvent, list))
-                            return list.Item2;
-                    }
+                        string buffTennis = SportsConverterTypes.TypeParseAll(marEvent.Type,st);
+                        if (pinEvent.TypeCoefDictionary.ContainsKey(buffTennis) &&
+                            CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffTennis], marEvent, pinEvent))
+                            return buffTennis;
+                    break;
+
+                case SportType.Hockey:
+                    string buffHockey = SportsConverterTypes.TypeParseAll(marEvent.Type, st);
+                    if (pinEvent.TypeCoefDictionary.ContainsKey(buffHockey) &&
+                        CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffHockey], marEvent, pinEvent))
+                        return buffHockey;
+                    break;
+
+                case SportType.Volleyball:
+                    string buffVolleyball = SportsConverterTypes.TypeParseAll(marEvent.Type, st);
+                    if (pinEvent.TypeCoefDictionary.ContainsKey(buffVolleyball) &&
+                        CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffVolleyball], marEvent, pinEvent))
+                        return buffVolleyball;
                     break;
 
                 default:

@@ -19,15 +19,17 @@ namespace DataParser.MY
         {
             result.Clear();
 
-
             //strings
             var url = "";
             var namefile = "";
-            var oldEvent = "";
+            string oldEvent = null;
             string date = null;
             string foraName1 = null;
             string _eventid = null;
             string totalName = null;
+
+            string oldLiga = null;
+            string liga = null;
 
             string old_team_name_1 = null;
             string old_team_name_2 = null;
@@ -49,152 +51,201 @@ namespace DataParser.MY
             //Integer
             var i = 0;
             var index = 0;
-            try
+            // try
+            // {
+
+            UrlAndNameFile(sportType, out url, out namefile);
+            var lines = (await HtmlAsync(url).ConfigureAwait(false)).Split('\n');
+
+
+            foreach (var line in lines)
             {
 
-                UrlAndNameFile(sportType, out url, out namefile);
-                var lines = (await HtmlAsync(url).ConfigureAwait(false)).Split('\n');
+                //-------------------LIGA-----------------
 
-
-                foreach (var line in lines)
+                if (line._Contains(Tags.Liga))
                 {
-                    if (isFora)
-                    {
-                        foraName1 = (isForaforteam1 ? "F1(" : "F2(") + line.Substrings("(", ")") + ")";
-                        isFora = false;
-                        isForaforteam1 = !isForaforteam1;
-                    }
-                    if (line.Contains(Tags.Fora))
-                    {
-                        isFora = true;
-                    }
-
-                    if (isTotal)
-                    {
-                        totalName = (isTotalUnder ? "TU(" : "TO(") + line.Substrings("(", ")") + ")";
-                        isTotalUnder = !isTotalUnder;
-                        isTotal = false;
-                    }
-                    if (line.Contains(Tags.Total))
-                    {
-                        isTotal = true;
-                    }
-
-                    if (countTypeCoff.Count < 10)
-                    {
-                        if (isTypeCoff)
-                        {
-                            countTypeCoff.Add((line.IndexOf('<') != -1) ? line.Replace("<b>", "").Replace("</b>", "") : line);
-                            isTypeCoff = false;
-                        }
-                        if (line._Contains(Tags.TypeCoff))
-                            isTypeCoff = true;
-                    }
-                    if (line._Contains(Tags.EventID))
-                    {
-                        _eventid = line.GetEventID();
-                        oldEvent = _eventid;
-                    }
-
-                    if (isDate)
-                    {
-                        date = line;
-                        isDate = false;
-                    }
-                    if (line._Contains(Tags.Date))
-                    {
-                        isDate = true;
-                    }
-
-                    string res = null;
-                    if (line.Contains(Tags.Coff) /*&& line.Contains("Match_Result")*/)
-                    {
-                        res = line.Substrings(Tags.Coff, "\"");
-                        koff.Add(res);
-                    }
-                    if (line.Contains("<span>&mdash;</span>") || line.Contains("—"))
-                    {
-                        res = "-";
-                        koff.Add(res);
-                    }
-
-                    if (date != null && res != null && _eventid != null)
-                    {
-                        if (index >= countTypeCoff.Count)
-                            index = 0;
-
-                        try
-                        {
-
-                            string q1 = englishNameTeams_Dictionary[_eventid].name1;
-                            string q2 = englishNameTeams_Dictionary[_eventid].name2;
-
-                            if (!string.IsNullOrEmpty(old_team_name_1) && !string.IsNullOrEmpty(old_team_name_2))
-                            {
-                                if (q1 != old_team_name_1 && q2 != old_team_name_2)
-                                {
-                                    i = 0;
-                                    is_correct_type = true;
-                                }
-
-                            }
-
-                            //Belgium, Germany
-
-                            result.Add(new ResultForForks(englishNameTeams_Dictionary[_eventid].name1,
-                                                      englishNameTeams_Dictionary[_eventid].name2,
-                                                      date,
-                                                      (!string.IsNullOrEmpty(totalName) || !string.IsNullOrEmpty(foraName1)) ? (!string.IsNullOrEmpty(totalName) ? totalName : foraName1) : countTypeCoff[i],  //  Type coff
-                                                      res,                //   znaczenia
-                                                      sportType.ToString(),
-                                                      Site.MarathonBet.ToString()
-                                                      ));
-
-                            if (string.IsNullOrEmpty(totalName) || string.IsNullOrEmpty(foraName1))
-                                i++;
-                            totalName = null;
-                            foraName1 = null;
-                            res = null;
-                            if (is_correct_type)
-                            {
-                                old_team_name_1 = q1;
-                                old_team_name_2 = q2;
-                                is_correct_type = false;
-                                i = 0;
-                            }
-
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
-                    }
-                    if (date != null && _eventid != null && res != null)
-                    {
-                        date = null;
-                        res = null;
-                        _eventid = null;
-                    }
-
-                    if (oldEvent != _eventid)
-                    {
-                        koff = new List<string>();
-                        i = 0;
-                    }
-                    if (koff.Count > (is_Football_Hokey(sportType) ? countCoff1 : countCoff2) - 1)
-                    {
-                        koff = new List<string>();
-                        i = 0;
-                    }
-
-                    /*if (teams.Count == (is_Football_Hokey(sportType) ? countCoff1 : countCoff2))
-                    {
-                        i++;
-                    }*/
-                    this.oldLine = line;
+                    oldLiga = liga;
+                    liga = GetAttribut(line);
+                    if (liga != oldLiga)
+                        countTypeCoff = new List<string>();
                 }
+
+                //----------------TYPE-COEFF---------------
+
+                if (countTypeCoff.Count < 10)
+                {
+                    if (isTypeCoff)
+                    {
+                        string coeff = ((line.IndexOf('<') != -1) ? line.Replace("<b>", "").Replace("</b>", "") : line).Trim();
+                        if (!countTypeCoff.Contains(coeff))
+                            countTypeCoff.Add(coeff);
+                        isTypeCoff = false;
+                    }
+                    if (line._Contains(Tags.TypeCoff))
+                        isTypeCoff = true;
+                }
+
+                //---------------EVENT---------------------
+                if (line._Contains(Tags.EventID))
+                {
+                    _eventid = line.GetEventID();
+                    oldEvent = _eventid;
+                }
+
+
+                //---------------DATE----------------------
+                if (isDate)
+                {
+                    date = line;
+                    isDate = false;
+                }
+                if (line._Contains(Tags.Date))
+                {
+                    isDate = true;
+                }
+
+                //--------------Coeff--Value----------------
+                string res = null;
+                if (line.Contains(Tags.Coff) /*&& line.Contains("Match_Result")*/)
+                {
+                    res = line.Substrings(Tags.Coff, "\"");
+                    koff.Add(res);
+                }
+                if (line.Contains("<span>&mdash;</span>") || line.Contains("—"))
+                {
+                    res = "-";
+                    koff.Add(res);
+                }
+
+
+                //-------------------FORA-------------------
+                if (isFora)
+                {
+                    foraName1 = (isForaforteam1 ? "F1(" : "F2(") + line.Substrings("(", ")") + ")";
+                    isFora = false;
+                    isForaforteam1 = !isForaforteam1;
+                }
+                if (line.Contains(Tags.Fora))
+                {
+                    isFora = true;
+                }
+
+
+                //------------------TOTAL-----------------
+                if (isTotal)
+                {
+                    totalName = (isTotalUnder ? "TU(" : "TO(") + line.Substrings("(", ")") + ")";
+                    isTotalUnder = !isTotalUnder;
+                    isTotal = false;
+                }
+                if (line.Contains(Tags.Total))
+                {
+                    isTotal = true;
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                //---------------Add to list RESULT--------------------------
+                if (date != null && res != null && _eventid != null && englishNameTeams_Dictionary.ContainsKey(_eventid))
+                {
+                    if (i >= countTypeCoff.Count)
+                        i = 0;
+
+                    //try
+                    // {
+                    //---------Team on english language----------
+                    try
+                    {
+                        string q1 = englishNameTeams_Dictionary[_eventid].name1;
+                        string q2 = englishNameTeams_Dictionary[_eventid].name2;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message.ToString());
+                        Console.ReadKey();
+                    }
+                    /*  if (!string.IsNullOrEmpty(old_team_name_1) && !string.IsNullOrEmpty(old_team_name_2))
+                      {
+                          if (q1 != old_team_name_1 && q2 != old_team_name_2)
+                          {
+                              i = 0;
+                              is_correct_type = true;
+                          }
+
+                      }*/
+
+
+                    result.Add(new ResultForForks(englishNameTeams_Dictionary[_eventid].name1,
+                                                  englishNameTeams_Dictionary[_eventid].name2,
+                                                  date,
+                                                  (!string.IsNullOrEmpty(totalName) || !string.IsNullOrEmpty(foraName1)) ? (!string.IsNullOrEmpty(totalName) ? totalName : foraName1) : countTypeCoff[i],  //  Type coff
+                                                  res,                //   znaczenia
+                                                  sportType.ToString(),
+                                                  Site.MarathonBet.ToString()
+                                                  ));
+                    if (i < countTypeCoff.Count)
+                        i++;
+                    else
+                        i = 0;
+
+                    //if (string.IsNullOrEmpty(totalName) || string.IsNullOrEmpty(foraName1))
+                    //   i++;
+
+                    totalName = null;
+                    foraName1 = null;
+                    res = null;
+                    /*  if (is_correct_type)
+                      {
+                          old_team_name_1 = q1;
+                          old_team_name_2 = q2;
+                          is_correct_type = false;
+                          i = 0;
+                      }
+                      */
+                    // }
+                    // catch
+                    // {
+                    // ignored
+                    // }
+                }
+                /* if (date != null && _eventid != null && res != null)
+                 {
+                     date = null;
+                     res = null;
+                     _eventid = null;
+                 }
+
+                 if (oldEvent != _eventid)
+                 {
+                     koff = new List<string>();
+                     i = 0;
+                 }
+                 if (koff.Count > (is_Football_Hokey(sportType) ? countCoff1 : countCoff2) - 1)
+                 {
+                     koff = new List<string>();
+                     i = 0;
+                 }
+                 */
+                /*if (teams.Count == (is_Football_Hokey(sportType) ? countCoff1 : countCoff2))
+                {
+                    i++;
+                }*/
+                this.oldLine = line;
             }
-            catch { }
+            // }
+            // catch { }
             return result;
         }
 
@@ -215,17 +266,17 @@ namespace DataParser.MY
 
         public async Task<List<ResultForForks>> InitiAsync(SportType sportType)
         {
-            try
-            {
-                this.englishNameTeams_Dictionary = await this.GetEnglishNameTEams(sportType).ConfigureAwait(false);
-                var result = await GetNameTeamsAndDateAsync(sportType).ConfigureAwait(false);
-                return result;
-                //this.ShowForks(a);
-            }
-            catch
-            {
-                // ignored
-            }
+            // try
+            // {
+            this.englishNameTeams_Dictionary = await this.GetEnglishNameTEams(sportType).ConfigureAwait(false);
+            var result = await GetNameTeamsAndDateAsync(sportType).ConfigureAwait(false);
+            return result;
+            //this.ShowForks(a);
+            // }
+            // catch
+            // {
+            // ignored
+            // }
             return new List<ResultForForks>();
         }
 
@@ -276,8 +327,8 @@ namespace DataParser.MY
                 if (line._Contains(Tags.NameTeam))
                 {
                     if (name1 == null)
-                        name1 = line.Substrings(Tags.NameTeam);
-                    else name2 = line.Substrings(Tags.NameTeam);
+                        name1 = GetAttribut(line);// line.Substrings(Tags.NameTeam);
+                    else name2 = GetAttribut(line);//line.Substrings(Tags.NameTeam);
                 }
                 if (!string.IsNullOrEmpty(name1) && !string.IsNullOrEmpty(name2) && !string.IsNullOrEmpty(_eventid))
                 {
@@ -291,8 +342,41 @@ namespace DataParser.MY
                 }
             }
 
+
             return resultEnglishTeams;
         }
+
+
+
+        //------------------PARSE------------------------------
+        private static string GetAttribut(string line, bool date = false)
+        {
+            bool isStartTag = false;
+            bool isFinish = false;
+            string result = "";
+            foreach (var l in line)
+            {
+                if (l == '<')
+                    isStartTag = false;
+                if (isStartTag)
+                    result += l;
+                if (l == '>')
+                    isStartTag = true;
+                if (String.IsNullOrEmpty(result.Trim()) && !isStartTag)
+                    result = "";
+                if (!String.IsNullOrEmpty(result.Trim()) && !isStartTag)
+                {
+                    isFinish = true;
+                    result += (date && !result.Contains("/2016")) ? "/2016 " : "";
+
+                }
+                if (isFinish && !date)
+                    return result;
+            }
+            return !date ? "" : result;
+        }
+
+
 
         private void UrlAndNameFile(SportType sportType, out string url, out string namefile, bool isEnglish = false)
         {

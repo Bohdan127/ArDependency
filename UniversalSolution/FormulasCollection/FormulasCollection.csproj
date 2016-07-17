@@ -61,7 +61,6 @@
     <Compile Include="Realizations\TwoOutComeForkFormulas.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Fakes Include="Fakes\ToolsPortable.fakes" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

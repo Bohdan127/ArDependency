@@ -10,7 +10,7 @@ namespace FormulasCollection.Models
         /// <summary>
         /// Id stored in DB, have auto increment so not required to fill
         /// </summary>
-        public long Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Sport Type

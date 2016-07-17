@@ -1,7 +1,6 @@
 ﻿using DataSaver.Models;
 using DevExpress.XtraEditors;
 using DXApplication1.Models;
-using FormulasCollection.Realizations;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -23,7 +22,7 @@ namespace DXApplication1
 
         #region CTOR
 
-        public XtraForm1(TwoOutComeForkFormulas forkFormulas)
+        public XtraForm1()
         {
             InitializeComponent();
 
@@ -31,7 +30,7 @@ namespace DXApplication1
             Closed += XtraForm1_Closed;
             Closing += XtraForm1_Closing;
 
-            _pageManager = new PageManager(this, forkFormulas);
+            _pageManager = new PageManager(this);
 
             DeserializeAll();
             PrepareData();
@@ -45,14 +44,18 @@ namespace DXApplication1
 
         private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            _pageManager.GetSearchPage().Hide();//if already shown right now
-            _pageManager.GetSearchPage().Show();
+            var page = _pageManager.GetSearchPage();
+            page.Hide();//if already shown right now
+            page.Show();
+            page.OnUpdate();
         }
 
         private void barButtonItem3_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            _pageManager.GetAccountPage().Hide();//if already shown right now
-            _pageManager.GetAccountPage().Show();
+            var page = _pageManager.GetAccountPage();
+            page.Hide();//if already shown right now
+            page.Show();
+            page.OnUpdate();
         }
 
         private void XtraForm1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -75,8 +78,9 @@ namespace DXApplication1
 
         private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            _pageManager.GetFilterPage(_filter).Hide();//if already shown right now
-            _pageManager.GetFilterPage(_filter).Show();
+            var page = _pageManager.GetFilterPage(_filter);
+            page.Hide();//if already shown right now
+            page.Show();
         }
 
         #endregion Events

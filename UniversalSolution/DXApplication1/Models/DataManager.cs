@@ -11,23 +11,20 @@ namespace DXApplication1.Models
 {
     public class DataManager
     {
-        private readonly TwoOutComeCalculatorFormulas _calculatorFormulas;
         private readonly TwoOutComeForkFormulas _forkFormulas;
-        private LocalSaver localSaver;
+        private readonly LocalSaver _localSaver;
 
-        public DataManager(TwoOutComeForkFormulas forkFormulas)
+        public DataManager()
         {
-            _forkFormulas = forkFormulas;
-            localSaver = new LocalSaver();
-            _calculatorFormulas = new TwoOutComeCalculatorFormulas();
+            _forkFormulas = new TwoOutComeForkFormulas();
+            _localSaver = new LocalSaver();
         }
 
-        public async Task<List<Fork>> GetForksForAllSportsAsync(Filter filterPage)
+        public async Task<List<Fork>> GetForksForAllSportsAsync(Filter filterPage, ForkType forkType)
         {
             if (filterPage == null) return new List<Fork>();
-            //todo load Merged also, before Current
-            var forks = await localSaver.GetForksAsync(filterPage, ForkType.Current).ConfigureAwait(false);
 
+            var forks = await _localSaver.GetForksAsync(filterPage, forkType).ConfigureAwait(false);
 
             if (filterPage.DefaultRate != null)
             {

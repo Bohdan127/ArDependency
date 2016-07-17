@@ -1,9 +1,8 @@
 ﻿using DataSaver.Models;
 using DXApplication1.Pages;
+using FormulasCollection.Enums;
 using FormulasCollection.Models;
-using FormulasCollection.Realizations;
 using System;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DXApplication1.Models
@@ -13,27 +12,27 @@ namespace DXApplication1.Models
         #region Members
 
         private FilterPage _filterPage;
-        private AccountingPage _accountingPage;
+        private SearchPage _accountingPage;
         private SearchPage _searchPage;
         private CalculatorPage _calculatorPage;
-        private Form _defaultMdiParent;
-        private OpenCalculatorForm _openCalculatorForm;
+        private readonly Form _defaultMdiParent;
         public DataManager DataManager { get; set; }
-        private Timer timer;
+        private readonly Timer _timer;
+        private bool _fromSearchPage = false;
 
         #endregion Members
 
         #region CTOR
 
-        public PageManager(Form mdiParent, TwoOutComeForkFormulas forkFormulas)
+        public PageManager(Form mdiParent)
         {
             _defaultMdiParent = mdiParent;
-            DataManager = new DataManager(forkFormulas);
-            timer = new Timer
+            DataManager = new DataManager();
+            _timer = new Timer
             {
                 Interval = 20 * 1000 //default for 20 seconds
             };
-            timer.Tick += Timer_Tick;
+            _timer.Tick += Timer_Tick;
         }
 
         #endregion CTOR
@@ -45,58 +44,37 @@ namespace DXApplication1.Models
             _accountingPage = null;
             _calculatorPage = null;
             _filterPage = null;
-        }
-
-        /// <summary>
-        /// This Control always reloaded in each call.
-        /// </summary>
-        public async Task<OpenCalculatorForm> CreateCalculatorForm(bool useMdiParent = false, Form mdiParent = null, bool loadData = true)
-        {
-            if (loadData) _openCalculatorForm = new OpenCalculatorForm(await DataManager.
-                 GetForksForAllSportsAsync(_filterPage?.Filter).ConfigureAwait(true));
-            else
-                _openCalculatorForm = new OpenCalculatorForm();
-
-            _openCalculatorForm.MdiParent = useMdiParent ? mdiParent ?? _defaultMdiParent : null;
-
-            return _openCalculatorForm;
+            _searchPage = null;
         }
 
         public FilterPage GetFilterPage(Filter filter, Form mdiParent = null, bool reload = false)
         {
+            _timer.Stop();
             if (filter == null) filter = new Filter();
 
-            if (_filterPage == null)
+            return _filterPage ?? (_filterPage = new FilterPage(filter)
             {
-                _filterPage = new FilterPage(filter)
-                {
-                    MdiParent = mdiParent ?? _defaultMdiParent,
-                    ToClose = false
-                };
-            }
-            timer?.Stop();
-            return _filterPage;
+                MdiParent = mdiParent ?? _defaultMdiParent,
+                ToClose = false
+            });
         }
 
         public CalculatorPage GetCalculatorPage(Form mdiParent = null, bool reload = false)
         {
-            if (_calculatorPage == null)
+            _timer.Stop();
+            return _calculatorPage ?? (_calculatorPage = new CalculatorPage
             {
-                _calculatorPage = new CalculatorPage
-                {
-                    MdiParent = mdiParent ?? _defaultMdiParent,
-                    ToClose = false
-                };
-            }
-            timer?.Stop();
-            return _calculatorPage;
+                MdiParent = mdiParent ?? _defaultMdiParent,
+                ToClose = false
+            });
         }
 
-        public AccountingPage GetAccountPage(Form mdiParent = null, bool reload = false)
+        public SearchPage GetAccountPage(Form mdiParent = null, bool reload = false)
         {
+            _timer.Stop();
             if (_accountingPage == null || reload)
             {
-                _accountingPage = new AccountingPage
+                _accountingPage = new SearchPage(false)
                 {
                     MdiParent = mdiParent ?? _defaultMdiParent,
                     ToClose = false
@@ -104,12 +82,18 @@ namespace DXApplication1.Models
                 _accountingPage.UpdateEvent += AccountPage_Update;
                 _accountingPage.CalculatorCall += AccountPage_CalculatorCall;
             }
-            timer?.Stop();
+            if (_filterPage.Filter.AutoUpdateTime != null)
+                _timer.Interval = _filterPage.Filter.AutoUpdateTime.Value * 1000;
+
+            _fromSearchPage = false;
+            _timer.Start();
+
             return _accountingPage;
         }
 
         public SearchPage GetSearchPage(Form mdiParent = null, bool reload = false)
         {
+            _timer.Stop();
             if (_searchPage == null || reload)
             {
                 _searchPage = new SearchPage
@@ -122,13 +106,10 @@ namespace DXApplication1.Models
             }
 
             if (_filterPage.Filter.AutoUpdateTime != null)
-                timer.Interval = _filterPage.Filter.AutoUpdateTime.Value * 1000;
+                _timer.Interval = _filterPage.Filter.AutoUpdateTime.Value * 1000;
 
-            if (!timer.Enabled)
-            {
-                SearchPage_Update(null, null);
-                timer.Start();
-            }
+            _fromSearchPage = true;
+            _timer.Start();
 
             return _searchPage;
         }
@@ -139,13 +120,32 @@ namespace DXApplication1.Models
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            SearchPage_Update(sender, e);
+            if (_fromSearchPage && !_searchPage.IsDisposed)
+                SearchPage_Update(sender, e);
+            else if (!_accountingPage.IsDisposed)
+                AccountPage_Update(sender, e);
         }
 
-        private void AccountPage_Update(object sender, EventArgs e)
+        private async void AccountPage_Update(object sender, EventArgs e)
         {
+            _accountingPage.StartLoading();
+            var resList = await DataManager.
+                GetForksForAllSportsAsync(_filterPage?.Filter, ForkType.Merged).ConfigureAwait(true);
+            resList.AddRange(await DataManager.
+                GetForksForAllSportsAsync(_filterPage?.Filter, ForkType.Saved).ConfigureAwait(true));
+            /*
+             * We should just update changed rows,
+             * not all as it is now
+             */
+            _accountingPage.MainGridControl.DataSource = null;
+            _accountingPage.MainGridControl.DataSource = resList;
+            _accountingPage.MainGridControl.Refresh();
+            _accountingPage.EndLoading();
         }
 
+        /// <summary>
+        /// Open calculator for Search and Account pages
+        /// </summary>
         private void AccountPage_CalculatorCall(object sender, EventArgs eventArgs)
         {
             if (!(sender is Fork)) return;
@@ -163,7 +163,13 @@ namespace DXApplication1.Models
         {
             _searchPage.StartLoading();
             var resList = await DataManager.
-                GetForksForAllSportsAsync(_filterPage?.Filter).ConfigureAwait(true);
+                GetForksForAllSportsAsync(_filterPage?.Filter, ForkType.Merged).ConfigureAwait(true);
+            resList.AddRange(await DataManager.
+                GetForksForAllSportsAsync(_filterPage?.Filter, ForkType.Current).ConfigureAwait(true));
+            /*
+             * We should just update changed rows,
+             * not all as it is now
+             */
             _searchPage.MainGridControl.DataSource = null;
             _searchPage.MainGridControl.DataSource = resList;
             _searchPage.MainGridControl.Refresh();

@@ -45,6 +45,8 @@
             this.colRate2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colCoef2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colProfit = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colSave = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemCheckEditSave = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlGroup3 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
@@ -57,6 +59,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.progressBarControl1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEditSave)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
@@ -102,6 +105,8 @@
             this.gridControl1.Location = new System.Drawing.Point(24, 42);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
+            this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repositoryItemCheckEditSave});
             this.gridControl1.Size = new System.Drawing.Size(595, 317);
             this.gridControl1.TabIndex = 4;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -119,7 +124,8 @@
             this.colBookmaker2,
             this.colRate2,
             this.colCoef2,
-            this.colProfit});
+            this.colProfit,
+            this.colSave});
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsView.ShowGroupPanel = false;
@@ -174,6 +180,7 @@
             this.colCoef1.Caption = "Коэффициент 1";
             this.colCoef1.FieldName = "CoefFirst";
             this.colCoef1.Name = "colCoef1";
+            this.colCoef1.OptionsColumn.ReadOnly = true;
             this.colCoef1.Visible = true;
             this.colCoef1.VisibleIndex = 5;
             // 
@@ -182,6 +189,7 @@
             this.colBookmaker2.Caption = "Букмекер 2";
             this.colBookmaker2.FieldName = "BookmakerSecond";
             this.colBookmaker2.Name = "colBookmaker2";
+            this.colBookmaker2.OptionsColumn.ReadOnly = true;
             this.colBookmaker2.Visible = true;
             this.colBookmaker2.VisibleIndex = 6;
             // 
@@ -190,6 +198,7 @@
             this.colRate2.Caption = "Тип ставки 2";
             this.colRate2.FieldName = "TypeSecond";
             this.colRate2.Name = "colRate2";
+            this.colRate2.OptionsColumn.ReadOnly = true;
             this.colRate2.Visible = true;
             this.colRate2.VisibleIndex = 7;
             // 
@@ -198,6 +207,7 @@
             this.colCoef2.Caption = "Коэффициент 2";
             this.colCoef2.FieldName = "CoefSecond";
             this.colCoef2.Name = "colCoef2";
+            this.colCoef2.OptionsColumn.ReadOnly = true;
             this.colCoef2.Visible = true;
             this.colCoef2.VisibleIndex = 8;
             // 
@@ -206,8 +216,26 @@
             this.colProfit.Caption = "Прибыль";
             this.colProfit.FieldName = "Profit";
             this.colProfit.Name = "colProfit";
+            this.colProfit.OptionsColumn.ReadOnly = true;
             this.colProfit.Visible = true;
             this.colProfit.VisibleIndex = 9;
+            // 
+            // colSave
+            // 
+            this.colSave.Caption = "Сохранить";
+            this.colSave.ColumnEdit = this.repositoryItemCheckEditSave;
+            this.colSave.FieldName = "Type";
+            this.colSave.Name = "colSave";
+            this.colSave.Visible = true;
+            this.colSave.VisibleIndex = 10;
+            // 
+            // repositoryItemCheckEditSave
+            // 
+            this.repositoryItemCheckEditSave.AutoHeight = false;
+            this.repositoryItemCheckEditSave.Caption = "";
+            this.repositoryItemCheckEditSave.CheckStyle = DevExpress.XtraEditors.Controls.CheckStyles.Style6;
+            this.repositoryItemCheckEditSave.Name = "repositoryItemCheckEditSave";
+            this.repositoryItemCheckEditSave.NullStyle = DevExpress.XtraEditors.Controls.StyleIndeterminate.Unchecked;
             // 
             // layoutControlGroup1
             // 
@@ -265,6 +293,8 @@
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "CalculateSheet_32x32.png");
             this.imageList1.Images.SetKeyName(1, "CalculateNow_32x32.png");
+            this.imageList1.Images.SetKeyName(2, "Paste_32x32.ico");
+            this.imageList1.Images.SetKeyName(3, "PieStylePie_32x32.ico");
             // 
             // SearchPage
             // 
@@ -281,6 +311,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.progressBarControl1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEditSave)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
@@ -314,5 +345,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn colRate2;
         private DevExpress.XtraGrid.Columns.GridColumn colCoef2;
         private DevExpress.XtraGrid.Columns.GridColumn colProfit;
+        private DevExpress.XtraGrid.Columns.GridColumn colSave;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEditSave;
     }
 }

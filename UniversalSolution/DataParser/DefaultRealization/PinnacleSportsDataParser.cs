@@ -99,21 +99,21 @@ namespace DataParser.DefaultRealization
                                 {
                                     try
                                     {
-                                        resList.Add(new EventWithTotal()
+                                        resList.Add(new EventWithTotal
                                         {
                                             Id = sportEvent.Value["id"].ConvertToLongOrNull(),
                                             TotalType = "1",
                                             TotalValue = period.Value?["moneyline"]?["home"]?.ToString(),
                                             MatchDateTime = period.Value?["cutoff"]?.ToString()
                                         });
-                                        resList.Add(new EventWithTotal()
+                                        resList.Add(new EventWithTotal
                                         {
                                             Id = sportEvent.Value["id"].ConvertToLongOrNull(),
                                             TotalType = "2",
                                             TotalValue = period.Value?["moneyline"]?["away"]?.ToString(),
                                             MatchDateTime = period.Value?["cutoff"]?.ToString()
                                         });
-                                        resList.Add(new EventWithTotal()
+                                        resList.Add(new EventWithTotal
                                         {
                                             Id = sportEvent.Value["id"].ConvertToLongOrNull(),
                                             TotalType = "X",
@@ -132,7 +132,7 @@ namespace DataParser.DefaultRealization
                                         {
                                             try
                                             {
-                                                resList.Add(new EventWithTotal()
+                                                resList.Add(new EventWithTotal
                                                 {
                                                     Id = sportEvent.Value["id"].ConvertToLongOrNull(),
                                                     TotalType = spread.Value?["hdp"]?.ToString(),
@@ -140,7 +140,7 @@ namespace DataParser.DefaultRealization
                                                     //  Remark = "spreads away",
                                                     MatchDateTime = period.Value?["cutoff"]?.ToString()
                                                 });
-                                                resList.Add(new EventWithTotal()
+                                                resList.Add(new EventWithTotal
                                                 {
                                                     Id = sportEvent.Value["id"].ConvertToLongOrNull(),
                                                     TotalType = spread.Value?["hdp"]?.ToString(),
@@ -156,14 +156,14 @@ namespace DataParser.DefaultRealization
                                         }
                                         try
                                         {
-                                            //resList.Add(new EventWithTotal()
+                                            //resList.Add(new EventWithTotal
                                             //{
                                             //    Id = sportEvent.Value["id"].ConvertToLong(),
                                             //    TotalType = "Больше",
                                             //    TotalValue = period.Value?["teamTotal"]?["away"]?["points"]?.ToString(),
                                             //    MatchDateTime = period.Value?["cutoff"]?.ToString()
                                             //});
-                                            //resList.Add(new EventWithTotal()
+                                            //resList.Add(new EventWithTotal
                                             //{
                                             //    Id = sportEvent.Value["id"].ConvertToLong(),
                                             //    TotalType = "Меньше",
@@ -236,7 +236,7 @@ namespace DataParser.DefaultRealization
             var resList = new Dictionary<long, List<EventWithTotalDictionary>>();
             try
             {
-                var sportEvents = (JsonObject)JsonObject.Load(totalResp.GetResponseStream());
+                var sportEvents = (JsonObject)JsonValue.Load(totalResp.GetResponseStream());
 
                 if (sportEvents?["leagues"] == null) return resList;
 
@@ -360,8 +360,11 @@ namespace DataParser.DefaultRealization
             Dictionary<long, string> resList = new Dictionary<long, string>();
             try
             {
-                foreach (var league in ((JsonObject)JsonObject.
-                    Load(teamNamesResp.GetResponseStream()))?["league"])
+                var jsonValue = ((JsonObject)JsonValue.
+                    Load(teamNamesResp.GetResponseStream()))?["league"];
+                if (jsonValue == null) return resList;
+
+                foreach (var league in jsonValue)
                 {
                     try
                     {

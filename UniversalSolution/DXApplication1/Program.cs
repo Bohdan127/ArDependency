@@ -1,6 +1,5 @@
 ﻿using DevExpress.LookAndFeel;
 using DXApplication1.ErrorProvider;
-using FormulasCollection.Realizations;
 using System;
 using System.Globalization;
 using System.Threading;
@@ -46,7 +45,7 @@ namespace DXApplication1
             AppDomain.CurrentDomain.UnhandledException +=
                 new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
-            Application.Run(new XtraForm1(new TwoOutComeForkFormulas()));
+            Application.Run(new XtraForm1());
         }
 
         private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)

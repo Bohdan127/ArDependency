@@ -15,16 +15,17 @@ namespace FormulasCollection.Realizations
         {
             if (CheckIsMustToBeRevert(marEvent.Event, pinEvent.TeamNames))
             {
-                if(CoefsWhichMustBeRevert.revertCoefs.ContainsKey(marEvent.Type))
-                coef2 = pinEvent.TypeCoefDictionary[CoefsWhichMustBeRevert.revertCoefs[marEvent.Type]];
+                if (CoefsWhichMustBeRevert.revertCoefs.ContainsKey(marEvent.Type))
+                    coef2 = pinEvent.TypeCoefDictionary[CoefsWhichMustBeRevert.revertCoefs[marEvent.Type]];
+                else
+                    coef2 = pinEvent.TypeCoefDictionary[CoefsWhichMustBeRevert.TypeRevertParse(marEvent.Type)];
             }
 
             return coef1 != null &&
             coef2 != null &&
             Math.Abs(coef1.Value) > 0.01 &&
             Math.Abs(coef2.Value) > 0.01 &&
-            1 > 1 / coef1.Value + 1 / coef2.Value &&
-            1 / coef1.Value + 1 / coef2.Value > 0.8d;
+            1 > 1 / coef1.Value + 1 / coef2.Value;
 
         }
         private bool CheckIsMustToBeRevert(string eventMarafon, string eventPinacle)
@@ -45,7 +46,6 @@ namespace FormulasCollection.Realizations
             List<ResultForForks> marathon)
         {
             var resList = new List<Fork>();
-            //marathon = AddAsian(marathon);
             foreach (var eventItem in marathon)
             {
                 var pinKey = pinnacle.Keys.FirstOrDefault(key =>
@@ -55,6 +55,7 @@ namespace FormulasCollection.Realizations
                 try
                 {
                     var pinEventKey = IsAnyForkAll(eventItem, pinnacle[pinKey], eventItem.SportType.EnumParse<SportType>());
+                    if (pinEventKey == null) continue;
                     if (pinEventKey.IsNotBlank())
                         resList.Add(new Fork
                         {
@@ -120,42 +121,42 @@ namespace FormulasCollection.Realizations
             switch (st)
             {
                 case SportType.Soccer:
-                        string buffSoccer = SportsConverterTypes.TypeParseAll(marEvent.Type,st);
-                            if (pinEvent.TypeCoefDictionary.ContainsKey(buffSoccer) &&
-                                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffSoccer], marEvent, pinEvent))
-                                return buffSoccer;
+                    string buffSoccer = SportsConverterTypes.TypeParseAll(marEvent.Type, st);
+                    if (pinEvent.TypeCoefDictionary.ContainsKey(buffSoccer) &&
+                        CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffSoccer], marEvent, pinEvent)
+                        && buffSoccer != null)
+                        return buffSoccer;
                     break;
 
                 case SportType.Basketball:
-                    /*
-                    if (marEvent.Type == list.Item1 && pinEvent.TypeCoefDictionary.ContainsKey(list.Item2) && move to 
-                    pinEvent.TypeCoefDictionary.ContainsKey(SportsConverterTypes.TypeParseBasketball(marEvent.Type))
-                    not checked but should be true, easer than write so many strings code
-                    */
                     string buffBasketBall = SportsConverterTypes.TypeParseAll(marEvent.Type,st);
                     if (pinEvent.TypeCoefDictionary.ContainsKey(buffBasketBall) &&
-                                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffBasketBall], marEvent, pinEvent))
+                                CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffBasketBall], marEvent, pinEvent)
+                                && buffBasketBall != null)
                                 return buffBasketBall;
                     break;
 
                 case SportType.Tennis:
-                        string buffTennis = SportsConverterTypes.TypeParseAll(marEvent.Type,st);
-                        if (pinEvent.TypeCoefDictionary.ContainsKey(buffTennis) &&
-                            CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffTennis], marEvent, pinEvent))
-                            return buffTennis;
+                    string buffTennis = SportsConverterTypes.TypeParseAll(marEvent.Type, st);
+                    if (pinEvent.TypeCoefDictionary.ContainsKey(buffTennis) &&
+                        CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffTennis], marEvent, pinEvent)
+                        && buffTennis != null)
+                        return buffTennis;
                     break;
 
                 case SportType.Hockey:
                     string buffHockey = SportsConverterTypes.TypeParseAll(marEvent.Type, st);
                     if (pinEvent.TypeCoefDictionary.ContainsKey(buffHockey) &&
-                        CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffHockey], marEvent, pinEvent))
+                        CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffHockey], marEvent, pinEvent)
+                        && buffHockey != null)
                         return buffHockey;
                     break;
 
                 case SportType.Volleyball:
                     string buffVolleyball = SportsConverterTypes.TypeParseAll(marEvent.Type, st);
                     if (pinEvent.TypeCoefDictionary.ContainsKey(buffVolleyball) &&
-                        CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffVolleyball], marEvent, pinEvent))
+                        CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffVolleyball], marEvent, pinEvent)
+                        && buffVolleyball != null)
                         return buffVolleyball;
                     break;
 

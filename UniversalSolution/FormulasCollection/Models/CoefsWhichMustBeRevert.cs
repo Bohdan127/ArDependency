@@ -29,5 +29,20 @@ namespace FormulasCollection.Models
                 { "X", "12"}
             };
         }
+
+        public static string TypeRevertParse(string typeEvent)
+        {
+            string typeEventTrim = typeEvent.Trim();
+            if (typeEventTrim[0].Equals('F'))
+            {
+                string val = typeEvent.Split('(', ')')[1].ToString();
+                if (val == null) return null;
+                return typeEventTrim[1].Equals('1')
+                    ? ("F1(" + (val[0].Equals('-') ? (val.Substring(1)) : ("-" + val.Substring(1))) + ")")
+                    : ("F2(" + (val[0].Equals('-') ? (val.Substring(1)) : ("-" + val.Substring(1))) + ")");
+            }
+
+            return null;
+        }
     }
 }

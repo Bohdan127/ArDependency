@@ -27,17 +27,51 @@ namespace ParseAPI
         [STAThread]
         private static void Main(string[] args)
         {
-            var start = "7/10/2016 5:30:00 AM"; //10/07/2016 16:30
+            #region Marathon
+            {
+                var mainUrl = "https://www.marathonbet.com/su/"; //https://www.marathonbet.com/su/
+                var mainId = "event_4305884"; //id="event_4305884"
+                var dataEventNameCssClass = "data -event-name"; //data -event-name="Тяньцзинь Тэда - Чанчунь Ятай"
+                var coefClass = "selection-link.normal"; //class="selection-link.normal"
+                var footballUrl = "https://www.marathonbet.com/su/popular/Football/?menu=true";//https://www.marathonbet.com/su/popular/Football/?menu=true
+                var tennisUrl = "https://www.marathonbet.com/su/popular/Tennis/?menu=true";//https://www.marathonbet.com/su/popular/Tennis/?menu=true
+                var basketballUrl = "https://www.marathonbet.com/su/popular/Basketball/?menu=true";//https://www.marathonbet.com/su/popular/Basketball/?menu=true
+                var hockeyUrl = "https://www.marathonbet.com/su/popular/Ice+Hockey/?menu=true";//https://www.marathonbet.com/su/popular/Ice+Hockey/?menu=true
+                /*
+                 * ?????????????????????????
+                 * Volleyball wasn't found in marathon 
+                 * ?????????????????????????
+                 */
+                var volleyballUrl = "https://www.marathonbet.com/su/popular/Volleyball/?menu=true";//https://www.marathonbet.com/su/popular/Volleyball/?menu=true
+            }
+            #endregion
 
-            var splitOne = start.Split(' ');
+            #region Pinnacle
+            {
+                var mainUrl = "https://www.pinnacle.com/en/rtn"; //https://www.pinnacle.com/en/rtn
+                var loginButtonClass = "button blue-bg login";//class="button blue-bg login"
+                var loginFieldClass = "customerId";//class="customerId"
+                var loginFieldName = "CustomerId";//name="CustomerId"
+                var passFieldClass = "password";//class="password"
+                var passFieldName = "Password";//name="Password"
+                var buttonLoginClass = "loginSubmit";//class="loginSubmit"
+                var buttonLoginValue = "Login";//value="Login"
+                var mainId = "event_4305884"; //id="event_4305884"
+                var dataEventNameCssClass = "data -event-name"; //data -event-name="Тяньцзинь Тэда - Чанчунь Ятай"
+                var coefClass = "selection-link.normal"; //class="selection-link.normal"
+            }
+            #endregion
+            //var start = "7/10/2016 5:30:00 AM"; //10/07/2016 16:30
 
-            var splitDate = splitOne[0].Split('/');
+            //var splitOne = start.Split(' ');
 
-            var splitTime = splitOne[1].Split(':');
+            //var splitDate = splitOne[0].Split('/');
 
-            var time = splitOne[2][0] == 'A' ? splitOne[1] : $"{Convert.ToInt16(splitTime[0]) + 12}:{splitTime[1]}";
+            //var splitTime = splitOne[1].Split(':');
 
-            var res = $"{splitDate[1]}/{splitDate[0]}/{splitDate[2]} {time}";
+            //var time = splitOne[2][0] == 'A' ? splitOne[1] : $"{Convert.ToInt16(splitTime[0]) + 12}:{splitTime[1]}";
+
+            //var res = $"{splitDate[1]}/{splitDate[0]}/{splitDate[2]} {time}";
 
 
             //var res = "-144.0".ConvertToDoubleOrNull2();

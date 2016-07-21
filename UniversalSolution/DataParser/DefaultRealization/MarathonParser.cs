@@ -17,161 +17,173 @@ namespace DataParser.MY
     {
         private async Task<List<ResultForForks>> GetNameTeamsAndDateAsync(SportType sportType)
         {
-                result.Clear();
+            result.Clear();
 
-                //strings
-                var url = "";
-                var namefile = "";
-                string oldEvent = null;
-                string date = null;
-                string foraName1 = null;
-                string _eventid = null;
-                string totalName = null;
+            //strings
+            var url = "";
+            var namefile = "";
+            string oldEvent = null;
+            string date = null;
+            string foraName1 = null;
+            string _eventid = null;
+            string totalName = null;
 
-                string oldLiga = null;
-                string liga = null;
+            string oldLiga = "";
+            string liga = "";
 
-                string old_team_name_1 = null;
-                string old_team_name_2 = null;
+            string old_team_name_1 = null;
+            string old_team_name_2 = null;
 
-                bool is_correct_type = true;
+            bool is_correct_type = true;
+            bool changeLiga = false;
 
-                //Boolean
-                var isDate = false;
-                var isTypeCoff = false;
-                var isFora = false;
-                var isTotal = false;
-                var isForaforteam1 = true;
-                var isTotalUnder = true;
+            //Boolean
+            var isDate = false;
+            var isTypeCoff = false;
+            var isFora = false;
+            var isTotal = false;
+            var isForaforteam1 = true;
+            var isTotalUnder = true;
 
-                //List<string>
-                var koff = new List<string>();
-                var countTypeCoff = new List<string>();
+            //List<string>
+            var koff = new List<string>();
+            var countTypeCoff = new List<string>();
 
-                //Integer
-                var i = 0;
-                var index = 0;
-                // try
-                // {
+            //Integer
+            var i = 0;
+            var index = 0;
+            // try
+            // {
 
-                UrlAndNameFile(sportType, out url, out namefile);
-                var lines = (await HtmlAsync(url).ConfigureAwait(false)).Split('\n');
+            UrlAndNameFile(sportType, out url, out namefile);
+            string s = await HtmlAsync(url).ConfigureAwait(false);
+            var lines = s.Split('\n');
 
 
-                foreach (var line in lines)
+            foreach (var line in lines)
+            {
+                //-------------------LIGA-----------------
+
+                if (line._Contains(Tags.Liga))
                 {
-                    //-------------------LIGA-----------------
-
-                    if (line._Contains(Tags.Liga))
+                    if (!changeLiga)
                     {
-                        oldLiga = liga;
-                        liga = GetAttribut(line);
-                        if (liga != oldLiga)
-                            countTypeCoff = new List<string>();
+                        liga = null;
+                        changeLiga = true;
                     }
-
-                    //----------------TYPE-COEFF---------------
-
-                    if (countTypeCoff.Count < 10)
-                    {
-                        if (isTypeCoff)
-                        {
-                            string coeff = ((line.IndexOf('<') != -1) ? line.Replace("<b>", "").Replace("</b>", "") : line).Trim();
-                            if (!countTypeCoff.Contains(coeff))
-                                countTypeCoff.Add(coeff);
-                            isTypeCoff = false;
-                        }
-                        if (line._Contains(Tags.TypeCoff))
-                            isTypeCoff = true;
-                    }
-
-                    //---------------EVENT---------------------
-                    if (line._Contains(Tags.EventID))
-                    {
-                        _eventid = line.GetEventID();
-                        oldEvent = _eventid;
-                    }
-
-
-                    //---------------DATE----------------------
-                    if (isDate)
-                    {
-                        date = line;
-                        isDate = false;
-                    }
-                    if (line._Contains(Tags.Date))
-                    {
-                        isDate = true;
-                    }
-
-                    //--------------Coeff--Value----------------
-                    string res = null;
-                    if (line.Contains(Tags.Coff) /*&& line.Contains("Match_Result")*/)
-                    {
-                        res = line.Substrings(Tags.Coff, "\"");
-                        koff.Add(res);
-                    }
-                    if (line.Contains("<span>&mdash;</span>") || line.Contains("—"))
-                    {
-                        res = "-";
-                        koff.Add(res);
-                    }
-
-                    //-------------------FORA-------------------
-                    if (isFora)
-                    {
-                        foraName1 = (isForaforteam1 ? "F1" : "F2") + GetAttribut(line).Trim();
-                        isFora = false;
-                        isForaforteam1 = !isForaforteam1;
-                    }
-                    if (line.Contains(Tags.Fora))
-                    {
-                        isFora = true;
-                    }
-
-
-                    //------------------TOTAL-----------------
-                    if (isTotal)
-                    {
-                        totalName = (isTotalUnder ? "TU" : "TO") + GetAttribut(line).Trim();
-                        isTotalUnder = !isTotalUnder;
-                        isTotal = false;
-                    }
-                    if (line.Contains(Tags.Total))
-                    {
-                        isTotal = true;
-                    }
-
-
-                    //---------------Add to list RESULT--------------------------
-                    if (date != null && res != null && _eventid != null && englishNameTeams_Dictionary.ContainsKey(_eventid))
-                    {
-                        if (i >= countTypeCoff.Count)
-                            i = 0;
-
-                            string q1 = englishNameTeams_Dictionary[_eventid].name1;
-                            string q2 = englishNameTeams_Dictionary[_eventid].name2;
-
-                            result.Add(new ResultForForks(englishNameTeams_Dictionary[_eventid].name1,
-                                                          englishNameTeams_Dictionary[_eventid].name2,
-                                                          date,
-                                                          (!string.IsNullOrEmpty(totalName) || !string.IsNullOrEmpty(foraName1)) ? (!string.IsNullOrEmpty(totalName) ? totalName : foraName1) : countTypeCoff[i],  //  Type coff
-                                                          res,                //   znaczenia
-                                                          sportType.ToString(),
-                                                          Site.MarathonBet.ToString()
-                                                          ));
-                            if (i < countTypeCoff.Count)
-                                i++;
-                            else
-                                i = 0;
-
-                        totalName = null;
-                        foraName1 = null;
-                        res = null;
-                    }
-
-                    this.oldLine = line;
+                    oldLiga = liga;
+                    liga += GetAttribut(line);
+                    if (liga != oldLiga)
+                        countTypeCoff = new List<string>();
                 }
+                else
+                {
+                    if (!String.IsNullOrEmpty(line))
+                        changeLiga = false;
+                }
+
+                //----------------TYPE-COEFF---------------
+
+                if (countTypeCoff.Count < 10)
+                {
+                    if (isTypeCoff)
+                    {
+                        string coeff = ((line.IndexOf('<') != -1) ? line.Replace("<b>", "").Replace("</b>", "") : line).Trim();
+                        if (!countTypeCoff.Contains(coeff))
+                            countTypeCoff.Add(coeff);
+                        isTypeCoff = false;
+                    }
+                    if (line._Contains(Tags.TypeCoff))
+                        isTypeCoff = true;
+                }
+
+                //---------------EVENT---------------------
+                if (line._Contains(Tags.EventID))
+                {
+                    _eventid = line.GetEventID();
+                    oldEvent = _eventid;
+                }
+
+
+                //---------------DATE----------------------
+                if (isDate)
+                {
+                    date = line;
+                    isDate = false;
+                }
+                if (line._Contains(Tags.Date))
+                {
+                    isDate = true;
+                }
+
+                //--------------Coeff--Value----------------
+                string res = null;
+                if (line.Contains(Tags.Coff) /*&& line.Contains("Match_Result")*/)
+                {
+                    res = line.Substrings(Tags.Coff, "\"");
+                    koff.Add(res);
+                }
+                if (line.Contains("<span>&mdash;</span>") || line.Contains("—"))
+                {
+                    res = "-";
+                    koff.Add(res);
+                }
+
+                //-------------------FORA-------------------
+                if (isFora)
+                {
+                    foraName1 = (isForaforteam1 ? "F1" : "F2") + GetAttribut(line).Trim();
+                    isFora = false;
+                    isForaforteam1 = !isForaforteam1;
+                }
+                if (line.Contains(Tags.Fora))
+                {
+                    isFora = true;
+                }
+
+
+                //------------------TOTAL-----------------
+                if (isTotal)
+                {
+                    totalName = (isTotalUnder ? "TU" : "TO") + GetAttribut(line).Trim();
+                    isTotalUnder = !isTotalUnder;
+                    isTotal = false;
+                }
+                if (line.Contains(Tags.Total))
+                {
+                    isTotal = true;
+                }
+
+
+                //---------------Add to list RESULT--------------------------
+                if (date != null && res != null && _eventid != null && englishNameTeams_Dictionary.ContainsKey(_eventid))
+                {
+                    if (i >= countTypeCoff.Count)
+                        i = 0;
+                    string q1 = englishNameTeams_Dictionary[_eventid].name1;
+                    string q2 = englishNameTeams_Dictionary[_eventid].name2;
+
+                    result.Add(new ResultForForks(_eventid, englishNameTeams_Dictionary[_eventid].name1,
+                                                  englishNameTeams_Dictionary[_eventid].name2,
+                                                  date,
+                                                  (!string.IsNullOrEmpty(totalName) || !string.IsNullOrEmpty(foraName1)) ? (!string.IsNullOrEmpty(totalName) ? totalName : foraName1) : countTypeCoff[i],  //  Type coff
+                                                  res,                //   znaczenia
+                                                  sportType.ToString(),
+                                                  Site.MarathonBet.ToString(),
+                                                  liga
+                                                  ));
+                    if (i < countTypeCoff.Count)
+                        i++;
+                    else
+                        i = 0;
+
+                    totalName = null;
+                    foraName1 = null;
+                    res = null;
+                }
+
+                this.oldLine = line;
+            }
             return result;
         }
 

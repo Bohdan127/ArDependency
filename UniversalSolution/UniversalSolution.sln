@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataParser", "DataParser\DataParser.csproj", "{586A03BB-1702-4143-B370-E1DC6656762A}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSaver", "DataSaver\DataSaver.csproj", "{6C968817-C8BB-4BFF-9284-C786DBF5E90D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLoader", "DataLoader\DataLoader.csproj", "{1F03FA64-CCEE-4BDB-AED8-9AAB4EE556B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCrawler", "WebCrawler\WebCrawler.csproj", "{AC11A78E-40F6-4418-B550-846602DC86CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,6 +125,22 @@ Global
 		{1F03FA64-CCEE-4BDB-AED8-9AAB4EE556B1}.Release|x64.Build.0 = Release|Any CPU
 		{1F03FA64-CCEE-4BDB-AED8-9AAB4EE556B1}.Release|x86.ActiveCfg = Release|Any CPU
 		{1F03FA64-CCEE-4BDB-AED8-9AAB4EE556B1}.Release|x86.Build.0 = Release|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Debug|ARM.Build.0 = Debug|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Debug|x64.Build.0 = Debug|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Debug|x86.Build.0 = Debug|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Release|ARM.ActiveCfg = Release|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Release|ARM.Build.0 = Release|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Release|x64.ActiveCfg = Release|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Release|x64.Build.0 = Release|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Release|x86.ActiveCfg = Release|Any CPU
+		{AC11A78E-40F6-4418-B550-846602DC86CB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -54,6 +54,8 @@
             this.layoutControlItem9 = new DevExpress.XtraLayout.LayoutControlItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.colLiga = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemHyperLinkEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemHyperLinkEdit();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.progressBarControl1.Properties)).BeginInit();
@@ -65,6 +67,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem9)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemHyperLinkEdit1)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
@@ -106,7 +109,8 @@
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
-            this.repositoryItemCheckEditSave});
+            this.repositoryItemCheckEditSave,
+            this.repositoryItemHyperLinkEdit1});
             this.gridControl1.Size = new System.Drawing.Size(595, 317);
             this.gridControl1.TabIndex = 4;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -117,6 +121,7 @@
             this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.colDateAndTime,
             this.colSportType,
+            this.colLiga,
             this.colTeams,
             this.colBookmaker,
             this.colRate1,
@@ -150,21 +155,22 @@
             // 
             // colTeams
             // 
-            this.colTeams.Caption = "Команды и лига";
+            this.colTeams.Caption = "Команды";
             this.colTeams.FieldName = "Event";
             this.colTeams.Name = "colTeams";
             this.colTeams.OptionsColumn.ReadOnly = true;
             this.colTeams.Visible = true;
-            this.colTeams.VisibleIndex = 2;
+            this.colTeams.VisibleIndex = 3;
             // 
             // colBookmaker
             // 
             this.colBookmaker.Caption = "Букмекер 1";
+            this.colBookmaker.ColumnEdit = this.repositoryItemHyperLinkEdit1;
             this.colBookmaker.FieldName = "BookmakerFirst";
             this.colBookmaker.Name = "colBookmaker";
             this.colBookmaker.OptionsColumn.ReadOnly = true;
             this.colBookmaker.Visible = true;
-            this.colBookmaker.VisibleIndex = 3;
+            this.colBookmaker.VisibleIndex = 4;
             // 
             // colRate1
             // 
@@ -173,7 +179,7 @@
             this.colRate1.Name = "colRate1";
             this.colRate1.OptionsColumn.ReadOnly = true;
             this.colRate1.Visible = true;
-            this.colRate1.VisibleIndex = 4;
+            this.colRate1.VisibleIndex = 5;
             // 
             // colCoef1
             // 
@@ -182,16 +188,17 @@
             this.colCoef1.Name = "colCoef1";
             this.colCoef1.OptionsColumn.ReadOnly = true;
             this.colCoef1.Visible = true;
-            this.colCoef1.VisibleIndex = 5;
+            this.colCoef1.VisibleIndex = 6;
             // 
             // colBookmaker2
             // 
             this.colBookmaker2.Caption = "Букмекер 2";
+            this.colBookmaker2.ColumnEdit = this.repositoryItemHyperLinkEdit1;
             this.colBookmaker2.FieldName = "BookmakerSecond";
             this.colBookmaker2.Name = "colBookmaker2";
             this.colBookmaker2.OptionsColumn.ReadOnly = true;
             this.colBookmaker2.Visible = true;
-            this.colBookmaker2.VisibleIndex = 6;
+            this.colBookmaker2.VisibleIndex = 7;
             // 
             // colRate2
             // 
@@ -200,7 +207,7 @@
             this.colRate2.Name = "colRate2";
             this.colRate2.OptionsColumn.ReadOnly = true;
             this.colRate2.Visible = true;
-            this.colRate2.VisibleIndex = 7;
+            this.colRate2.VisibleIndex = 8;
             // 
             // colCoef2
             // 
@@ -209,16 +216,16 @@
             this.colCoef2.Name = "colCoef2";
             this.colCoef2.OptionsColumn.ReadOnly = true;
             this.colCoef2.Visible = true;
-            this.colCoef2.VisibleIndex = 8;
+            this.colCoef2.VisibleIndex = 9;
             // 
             // colProfit
             // 
-            this.colProfit.Caption = "Прибыль";
+            this.colProfit.Caption = "Процент";
             this.colProfit.FieldName = "Profit";
             this.colProfit.Name = "colProfit";
             this.colProfit.OptionsColumn.ReadOnly = true;
             this.colProfit.Visible = true;
-            this.colProfit.VisibleIndex = 9;
+            this.colProfit.VisibleIndex = 10;
             // 
             // colSave
             // 
@@ -227,7 +234,7 @@
             this.colSave.FieldName = "Type";
             this.colSave.Name = "colSave";
             this.colSave.Visible = true;
-            this.colSave.VisibleIndex = 10;
+            this.colSave.VisibleIndex = 11;
             // 
             // repositoryItemCheckEditSave
             // 
@@ -296,6 +303,21 @@
             this.imageList1.Images.SetKeyName(2, "Paste_32x32.ico");
             this.imageList1.Images.SetKeyName(3, "PieStylePie_32x32.ico");
             // 
+            // colLiga
+            // 
+            this.colLiga.Caption = "Лига";
+            this.colLiga.FieldName = "Liga";
+            this.colLiga.Name = "colLiga";
+            this.colLiga.Visible = true;
+            this.colLiga.VisibleIndex = 2;
+            // 
+            // repositoryItemHyperLinkEdit1
+            // 
+            this.repositoryItemHyperLinkEdit1.AutoHeight = false;
+            this.repositoryItemHyperLinkEdit1.Name = "repositoryItemHyperLinkEdit1";
+            this.repositoryItemHyperLinkEdit1.StartKey = new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None);
+            this.repositoryItemHyperLinkEdit1.StartLinkOnClickingEmptySpace = false;
+            // 
             // SearchPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -317,6 +339,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemHyperLinkEdit1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -347,5 +370,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn colProfit;
         private DevExpress.XtraGrid.Columns.GridColumn colSave;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEditSave;
+        private DevExpress.XtraGrid.Columns.GridColumn colLiga;
+        private DevExpress.XtraEditors.Repository.RepositoryItemHyperLinkEdit repositoryItemHyperLinkEdit1;
     }
 }

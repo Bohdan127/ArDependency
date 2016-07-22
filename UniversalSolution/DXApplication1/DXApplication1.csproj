@@ -255,6 +255,10 @@
       <Project>{c6982ab9-704a-474f-a303-89b4c4a3d11e}</Project>
       <Name>FormulasCollection</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WebCrawler\WebCrawler.csproj">
+      <Project>{AC11A78E-40F6-4418-B550-846602DC86CB}</Project>
+      <Name>WebCrawler</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PublishFile Include="Castle.Core">

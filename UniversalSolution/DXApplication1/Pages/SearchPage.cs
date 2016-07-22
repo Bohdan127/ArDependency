@@ -1,4 +1,5 @@
-﻿using DataSaver;
+﻿using DataParser.Enums;
+using DataSaver;
 using DevExpress.XtraGrid;
 using FormulasCollection.Enums;
 using FormulasCollection.Models;
@@ -6,6 +7,7 @@ using System;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+using WebCrawler.SeleniumCrawler;
 
 namespace DXApplication1.Pages
 {
@@ -29,6 +31,7 @@ namespace DXApplication1.Pages
             backgroundWorker1.DoWork += BackgroundWorker1_DoWork;
             backgroundWorker1.WorkerSupportsCancellation = true;
             repositoryItemCheckEditSave.EditValueChanging += RepositoryItemCheckEditSave_EditValueChanging;
+            repositoryItemHyperLinkEdit1.Click += RepositoryItemHyperLinkEdit1_Click;
             _localSaver = new LocalSaver();
 
             if (isSearchPage)
@@ -109,6 +112,15 @@ namespace DXApplication1.Pages
         {
             if (backgroundWorker1.IsBusy)
                 backgroundWorker1.CancelAsync();
+        }
+
+        private void RepositoryItemHyperLinkEdit1_Click(object sender, EventArgs e)
+        {
+            var currRow = (Fork)gridView1.GetFocusedRow();
+            if (gridView1.FocusedColumn == colBookmaker)
+                MarathonCrawler.SearchAndOpenEvent((SportType)Enum.Parse(typeof(SportType), currRow.Sport, true), currRow.Id, currRow.CoefFirst);
+            else
+                PinnacleCrawler.SearchAndOpenEvent();
         }
     }
 }

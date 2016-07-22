@@ -51,25 +51,27 @@ namespace FormulasCollection.Realizations
                 var pinKey = pinnacle.Keys.FirstOrDefault(key =>
                     Extentions.GetStringSimilarityInPercent(eventItem.Event, key, true) >= 90);
                 if (pinKey == null) continue;
-
+                var pin = pinnacle[pinKey];
                 try
                 {
                     var pinEventKey = IsAnyForkAll(eventItem, pinnacle[pinKey], eventItem.SportType.EnumParse<SportType>());
                     if (pinEventKey == null) continue;
                     if (pinEventKey.IsNotBlank())
+                    {
                         resList.Add(new Fork
                         {
-                            Event = pinnacle[pinKey].TeamNames,
+                            Event = pin.TeamNames,
                             TypeFirst = eventItem.Type,
                             CoefFirst = eventItem.Coef,
                             TypeSecond = pinEventKey.ConvertToStringOrNull(),
-                            CoefSecond = pinnacle[pinKey].TypeCoefDictionary[pinEventKey.ConvertToStringOrNull()].ConvertToStringOrNull(),
+                            CoefSecond = pin.TypeCoefDictionary[pinEventKey.ConvertToStringOrNull()].ConvertToStringOrNull(),
                             Sport = eventItem.SportType,
-                            MatchDateTime = pinnacle[pinKey].MatchDateTime.ToString(),
+                            MatchDateTime = pin.MatchDateTime.ToString(),
                             BookmakerFirst = "https://www.marathonbet.com/",
                             BookmakerSecond = "http://www.pinnaclesports.com/",
                             Type = ForkType.Current
                         });
+                    }
                 }
                 catch
                 {

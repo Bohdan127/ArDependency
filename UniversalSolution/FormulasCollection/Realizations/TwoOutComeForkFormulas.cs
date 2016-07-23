@@ -30,17 +30,9 @@ namespace FormulasCollection.Realizations
         }
         private bool CheckIsMustToBeRevert(string eventMarafon, string eventPinacle)
         {
-            if (Extentions.GetStringSimilarityInPercent(eventMarafon.Split('-')[0],
-                eventPinacle.Split('-')[0], true) >= 80)
-            {
-                return false;
-            }
-            else
-                return true;
+            return Extentions.GetStringSimilarityInPercent(eventMarafon.Split('-')[0],
+                eventPinacle.Split('-')[0], true) < 80;
         }
-        public double GetProfit(double? rate, double? kof1, double? kof2) => (rate != null && kof2 != null && kof1 != null)
-            ? Math.Round(rate.Value / (kof1.Value + kof2.Value) * (kof1.Value * kof2.Value), 2)
-            : 0d;
 
         public List<Fork> GetAllForksDictionary(Dictionary<string, ResultForForksDictionary> pinnacle,
             List<ResultForForks> marathon)
@@ -60,7 +52,7 @@ namespace FormulasCollection.Realizations
                     {
                         resList.Add(new Fork
                         {
-                            Liege = eventItem.Liege,
+                            League = eventItem.League,
                             EventId = eventItem.EventId,
                             Event = eventItem.Event,
                             TypeFirst = eventItem.Type,

@@ -73,8 +73,8 @@ namespace FormulasCollection.Models
         public string EventId { get; set; }
 
         /// <summary>
-        /// Liege of game
+        /// League of game
         /// </summary>
-        public string Liege { get; set; }
+        public string League { get; set; }
     }
 }

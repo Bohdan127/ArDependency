@@ -6,13 +6,13 @@
         public string Type { get; set; }
         public string Coef { get; set; }
         public string EventId { get; set; }
-        public string Liege { get; set; }
+        public string League { get; set; }
         public string Bookmaker { get; set; }
 
         //  X1 X2 1 2
         public ResultForForks() { }
 
-        public ResultForForks(string eventID, string nameTeam1, string nameTeam2, string date, string nameCoff, string coef, string type, string bookmaker, string liege)
+        public ResultForForks(string eventID, string nameTeam1, string nameTeam2, string date, string nameCoff, string coef, string type, string bookmaker, string league)
         {
             this.Event = nameTeam1.Trim() + " - " + nameTeam2.Trim();
             this.MatchDateTime = date;
@@ -21,7 +21,7 @@
             SportType = type;
             Bookmaker = bookmaker;
             this.EventId = eventID;
-            this.Liege = liege;
+            this.League = league;
         }
 
         public string SportType { get; set; }

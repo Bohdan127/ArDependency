@@ -29,7 +29,7 @@ namespace DataParser.MY
             string totalName = null;
 
             string oldLiga = "";
-            string liga = "";
+            string league = "";
 
             string old_team_name_1 = null;
             string old_team_name_2 = null;
@@ -68,12 +68,12 @@ namespace DataParser.MY
                 {
                     if (!changeLiga)
                     {
-                        liga = null;
+                        league = null;
                         changeLiga = true;
                     }
-                    oldLiga = liga;
-                    liga += GetAttribut(line);
-                    if (liga != oldLiga)
+                    oldLiga = league;
+                    league += GetAttribut(line);
+                    if (league != oldLiga)
                         countTypeCoff = new List<string>();
                 }
                 else
@@ -170,7 +170,7 @@ namespace DataParser.MY
                                                   res,                //   znaczenia
                                                   sportType.ToString(),
                                                   Site.MarathonBet.ToString(),
-                                                  liga
+                                                  league
                                                   ));
                     if (i < countTypeCoff.Count)
                         i++;

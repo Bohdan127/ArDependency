@@ -190,6 +190,16 @@ namespace DataSaver
             };
             return result;
         }
+        protected virtual Users MapJsonDocumentToUsers(JsonDocument json)
+        {
+            var result = new Users
+            {
+                Id = json.Key,
+                Login = json.DataAsJson.Value<string>("Login"),
+                Password = json.DataAsJson.Value<string>("Password")
+            };
+            return result;
+        }
 
         protected virtual ForkRow MapForkToForkRow(Fork fork)
         {
@@ -228,6 +238,33 @@ namespace DataSaver
                 Type = forkRow.Type
             };
             return result;
+        }
+
+        public virtual bool AddUserToDB(string login, string password)
+        {
+            Users user = new Users() { Login = login, Password = password };
+            if (user == null) return false;
+            try
+            {
+                Session.Store(user);
+            }
+            catch (Exception)
+            {
+                //ignored
+            }
+            Session.SaveChanges();
+            return true;
+        }
+        public virtual Users FindUser()
+        {
+            var jsonList = new List<JsonDocument>();
+            using (_store.DatabaseCommands.DisableAllCaching())
+            {
+                jsonList.AddRange(_store.DatabaseCommands.GetDocuments(0, PageSize));
+            }
+            jsonList.RemoveAll(json => !json.Key.Contains("users/"));
+            var resList = jsonList.Select(MapJsonDocumentToUsers);
+            return resList != null ? resList.FirstOrDefault() : null;
         }
     }
 }

@@ -47,11 +47,21 @@ namespace DataLoader
 
         private static void GetUserData()
         {
-            Console.WriteLine("Please enter user login");
-            UserLogin = Console.ReadLine();
+            var user = _localSaver.FindUser();
+            if (user != null)
+            {
+                UserLogin = user.Login;
+                UserPass = user.Password;
+            }
+            else {
+                Console.WriteLine("Please enter user login");
+                UserLogin = Console.ReadLine();
 
-            Console.WriteLine("Please enter user password");
-            UserPass = Console.ReadLine();
+                Console.WriteLine("Please enter user password");
+                UserPass = Console.ReadLine();
+                _localSaver.AddUserToDB(UserLogin, UserPass);
+            }
+            
         }
 
         private static void StartLoadDictionary()

@@ -313,6 +313,23 @@ namespace DataParser.MY
             }
             return !date ? "" : result;
         }
+        private static string GetLigue(string line)
+        {
+            bool isStartTag = true;
+            string result = "";
+            foreach (var l in line)
+            {
+                if (l == '<')
+                    isStartTag = false;
+                if (isStartTag)
+                    result += l;
+                if (l == '>')
+                    isStartTag = true;
+                if (String.IsNullOrEmpty(result.Trim()) && !isStartTag)
+                    result = "";
+            }
+            return result;
+        }
 
 
 

@@ -57,10 +57,9 @@ namespace DXApplication1.Models
             if (filterPage.FaterThen != null)
             {
                 DateTime dateFater;
-                forks.RemoveAll(a => DateTime.Compare(DateTime.TryParse(a.MatchDateTime, out dateFater) 
+                forks.RemoveAll(a => DateTime.Compare(DateTime.TryParse(a.MatchDateTime.Trim(), out dateFater)
                     ? dateFater : DateTime.Now, filterPage.FaterThen.Value) < 0);
             }
-
             if (filterPage.LongerThen != null)
             {
                 DateTime dateLonger;

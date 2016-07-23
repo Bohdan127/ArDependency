@@ -140,6 +140,7 @@ namespace DXApplication1.Pages
 
         private void Min_Changing(object sender, ChangingEventArgs e)
         {
+            Filter.Min = null;
             lock (Filter)
             {
                 Filter.Min = e.NewValue.ConvertToIntOrNull();
@@ -148,6 +149,7 @@ namespace DXApplication1.Pages
 
         private void Max_Changing(object sender, ChangingEventArgs e)
         {
+            Filter.Max = null;
             lock (Filter)
             {
                 Filter.Max = e.NewValue.ConvertToIntOrNull();
@@ -211,7 +213,8 @@ namespace DXApplication1.Pages
         }
 
         private void Faster_Changing(object sender, ChangingEventArgs e)
-        {
+        { 
+            Filter.FaterThen = null;
             lock (Filter)
             {
                 DateTime dateValue;
@@ -224,6 +227,7 @@ namespace DXApplication1.Pages
 
         private void Later_Changing(object sender, ChangingEventArgs e)
         {
+            Filter.LongerThen = null;
             lock (Filter)
             {
                 DateTime dateValue;

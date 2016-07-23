@@ -11,6 +11,7 @@ namespace DXApplication1.Models
     {
         #region Members
 
+        private Filter _filter;
         private FilterPage _filterPage;
         private SearchPage _accountingPage;
         private SearchPage _searchPage;

@@ -66,5 +66,15 @@ namespace FormulasCollection.Models
         /// Type of Fork
         /// </summary>
         public ForkType Type { get; set; }
+
+        /// <summary>
+        /// Event Id for Pinnacle search
+        /// </summary>
+        public string EventId { get; set; }
+
+        /// <summary>
+        /// Liege of game
+        /// </summary>
+        public string Liege { get; set; }
     }
 }

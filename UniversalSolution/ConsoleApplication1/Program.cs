@@ -1,4 +1,5 @@
-﻿using DataSaver.Models;
+﻿using DataParser.Enums;
+using DataSaver.Models;
 using DataSaver.RavenDB;
 using Raven.Client;
 using Raven.Client.Document;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using ToolsPortable;
+using WebCrawler.SeleniumCrawler;
 
 namespace ParseAPI
 {
@@ -27,24 +29,6 @@ namespace ParseAPI
         [STAThread]
         private static void Main(string[] args)
         {
-            #region Marathon
-            {
-                var mainUrl = "https://www.marathonbet.com/su/"; //https://www.marathonbet.com/su/
-                var mainId = "event_4305884"; //id="event_4305884"
-                var dataEventNameCssClass = "data -event-name"; //data -event-name="Тяньцзинь Тэда - Чанчунь Ятай"
-                var coefClass = "selection-link.normal"; //class="selection-link.normal"
-                var footballUrl = "https://www.marathonbet.com/su/popular/Football/?menu=true";//https://www.marathonbet.com/su/popular/Football/?menu=true
-                var tennisUrl = "https://www.marathonbet.com/su/popular/Tennis/?menu=true";//https://www.marathonbet.com/su/popular/Tennis/?menu=true
-                var basketballUrl = "https://www.marathonbet.com/su/popular/Basketball/?menu=true";//https://www.marathonbet.com/su/popular/Basketball/?menu=true
-                var hockeyUrl = "https://www.marathonbet.com/su/popular/Ice+Hockey/?menu=true";//https://www.marathonbet.com/su/popular/Ice+Hockey/?menu=true
-                /*
-                 * ?????????????????????????
-                 * Volleyball wasn't found in marathon 
-                 * ?????????????????????????
-                 */
-                var volleyballUrl = "https://www.marathonbet.com/su/popular/Volleyball/?menu=true";//https://www.marathonbet.com/su/popular/Volleyball/?menu=true
-            }
-            #endregion
 
             #region Pinnacle
             {
@@ -61,6 +45,9 @@ namespace ParseAPI
                 var coefClass = "selection-link.normal"; //class="selection-link.normal"
             }
             #endregion
+
+
+            MarathonCrawler.SearchAndOpenEvent(SportType.Soccer, "event_3374208", "3.40");
             //var start = "7/10/2016 5:30:00 AM"; //10/07/2016 16:30
 
             //var splitOne = start.Split(' ');

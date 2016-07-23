@@ -60,7 +60,9 @@ namespace FormulasCollection.Realizations
                     {
                         resList.Add(new Fork
                         {
-                            Event = pin.TeamNames,
+                            Liege = eventItem.Liege,
+                            EventId = eventItem.EventId,
+                            Event = eventItem.Event,
                             TypeFirst = eventItem.Type,
                             CoefFirst = eventItem.Coef,
                             TypeSecond = pinEventKey.ConvertToStringOrNull(),
@@ -131,11 +133,11 @@ namespace FormulasCollection.Realizations
                     break;
 
                 case SportType.Basketball:
-                    string buffBasketBall = SportsConverterTypes.TypeParseAll(marEvent.Type,st);
+                    string buffBasketBall = SportsConverterTypes.TypeParseAll(marEvent.Type, st);
                     if (pinEvent.TypeCoefDictionary.ContainsKey(buffBasketBall) &&
                                 CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(), pinEvent.TypeCoefDictionary[buffBasketBall], marEvent, pinEvent)
                                 && buffBasketBall != null)
-                                return buffBasketBall;
+                        return buffBasketBall;
                     break;
 
                 case SportType.Tennis:
@@ -165,7 +167,7 @@ namespace FormulasCollection.Realizations
                 default:
                     SportType.NoType.ToString();
                     break;
-        }
+            }
             return null;
         }
     }

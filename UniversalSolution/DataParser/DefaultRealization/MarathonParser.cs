@@ -320,33 +320,33 @@ namespace DataParser.MY
         {
             string language = isEnglish ? "en" : "su";
             string en_namefile = isEnglish ? "en" : "";
-            url = "https://www.marathonbet.com/" + language + "/popular/Ice+Hockey/?menu";
+            url = "https://www.marathonbet.com/" + language + "/popular/Ice+Hockey/";
             namefile = "Default.html";
             switch (sportType)
             {
                 case SportType.Soccer:
                     namefile = "Soccer" + en_namefile + ".html";
-                    url = "https://www.marathonbet.com/" + language + "/popular/Football/?menu"; //"/betting/Football/England/Championship/Promotion+Play-Offs/Semi+Final/1st+Leg/";
+                    url = "https://www.marathonbet.com/" + language + "/popular/Football/"; //"/betting/Football/England/Championship/Promotion+Play-Offs/Semi+Final/1st+Leg/";
                     break;
 
                 case SportType.Basketball:
                     namefile = "Basketball" + en_namefile + ".html";
-                    url = "https://www.marathonbet.com/" + language + "/popular/Basketball/?menu";
+                    url = "https://www.marathonbet.com/" + language + "/popular/Basketball/";
                     break;
 
                 case SportType.Hockey:
                     namefile = "Hokey" + en_namefile + ".html";
-                    url = "https://www.marathonbet.com/" + language + "/popular/Ice+Hockey/?menu";
+                    url = "https://www.marathonbet.com/" + language + "/popular/Ice+Hockey/";
                     break;
 
                 case SportType.Tennis:
                     namefile = "Tenis" + en_namefile + ".html";
-                    url = "https://www.marathonbet.com/" + language + "/popular/Tennis/?menu";
+                    url = "https://www.marathonbet.com/" + language + "/popular/Tennis/";
                     break;
 
                 case SportType.Volleyball:
                     namefile = "Volleyball" + en_namefile + ".html";
-                    url = "https://www.marathonbet.com/" + language + "/popular/Volleyball/?menu";
+                    url = "https://www.marathonbet.com/" + language + "/popular/Volleyball/";
                     break;
             }
         }

@@ -54,6 +54,20 @@ namespace DXApplication1.Models
             if (filterPage.Max != null)
                 forks.RemoveAll(f => f.Profit >= filterPage.Max.Value);
 
+            if (filterPage.FaterThen != null)
+            {
+                DateTime dateFater;
+                forks.RemoveAll(a => DateTime.Compare(DateTime.TryParse(a.MatchDateTime, out dateFater) 
+                    ? dateFater : DateTime.Now, filterPage.FaterThen.Value) < 0);
+            }
+
+            if (filterPage.LongerThen != null)
+            {
+                DateTime dateLonger;
+                forks.RemoveAll(a => DateTime.Compare(DateTime.TryParse(a.MatchDateTime, out dateLonger)
+                    ? dateLonger : DateTime.Now, filterPage.LongerThen.Value) > 0);
+            }
+
             return forks;
         }
     }

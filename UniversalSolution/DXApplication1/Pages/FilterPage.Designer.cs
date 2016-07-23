@@ -517,7 +517,6 @@ namespace DXApplication1.Pages
             // layoutControlItemNotFaster
             // 
             this.layoutControlItemNotFaster.Control = this.fasterDateTimePicker;
-            this.layoutControlItemNotFaster.Enabled = false;
             this.layoutControlItemNotFaster.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemNotFaster.Name = "layoutControlItemNotFaster";
             this.layoutControlItemNotFaster.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);
@@ -529,7 +528,6 @@ namespace DXApplication1.Pages
             // 
             this.layoutControlItemNoLater.Control = this.longerDateTimePicker;
             this.layoutControlItemNoLater.CustomizationFormText = "layoutControlItem19";
-            this.layoutControlItemNoLater.Enabled = false;
             this.layoutControlItemNoLater.Location = new System.Drawing.Point(0, 24);
             this.layoutControlItemNoLater.Name = "layoutControlItemNoLater";
             this.layoutControlItemNoLater.Padding = new DevExpress.XtraLayout.Utils.Padding(10, 2, 2, 2);

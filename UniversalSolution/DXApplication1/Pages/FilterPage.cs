@@ -214,7 +214,11 @@ namespace DXApplication1.Pages
         {
             lock (Filter)
             {
-                Filter.FaterThen = Extentions.ConvertStringToDateTime(e.NewValue?.ToString());
+                DateTime dateValue;
+                    if (DateTime.TryParse(e.NewValue?.ToString(), out dateValue))
+                    {
+                        Filter.FaterThen = dateValue;
+                    }        
             }
         }
 
@@ -222,7 +226,11 @@ namespace DXApplication1.Pages
         {
             lock (Filter)
             {
-                Filter.LongerThen = Extentions.ConvertStringToDateTime(e.NewValue?.ToString());
+                DateTime dateValue;
+                if (DateTime.TryParse(e.NewValue?.ToString(), out dateValue))
+                {
+                    Filter.LongerThen = dateValue;
+                }
             }
         }
 

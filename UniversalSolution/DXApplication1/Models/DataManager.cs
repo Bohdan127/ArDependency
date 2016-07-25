@@ -46,7 +46,7 @@ namespace DXApplication1.Models
                     var income3 = Convert.ToDouble(_calculatorFormulas.CalculateClearRate(rate2, income1));
                     var income4 = Convert.ToDouble(_calculatorFormulas.CalculateClearRate(rate1, income2));
                     //todo delete this shit and refactored to one command
-                    fork.Profit = Convert.ToDouble(_calculatorFormulas.CalculateSummaryIncome(income3, income4)) - defRate;
+                    fork.Profit = Math.Round(Convert.ToDouble(_calculatorFormulas.CalculateSummaryIncome(income3, income4)) - defRate, 2);
                 }
             }
             if (filterPage.Min != null)

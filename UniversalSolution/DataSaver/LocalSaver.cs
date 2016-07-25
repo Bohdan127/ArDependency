@@ -18,8 +18,6 @@ namespace DataSaver
 {
     public class LocalSaver
     {
-        //internal ForkTableAdapter TableAdapter;
-        //internal ForksDataSet DataSet;
         internal DocumentStore _store;
 
         private IDocumentSession _session;
@@ -190,9 +188,9 @@ namespace DataSaver
             };
             return result;
         }
-        protected virtual Users MapJsonDocumentToUsers(JsonDocument json)
+        protected virtual User MapJsonDocumentToUsers(JsonDocument json)
         {
-            var result = new Users
+            var result = new User
             {
                 Id = json.Key,
                 Login = json.DataAsJson.Value<string>("Login"),
@@ -240,10 +238,18 @@ namespace DataSaver
             return result;
         }
 
+        public virtual void UpdateUser(User user)
+        {
+            var userDocument = Session.Load<User>(user.Id);
+            userDocument.Login = user.Login;
+            userDocument.Password = user.Password;
+            Session.SaveChanges();
+        }
+
         public virtual bool AddUserToDB(string login, string password)
         {
-            Users user = new Users() { Login = login, Password = password };
-            if (user == null) return false;
+            var user = new User { Login = login, Password = password };
+
             try
             {
                 Session.Store(user);
@@ -255,16 +261,22 @@ namespace DataSaver
             Session.SaveChanges();
             return true;
         }
-        public virtual Users FindUser()
+        public virtual User FindUser()
         {
             var jsonList = new List<JsonDocument>();
             using (_store.DatabaseCommands.DisableAllCaching())
             {
-                jsonList.AddRange(_store.DatabaseCommands.GetDocuments(0, PageSize));
+                for (var i = 0;
+                    i <=
+                    Session.Query<ForkRow>().Customize(x => x.WaitForNonStaleResultsAsOfNow()).GetPageCount(PageSize);
+                    i += PageSize)
+                {
+                    jsonList.AddRange(_store.DatabaseCommands.GetDocuments(i, PageSize));
+                }
             }
             jsonList.RemoveAll(json => !json.Key.Contains("users/"));
             var resList = jsonList.Select(MapJsonDocumentToUsers);
-            return resList != null ? resList.FirstOrDefault() : null;
+            return resList.FirstOrDefault();
         }
     }
 }

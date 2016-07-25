@@ -2,6 +2,8 @@
 using DevExpress.XtraBars.Alerter;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace WebCrawler.SeleniumCrawler
 {
@@ -20,6 +22,12 @@ namespace WebCrawler.SeleniumCrawler
         static MarathonCrawler()
         {
             AlertControl = new AlertControl();
+            AlertControl.BeforeFormShow += _alertControl_BeforeFormShow;
+        }
+
+        private static void _alertControl_BeforeFormShow(object sender, AlertFormEventArgs e)
+        {
+            e.Location = new Point((Screen.PrimaryScreen.Bounds.Width + 150) / 2, (Screen.PrimaryScreen.Bounds.Height - 150) / 2);
         }
 
         public static void SearchAndOpenEvent(SportType sportType, string eventId, string coefValue)
@@ -65,6 +73,10 @@ namespace WebCrawler.SeleniumCrawler
                     break;
                 }
                 driver.Close();
+            }
+            catch
+            {
+                //found = false;
             }
             finally
             {

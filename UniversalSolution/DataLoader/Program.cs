@@ -53,7 +53,8 @@ namespace DataLoader
                 UserLogin = user.Login;
                 UserPass = user.Password;
             }
-            else {
+            else
+            {
                 Console.WriteLine("Please enter user login");
                 UserLogin = Console.ReadLine();
 
@@ -61,7 +62,7 @@ namespace DataLoader
                 UserPass = Console.ReadLine();
                 _localSaver.AddUserToDB(UserLogin, UserPass);
             }
-            
+
         }
 
         private static void StartLoadDictionary()
@@ -73,7 +74,7 @@ namespace DataLoader
                 Console.WriteLine($"User Password = '{UserPass}'");
 
                 //always loading all sports
-                var sportsToLoading = new[] { SportType.Basketball, SportType.Hockey, SportType.Soccer, SportType.Tennis, SportType.Volleyball };
+                var sportsToLoading = new[] { SportType.Basketball, SportType.Hockey, SportType.Soccer, SportType.Tennis };
 
                 foreach (var sportType in sportsToLoading)
                 {

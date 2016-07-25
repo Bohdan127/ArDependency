@@ -1,4 +1,5 @@
-﻿using DataSaver.Models;
+﻿using DataSaver;
+using DataSaver.Models;
 using DevExpress.XtraEditors.Controls;
 using System;
 using System.ComponentModel;
@@ -11,6 +12,10 @@ namespace DXApplication1.Pages
     {
         public Filter Filter { get; private set; }
 
+        public LocalSaver LocalSaver { get; private set; }
+
+        private string _userId;
+
         public bool ToClose { get; set; }
 
         public FilterPage()
@@ -19,16 +24,26 @@ namespace DXApplication1.Pages
         }
 
         public FilterPage(Filter filter)
-            : this()
+                : this()
         {
             Filter = filter;
+            LocalSaver = new LocalSaver();
 
             //New Requirements: parser for this two site only
             Filter.MarathonBet = true;
             Filter.PinnacleSports = true;
 
             FirstBind();
+            UserBind();
             InitializeEvents();
+        }
+
+        private void UserBind()
+        {
+            var user = LocalSaver.FindUser();
+            textEditEmail.Text = user.Login;
+            textEditPassword.Text = user.Password;
+            _userId = user.Id;
         }
 
         protected void FirstBind()
@@ -51,7 +66,6 @@ namespace DXApplication1.Pages
                 textEditUserLogin.EditValue = Filter.UserName;
                 textEditUserPass.EditValue = Filter.UserPass;
                 textEditAutoUpdate.EditValue = Filter.AutoUpdateTime;
-                textEditRate.EditValue = Filter.DefaultRate;
             }
         }
 
@@ -74,7 +88,21 @@ namespace DXApplication1.Pages
             textEditUserLogin.EditValueChanging += TextEditUserLogin_EditValueChanging;
             textEditUserPass.EditValueChanging += TextEditUserPass_EditValueChanging;
             textEditAutoUpdate.EditValueChanging += TextEditAutoUpdate_EditValueChanging;
-            textEditRate.EditValueChanging += SpinEditRate_EditValueChanging;
+            textEditAutoUpdate.EditValueChanging += TextEditAutoUpdate_EditValueChanging;
+            textEditAutoUpdate.EditValueChanging += TextEditAutoUpdate_EditValueChanging;
+            textEditEmail.EditValueChanged += User_EditValueChanged;
+            textEditPassword.EditValueChanged += User_EditValueChanged;
+        }
+
+        private void User_EditValueChanged(object sender, EventArgs e)
+        {
+            var user = new User
+            {
+                Id = _userId,
+                Login = textEditEmail.Text,
+                Password = textEditPassword.Text
+            };
+            LocalSaver.UpdateUser(user);
         }
 
         public void DeInitializeEvents()
@@ -94,17 +122,8 @@ namespace DXApplication1.Pages
             tennisToggleSwitch.Toggled -= Tennis_Toggled;
             hockeyToggleSwitch.Toggled -= Hockey_Toggled;
             textEditUserLogin.EditValueChanging -= TextEditUserLogin_EditValueChanging;
-            textEditUserPass.EditValueChanging -= TextEditUserPass_EditValueChanging;
-            textEditAutoUpdate.EditValueChanging -= TextEditAutoUpdate_EditValueChanging;
-            textEditRate.EditValueChanging -= SpinEditRate_EditValueChanging;
-        }
-
-        private void SpinEditRate_EditValueChanging(object sender, ChangingEventArgs e)
-        {
-            lock (Filter)
-            {
-                Filter.DefaultRate = e.NewValue.ConvertToIntOrNull();
-            }
+            textEditEmail.EditValueChanged -= User_EditValueChanged;
+            textEditPassword.EditValueChanged -= User_EditValueChanged;
         }
 
         private void TextEditAutoUpdate_EditValueChanging(object sender, ChangingEventArgs e)
@@ -218,10 +237,10 @@ namespace DXApplication1.Pages
             lock (Filter)
             {
                 DateTime dateValue;
-                    if (DateTime.TryParse(e.NewValue?.ToString(), out dateValue))
-                    {
-                        Filter.FaterThen = dateValue;
-                    }        
+                if (DateTime.TryParse(e.NewValue?.ToString(), out dateValue))
+                {
+                    Filter.FaterThen = dateValue;
+                }
             }
         }
 

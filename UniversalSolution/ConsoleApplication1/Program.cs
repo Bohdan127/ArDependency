@@ -1,11 +1,11 @@
-﻿using DataParser.Enums;
-using DataSaver.Models;
+﻿using DataSaver.Models;
 using DataSaver.RavenDB;
 using Raven.Client;
 using Raven.Client.Document;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using DataParser.Enums;
 using ToolsPortable;
 using WebCrawler.SeleniumCrawler;
 
@@ -46,7 +46,7 @@ namespace ParseAPI
             }
             #endregion
 
-
+            //PinnacleCrawler.SearchAndOpenEvent();
             MarathonCrawler.SearchAndOpenEvent(SportType.Soccer, "event_3374208", "3.40");
             //var start = "7/10/2016 5:30:00 AM"; //10/07/2016 16:30
 

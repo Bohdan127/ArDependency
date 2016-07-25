@@ -204,18 +204,19 @@ namespace DataParser.MY
 
         public async Task<List<ResultForForks>> InitiAsync(SportType sportType)
         {
-            // try
-            // {
-            this.englishNameTeams_Dictionary = await this.GetEnglishNameTEams(sportType).ConfigureAwait(false);
+            try
+            {
+                this.englishNameTeams_Dictionary = await this.GetEnglishNameTEams(sportType).ConfigureAwait(false);
             var result = await GetNameTeamsAndDateAsync(sportType).ConfigureAwait(false);
             return result;
-            //this.ShowForks(a);
-            // }
-            // catch
-            // {
-            // ignored
-            // }
+            }
+            catch
+            {
+                //ignored
+             }
             return new List<ResultForForks>();
+            //I guess it must be cause when Exception is not catched, it will show Exception in program,
+            // so in my opinion it will be better to return zero Forks from this type one
         }
 
         private static async Task<string> HtmlAsync(string url, bool a = true)

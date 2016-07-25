@@ -31,7 +31,7 @@ namespace FormulasCollection.Realizations
         private bool CheckIsMustToBeRevert(string eventMarafon, string eventPinacle)
         {
             return Extentions.GetStringSimilarityInPercent(eventMarafon.Split('-')[0],
-                eventPinacle.Split('-')[0], true) < 80;
+                eventPinacle.Split('-')[0], true) < 90;
         }
 
         public List<Fork> GetAllForksDictionary(Dictionary<string, ResultForForksDictionary> pinnacle,
@@ -41,8 +41,10 @@ namespace FormulasCollection.Realizations
             foreach (var eventItem in marathon)
             {
                 var pinKey = pinnacle.Keys.FirstOrDefault(key =>
-                    Extentions.GetStringSimilarityInPercent(eventItem.Event, key, true) >= 90);
-                if (pinKey == null) continue;
+                    Extentions.GetStringSimilarityInPercent(eventItem.Event, key, true) >= 85);
+                if (pinKey == null)
+                    continue;
+
                 var pin = pinnacle[pinKey];
                 try
                 {

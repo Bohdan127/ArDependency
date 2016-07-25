@@ -184,6 +184,8 @@ namespace DataSaver
                 MatchDateTime = json.DataAsJson.Value<string>("MatchDateTime"),
                 BookmakerFirst = json.DataAsJson.Value<string>("BookmakerFirst"),
                 BookmakerSecond = json.DataAsJson.Value<string>("BookmakerSecond"),
+                EventId = json.DataAsJson.Value<string>("EventId"),
+                League = json.DataAsJson.Value<string>("League"),
                 Type = (ForkType)Enum.Parse(typeof(ForkType), json.DataAsJson.Value<string>("Type"))
             };
             return result;
@@ -213,7 +215,9 @@ namespace DataSaver
                 Sport = fork.Sport,
                 TypeFirst = fork.TypeFirst,
                 TypeSecond = fork.TypeSecond,
-                Type = fork.Type
+                Type = fork.Type,
+                EventId = fork.EventId,
+                League = fork.League
             };
             return result;
         }
@@ -233,7 +237,9 @@ namespace DataSaver
                 Sport = forkRow.Sport,
                 TypeFirst = forkRow.TypeFirst,
                 TypeSecond = forkRow.TypeSecond,
-                Type = forkRow.Type
+                Type = forkRow.Type,
+                EventId = forkRow.EventId,
+                League = forkRow.League
             };
             return result;
         }

@@ -58,6 +58,16 @@ namespace DataSaver.Models
         public string BookmakerSecond { get; set; }
 
         /// <summary>
+        /// Event Id for Pinnacle search
+        /// </summary>
+        public string EventId { get; set; }
+
+        /// <summary>
+        /// League of game
+        /// </summary>
+        public string League { get; set; }
+
+        /// <summary>
         /// Type of Fork
         /// </summary>
         public ForkType Type { get; set; }

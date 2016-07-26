@@ -34,8 +34,6 @@ namespace DXApplication1.Pages
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.textEditEmail = new DevExpress.XtraEditors.TextEdit();
             this.textEditAutoUpdate = new DevExpress.XtraEditors.TextEdit();
-            this.textEditUserPass = new DevExpress.XtraEditors.TextEdit();
-            this.textEditUserLogin = new DevExpress.XtraEditors.TextEdit();
             this.fasterDateTimePicker = new DevExpress.XtraEditors.DateEdit();
             this.maxTextEdit = new DevExpress.XtraEditors.TextEdit();
             this.minTextEdit = new DevExpress.XtraEditors.TextEdit();
@@ -70,8 +68,6 @@ namespace DXApplication1.Pages
             this.layoutControlItemNotFaster = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemNoLater = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroupOther = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.layoutControlItemUserLogin = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItemUserPass = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemAutoUpdate = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroupPinnacle = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemLogin = new DevExpress.XtraLayout.LayoutControlItem();
@@ -80,8 +76,6 @@ namespace DXApplication1.Pages
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.textEditEmail.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditAutoUpdate.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEditUserPass.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEditUserLogin.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fasterDateTimePicker.Properties.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fasterDateTimePicker.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.maxTextEdit.Properties)).BeginInit();
@@ -118,8 +112,6 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNotFaster)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNoLater)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupOther)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemUserLogin)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemUserPass)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoUpdate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupPinnacle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemLogin)).BeginInit();
@@ -130,8 +122,6 @@ namespace DXApplication1.Pages
             // 
             this.dataLayoutControl1.Controls.Add(this.textEditEmail);
             this.dataLayoutControl1.Controls.Add(this.textEditAutoUpdate);
-            this.dataLayoutControl1.Controls.Add(this.textEditUserPass);
-            this.dataLayoutControl1.Controls.Add(this.textEditUserLogin);
             this.dataLayoutControl1.Controls.Add(this.fasterDateTimePicker);
             this.dataLayoutControl1.Controls.Add(this.maxTextEdit);
             this.dataLayoutControl1.Controls.Add(this.minTextEdit);
@@ -156,7 +146,7 @@ namespace DXApplication1.Pages
             // 
             // textEditEmail
             // 
-            this.textEditEmail.Location = new System.Drawing.Point(448, 344);
+            this.textEditEmail.Location = new System.Drawing.Point(448, 296);
             this.textEditEmail.Name = "textEditEmail";
             this.textEditEmail.Size = new System.Drawing.Size(128, 20);
             this.textEditEmail.StyleController = this.dataLayoutControl1;
@@ -164,7 +154,7 @@ namespace DXApplication1.Pages
             // 
             // textEditAutoUpdate
             // 
-            this.textEditAutoUpdate.Location = new System.Drawing.Point(448, 278);
+            this.textEditAutoUpdate.Location = new System.Drawing.Point(448, 230);
             this.textEditAutoUpdate.Name = "textEditAutoUpdate";
             this.textEditAutoUpdate.Properties.Mask.BeepOnError = true;
             this.textEditAutoUpdate.Properties.Mask.EditMask = "[1-9]\\d?+";
@@ -174,22 +164,6 @@ namespace DXApplication1.Pages
             this.textEditAutoUpdate.Size = new System.Drawing.Size(128, 20);
             this.textEditAutoUpdate.StyleController = this.dataLayoutControl1;
             this.textEditAutoUpdate.TabIndex = 10;
-            // 
-            // textEditUserPass
-            // 
-            this.textEditUserPass.Location = new System.Drawing.Point(448, 254);
-            this.textEditUserPass.Name = "textEditUserPass";
-            this.textEditUserPass.Size = new System.Drawing.Size(128, 20);
-            this.textEditUserPass.StyleController = this.dataLayoutControl1;
-            this.textEditUserPass.TabIndex = 9;
-            // 
-            // textEditUserLogin
-            // 
-            this.textEditUserLogin.Location = new System.Drawing.Point(448, 230);
-            this.textEditUserLogin.Name = "textEditUserLogin";
-            this.textEditUserLogin.Size = new System.Drawing.Size(128, 20);
-            this.textEditUserLogin.StyleController = this.dataLayoutControl1;
-            this.textEditUserLogin.TabIndex = 8;
             // 
             // fasterDateTimePicker
             // 
@@ -325,7 +299,7 @@ namespace DXApplication1.Pages
             // 
             // textEditPassword
             // 
-            this.textEditPassword.Location = new System.Drawing.Point(448, 368);
+            this.textEditPassword.Location = new System.Drawing.Point(448, 320);
             this.textEditPassword.Name = "textEditPassword";
             this.textEditPassword.Size = new System.Drawing.Size(128, 20);
             this.textEditPassword.StyleController = this.dataLayoutControl1;
@@ -550,36 +524,16 @@ namespace DXApplication1.Pages
             // layoutControlGroupOther
             // 
             this.layoutControlGroupOther.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemUserLogin,
-            this.layoutControlItemUserPass,
             this.layoutControlItemAutoUpdate});
             this.layoutControlGroupOther.Location = new System.Drawing.Point(279, 188);
             this.layoutControlGroupOther.Name = "layoutControlGroupOther";
-            this.layoutControlGroupOther.Size = new System.Drawing.Size(301, 114);
+            this.layoutControlGroupOther.Size = new System.Drawing.Size(301, 66);
             this.layoutControlGroupOther.Text = "Дополнительные";
-            // 
-            // layoutControlItemUserLogin
-            // 
-            this.layoutControlItemUserLogin.Control = this.textEditUserLogin;
-            this.layoutControlItemUserLogin.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItemUserLogin.Name = "layoutControlItemUserLogin";
-            this.layoutControlItemUserLogin.Size = new System.Drawing.Size(277, 24);
-            this.layoutControlItemUserLogin.Text = "Pinnacle Юзер";
-            this.layoutControlItemUserLogin.TextSize = new System.Drawing.Size(142, 13);
-            // 
-            // layoutControlItemUserPass
-            // 
-            this.layoutControlItemUserPass.Control = this.textEditUserPass;
-            this.layoutControlItemUserPass.Location = new System.Drawing.Point(0, 24);
-            this.layoutControlItemUserPass.Name = "layoutControlItemUserPass";
-            this.layoutControlItemUserPass.Size = new System.Drawing.Size(277, 24);
-            this.layoutControlItemUserPass.Text = "Pinnacle Пароль";
-            this.layoutControlItemUserPass.TextSize = new System.Drawing.Size(142, 13);
             // 
             // layoutControlItemAutoUpdate
             // 
             this.layoutControlItemAutoUpdate.Control = this.textEditAutoUpdate;
-            this.layoutControlItemAutoUpdate.Location = new System.Drawing.Point(0, 48);
+            this.layoutControlItemAutoUpdate.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemAutoUpdate.Name = "layoutControlItemAutoUpdate";
             this.layoutControlItemAutoUpdate.Size = new System.Drawing.Size(277, 24);
             this.layoutControlItemAutoUpdate.Text = "Время автообновления(сек)";
@@ -590,9 +544,9 @@ namespace DXApplication1.Pages
             this.layoutControlGroupPinnacle.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlItemLogin,
             this.layoutControlItemPassword});
-            this.layoutControlGroupPinnacle.Location = new System.Drawing.Point(279, 302);
+            this.layoutControlGroupPinnacle.Location = new System.Drawing.Point(279, 254);
             this.layoutControlGroupPinnacle.Name = "layoutControlGroupPinnacle";
-            this.layoutControlGroupPinnacle.Size = new System.Drawing.Size(301, 94);
+            this.layoutControlGroupPinnacle.Size = new System.Drawing.Size(301, 142);
             this.layoutControlGroupPinnacle.Text = "Пиннакл";
             // 
             // layoutControlItemLogin
@@ -610,7 +564,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemPassword.CustomizationFormText = "layoutControlItem1";
             this.layoutControlItemPassword.Location = new System.Drawing.Point(0, 24);
             this.layoutControlItemPassword.Name = "layoutControlItemPassword";
-            this.layoutControlItemPassword.Size = new System.Drawing.Size(277, 28);
+            this.layoutControlItemPassword.Size = new System.Drawing.Size(277, 76);
             this.layoutControlItemPassword.Text = "Пароль";
             this.layoutControlItemPassword.TextSize = new System.Drawing.Size(142, 13);
             // 
@@ -628,8 +582,6 @@ namespace DXApplication1.Pages
             this.dataLayoutControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.textEditEmail.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditAutoUpdate.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEditUserPass.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEditUserLogin.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fasterDateTimePicker.Properties.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fasterDateTimePicker.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.maxTextEdit.Properties)).EndInit();
@@ -666,8 +618,6 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNotFaster)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNoLater)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupOther)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemUserLogin)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemUserPass)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoUpdate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupPinnacle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemLogin)).EndInit();
@@ -712,11 +662,7 @@ namespace DXApplication1.Pages
         private DateEdit longerDateTimePicker;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemNoLater;
         private TextEdit textEditAutoUpdate;
-        private TextEdit textEditUserPass;
-        private TextEdit textEditUserLogin;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroupOther;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemUserLogin;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemUserPass;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemAutoUpdate;
         private TextEdit textEditEmail;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroupPinnacle;

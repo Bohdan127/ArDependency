@@ -1,7 +1,9 @@
 ﻿using DataParser.Enums;
 using DevExpress.XtraBars.Alerter;
+using NLog;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -9,6 +11,8 @@ namespace WebCrawler.SeleniumCrawler
 {
     public static class MarathonCrawler
     {
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
+
         private const string CoefClass = "height-column-with-price";
         private const string FootballUrl = "https://www.marathonbet.com/su/betting/Football/";
         private const string TennisUrl = "https://www.marathonbet.com/su/betting/Tennis/";
@@ -32,7 +36,12 @@ namespace WebCrawler.SeleniumCrawler
 
         public static void SearchAndOpenEvent(SportType sportType, string eventId, string coefValue)
         {
-            if (_busy) return;
+            _logger.Trace($"start SearchAndOpenEvent.  sportType = {sportType}. eventId = {eventId}. coefValue = {coefValue}");
+            if (_busy)
+            {
+                _logger.Info("_busy => return!!!");
+                return;
+            }
 
             var found = false;
             try
@@ -61,28 +70,43 @@ namespace WebCrawler.SeleniumCrawler
                         driver.Navigate().GoToUrl(VolleyballUrl);
                         break;
                 }
+                if (!eventId.StartsWith("event_"))
+                    eventId = "event_" + eventId;
                 var eventRow = driver.FindElement(By.Id(eventId));
-                var elements = eventRow.FindElements(By.ClassName(CoefClass));
-                foreach (var element in elements)
+                try
                 {
-                    if (!element.Text.Contains(coefValue))
-                        continue;
+                    var elements = eventRow.FindElements(By.ClassName(CoefClass));
+                    foreach (var element in elements)
+                    {
+                        if (!element.Text.Contains(coefValue))
+                            continue;
 
-                    element.Click();
-                    found = true;
-                    break;
+                        element.Click();
+                        found = true;
+                        break;
+                    }
                 }
-                driver.Close();
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                    _logger.Error(ex.StackTrace);
+                    eventRow?.Click();
+                    found = true;
+                }
+                //driver.Close();
             }
-            catch
+            catch (Exception ex)
             {
-                //found = false;
+                _logger.Error(ex.Message);
+                _logger.Error(ex.StackTrace);
             }
             finally
             {
+                _logger.Info(found ? "Event was found" : "Event was not found");
                 AlertControl.Show(null, found ? "Событие найдено" : "Событие не было найдено", "");
                 _busy = false;
             }
+            _logger.Trace($"End SearchAndOpenEvent.");
         }
     }
 }

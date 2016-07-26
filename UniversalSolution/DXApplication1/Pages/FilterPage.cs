@@ -63,8 +63,6 @@ namespace DXApplication1.Pages
                 longerDateTimePicker.EditValue = Filter.LongerThen;
                 outCome2ToggleSwitch.EditValue = Filter.OutCome2;
                 outcome3ToggleSwitch.EditValue = Filter.OutCome3;
-                textEditUserLogin.EditValue = Filter.UserName;
-                textEditUserPass.EditValue = Filter.UserPass;
                 textEditAutoUpdate.EditValue = Filter.AutoUpdateTime;
             }
         }
@@ -85,8 +83,6 @@ namespace DXApplication1.Pages
             volleyballToggleSwitch.Toggled += Volleyball_Toggled;
             tennisToggleSwitch.Toggled += Tennis_Toggled;
             hockeyToggleSwitch.Toggled += Hockey_Toggled;
-            textEditUserLogin.EditValueChanging += TextEditUserLogin_EditValueChanging;
-            textEditUserPass.EditValueChanging += TextEditUserPass_EditValueChanging;
             textEditAutoUpdate.EditValueChanging += TextEditAutoUpdate_EditValueChanging;
             textEditAutoUpdate.EditValueChanging += TextEditAutoUpdate_EditValueChanging;
             textEditAutoUpdate.EditValueChanging += TextEditAutoUpdate_EditValueChanging;
@@ -121,7 +117,6 @@ namespace DXApplication1.Pages
             volleyballToggleSwitch.Toggled -= Volleyball_Toggled;
             tennisToggleSwitch.Toggled -= Tennis_Toggled;
             hockeyToggleSwitch.Toggled -= Hockey_Toggled;
-            textEditUserLogin.EditValueChanging -= TextEditUserLogin_EditValueChanging;
             textEditEmail.EditValueChanged -= User_EditValueChanged;
             textEditPassword.EditValueChanged -= User_EditValueChanged;
         }
@@ -131,22 +126,6 @@ namespace DXApplication1.Pages
             lock (Filter)
             {
                 Filter.AutoUpdateTime = e.NewValue.ConvertToIntOrNull();
-            }
-        }
-
-        private void TextEditUserPass_EditValueChanging(object sender, ChangingEventArgs e)
-        {
-            lock (Filter)
-            {
-                Filter.UserPass = e.NewValue?.ToString();
-            }
-        }
-
-        private void TextEditUserLogin_EditValueChanging(object sender, ChangingEventArgs e)
-        {
-            lock (Filter)
-            {
-                Filter.UserName = e.NewValue?.ToString();
             }
         }
 
@@ -230,7 +209,7 @@ namespace DXApplication1.Pages
         }
 
         private void Faster_Changing(object sender, ChangingEventArgs e)
-        { 
+        {
             lock (Filter)
             {
                 DateTime dateValue;

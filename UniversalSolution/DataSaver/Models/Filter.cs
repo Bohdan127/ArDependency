@@ -32,9 +32,6 @@ namespace DataSaver.Models
 
         public string LicenseKey { get; set; }
 
-        public string UserName { get; set; }
-
-        public string UserPass { get; set; }
 
         public int? AutoUpdateTime { get; set; }
 

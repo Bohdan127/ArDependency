@@ -85,6 +85,10 @@ namespace WebCrawler.SeleniumCrawler
                         found = true;
                         break;
                     }
+                    if (!found)
+                    {
+                        eventRow.FindElement(By.ClassName("member-name")).Click();
+                        found = true;}
                 }
                 catch (Exception ex)
                 {

@@ -1,5 +1,4 @@
-﻿//using DataParser.DefaultRealization;
-//using DataParser.Enums;
+﻿
 using DataParser.Enums;
 using DataParser.Extensions;
 using DataParser.Models;
@@ -11,7 +10,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace DataParser.MY
+namespace DataParser.DefaultRealization
 {
     public class MarathonParser
     {
@@ -64,7 +63,7 @@ namespace DataParser.MY
             {
                 //-------------------LIGA-----------------
 
-                if (line._Contains(Tags.Liga))
+                if (line._Contains(MarathonTags.Liga))
                 {
                     if (!changeLiga)
                     {
@@ -93,12 +92,12 @@ namespace DataParser.MY
                             countTypeCoff.Add(coeff);
                         isTypeCoff = false;
                     }
-                    if (line._Contains(Tags.TypeCoff))
+                    if (line._Contains(MarathonTags.TypeCoff))
                         isTypeCoff = true;
                 }
 
                 //---------------EVENT---------------------
-                if (line._Contains(Tags.EventID))
+                if (line._Contains(MarathonTags.EventID))
                 {
                     _eventid = line.GetEventID();
                     oldEvent = _eventid;
@@ -111,16 +110,16 @@ namespace DataParser.MY
                     date = line;
                     isDate = false;
                 }
-                if (line._Contains(Tags.Date))
+                if (line._Contains(MarathonTags.Date))
                 {
                     isDate = true;
                 }
 
                 //--------------Coeff--Value----------------
                 string res = null;
-                if (line.Contains(Tags.Coff) /*&& line.Contains("Match_Result")*/)
+                if (line.Contains(MarathonTags.Coff) /*&& line.Contains("Match_Result")*/)
                 {
-                    res = line.Substrings(Tags.Coff, "\"");
+                    res = line.Substrings(MarathonTags.Coff, "\"");
                     koff.Add(res);
                 }
                 if (line.Contains("<span>&mdash;</span>") || line.Contains("—"))
@@ -136,7 +135,7 @@ namespace DataParser.MY
                     isFora = false;
                     isForaforteam1 = !isForaforteam1;
                 }
-                if (line.Contains(Tags.Fora))
+                if (line.Contains(MarathonTags.Fora))
                 {
                     isFora = true;
                 }
@@ -149,7 +148,7 @@ namespace DataParser.MY
                     isTotalUnder = !isTotalUnder;
                     isTotal = false;
                 }
-                if (line.Contains(Tags.Total))
+                if (line.Contains(MarathonTags.Total))
                 {
                     isTotal = true;
                 }
@@ -207,13 +206,13 @@ namespace DataParser.MY
             try
             {
                 this.englishNameTeams_Dictionary = await this.GetEnglishNameTEams(sportType).ConfigureAwait(false);
-            var result = await GetNameTeamsAndDateAsync(sportType).ConfigureAwait(false);
-            return result;
+                var result = await GetNameTeamsAndDateAsync(sportType).ConfigureAwait(false);
+                return result;
             }
             catch
             {
                 //ignored
-             }
+            }
             return new List<ResultForForks>();
             //I guess it must be cause when Exception is not catched, it will show Exception in program,
             // so in my opinion it will be better to return zero Forks from this type one
@@ -260,10 +259,10 @@ namespace DataParser.MY
 
             foreach (var line in lines)
             {
-                if (line._Contains(Tags.EventID))
+                if (line._Contains(MarathonTags.EventID))
                     _eventid = line.GetEventID();
 
-                if (line._Contains(Tags.NameTeam))
+                if (line._Contains(MarathonTags.NameTeam))
                 {
                     if (name1 == null)
                         name1 = GetAttribut(line);// line.Substrings(Tags.NameTeam);

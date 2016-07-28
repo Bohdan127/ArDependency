@@ -1,56 +1,19 @@
 ﻿using DataParser.Enums;
+using DataParser.Extensions;
 using FormulasCollection.Enums;
 using FormulasCollection.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using DataParser.Models;
 
 namespace DataParser.DefaultRealization
 {
-    public static class Tags
-    {
-        public static string BOOKER = "class=\"booker\"";
-        public static string TIME = "class=\"time\"";
-        public static string EVENT = "class=\"event";
-        public static string COEFF = "class=\"coeff\"";
-        public static string VALUE = "class=\"value odd_record_";
-
-    }
-    public class Surebet
-    {
-        public string Booker { get; set; }
-        public string Time { get; set; }
-        public string Event { get; set; }
-        public string Coeff { get; set; }
-        public string Value { get; set; }
-
-        public Surebet() { }
-        public Surebet(string booker, string time, string _event, string coeff, string value)
-        {
-            this.Booker = booker;
-            this.Time = time;
-            this.Event = _event;
-            this.Coeff = coeff;
-            this.Value = value;
-        }
-    }
-    public class TwoBooker
-    {
-        public Surebet Pinnacle { get; set; }
-        public Surebet Marathon { get; set; }
-        public TwoBooker() { }
-        public TwoBooker(Surebet pinnacle, Surebet marathon)
-        {
-            this.Pinnacle = pinnacle;
-            this.Marathon = marathon;
-        }
-    }
-    public class Parse
+    public class SurebetParser
     {
         public List<Fork> GetForks(SportType sportType)
         {
@@ -71,15 +34,15 @@ namespace DataParser.DefaultRealization
 
             foreach (var line in lines)
             {
-                if (line.Contains(Tags.BOOKER))
+                if (line.Contains(SurebetTags.BOOKER))
                     booker = GetAttribut(line);
-                else if (line.Contains(Tags.TIME))
-                    time = GetAttribut(line,true);
-                else if (line.Contains(Tags.EVENT))
+                else if (line.Contains(SurebetTags.TIME))
+                    time = GetAttribut(line, true);
+                else if (line.Contains(SurebetTags.EVENT))
                     _event = GetAttribut(line);
-                else if (line.Contains(Tags.COEFF))
+                else if (line.Contains(SurebetTags.COEFF))
                     coeff = GetAttribut(line);
-                else if (line.Contains(Tags.VALUE))
+                else if (line.Contains(SurebetTags.VALUE))
                     value = GetAttribut(line);
                 if (!String.IsNullOrEmpty(booker)
                     && !String.IsNullOrEmpty(time)
@@ -153,7 +116,7 @@ namespace DataParser.DefaultRealization
         private static string ClearCoeff(string line)
         {
             if (line.Contains(' '))
-                line =  line.Split(' ')[0];
+                line = line.Split(' ')[0];
             if (line.Contains("&minus;"))
                 line = line.Replace("&minus;", "-");
             if (line.Contains("&plus;"))
@@ -220,13 +183,13 @@ namespace DataParser.DefaultRealization
                 if (!String.IsNullOrEmpty(result.Trim()) && !isStartTag)
                 {
                     isFinish = true;
-                    result += (date && !result.Contains("/2016") )? "/2016 ":"";
-                    
+                    result += (date && !result.Contains("/2016")) ? "/2016 " : "";
+
                 }
                 if (isFinish && !date)
                     return result;
             }
-            return !date?"":result;
+            return !date ? "" : result;
         }
 
         private string UrlAndNameFile(SportType sportType)

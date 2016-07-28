@@ -22,7 +22,7 @@
         public static string GetEventID(this string line)
         {
             string eventid = null;
-            int start = line.IndexOf(Tags.EventID) + Tags.EventID.Length + 2;
+            int start = line.IndexOf(MarathonTags.EventID) + MarathonTags.EventID.Length + 2;
             line = line.Substring(start);
             eventid = line.Substring(0, line.IndexOf("\""));
             return eventid;

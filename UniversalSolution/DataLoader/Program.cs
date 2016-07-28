@@ -1,6 +1,5 @@
 ﻿using DataParser.DefaultRealization;
 using DataParser.Enums;
-using DataParser.MY;
 using DataSaver;
 using FormulasCollection.Models;
 using FormulasCollection.Realizations;
@@ -89,7 +88,7 @@ namespace DataLoader
             // ReSharper disable once FunctionNeverReturns
         }
 
-        private static List<Fork> LoadSureBet(SportType sportType) => new Parse().GetForks(sportType);
+        private static List<Fork> LoadSureBet(SportType sportType) => new SurebetParser().GetForks(sportType);
 
         private static List<Fork> GetForksDictionary(SportType sportType, Dictionary<string, ResultForForksDictionary> pinSport, List<ResultForForks> marSport)
         {

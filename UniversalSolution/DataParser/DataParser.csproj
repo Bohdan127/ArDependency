@@ -81,11 +81,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefaultRealization\Parse.cs" />
+    <Compile Include="Models\Surebet.cs" />
+    <Compile Include="DefaultRealization\SurebetParser.cs" />
     <Compile Include="DefaultRealization\PinnacleSportsDataParser.cs" />
+    <Compile Include="Models\TwoBooker.cs" />
+    <Compile Include="Extensions\SurebetTags.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\HelperParse.cs" />
-    <Compile Include="Extensions\Tags.cs" />
+    <Compile Include="Extensions\MarathonTags.cs" />
     <Compile Include="Models\EnglishNameTeams.cs" />
     <Compile Include="Models\EventWithTeamName.cs" />
     <Compile Include="Models\EventWithTotal.cs" />

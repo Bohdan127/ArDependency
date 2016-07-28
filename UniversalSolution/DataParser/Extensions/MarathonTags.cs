@@ -1,6 +1,6 @@
 ﻿namespace DataParser.Extensions
 {
-    public static class Tags
+    public static class MarathonTags
     {
         public static readonly string NameTeam = "member-name nowrap";// <div class="today-member-name nowrap " data-ellipsis="{}">;
         public static readonly string Date = "<td class=\"date\">";

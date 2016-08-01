@@ -76,5 +76,10 @@ namespace FormulasCollection.Models
         /// League of game
         /// </summary>
         public string League { get; set; }
+
+        /// <summary>
+        /// Id of event for placing bet in Pinnacle
+        /// </summary>
+        public string LineId { get; set; }
     }
 }

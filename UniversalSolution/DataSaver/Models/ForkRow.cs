@@ -71,5 +71,11 @@ namespace DataSaver.Models
         /// Type of Fork
         /// </summary>
         public ForkType Type { get; set; }
+
+
+        /// <summary>
+        /// Id of event for placing bet in Pinnacle
+        /// </summary>
+        public string LineId { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using DataParser.Enums;
 using DataParser.Extensions;
 using DataParser.Models;
 using FormulasCollection.Models;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,6 +15,8 @@ namespace DataParser.DefaultRealization
 {
     public class MarathonParser
     {
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
+
         private async Task<List<ResultForForks>> GetNameTeamsAndDateAsync(SportType sportType)
         {
             result.Clear();
@@ -209,12 +212,12 @@ namespace DataParser.DefaultRealization
                 var result = await GetNameTeamsAndDateAsync(sportType).ConfigureAwait(false);
                 return result;
             }
-            catch
+            catch (Exception ex)
             {
-                //ignored
+                _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
             }
             return new List<ResultForForks>();
-            //I guess it must be cause when Exception is not catched, it will show Exception in program,
+            //I guess it must be cause when Exception is not catch(Exception ex)ed, it will show Exception in program,
             // so in my opinion it will be better to return zero Forks from this type one
         }
 
@@ -231,9 +234,9 @@ namespace DataParser.DefaultRealization
                 reader = new StreamReader(response.GetResponseStream());
                 HTML = await reader.ReadToEndAsync().ConfigureAwait(false);
             }
-            catch (FileLoadException)
+            catch (FileLoadException ex)
             {
-                //ignored
+                _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
             }
             finally
             {

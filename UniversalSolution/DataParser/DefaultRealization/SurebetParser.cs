@@ -1,7 +1,9 @@
 ﻿using DataParser.Enums;
 using DataParser.Extensions;
+using DataParser.Models;
 using FormulasCollection.Enums;
 using FormulasCollection.Models;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,12 +11,13 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using DataParser.Models;
 
 namespace DataParser.DefaultRealization
 {
     public class SurebetParser
     {
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
+
         public List<Fork> GetForks(SportType sportType)
         {
             List<TwoBooker> forks = new List<TwoBooker>();
@@ -150,9 +153,9 @@ namespace DataParser.DefaultRealization
                 reader = new StreamReader(response.GetResponseStream());
                 HTML = await reader.ReadToEndAsync().ConfigureAwait(false);
             }
-            catch (FileLoadException)
+            catch (FileLoadException ex)
             {
-                //ignored
+                _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
             }
             finally
             {

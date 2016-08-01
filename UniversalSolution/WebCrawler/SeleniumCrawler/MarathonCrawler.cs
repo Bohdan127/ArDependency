@@ -88,7 +88,8 @@ namespace WebCrawler.SeleniumCrawler
                     if (!found)
                     {
                         eventRow.FindElement(By.ClassName("member-name")).Click();
-                        found = true;}
+                        found = true;
+                    }
                 }
                 catch (Exception ex)
                 {

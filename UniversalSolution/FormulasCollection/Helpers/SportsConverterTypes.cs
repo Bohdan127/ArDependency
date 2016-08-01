@@ -20,7 +20,7 @@ namespace FormulasCollection.Helpers
                 {
                     val = typeEventTrim.Split('(', ')')[1].ToString();
                 }
-                catch
+                catch(Exception ex)
                 {
                     val = null;
                 }
@@ -36,7 +36,7 @@ namespace FormulasCollection.Helpers
                 {
                     val = typeEventTrim.Split('(', ')')[1].ToString();
                 }
-                catch
+                catch(Exception ex)
                 {
                     val = null;
                 }

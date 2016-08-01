@@ -3,6 +3,7 @@ using DataSaver.Models;
 using DataSaver.RavenDB;
 using FormulasCollection.Enums;
 using FormulasCollection.Models;
+using NLog;
 using Raven.Abstractions.Data;
 using Raven.Abstractions.Extensions;
 using Raven.Client;
@@ -23,6 +24,8 @@ namespace DataSaver
         private IDocumentSession _session;
 
         public const int PageSize = 128;
+
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public LocalSaver()
         {
@@ -66,9 +69,9 @@ namespace DataSaver
                 {
                     Session.Store(MapForkToForkRow(fork));
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    //ignored
+                    _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
                 }
             }
             Session.SaveChanges();
@@ -186,7 +189,8 @@ namespace DataSaver
                 BookmakerSecond = json.DataAsJson.Value<string>("BookmakerSecond"),
                 EventId = json.DataAsJson.Value<string>("EventId"),
                 League = json.DataAsJson.Value<string>("League"),
-                Type = (ForkType)Enum.Parse(typeof(ForkType), json.DataAsJson.Value<string>("Type"))
+                Type = (ForkType)Enum.Parse(typeof(ForkType), json.DataAsJson.Value<string>("Type")),
+                LineId = json.DataAsJson.Value<string>("LineId")
             };
             return result;
         }
@@ -217,7 +221,8 @@ namespace DataSaver
                 TypeSecond = fork.TypeSecond,
                 Type = fork.Type,
                 EventId = fork.EventId,
-                League = fork.League
+                League = fork.League,
+                LineId = fork.LineId
             };
             return result;
         }
@@ -239,7 +244,8 @@ namespace DataSaver
                 TypeSecond = forkRow.TypeSecond,
                 Type = forkRow.Type,
                 EventId = forkRow.EventId,
-                League = forkRow.League
+                League = forkRow.League,
+                LineId = forkRow.LineId
             };
             return result;
         }
@@ -260,9 +266,9 @@ namespace DataSaver
             {
                 Session.Store(user);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //ignored
+                _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
             }
             Session.SaveChanges();
             return true;

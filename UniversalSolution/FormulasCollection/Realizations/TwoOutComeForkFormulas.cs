@@ -2,8 +2,10 @@
 using FormulasCollection.Enums;
 using FormulasCollection.Helpers;
 using FormulasCollection.Models;
+using NLog;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using ToolsPortable;
 
@@ -11,6 +13,8 @@ namespace FormulasCollection.Realizations
 {
     public class TwoOutComeForkFormulas
     {
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
+
         public bool CheckIsFork(double? coef1, double? coef2, ResultForForks marEvent, ResultForForksDictionary pinEvent)
         {
             if (CheckIsMustToBeRevert(marEvent.Event, pinEvent.TeamNames))
@@ -60,18 +64,20 @@ namespace FormulasCollection.Realizations
                             TypeFirst = eventItem.Type,
                             CoefFirst = eventItem.Coef,
                             TypeSecond = pinEventKey.ConvertToStringOrNull(),
-                            CoefSecond = pin.TypeCoefDictionary[pinEventKey.ConvertToStringOrNull()].ConvertToStringOrNull(),
+                            CoefSecond = pin.TypeCoefDictionary[pinEventKey].ConvertToStringOrNull(),
                             Sport = eventItem.SportType,
-                            MatchDateTime = pin.MatchDateTime.ToString(),
+                            MatchDateTime = pin.MatchDateTime.ToString(CultureInfo.CurrentCulture),
                             BookmakerFirst = "https://www.marathonbet.com/",
                             BookmakerSecond = "http://www.pinnaclesports.com/",
-                            Type = ForkType.Current
+                            Type = ForkType.Current,
+                            LineId = pin.TypeLineIdDictionary[pinEventKey]
                         });
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // ingored
+                    _logger.Error(ex.Message);
+                    _logger.Error(ex.StackTrace);
                 }
             }
             return resList;

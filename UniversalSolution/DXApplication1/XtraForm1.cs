@@ -1,4 +1,5 @@
-﻿using DataSaver.Models;
+﻿using System;
+using DataSaver.Models;
 using DevExpress.XtraEditors;
 using DXApplication1.Models;
 using System.IO;
@@ -106,7 +107,7 @@ namespace DXApplication1
                 _filter = (Filter)new XmlSerializer(typeof(Filter))
                     .Deserialize(new StreamReader(SettingsPath + SettingsFile));
             }
-            catch
+            catch(Exception ex)
             {
                 bRes = false;
             }
@@ -135,7 +136,7 @@ namespace DXApplication1
 
                 writer.Close();
             }
-            catch
+            catch(Exception ex)
             {
                 bRes = false;
             }

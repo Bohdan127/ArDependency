@@ -120,7 +120,7 @@ namespace DXApplication1.Pages
             if (gridView1.FocusedColumn == colBookmaker)
                 MarathonCrawler.SearchAndOpenEvent((SportType)Enum.Parse(typeof(SportType), currRow.Sport, true), currRow.EventId, currRow.CoefFirst);
             else
-                PinnacleCrawler.SearchAndOpenEvent();
+                PinnacleCrawler.SearchAndOpenEvent(currRow["LineId"]);
         }
     }
 }

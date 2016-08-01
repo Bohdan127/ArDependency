@@ -2,11 +2,10 @@
 using DataParser.Models;
 using FormulasCollection.Models;
 using FormulasCollection.Realizations;
+using NLog;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Json;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,219 +15,13 @@ namespace DataParser.DefaultRealization
 {
     public class PinnacleSportsDataParser
     {
-        private SportType SportType = SportType.NoType;
-        private ConverterFormulas _converter;
+        private SportType _sportType = SportType.NoType;
+        private readonly ConverterFormulas _converter;
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
-        public PinnacleSportsDataParser(ConverterFormulas converter)
+        public PinnacleSportsDataParser()
         {
-            _converter = converter;
-        }
-
-        public async Task<List<ResultForForks>> GetAllPinacleEventsForRequestAsync(SportType sportType, string userLogin, string userPass)
-        {
-            var resList = new List<ResultForForks>();
-            this.SportType = sportType;
-            try
-            {
-                var totalResp = await GetAllTotalsAsync(userLogin, userPass).ConfigureAwait(false);
-                var teamNamesResp = await GetAllTeamNamesAsync(userLogin, userPass).ConfigureAwait(false);
-                resList.AddRange(GroupResponses(totalResp, teamNamesResp));
-                resList.RemoveAll(r =>
-                {
-                    var d = r.Coef.ConvertToDoubleOrNull();
-                    return d != null && (Math.Abs(d.Value) < 0.01 || Math.Abs(d.Value - _converter.IncorrectAmericanOdds) < 0.01);
-                });
-            }
-            catch
-            {
-                // ignored
-            }
-            return resList;
-        }
-
-        private IEnumerable<ResultForForks> GroupResponses(HttpWebResponse totalResp, HttpWebResponse teamNamesResp)
-        {
-            var eventsWithNames = ParseEventWithNames(teamNamesResp);
-            var eventsWithTotal = ParseEventWithTotals(totalResp);
-
-            return (from withNames in eventsWithNames
-                    from withTotal in eventsWithTotal.Where(t => withNames.Id != null && t.Id != null && t.Id.Value == withNames.Id.Value)
-                    select new ResultForForks
-                    {
-                        Event = withNames.TeamNames,
-                        Type = withTotal.TotalType,
-                        Coef = _converter.ConvertAmericanToDecimal(
-                           withTotal.TotalValue.ConvertToDoubleOrNull()).ToString(CultureInfo.CurrentCulture),
-                        SportType = SportType.ToString(),
-                        Bookmaker = Site.PinnacleSports.ToString(),
-                        MatchDateTime = FormatStringDateTime(withTotal.MatchDateTime)
-                    }).ToList();
-        }
-
-        private string FormatStringDateTime(string date)
-        {
-            var splitOne = date.Split(' ');
-
-            var splitDate = splitOne[0].Split('/');
-
-            var splitTime = splitOne[1].Split(':');
-
-            var time = splitOne[2][0] == 'A' ? splitOne[1] : $"{Convert.ToInt16(splitTime[0]) + 12}:{splitTime[1]}";
-
-            return $"{splitDate[1]}/{splitDate[0]}/{splitDate[2]} {time}";
-        }
-
-        private List<EventWithTotal> ParseEventWithTotals(HttpWebResponse totalResp)
-        {
-            var resList = new List<EventWithTotal>();
-            try
-            {
-                var sportEvents = (JsonObject)JsonObject.Load(totalResp.GetResponseStream());
-
-                if (sportEvents?["leagues"] == null) return resList;
-
-                foreach (var league in sportEvents["leagues"])
-                {
-                    try
-                    {
-                        foreach (var sportEvent in league.Value?["events"])
-                        {
-                            try
-                            {
-                                foreach (var period in sportEvent.Value?["periods"])
-                                {
-                                    try
-                                    {
-                                        resList.Add(new EventWithTotal
-                                        {
-                                            Id = sportEvent.Value["id"].ConvertToLongOrNull(),
-                                            TotalType = "1",
-                                            TotalValue = period.Value?["moneyline"]?["home"]?.ToString(),
-                                            MatchDateTime = period.Value?["cutoff"]?.ToString()
-                                        });
-                                        resList.Add(new EventWithTotal
-                                        {
-                                            Id = sportEvent.Value["id"].ConvertToLongOrNull(),
-                                            TotalType = "2",
-                                            TotalValue = period.Value?["moneyline"]?["away"]?.ToString(),
-                                            MatchDateTime = period.Value?["cutoff"]?.ToString()
-                                        });
-                                        resList.Add(new EventWithTotal
-                                        {
-                                            Id = sportEvent.Value["id"].ConvertToLongOrNull(),
-                                            TotalType = "X",
-                                            TotalValue = period.Value?["moneyline"]?["draw"]?.ToString(),
-                                            MatchDateTime = period.Value?["cutoff"]?.ToString()
-                                        });
-                                    }
-                                    catch
-                                    {
-                                        //ignored
-                                    }
-
-                                    try
-                                    {
-                                        foreach (var spread in period.Value?["spreads"])
-                                        {
-                                            try
-                                            {
-                                                resList.Add(new EventWithTotal
-                                                {
-                                                    Id = sportEvent.Value["id"].ConvertToLongOrNull(),
-                                                    TotalType = spread.Value?["hdp"]?.ToString(),
-                                                    TotalValue = spread.Value?["away"]?.ToString(),
-                                                    //  Remark = "spreads away",
-                                                    MatchDateTime = period.Value?["cutoff"]?.ToString()
-                                                });
-                                                resList.Add(new EventWithTotal
-                                                {
-                                                    Id = sportEvent.Value["id"].ConvertToLongOrNull(),
-                                                    TotalType = spread.Value?["hdp"]?.ToString(),
-                                                    TotalValue = spread.Value?["home"]?.ToString(),
-                                                    //  Remark = "spreads home",
-                                                    MatchDateTime = period.Value?["cutoff"]?.ToString()
-                                                });
-                                            }
-                                            catch
-                                            {
-                                                //ignored
-                                            }
-                                        }
-                                        try
-                                        {
-                                            //resList.Add(new EventWithTotal
-                                            //{
-                                            //    Id = sportEvent.Value["id"].ConvertToLong(),
-                                            //    TotalType = "Больше",
-                                            //    TotalValue = period.Value?["teamTotal"]?["away"]?["points"]?.ToString(),
-                                            //    MatchDateTime = period.Value?["cutoff"]?.ToString()
-                                            //});
-                                            //resList.Add(new EventWithTotal
-                                            //{
-                                            //    Id = sportEvent.Value["id"].ConvertToLong(),
-                                            //    TotalType = "Меньше",
-                                            //    TotalValue = period.Value?["teamTotal"]?["home"]?["points"]?.ToString(),
-                                            //    MatchDateTime = period.Value?["cutoff"]?.ToString()
-                                            //});
-                                        }
-                                        catch
-                                        {
-                                            //ignored
-                                        }
-                                    }
-                                    catch
-                                    {
-                                        // ignored
-                                    }
-                                }
-                            }
-                            catch
-                            {
-                                // ignored
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                }
-            }
-            catch
-            {
-                // ignored
-            }
-            return resList;
-        }
-
-        private List<EventWithTeamName> ParseEventWithNames(HttpWebResponse teamNamesResp)
-        {
-            List<EventWithTeamName> list = new List<EventWithTeamName>();
-            try
-            {
-                foreach (var league in
-                        ((JsonObject)JsonObject.Load(teamNamesResp.GetResponseStream()))?["league"])
-                {
-                    var sportEvents = league.Value?["events"];
-                    if (sportEvents != null)
-                        foreach (var sportEvent in sportEvents)
-                        {
-                            if (sportEvent.Value != null)
-                                list.Add(new EventWithTeamName()
-                                {
-                                    Id = sportEvent.Value["id"].ConvertToLongOrNull(),
-                                    TeamNames =
-                                        $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"
-                                        .Replace("\"", "")
-                                });
-                        }
-                }
-            }
-            catch
-            {
-                //ignored
-            }
-            return list;
+            _converter = new ConverterFormulas();
         }
 
         private Dictionary<long, List<EventWithTotalDictionary>> ParseEventWithTotalsDictionaty(HttpWebResponse totalResp)
@@ -259,28 +52,31 @@ namespace DataParser.DefaultRealization
 
                                     try
                                     {
-                                        resList[id].Add(new EventWithTotalDictionary()
+                                        resList[id].Add(new EventWithTotalDictionary
                                         {
+                                            LineId = period.Value?["lineId"]?.ToString(),
                                             TotalType = "1",
                                             TotalValue = period.Value?["moneyline"]?["home"]?.ToString(),
                                             MatchDateTime = matchDateTime
                                         });
-                                        resList[id].Add(new EventWithTotalDictionary()
+                                        resList[id].Add(new EventWithTotalDictionary
                                         {
+                                            LineId = period.Value?["lineId"]?.ToString(),
                                             TotalType = "2",
                                             TotalValue = period.Value?["moneyline"]?["away"]?.ToString(),
                                             MatchDateTime = matchDateTime
                                         });
-                                        resList[id].Add(new EventWithTotalDictionary()
+                                        resList[id].Add(new EventWithTotalDictionary
                                         {
+                                            LineId = period.Value?["lineId"]?.ToString(),
                                             TotalType = "X",
                                             TotalValue = period.Value?["moneyline"]?["draw"]?.ToString(),
                                             MatchDateTime = matchDateTime
                                         });
                                     }
-                                    catch
+                                    catch (Exception ex)
                                     {
-                                        //ignored
+                                        _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
                                     }
 
                                     try
@@ -289,79 +85,84 @@ namespace DataParser.DefaultRealization
                                         {
                                             try
                                             {
-                                                resList[id].Add(new EventWithTotalDictionary()
+                                                resList[id].Add(new EventWithTotalDictionary
                                                 {
+                                                    LineId = period.Value?["lineId"]?.ToString(),
                                                     TotalType = $"F2({spread.Value?["hdp"]})",
                                                     TotalValue = spread.Value?["away"]?.ToString(),
                                                     MatchDateTime = matchDateTime
                                                 });
-                                                resList[id].Add(new EventWithTotalDictionary()
+                                                resList[id].Add(new EventWithTotalDictionary
                                                 {
+                                                    LineId = period.Value?["lineId"]?.ToString(),
                                                     TotalType = $"F1({spread.Value?["hdp"]})",
                                                     TotalValue = spread.Value?["home"]?.ToString(),
                                                     MatchDateTime = matchDateTime
                                                 });
                                             }
-                                            catch
+                                            catch (Exception ex)
                                             {
-                                                //ignored
+                                                _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
                                             }
                                         }
                                         foreach (var total in period.Value?["totals"])
                                         {
                                             try
                                             {
-                                                resList[id].Add(new EventWithTotalDictionary()
+                                                resList[id].Add(new EventWithTotalDictionary
                                                 {
+                                                    LineId = period.Value?["lineId"]?.ToString(),
                                                     TotalType = $"TO({total.Value?["points"]})",
                                                     TotalValue = total.Value?["over"]?.ToString(),
                                                     MatchDateTime = matchDateTime
                                                 });
-                                                resList[id].Add(new EventWithTotalDictionary()
+                                                resList[id].Add(new EventWithTotalDictionary
                                                 {
+                                                    LineId = period.Value?["lineId"]?.ToString(),
                                                     TotalType = $"TU({total.Value?["points"]})",
                                                     TotalValue = total.Value?["under"]?.ToString(),
                                                     MatchDateTime = matchDateTime
                                                 });
                                             }
-                                            catch
+                                            catch (Exception ex)
                                             {
-                                                //ignored
+                                                _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
                                             }
                                         }
                                     }
-                                    catch
+                                    catch (Exception ex)
                                     {
-                                        // ignored
+                                        _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
                                     }
                                 }
                             }
-                            catch
+                            catch (Exception ex)
                             {
-                                // ignored
+                                _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
                             }
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        // ignored
+                        _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // ignored
+                _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
             }
             return resList;
         }
 
         private Dictionary<long, string> ParseEventWithNamesDictionary(HttpWebResponse teamNamesResp)
         {
-            Dictionary<long, string> resList = new Dictionary<long, string>();
+            var resList = new Dictionary<long, string>();
             try
             {
                 var jsonValue = ((JsonObject)JsonValue.
                     Load(teamNamesResp.GetResponseStream()))?["league"];
+
                 if (jsonValue == null) return resList;
 
                 foreach (var league in jsonValue)
@@ -376,25 +177,27 @@ namespace DataParser.DefaultRealization
                         {
                             //if id null - all ok will be exception and we go to the next item in foreach
                             var convertToLongOrNull = sportEvent.Value["id"].ConvertToLongOrNull();
-                            if (convertToLongOrNull != null)
-                            {
-                                var id = convertToLongOrNull.Value;
 
-                                if (!resList.ContainsKey(id))
-                                    resList.Add(id, $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"
-                                        .Replace("\"", ""));
-                            }
+                            if (convertToLongOrNull == null) continue;
+
+                            var id = convertToLongOrNull.Value;
+
+                            if (!resList.ContainsKey(id))
+                                resList.Add(id, $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"
+                                    .Replace("\"", ""));
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        //ignored
+                        _logger.Error(ex.Message);
+                        _logger.Error(ex.StackTrace);
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                //ignored
+                _logger.Error(ex.Message);
+                _logger.Error(ex.StackTrace);
             }
             return resList;
         }
@@ -424,12 +227,16 @@ namespace DataParser.DefaultRealization
                                 {
                                     TeamNames = eventWithName.Value,
                                     MatchDateTime = DateTime.Parse(eventWithTotal.MatchDateTime.Replace("\"", "")),
-                                    TypeCoefDictionary = new Dictionary<string, double>()
+                                    TypeCoefDictionary = new Dictionary<string, double>(),
+                                    TypeLineIdDictionary = new Dictionary<string, string>()
                                 });
                             if (eventWithTotal.TotalType.Contains("T"))
                                 eventWithTotal.TotalType = ParseTotalType(eventWithTotal.TotalType);
-                            resDic[key].TypeCoefDictionary.Add(eventWithTotal.TotalType,
+                            {
+                                resDic[key].TypeCoefDictionary.Add(eventWithTotal.TotalType,
                                 _converter.ConvertAmericanToDecimal(eventWithTotal.TotalValue.ConvertToDoubleOrNull()));
+                            }
+                            resDic[key].TypeLineIdDictionary.Add(eventWithTotal.TotalType, eventWithTotal.LineId);
                         }
                         else
                         {
@@ -439,11 +246,14 @@ namespace DataParser.DefaultRealization
                                 resDic[key].TypeCoefDictionary.Add(eventWithTotal.TotalType,
                                     _converter.ConvertAmericanToDecimal(
                                         eventWithTotal.TotalValue.ConvertToDoubleOrNull()));
+                            if (!resDic[key].TypeLineIdDictionary.ContainsKey(eventWithTotal.TotalType))
+                                resDic[key].TypeLineIdDictionary.Add(eventWithTotal.TotalType, eventWithTotal.LineId);
+
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        //ignored
+                        _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
                     }
                 }
             }
@@ -460,10 +270,11 @@ namespace DataParser.DefaultRealization
             return prefix + Extentions.Round(_converter.ConvertAmericanToDecimal(totalType.ConvertToDoubleOrNull())) + ")";
         }
 
-        public async Task<Dictionary<string, ResultForForksDictionary>> GetAllPinacleEventsForRequestDictionaryAsync(SportType sportType, string userLogin, string userPass)
+        public async Task<Dictionary<string, ResultForForksDictionary>> GetAllPinacleEventsDictionaryAsync(
+            SportType sportType, string userLogin, string userPass)
         {
             var resDic = new Dictionary<string, ResultForForksDictionary>();
-            this.SportType = sportType;
+            _sportType = sportType;
             try
             {
                 var totalResp = await GetAllTotalsAsync(userLogin, userPass).ConfigureAwait(false);
@@ -487,9 +298,10 @@ namespace DataParser.DefaultRealization
                         resDic[key].TypeCoefDictionary.Remove(keyForRemove);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // ignored
+                _logger.Error(ex.Message);
+                _logger.Error(ex.StackTrace);
             }
             return resDic;
         }
@@ -500,7 +312,7 @@ namespace DataParser.DefaultRealization
         /// <returns></returns>
         protected virtual async Task<HttpWebResponse> GetAllTeamNamesAsync(string userLogin, string userPass)
         {
-            var request = (HttpWebRequest)WebRequest.Create("https://api.pinnaclesports.com/v1/fixtures?sportid=" + (int)SportType);
+            var request = (HttpWebRequest)WebRequest.Create("https://api.pinnaclesports.com/v1/fixtures?sportid=" + (int)_sportType);
             string credentials = String.Format("{0}:{1}", userLogin, userPass);//for test "VB794327", "artem89@"
             byte[] bytes = Encoding.UTF8.GetBytes(credentials);
             string base64 = Convert.ToBase64String(bytes);
@@ -520,8 +332,8 @@ namespace DataParser.DefaultRealization
         /// <returns></returns>
         protected virtual async Task<HttpWebResponse> GetAllTotalsAsync(string userLogin, string userPass)
         {
-            var request = (HttpWebRequest)WebRequest.Create("https://api.pinnaclesports.com/v1/odds?sportid=" + (int)SportType);
-            string credentials = String.Format("{0}:{1}", userLogin, userPass);//for test "VB794327", "artem89@"
+            var request = (HttpWebRequest)WebRequest.Create("https://api.pinnaclesports.com/v1/odds?sportid=" + (int)_sportType);
+            string credentials = $"{userLogin}:{userPass}";//for test "VB794327", "artem89@"
             byte[] bytes = Encoding.UTF8.GetBytes(credentials);
             string base64 = Convert.ToBase64String(bytes);
             string authorization = String.Concat("Basic ", base64);
@@ -530,8 +342,7 @@ namespace DataParser.DefaultRealization
             request.Method = "GET";
             request.Accept = "application/json";
             request.ContentType = "application/json; charset=utf-8";
-            return
-                ((HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false));
+            return (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using DataSaver;
 using DevExpress.XtraBars.Alerter;
+using ExchangeAPI.Data;
+using ExchangeAPI.Providers.Pinnacle;
 using NLog;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
-using System;
-using System.Threading;
+using ToolsPortable;
 
 namespace WebCrawler.SeleniumCrawler
 {
@@ -28,52 +27,26 @@ namespace WebCrawler.SeleniumCrawler
             AlertControl = new AlertControl();
         }
 
-        public static void SearchAndOpenEvent()
+        public static void SearchAndOpenEvent(string lineId)
         {
-            _logger.Trace("start SearchAndOpenEvent.");
-            if (_busy)
+            _logger.Trace($"start SearchAndOpenEvent. lineId = {lineId}");
+
+            if (lineId.IsBlank())
             {
-                _logger.Info("_busy => return!!!");
+                _logger.Warn("lineId is Blank");
                 return;
             }
 
-            var found = false;
-            try
-            {
-                var prof = new FirefoxProfile();
-                prof.SetPreference("browser.startup.homepage_override.mstone", "ignore");
-                prof.SetPreference("startup.homepage_welcome_url.additional", "about:blank");
-                var driver = new FirefoxDriver(prof);
+            var pinProvider = new PinnacleProvider();
 
-                var user = LocalSaver.FindUser();
+            pinProvider.Login("login",
+                "password");
+            var marketData = new MarketData("id",
+                pinProvider,
+                "locate");
+            var order = new Order();//todo here we have a lot of parameters
+            pinProvider.PlaceBet(marketData, order);
 
-
-                driver.Navigate().GoToUrl(MainUrl);
-                Thread.Sleep(2000);
-                var element = driver.FindElement(By.ClassName(LoginButtonClass));
-                element.Click();
-                Thread.Sleep(2000);
-                element = driver.FindElement(By.ClassName(LoginFieldClass));
-                element.SendKeys(user.Login);
-                element = driver.FindElement(By.ClassName(PassFieldClass));
-                element.SendKeys(user.Password);
-                element = driver.FindElement(By.ClassName(ButtonLoginClass));
-                element.Click();
-                Thread.Sleep(2000);
-                _busy = true;
-                found = true;
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message);
-                _logger.Error(ex.StackTrace);
-            }
-            finally
-            {
-                _logger.Info(found ? "LogIn was successful" : "LogIn was not successful");
-                AlertControl.Show(null, found ? "Вход был успешным" : "Не войти", "");
-                _busy = false;
-            }
             _logger.Trace("End SearchAndOpenEvent.");
         }
     }

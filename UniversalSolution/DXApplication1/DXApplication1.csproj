@@ -151,6 +151,12 @@
     <Compile Include="ErrorProvider\ExceptionHandlerForm.Designer.cs">
       <DependentUpon>ExceptionHandlerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\PinnacleBetForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PinnacleBetForm.Designer.cs">
+      <DependentUpon>PinnacleBetForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\DataManager.cs" />
     <Compile Include="Models\PageManager.cs" />
     <Compile Include="Pages\SearchPage.cs">
@@ -187,6 +193,9 @@
     </Compile>
     <EmbeddedResource Include="ErrorProvider\ExceptionHandlerForm.resx">
       <DependentUpon>ExceptionHandlerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PinnacleBetForm.resx">
+      <DependentUpon>PinnacleBetForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\SearchPage.resx">
       <DependentUpon>SearchPage.cs</DependentUpon>

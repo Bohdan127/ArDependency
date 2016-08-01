@@ -36,7 +36,7 @@ namespace DataLoader
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
 
-            _pinnacle = new PinnacleSportsDataParser(new ConverterFormulas());
+            _pinnacle = new PinnacleSportsDataParser();
             _marathon = new MarathonParser();
             _localSaver = new LocalSaver();
             _forkFormulas = new TwoOutComeForkFormulas();
@@ -127,7 +127,7 @@ namespace DataLoader
         {
             Console.WriteLine($"Start Loading {sportType} Events from Pinnacle");
 
-            var newList = _pinnacle.GetAllPinacleEventsForRequestDictionaryAsync(sportType, UserLogin, UserPass).Result;
+            var newList = _pinnacle.GetAllPinacleEventsDictionaryAsync(sportType, UserLogin, UserPass).Result;
 
             Console.WriteLine("Loading finished");
             Console.WriteLine($"Was founded {newList.Count} {sportType} Events from Pinnacle");

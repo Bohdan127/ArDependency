@@ -7,5 +7,7 @@
         public string TotalValue { get; set; }
 
         public string MatchDateTime { get; set; }
+
+        public string LineId { get; set; }
     }
 }

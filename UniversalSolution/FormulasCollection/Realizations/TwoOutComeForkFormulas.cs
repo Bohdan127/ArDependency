@@ -32,11 +32,9 @@ namespace FormulasCollection.Realizations
             1 > 1 / coef1.Value + 1 / coef2.Value;
 
         }
-        private bool CheckIsMustToBeRevert(string eventMarafon, string eventPinacle)
-        {
-            return Extentions.GetStringSimilarityInPercent(eventMarafon.Split('-')[0],
+        private bool CheckIsMustToBeRevert(string eventMarafon, string eventPinacle) =>
+        Extentions.GetStringSimilarityInPercent(eventMarafon.Split('-')[0],
                 eventPinacle.Split('-')[0], true) < 90;
-        }
 
         public List<Fork> GetAllForksDictionary(Dictionary<string, ResultForForksDictionary> pinnacle,
             List<ResultForForks> marathon)
@@ -81,41 +79,6 @@ namespace FormulasCollection.Realizations
                 }
             }
             return resList;
-        }
-
-        private List<ResultForForks> AddAsian(List<ResultForForks> marathon)
-        {
-            var result = new List<ResultForForks>();
-            ResultForForks zero = null;
-            ResultForForks five = null;
-            bool isZero = false;
-            foreach (var r in marathon)
-            {
-                result.Add(r);
-                if (r.Type.EndsWith("0)"))
-                {
-                    isZero = true;
-                    zero = r;
-                }
-                if (r.Type.EndsWith("5)"))
-                {
-                    isZero = false;
-                    five = r;
-                }
-                if (zero != null && five != null)
-                {
-                    if (zero.Event == five.Event)
-                    {
-                        if (isZero)
-                            zero.Type = zero.Type.Remove(zero.Type.Length - 2) + "75)";
-                        else
-                            zero.Type = zero.Type.Remove(zero.Type.Length - 2) + "25)";
-                        zero.Coef = ((zero.Coef.ConvertToDoubleOrNull() + five.Coef.ConvertToDoubleOrNull()) / 2).ToString();
-                        result.Add(zero);
-                    }
-                }
-            }
-            return result;
         }
 
         private string IsAnyForkAll(ResultForForks marEvent, ResultForForksDictionary pinEvent, SportType st)

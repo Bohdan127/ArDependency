@@ -119,8 +119,6 @@ namespace DXApplication1.Pages
             var currRow = (Fork)gridView1.GetFocusedRow();
             if (gridView1.FocusedColumn == colBookmaker)
                 MarathonCrawler.SearchAndOpenEvent((SportType)Enum.Parse(typeof(SportType), currRow.Sport, true), currRow.EventId, currRow.CoefFirst);
-            else
-                PinnacleCrawler.SearchAndOpenEvent(currRow["LineId"]);
         }
     }
 }

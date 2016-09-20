@@ -5,6 +5,7 @@
         public string eventid;
         public string name1;
         public string name2;
+        public string league;
 
         public EnglishNameTeams()
         {

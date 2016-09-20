@@ -8,11 +8,13 @@
         public string EventId { get; set; }
         public string League { get; set; }
         public string Bookmaker { get; set; }
+        public DataMarathonForAutoPlays marathonAutoPlay;
+  
 
         //  X1 X2 1 2
         public ResultForForks() { }
 
-        public ResultForForks(string eventID, string nameTeam1, string nameTeam2, string date, string nameCoff, string coef, string type, string bookmaker, string league)
+        public ResultForForks(string eventID, string nameTeam1, string nameTeam2, string date, string nameCoff, string coef, string type, string bookmaker, string league, DataMarathonForAutoPlays obj)
         {
             this.Event = nameTeam1.Trim() + " - " + nameTeam2.Trim();
             this.MatchDateTime = date;
@@ -22,6 +24,8 @@
             Bookmaker = bookmaker;
             this.EventId = eventID;
             this.League = league;
+
+           this.marathonAutoPlay = obj;
         }
 
         public string SportType { get; set; }

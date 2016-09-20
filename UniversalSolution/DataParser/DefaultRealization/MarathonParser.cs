@@ -4,18 +4,26 @@ using DataParser.Extensions;
 using DataParser.Models;
 using FormulasCollection.Models;
 using NLog;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.PhantomJS;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DataParser.DefaultRealization
 {
     public class MarathonParser
     {
         private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private PhantomJSDriver _driver;
+        OpenQA.Selenium.Firefox.FirefoxDriver firefox;
+        private string isClick_IdEvent = ".";
+        private string RefreshPage = "";
 
         private async Task<List<ResultForForks>> GetNameTeamsAndDateAsync(SportType sportType)
         {
@@ -33,10 +41,9 @@ namespace DataParser.DefaultRealization
             string oldLiga = "";
             string league = "";
 
-            string old_team_name_1 = null;
-            string old_team_name_2 = null;
+            string isLive = null;
+            string liga_ContainerID = null;
 
-            bool is_correct_type = true;
             bool changeLiga = false;
 
             //Boolean
@@ -60,6 +67,9 @@ namespace DataParser.DefaultRealization
             UrlAndNameFile(sportType, out url, out namefile);
             string s = await HtmlAsync(url).ConfigureAwait(false);
             var lines = s.Split('\n');
+            string res = null;
+
+            DataMarathonForAutoPlays obj = new DataMarathonForAutoPlays();
 
 
             foreach (var line in lines)
@@ -84,6 +94,16 @@ namespace DataParser.DefaultRealization
                         changeLiga = false;
                 }
 
+
+                //------------------LigaID-----------------
+
+                if (line._Contains(MarathonTags.Liga_ContainerID))
+                {
+                    //liga_ContainerID = line.Substrings(MarathonTags.Liga_ContainerID + "=\"", "\">");
+                    liga_ContainerID = line.TagsContent(MarathonTags.Liga_ContainerID);
+                }
+
+
                 //----------------TYPE-COEFF---------------
 
                 if (countTypeCoff.Count < 10)
@@ -106,6 +126,12 @@ namespace DataParser.DefaultRealization
                     oldEvent = _eventid;
                 }
 
+                //---------------Live---------------------
+
+                if (line._Contains(MarathonTags.IsLive))
+                {
+                    isLive = line.Substrings(MarathonTags.IsLive + "=\"", "\">");
+                }
 
                 //---------------DATE----------------------
                 if (isDate)
@@ -119,7 +145,7 @@ namespace DataParser.DefaultRealization
                 }
 
                 //--------------Coeff--Value----------------
-                string res = null;
+                
                 if (line.Contains(MarathonTags.Coff) /*&& line.Contains("Match_Result")*/)
                 {
                     res = line.Substrings(MarathonTags.Coff, "\"");
@@ -156,9 +182,22 @@ namespace DataParser.DefaultRealization
                     isTotal = true;
                 }
 
+                //-----------------Auto Play---------------------------------
+
+
+                if (line.Contains(Tags_DataMarathonForAutoPlays.data_sel))
+                {
+                    obj = ParseForAutoPlay(line, Tags_DataMarathonForAutoPlays.data_sel);
+                }
+                if (line.Contains(Tags_DataMarathonForAutoPlays.data_selection_key))
+                {
+                    obj = ParseForAutoPlay(line, Tags_DataMarathonForAutoPlays.data_selection_key, obj);
+                }
+
+
 
                 //---------------Add to list RESULT--------------------------
-                if (date != null && res != null && _eventid != null && englishNameTeams_Dictionary.ContainsKey(_eventid))
+                if (date != null && res != null && _eventid != null && englishNameTeams_Dictionary.ContainsKey(_eventid) && obj.CheckFullData())
                 {
                     if (i >= countTypeCoff.Count)
                         i = 0;
@@ -172,8 +211,18 @@ namespace DataParser.DefaultRealization
                                                   res,                //   znaczenia
                                                   sportType.ToString(),
                                                   Site.MarathonBet.ToString(),
-                                                  league
+                                                  league,
+                                                  obj
                                                   ));
+                    obj = null;
+
+                    // var nextElement = this.PhantomFireFox(url, "event_" + _eventid);
+                    /* if (!string.IsNullOrEmpty(date))
+                     {
+                         //PhantomDriver
+                         //PhantomFireFox
+                         var nextElement = this.PhantomFireFox(url, _eventid, liga_ContainerID, this.IsToday(date), sportType);
+                     }*/
                     if (i < countTypeCoff.Count)
                         i++;
                     else
@@ -200,22 +249,38 @@ namespace DataParser.DefaultRealization
 
         public MarathonParser()
         {
+            /*
+                        var prof = new FirefoxProfile();
+                        prof.SetPreference("browser.startup.homepage_override.mstone",
+                            "ignore");
+                        prof.SetPreference("startup.homepage_welcome_url.additional",
+                            "about:blank");
+                        prof.EnableNativeEvents = false;
+
+                         firefox = new OpenQA.Selenium.Firefox.FirefoxDriver(prof);
+                         firefox.Manage().Window.Maximize();
+                         firefox.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromMinutes(35));
+                         firefox.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromMinutes(35));
+                         firefox.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromMinutes(35));*/
+
+            /*
+             var driverService = PhantomJSDriverService.CreateDefaultService(); 
+             _driver = new PhantomJSDriver();
+             _driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromMinutes(35));
+             _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromMinutes(35));
+             _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromMinutes(35));*/
+
             result = new List<ResultForForks>();
             // Initi(sportType);
         }
 
         public async Task<List<ResultForForks>> InitiAsync(SportType sportType)
         {
-            try
-            {
-                this.englishNameTeams_Dictionary = await this.GetEnglishNameTEams(sportType).ConfigureAwait(false);
-                var result = await GetNameTeamsAndDateAsync(sportType).ConfigureAwait(false);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
-            }
+
+            this.englishNameTeams_Dictionary = await this.GetEnglishNameTEams(sportType).ConfigureAwait(false);
+            var result = await GetNameTeamsAndDateAsync(sportType).ConfigureAwait(false);
+            return result;
+
             return new List<ResultForForks>();
             //I guess it must be cause when Exception is not catch(Exception ex)ed, it will show Exception in program,
             // so in my opinion it will be better to return zero Forks from this type one
@@ -242,8 +307,17 @@ namespace DataParser.DefaultRealization
             {
                 reader?.Close();
             }
-
+            WriteToDocument(HTML);
             return HTML;
+        }
+
+        private static void WriteToDocument(string html)
+        {
+            using (StreamWriter sw = new StreamWriter("html__.txt"))
+            {
+                sw.WriteLine(html);
+                sw.Close();
+            }
         }
 
         private async Task<Dictionary<string, EnglishNameTeams>> GetEnglishNameTEams(SportType sportType)
@@ -434,5 +508,217 @@ namespace DataParser.DefaultRealization
                     );
             }
         }
+
+        private bool IsToday(string date)
+        {
+            int count = date.Trim().Split().Length;
+            return !(count > 2);
+        }
+
+        private string PhantomDriver(string urlTypeSport, string id, string ligaID, bool today, SportType sporttype)
+        {
+            id = id.Contains("event_") ? id : "event_" + id;
+            string liveTag = today ? "today-name" : "name";
+            var res = "";
+
+            try
+            {
+                if (!String.IsNullOrEmpty(this.isClick_IdEvent))
+                {
+                    if (this.isClick_IdEvent != id)
+                    {
+                        _driver.Navigate().GoToUrl(urlTypeSport);
+                        var idTag = _driver.FindElement(By.Id(id));
+                        var click = idTag.FindElement(By.ClassName(liveTag));
+                        click.Click();
+
+                        //var a = _driver.FindElement(By.Id(id)).FindElement(By.ClassName("blocks-area"));
+                        var a = _driver.FindElement(By.Id(id));
+                        res = a.Text;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                /*MessageBox.Show(e.Message.ToString());
+                _driver.Close();
+                _driver = new PhantomJSDriver();*/
+                //return PhantomDriver(urlTypeSport, id, ligaID, today, sporttype);
+            }
+            this.isClick_IdEvent = id;
+            this.WriteToDocumentWithSelenium(res, sporttype, ligaID, id);
+            return res;
+        }
+        private string PhantomFireFox(string urlTypeSport, string id, string ligaID, bool today, SportType sporttype)
+        {
+            id = id.Contains("event_") ? id : "event_" + id;
+            string liveTag = today ? "today-name" : "name";
+            var res = "";
+
+            try
+            {
+                if (!String.IsNullOrEmpty(this.isClick_IdEvent))
+                {
+                    if (this.isClick_IdEvent != id)
+                    {
+                        firefox.Navigate().GoToUrl(urlTypeSport);
+                        var idTag = firefox.FindElement(By.Id(id));
+                        var click = idTag.FindElement(By.ClassName(liveTag));
+                        click.Click();
+
+                        //var a = firefox.FindElement(By.Id(id)).FindElement(By.ClassName("blocks-area"));
+                        var a = firefox.FindElement(By.Id(id));
+                        res = a.Text;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message.ToString());
+                firefox.Close();
+                firefox = new OpenQA.Selenium.Firefox.FirefoxDriver();
+                return PhantomFireFox(urlTypeSport, id, ligaID, today, sporttype);
+            }
+            this.isClick_IdEvent = id;
+            this.WriteToDocumentWithSelenium(res, sporttype, ligaID, id);
+            return res;
+        }
+        private void WriteToDocumentWithSelenium(string data, SportType sporttype, string LigueId, string id)
+        {
+            string mainNameFolder = "Selenium Results";
+            string nameFolderForTypeSport = sporttype.ToString();
+            string nameFolderForLigueId = LigueId;
+            string nameFile = id + ".txt";
+            string path = "";
+            if (!Directory.Exists(mainNameFolder))
+            {
+                Directory.CreateDirectory(mainNameFolder);
+            }
+            path += mainNameFolder + "\\";
+            if (!Directory.Exists(path + nameFolderForTypeSport))
+            {
+                Directory.CreateDirectory(path + nameFolderForTypeSport);
+            }
+            path += nameFolderForTypeSport + "\\";
+            if (!Directory.Exists(path + nameFolderForLigueId))
+            {
+                Directory.CreateDirectory(path + nameFolderForLigueId);
+            }
+            path += nameFolderForLigueId + "\\";
+            if (!File.Exists(path + nameFile))
+            {
+                path += nameFile;
+                using (StreamWriter sw = new StreamWriter(path))
+                {
+                    sw.WriteLine(data);
+                    sw.Close();
+                }
+            }
+        }
+
+        private DataMarathonForAutoPlays ParseForAutoPlay(string line, string tag, DataMarathonForAutoPlays obj = null)
+        {
+            
+            obj = obj == null ? (obj = new DataMarathonForAutoPlays()) : obj;
+            if (tag.Equals(Tags_DataMarathonForAutoPlays.data_sel))
+            {
+                line = line.TagsContent2(Tags_DataMarathonForAutoPlays.data_sel);
+                var a = getString(line);
+
+                var b = a.Split(':');
+
+                var b1 = b[0].Replace("[", "").Replace("]", "").Split(',');
+                var price = b[1].Replace("[", "").Replace("]", "").Split(',');
+
+                var subj = line.Split(',');
+                obj.sn = b1[0];
+                obj.mn = b1[1];
+                obj.ewc = b1[2];
+                obj.cid = b1[3];
+                obj.prt = b1[4];
+                obj.ewf = b1[5];
+                obj.epr = b1[6];
+
+                for (int i = 0; i < price.Length; i++)
+                {
+                    obj.prices.Add(price[i]);
+                }
+            }
+            if (tag.Equals(Tags_DataMarathonForAutoPlays.data_selection_key))
+            {
+                obj.selection_key = line.TagsContent(Tags_DataMarathonForAutoPlays.data_selection_key);
+            }
+            return obj;
+        }
+        /*{"sn":"Burgos (+9.5)",
+   "mn":"Победа с учетом форы",
+   "ewc":"1/1 1",
+   "cid":10182298350,
+   "prt":"CP",
+   "ewf":"1.0",
+   "epr":"1.83",
+   "prices"
+       :{"0":"83/100",
+         "1":"1.83",
+         "2":"-121",
+         "3":"0.83",
+         "4":"0.83",
+         "5":"-1.21"}}*/
+        private string getString(string line)
+        {
+            line = line.Trim('{');
+            string result = "";
+            bool find_ = false; // :
+            bool _find = false; // {
+            string element = "";
+            string price = "";
+            foreach (var l in line)
+            {
+
+                if (l == ',')
+                {
+
+                    if (find_ && !_find)
+                    {
+                        find_ = false;
+                        result += (!string.IsNullOrEmpty(result)) ? "," : "[";
+                        result += element.Trim('\"');
+                        element = "";
+                    }
+                    if (find_ && _find)
+                    {
+                        find_ = false;
+                        price += (!string.IsNullOrEmpty(price)) ? "," : "[";
+                        price += element.Trim('\"');
+                        element = "";
+                    }
+
+                }
+                if (l == '{' || l=='}')
+                {
+                    find_ = false;
+                }
+                if (find_)
+                {
+
+                    element += l;
+
+                }
+                if (l == ':')
+                {
+                    find_ = true;
+                }
+                if (l == '{')
+                {
+                    _find = true;
+                }
+
+            }
+            result += "]:";
+            result += (price+","+ element + "]");
+
+            return result;
+        }
+
     }
 }

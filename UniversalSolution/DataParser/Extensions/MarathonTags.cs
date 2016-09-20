@@ -10,5 +10,11 @@
         public static readonly string Fora = "data-market-type=\"HANDICAP\"";
         public static readonly string Total = "data-market-type=\"TOTAL\"";
         public static readonly string Liga = "<span class=\"nowrap\">";
+
+
+        public static readonly string ForaFull = "coeff-handicap";
+
+        public static readonly string IsLive = "data-live";
+        public static readonly string Liga_ContainerID = "data-category-treeId";
     }
 }

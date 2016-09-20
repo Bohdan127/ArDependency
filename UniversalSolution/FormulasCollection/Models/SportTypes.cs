@@ -46,8 +46,12 @@ namespace FormulasCollection.Models
             };
             CoefsHockey = new Dictionary<string, string>
             {
-                { "1","2"},
-                { "2","1"}
+                { "12", "X"},
+                { "1X", "2"},
+                { "X2", "1"},
+                { "1", "X2"},
+                { "2", "1X"},
+                { "X", "12"}
             };
             CoefsVolleyBall = new Dictionary<string, string>
             {

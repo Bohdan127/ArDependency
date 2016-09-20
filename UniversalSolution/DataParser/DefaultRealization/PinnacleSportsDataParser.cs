@@ -217,15 +217,14 @@ namespace DataParser.DefaultRealization
                 {
                     try
                     {
-                        //var teams = eventWithName.Value.Split('-');
-                        //var key = $"{teams[0].Trim().Split(' ').First()}-{teams[1].Trim().Split(' ').First()}";
-                        var key = $"{eventWithName.Value}";//-{DateTime.Parse(eventWithTotal.MatchDateTime.Replace("\"",""), CultureInfo.InvariantCulture)}";
+                        var key = $"{eventWithName.Value}";
                         if (!resDic.ContainsKey(key))
                         {
                             resDic.Add(key,
                                 new ResultForForksDictionary
                                 {
                                     TeamNames = eventWithName.Value,
+                                    EventId = eventWithName.Key.ToString(),
                                     MatchDateTime = DateTime.Parse(eventWithTotal.MatchDateTime.Replace("\"", "")),
                                     TypeCoefDictionary = new Dictionary<string, double>(),
                                     TypeLineIdDictionary = new Dictionary<string, string>()

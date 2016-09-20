@@ -19,7 +19,7 @@ namespace FormulasCollection.Realizations
         public TwoOutComeForkFormulas()
         {
             _calculatorFormulas = new TwoOutComeCalculatorFormulas();
-        }                                                                                                 
+        }
 
         public bool CheckIsFork(double? coef1, double? coef2, ResultForForks marEvent, ResultForForksDictionary pinEvent)
         {
@@ -79,7 +79,8 @@ namespace FormulasCollection.Realizations
                         resList.Add(new Fork
                         {
                             League = eventItem.League,
-                            EventId = eventItem.EventId,
+                            MarathonEventId = eventItem.EventId,
+                            PinnacleEventId = pin.EventId,
                             Event = eventItem.Event,
                             TypeFirst = eventItem.Type,
                             CoefFirst = eventItem.Coef,

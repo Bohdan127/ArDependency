@@ -68,9 +68,14 @@ namespace FormulasCollection.Models
         public ForkType Type { get; set; }
 
         /// <summary>
-        /// Event Id for Pinnacle search
+        /// Event Id for Pinnacle search from Marathon
         /// </summary>
-        public string EventId { get; set; }
+        public string MarathonEventId { get; set; }
+
+        /// <summary>
+        /// Event Id for Pinnacle search from Pinnacle
+        /// </summary>
+        public string PinnacleEventId { get; set; }
 
         /// <summary>
         /// League of game

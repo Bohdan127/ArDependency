@@ -9,6 +9,8 @@ namespace FormulasCollection.Models
 
         public DateTime MatchDateTime { get; set; }
 
+        public string EventId { get; set; }
+
         public Dictionary<string, double> TypeCoefDictionary { get; set; }
 
         public Dictionary<string, string> TypeLineIdDictionary { get; set; }

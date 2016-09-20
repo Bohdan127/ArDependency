@@ -95,7 +95,7 @@ namespace DataLoader
             Console.WriteLine($"Start Calculate Forks for {sportType} sport type");
 
             var resList = _forkFormulas.GetAllForksDictionary(pinSport, marSport);
-           // resList.AddRange(LoadSureBet(sportType));
+            //resList.AddRange(LoadSureBet(sportType));
             Console.WriteLine("Calculate finished");
             Console.WriteLine($"Was founded {resList.Count} {sportType} Forks");
 

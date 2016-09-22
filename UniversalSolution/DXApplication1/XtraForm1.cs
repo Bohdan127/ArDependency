@@ -1,7 +1,8 @@
-﻿using System;
-using DataSaver.Models;
+﻿using DataSaver.Models;
 using DevExpress.XtraEditors;
 using DXApplication1.Models;
+using NLog;
+using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -11,6 +12,9 @@ namespace DXApplication1
     public partial class XtraForm1 : XtraForm
     {
         #region Members
+
+        // ReSharper disable once InconsistentNaming
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public const string SettingsPath = "./";
         public const string SettingsFile = "Configuration.xml";
@@ -107,8 +111,10 @@ namespace DXApplication1
                 _filter = (Filter)new XmlSerializer(typeof(Filter))
                     .Deserialize(new StreamReader(SettingsPath + SettingsFile));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
+                _logger.Error(ex.Message);
+                _logger.Error(ex.StackTrace);
                 bRes = false;
             }
 
@@ -136,8 +142,10 @@ namespace DXApplication1
 
                 writer.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
+                _logger.Error(ex.Message);
+                _logger.Error(ex.StackTrace);
                 bRes = false;
             }
 

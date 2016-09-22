@@ -165,8 +165,7 @@ namespace DataSaver
 
         public virtual void UpdateFork(Fork fork)
         {
-            UpdateFork(MapForkToForkRow(fork));
-        }
+            UpdateFork(MapForkToForkRow(fork));}
 
         public virtual void DeleteFork(Fork fork)
         {
@@ -187,7 +186,8 @@ namespace DataSaver
                 MatchDateTime = json.DataAsJson.Value<string>("MatchDateTime"),
                 BookmakerFirst = json.DataAsJson.Value<string>("BookmakerFirst"),
                 BookmakerSecond = json.DataAsJson.Value<string>("BookmakerSecond"),
-                MarathonEventId = json.DataAsJson.Value<string>("EventId"),
+                MarathonEventId = json.DataAsJson.Value<string>("MarathonEventId"),
+                PinnacleEventId = json.DataAsJson.Value<string>("PinnacleEventId"),
                 League = json.DataAsJson.Value<string>("League"),
                 Type = (ForkType)Enum.Parse(typeof(ForkType), json.DataAsJson.Value<string>("Type")),
                 LineId = json.DataAsJson.Value<string>("LineId")

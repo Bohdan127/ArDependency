@@ -22,6 +22,7 @@ namespace FormulasCollection.Helpers
                 }
                 catch(Exception ex)
                 {
+
                     val = null;
                 }
                 if (val == null) return null;

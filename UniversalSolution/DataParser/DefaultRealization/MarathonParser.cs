@@ -5,7 +5,6 @@ using DataParser.Models;
 using FormulasCollection.Models;
 using NLog;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.PhantomJS;
 using System;
 using System.Collections.Generic;
@@ -60,7 +59,6 @@ namespace DataParser.DefaultRealization
 
             //Integer
             var i = 0;
-            var index = 0;
             // try
             // {
 
@@ -145,7 +143,7 @@ namespace DataParser.DefaultRealization
                 }
 
                 //--------------Coeff--Value----------------
-                
+
                 if (line.Contains(MarathonTags.Coff) /*&& line.Contains("Match_Result")*/)
                 {
                     res = line.Substrings(MarathonTags.Coff, "\"");
@@ -618,7 +616,7 @@ namespace DataParser.DefaultRealization
 
         private DataMarathonForAutoPlays ParseForAutoPlay(string line, string tag, DataMarathonForAutoPlays obj = null)
         {
-            
+
             obj = obj == null ? (obj = new DataMarathonForAutoPlays()) : obj;
             if (tag.Equals(Tags_DataMarathonForAutoPlays.data_sel))
             {
@@ -694,7 +692,7 @@ namespace DataParser.DefaultRealization
                     }
 
                 }
-                if (l == '{' || l=='}')
+                if (l == '{' || l == '}')
                 {
                     find_ = false;
                 }
@@ -715,7 +713,7 @@ namespace DataParser.DefaultRealization
 
             }
             result += "]:";
-            result += (price+","+ element + "]");
+            result += (price + "," + element + "]");
 
             return result;
         }

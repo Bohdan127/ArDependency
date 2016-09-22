@@ -23,19 +23,6 @@ namespace FormulasCollection.Realizations
 
         public bool CheckIsFork(double? coef1, double? coef2, ResultForForks marEvent, ResultForForksDictionary pinEvent)
         {
-            //if (CheckIsMustToBeRevert(marEvent.Event, pinEvent.TeamNames))
-            //{
-            //    if (CoefsWhichMustBeRevert.revertCoefs.ContainsKey(marEvent.Type))
-            //        coef2 = pinEvent.TypeCoefDictionary[CoefsWhichMustBeRevert.revertCoefs[marEvent.Type]];
-            //    else
-            //        coef2 = pinEvent.TypeCoefDictionary[CoefsWhichMustBeRevert.TypeRevertParse(marEvent.Type)];
-            //}
-
-            //return coef1 != null &&
-            //coef2 != null &&
-            //Math.Abs(coef1.Value) > 0.01 &&
-            //Math.Abs(coef2.Value) > 0.01 &&
-            //1 > 1 / coef1.Value + 1 / coef2.Value;
             if (coef1 == null
                 || coef2 == null)
                 return false;
@@ -68,6 +55,11 @@ namespace FormulasCollection.Realizations
                     Extentions.GetStringSimilarityInPercent(eventItem.Event, key, true) >= 85);
                 if (pinKey == null)
                     continue;
+
+                if (CheckIsMustToBeRevert(eventItem.Event,
+                    pinKey))
+                    RevertValues(pinnacle,
+                        pinKey);
 
                 var pin = pinnacle[pinKey];
                 try
@@ -102,6 +94,31 @@ namespace FormulasCollection.Realizations
                 }
             }
             return resList;
+        }
+
+        private void RevertValues(Dictionary<string, ResultForForksDictionary> pinnacle,
+            string pinKey)
+        {
+            var pin = pinnacle[pinKey];
+            var tmpDic = new Dictionary<string, double>();
+            foreach (var typeCoef in pin.TypeCoefDictionary)
+            {
+                if (typeCoef.Key == "1")
+                    tmpDic.Add("2", typeCoef.Value);
+                else if (typeCoef.Key == "2")
+                    tmpDic.Add("1", typeCoef.Value);
+                else if (typeCoef.Key.StartsWith("F1"))
+                    tmpDic.Add("F2" + typeCoef.Key.Remove(0, 2), typeCoef.Value);
+                else if (typeCoef.Key.StartsWith("F2"))
+                    tmpDic.Add("F1" + typeCoef.Key.Remove(0, 2), typeCoef.Value);
+                else if (typeCoef.Key.StartsWith("TO"))
+                    tmpDic.Add("TU" + typeCoef.Key.Remove(0, 2), typeCoef.Value);
+                else if (typeCoef.Key.StartsWith("TU"))
+                    tmpDic.Add("TO" + typeCoef.Key.Remove(0, 2), typeCoef.Value);
+                else
+                    tmpDic.Add(typeCoef.Key, typeCoef.Value);
+            }
+            pin.TypeCoefDictionary = tmpDic;
         }
 
         private string IsAnyForkAll(ResultForForks marEvent, ResultForForksDictionary pinEvent, SportType st)

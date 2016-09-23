@@ -1,4 +1,5 @@
 ﻿using FormulasCollection.Enums;
+using System.Collections.Generic;
 
 namespace DataSaver.Models
 {
@@ -82,5 +83,23 @@ namespace DataSaver.Models
         /// Id of event for placing bet in Pinnacle
         /// </summary>
         public string LineId { get; set; }
+
+        public string sn { get; set; }
+
+        public string mn { get; set; }
+
+        public string ewc { get; set; }
+
+        public string cid { get; set; }
+
+        public string prt { get; set; }
+
+        public string ewf { get; set; }
+
+        public string epr { get; set; }
+
+        public List<string> prices { get; set; }
+
+        public string selection_key { get; set; }
     }
 }

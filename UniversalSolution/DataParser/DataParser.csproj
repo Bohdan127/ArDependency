@@ -41,6 +41,9 @@
       <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>C:\Users\w4713\Desktop\Wcf\Iesi.Collections.dll</HintPath>
+    </Reference>
     <Reference Include="Interop.SHDocVw, Version=1.1.0.0, Culture=neutral, PublicKeyToken=db7cfd3acb5ad44e, processorArchitecture=MSIL">
       <HintPath>..\packages\WatiN.2.1.0\lib\net40\Interop.SHDocVw.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -92,6 +95,7 @@
   <ItemGroup>
     <Compile Include="Models\Surebet.cs" />
     <Compile Include="DefaultRealization\SurebetParser.cs" />
+    <Compile Include="DefaultRealization\ParseOlimpKz.cs" />
     <Compile Include="DefaultRealization\PinnacleSportsDataParser.cs" />
     <Compile Include="Models\TwoBooker.cs" />
     <Compile Include="Extensions\SurebetTags.cs" />
@@ -109,6 +113,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\packages\Selenium.Mozilla.Firefox.Webdriver.0.6.0.1\driver\wires-0.6.0-win.exe">
+      <Link>wires-0.6.0-win.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="phantomjs.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Readme.txt" />
     <None Include="App.config" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -119,12 +131,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\FormulasCollection\FormulasCollection.csproj">
-      <Project>{C6982AB9-704A-474F-A303-89B4C4A3D11E}</Project>
+      <Project>{c6982ab9-704a-474f-a303-89b4c4a3d11e}</Project>
       <Name>FormulasCollection</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -276,7 +276,13 @@ namespace DataParser.DefaultRealization
         {
 
             this.englishNameTeams_Dictionary = await this.GetEnglishNameTEams(sportType).ConfigureAwait(false);
-            var result = await GetNameTeamsAndDateAsync(sportType).ConfigureAwait(false);
+            try {
+                var result = await GetNameTeamsAndDateAsync(sportType).ConfigureAwait(false);
+            }catch(Exception e)
+            {
+                var ee = e.StackTrace;
+                var eee = e.Message;
+            }
             return result;
 
             return new List<ResultForForks>();

@@ -34,7 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevExpress.RichEdit.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
@@ -89,17 +88,9 @@
       <Project>{586a03bb-1702-4143-b370-e1dc6656762a}</Project>
       <Name>DataParser</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DataSaver\DataSaver.csproj">
-      <Project>{6C968817-C8BB-4BFF-9284-C786DBF5E90D}</Project>
-      <Name>DataSaver</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FormulasCollection\FormulasCollection.csproj">
-      <Project>{C6982AB9-704A-474F-A303-89B4C4A3D11E}</Project>
+      <Project>{c6982ab9-704a-474f-a303-89b4c4a3d11e}</Project>
       <Name>FormulasCollection</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WebCrawler\WebCrawler.csproj">
-      <Project>{AC11A78E-40F6-4418-B550-846602DC86CB}</Project>
-      <Name>WebCrawler</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

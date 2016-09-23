@@ -190,7 +190,17 @@ namespace DataSaver
                 PinnacleEventId = json.DataAsJson.Value<string>("PinnacleEventId"),
                 League = json.DataAsJson.Value<string>("League"),
                 Type = (ForkType)Enum.Parse(typeof(ForkType), json.DataAsJson.Value<string>("Type")),
-                LineId = json.DataAsJson.Value<string>("LineId")
+                LineId = json.DataAsJson.Value<string>("LineId"),
+
+                sn = json.DataAsJson.Value<string>("sn"),
+                mn = json.DataAsJson.Value<string>("mn"),
+                ewc = json.DataAsJson.Value<string>("ewc"),
+                cid = json.DataAsJson.Value<string>("cid"),
+                prt = json.DataAsJson.Value<string>("prt"),
+                ewf = json.DataAsJson.Value<string>("ewf"),
+                epr = json.DataAsJson.Value<string>("epr"),
+                prices = json.DataAsJson.Value<List<string>>("prices"),
+                selection_key = json.DataAsJson.Value<string>("selection_key")
             };
             return result;
         }
@@ -223,7 +233,17 @@ namespace DataSaver
                 MarathonEventId = fork.MarathonEventId,
                 PinnacleEventId = fork.PinnacleEventId,
                 League = fork.League,
-                LineId = fork.LineId
+                LineId = fork.LineId,
+
+                sn = fork.sn,
+                mn = fork.mn,
+                ewc = fork.ewc,
+                cid = fork.cid,
+                prt = fork.prt,
+                ewf = fork.ewf,
+                epr = fork.epr,
+                prices = fork.prices,
+                selection_key = fork.selection_key
             };
             return result;
         }
@@ -247,7 +267,17 @@ namespace DataSaver
                 MarathonEventId = forkRow.MarathonEventId,
                 PinnacleEventId = forkRow.PinnacleEventId,
                 League = forkRow.League,
-                LineId = forkRow.LineId
+                LineId = forkRow.LineId,
+
+                sn = forkRow.sn,
+                mn = forkRow.mn,
+                ewc = forkRow.ewc,
+                cid = forkRow.cid,
+                prt = forkRow.prt,
+                ewf = forkRow.ewf,
+                epr = forkRow.epr,
+                prices = forkRow.prices,
+                selection_key = forkRow.selection_key
             };
             return result;
         }

@@ -213,7 +213,9 @@ namespace DXApplication1.Pages
             lock (Filter)
             {
                 DateTime dateValue;
-                if (DateTime.TryParse(e.NewValue?.ToString(), out dateValue))
+                if (e.NewValue == null)
+                    Filter.FaterThen = null;
+                else if (DateTime.TryParse(e.NewValue?.ToString(), out dateValue))
                 {
                     Filter.FaterThen = dateValue;
                 }
@@ -225,7 +227,9 @@ namespace DXApplication1.Pages
             lock (Filter)
             {
                 DateTime dateValue;
-                if (DateTime.TryParse(e.NewValue?.ToString(), out dateValue))
+                if (e.NewValue == null)
+                    Filter.LongerThen = null;
+                else if (DateTime.TryParse(e.NewValue?.ToString(), out dateValue))
                 {
                     Filter.LongerThen = dateValue;
                 }

@@ -41,9 +41,9 @@ namespace DXApplication1.Pages
         private void UserBind()
         {
             var user = LocalSaver.FindUser();
-            textEditEmail.Text = user.Login;
-            textEditPassword.Text = user.Password;
-            _userId = user.Id;
+            textEditEmail.Text = user?.Login;
+            textEditPassword.Text = user?.Password;
+            _userId = user?.Id;
         }
 
         protected void FirstBind()

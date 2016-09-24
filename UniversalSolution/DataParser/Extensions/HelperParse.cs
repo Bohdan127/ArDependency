@@ -94,9 +94,11 @@ namespace DataParser.Extensions
 
 
         }
+
         public static bool CheckFullData(this DataMarathonForAutoPlays obj)
         {
-            return obj.cid != null &&
+            return obj != null &&
+                   obj.cid != null &&
                    obj.epr != null &&
                    obj.ewc != null &&
                    obj.ewf != null &&

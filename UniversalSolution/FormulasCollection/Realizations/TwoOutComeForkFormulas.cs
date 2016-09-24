@@ -68,7 +68,8 @@ namespace FormulasCollection.Realizations
                     if (pinEventKey == null) continue;
                     if (pinEventKey.IsNotBlank())
                     {
-                        resList.Add(new Fork
+                        //fork variable is created for debug, please don't refactor it into resList.Add function
+                        var fork = new Fork
                         {
                             League = eventItem.League,
                             MarathonEventId = eventItem.EventId,
@@ -84,7 +85,8 @@ namespace FormulasCollection.Realizations
                             BookmakerSecond = "http://www.pinnaclesports.com/",
                             Type = ForkType.Current,
                             LineId = pin.TypeLineIdDictionary[pinEventKey]
-                        });
+                        };
+                        resList.Add(fork);
                     }
                 }
                 catch (Exception ex)

@@ -73,7 +73,8 @@ namespace DXApplication1.Pages
         public void InitializeEvents()
         {
             Closing += AccountingPage_Closing;
-            Shown += CalculatorPage_Shown; UpdateForm += CalculatorPage_UpdateForm;
+            Shown += CalculatorPage_Shown;
+            UpdateForm += CalculatorPage_UpdateForm;
             RateChanging += AccountingPage_RateChanging;
             textEditRate2.EditValueChanged += TextEditRate2_EditValueChanged;
             textEditRate1.EditValueChanged += TextEditRate2_EditValueChanged;

@@ -31,7 +31,7 @@ namespace DXApplication1.Models
             {
                 foreach (var fork in forks)
                 {
-                    var defRate = 100d;
+                    var defRate = filterPage.DefaultRate.Value;
                     var coef1 = fork.CoefFirst.ConvertToDoubleOrNull();
                     var coef2 = fork.CoefSecond.ConvertToDoubleOrNull();
                     var rates = _calculatorFormulas.GetRecommendedRates(defRate, coef1, coef2);
@@ -46,7 +46,7 @@ namespace DXApplication1.Models
                     var income3 = Convert.ToDouble(_calculatorFormulas.CalculateClearRate(rate2, income1));
                     var income4 = Convert.ToDouble(_calculatorFormulas.CalculateClearRate(rate1, income2));
                     //todo delete this shit and refactored to one command
-                    fork.Profit = Math.Round(Convert.ToDouble(_calculatorFormulas.CalculateSummaryIncome(income3, income4)) - defRate, 2);
+                    fork.Profit = Math.Round(Convert.ToDouble(_calculatorFormulas.CalculateSummaryIncome(income3, income4)) * 100 / defRate-100, 2);
                 }
             }
             if (filterPage.Min != null)

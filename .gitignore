@@ -3,3 +3,18 @@
 ################################################################################
 
 *.suo
+/UniversalSolution/ConsoleApplication1/bin/Debug
+/UniversalSolution/ConsoleApplication1/obj/Debug
+/UniversalSolution/DataLoader/bin/Debug
+/UniversalSolution/DataLoader/obj/Debug
+/UniversalSolution/DataParser/bin/Debug
+/UniversalSolution/DataParser/obj/Debug
+/UniversalSolution/DataSaver/bin/Debug
+/UniversalSolution/DataSaver/obj/Debug
+/UniversalSolution/DXApplication1/bin/Debug
+/UniversalSolution/DXApplication1/obj/Debug
+/UniversalSolution/FormulasCollection/bin/Debug
+/UniversalSolution/FormulasCollection/obj/Debug
+/UniversalSolution/packages
+/UniversalSolution/WebCrawler/bin/Debug
+/UniversalSolution/WebCrawler/obj/Debug

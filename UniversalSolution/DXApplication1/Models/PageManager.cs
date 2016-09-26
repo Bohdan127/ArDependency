@@ -151,12 +151,14 @@ namespace DXApplication1.Models
             if (!(sender is Fork)) return;
 
             var fork = (Fork)sender;
+            var profit = fork.Profit;
             fork.Profit = _filterPage.Filter.DefaultRate != null
                 ? (double)_filterPage.Filter.DefaultRate
                 : 0;
 
             GetCalculatorPage(reload: true).Fork = fork;
             GetCalculatorPage().Show();
+            fork.Profit = profit;
         }
 
         private async void SearchPage_Update(object sender, EventArgs e)

@@ -64,6 +64,7 @@ namespace DXApplication1.Pages
                 outCome2ToggleSwitch.EditValue = Filter.OutCome2;
                 outcome3ToggleSwitch.EditValue = Filter.OutCome3;
                 textEditAutoUpdate.EditValue = Filter.AutoUpdateTime;
+                textEditRate.EditValue = Filter.DefaultRate;
             }
         }
 
@@ -88,6 +89,7 @@ namespace DXApplication1.Pages
             textEditAutoUpdate.EditValueChanging += TextEditAutoUpdate_EditValueChanging;
             textEditEmail.EditValueChanged += User_EditValueChanged;
             textEditPassword.EditValueChanged += User_EditValueChanged;
+            textEditRate.EditValueChanging += SpinEditRate_EditValueChanging;
         }
 
         private void User_EditValueChanged(object sender, EventArgs e)
@@ -119,6 +121,15 @@ namespace DXApplication1.Pages
             hockeyToggleSwitch.Toggled -= Hockey_Toggled;
             textEditEmail.EditValueChanged -= User_EditValueChanged;
             textEditPassword.EditValueChanged -= User_EditValueChanged;
+            textEditRate.EditValueChanging -= SpinEditRate_EditValueChanging;
+        }
+
+        private void SpinEditRate_EditValueChanging(object sender, ChangingEventArgs e)
+        {
+            lock (Filter)
+            {
+                Filter.DefaultRate = e.NewValue.ConvertToIntOrNull();
+            }
         }
 
         private void TextEditAutoUpdate_EditValueChanging(object sender, ChangingEventArgs e)

@@ -69,6 +69,8 @@ namespace DXApplication1.Pages
             this.layoutControlItemNoLater = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroupOther = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemAutoUpdate = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemRate = new DevExpress.XtraLayout.LayoutControlItem();
+            this.textEditRate = new DevExpress.XtraEditors.TextEdit();
             this.layoutControlGroupPinnacle = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemLogin = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemPassword = new DevExpress.XtraLayout.LayoutControlItem();
@@ -113,6 +115,8 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNoLater)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupOther)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoUpdate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditRate.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupPinnacle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemLogin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPassword)).BeginInit();
@@ -136,6 +140,7 @@ namespace DXApplication1.Pages
             this.dataLayoutControl1.Controls.Add(this.tennisToggleSwitch);
             this.dataLayoutControl1.Controls.Add(this.hockeyToggleSwitch);
             this.dataLayoutControl1.Controls.Add(this.textEditPassword);
+            this.dataLayoutControl1.Controls.Add(this.textEditRate);
             this.dataLayoutControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataLayoutControl1.Location = new System.Drawing.Point(0, 0);
             this.dataLayoutControl1.Name = "dataLayoutControl1";
@@ -146,7 +151,7 @@ namespace DXApplication1.Pages
             // 
             // textEditEmail
             // 
-            this.textEditEmail.Location = new System.Drawing.Point(448, 296);
+            this.textEditEmail.Location = new System.Drawing.Point(448, 320);
             this.textEditEmail.Name = "textEditEmail";
             this.textEditEmail.Size = new System.Drawing.Size(128, 20);
             this.textEditEmail.StyleController = this.dataLayoutControl1;
@@ -299,7 +304,7 @@ namespace DXApplication1.Pages
             // 
             // textEditPassword
             // 
-            this.textEditPassword.Location = new System.Drawing.Point(448, 320);
+            this.textEditPassword.Location = new System.Drawing.Point(448, 344);
             this.textEditPassword.Name = "textEditPassword";
             this.textEditPassword.Size = new System.Drawing.Size(128, 20);
             this.textEditPassword.StyleController = this.dataLayoutControl1;
@@ -524,10 +529,11 @@ namespace DXApplication1.Pages
             // layoutControlGroupOther
             // 
             this.layoutControlGroupOther.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItemAutoUpdate});
+            this.layoutControlItemAutoUpdate,
+            this.layoutControlItemRate});
             this.layoutControlGroupOther.Location = new System.Drawing.Point(279, 188);
             this.layoutControlGroupOther.Name = "layoutControlGroupOther";
-            this.layoutControlGroupOther.Size = new System.Drawing.Size(301, 66);
+            this.layoutControlGroupOther.Size = new System.Drawing.Size(301, 90);
             this.layoutControlGroupOther.Text = "Дополнительные";
             // 
             // layoutControlItemAutoUpdate
@@ -539,14 +545,37 @@ namespace DXApplication1.Pages
             this.layoutControlItemAutoUpdate.Text = "Время автообновления(сек)";
             this.layoutControlItemAutoUpdate.TextSize = new System.Drawing.Size(142, 13);
             // 
+            // layoutControlItemRate
+            // 
+            this.layoutControlItemRate.Control = this.textEditRate;
+            this.layoutControlItemRate.Location = new System.Drawing.Point(0, 24);
+            this.layoutControlItemRate.Name = "layoutControlItemRate";
+            this.layoutControlItemRate.Size = new System.Drawing.Size(277, 24);
+            this.layoutControlItemRate.Text = "Ставка по умолчанию";
+            this.layoutControlItemRate.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
+            this.layoutControlItemRate.TextSize = new System.Drawing.Size(112, 13);
+            this.layoutControlItemRate.TextToControlDistance = 5;
+            // 
+            // textEditRate
+            // 
+            this.textEditRate.Location = new System.Drawing.Point(420, 254);
+            this.textEditRate.Name = "textEditRate";
+            this.textEditRate.Properties.Mask.BeepOnError = true;
+            this.textEditRate.Properties.Mask.EditMask = "[1-9]\\d?+";
+            this.textEditRate.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx;
+            this.textEditRate.Properties.Mask.ShowPlaceHolders = false;
+            this.textEditRate.Size = new System.Drawing.Size(156, 20);
+            this.textEditRate.StyleController = this.dataLayoutControl1;
+            this.textEditRate.TabIndex = 11;
+            // 
             // layoutControlGroupPinnacle
             // 
             this.layoutControlGroupPinnacle.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlItemLogin,
             this.layoutControlItemPassword});
-            this.layoutControlGroupPinnacle.Location = new System.Drawing.Point(279, 254);
+            this.layoutControlGroupPinnacle.Location = new System.Drawing.Point(279, 278);
             this.layoutControlGroupPinnacle.Name = "layoutControlGroupPinnacle";
-            this.layoutControlGroupPinnacle.Size = new System.Drawing.Size(301, 142);
+            this.layoutControlGroupPinnacle.Size = new System.Drawing.Size(301, 118);
             this.layoutControlGroupPinnacle.Text = "Пиннакл";
             // 
             // layoutControlItemLogin
@@ -564,7 +593,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemPassword.CustomizationFormText = "layoutControlItem1";
             this.layoutControlItemPassword.Location = new System.Drawing.Point(0, 24);
             this.layoutControlItemPassword.Name = "layoutControlItemPassword";
-            this.layoutControlItemPassword.Size = new System.Drawing.Size(277, 76);
+            this.layoutControlItemPassword.Size = new System.Drawing.Size(277, 52);
             this.layoutControlItemPassword.Text = "Пароль";
             this.layoutControlItemPassword.TextSize = new System.Drawing.Size(142, 13);
             // 
@@ -619,6 +648,8 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemNoLater)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupOther)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoUpdate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemRate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditRate.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupPinnacle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemLogin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPassword)).EndInit();
@@ -669,5 +700,7 @@ namespace DXApplication1.Pages
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemLogin;
         private TextEdit textEditPassword;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemPassword;
+        private TextEdit textEditRate;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemRate;
     }
 }

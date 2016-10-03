@@ -15,6 +15,7 @@
         public string Bookmaker { get; set; }
 
         public DataMarathonForAutoPlays marathonAutoPlay { get; set; }
+        public ResultForForks() { }
 
         public ResultForForks(string eventID, string nameTeam1, string nameTeam2, string date, string nameCoff, string coef, string type, string bookmaker, string league, DataMarathonForAutoPlays obj)
         {this.Event = nameTeam1.Trim() + " - " + nameTeam2.Trim();

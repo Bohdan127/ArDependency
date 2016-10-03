@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -23,9 +24,281 @@ namespace DataParser.DefaultRealization
         OpenQA.Selenium.Firefox.FirefoxDriver firefox;
         private string isClick_IdEvent = ".";
         private string RefreshPage = "";
+        public static List<ResultForForks> winik = new List<ResultForForks>();
+
 
         private async Task<List<ResultForForks>> GetNameTeamsAndDateAsync(SportType sportType)
         {
+            result.Clear();
+
+            ResultForForks teamToAdd = null;
+
+            //List<string>
+            List<string> list_coeffType = new List<string>();
+
+            //integer
+            int indexEvent = 0;
+
+            //string
+            string url = string.Empty;
+            string namefile = string.Empty;
+            //string selectedEvent = string.Empty;
+            string eventid = string.Empty;
+            //string totalOrFora = string.Empty;
+
+            //bool
+            bool isTypeCoff = false;
+            bool canParseDataToTeam = false;
+            bool isEventID = false;
+            //bool isTeamName = false;
+            bool isDate = false;
+            bool isDataToAutoPlay = false;
+            bool isSelectionKey = false;
+            bool isValueCoef = false;
+            bool isFora = false;
+            bool isTotal = false;
+
+            //bool isChangeEvent = false;
+
+            bool isLigue = false;
+
+            DataMarathonForAutoPlays obj = new DataMarathonForAutoPlays();
+
+
+
+            UrlAndNameFile(sportType, out url, out namefile);
+            string gotHtml = await HtmlAsync(url).ConfigureAwait(false);
+            string[] lines = gotHtml.Split('\n');
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                try
+                {
+                    if (lines[i].Contains(">Итоги<") || lines[i].Contains(">Итоги.<"))
+                        break;
+                    if (lines[i].Contains(MarathonTags.newTypeCoeff))
+                    {
+                        isTypeCoff = true;
+                        indexEvent = 0;
+                        list_coeffType = new List<string>();
+                    }
+                    else if (isTypeCoff && lines[i].Contains(MarathonTags.newTag_TypeCoeff))
+                    {
+                        isTypeCoff = false;
+                    }
+                    if (lines[i]._Contains(MarathonTags.mainTagForEvent, MarathonTags.newEventID))
+                    {
+                        canParseDataToTeam = true;
+                        isEventID = true;
+                    }
+                    /*else if (lines[i].Contains(MarathonTags.newTeamName))
+                    {
+                        isTeamName = true;
+                    }*/
+                    else if (lines[i].Contains(MarathonTags.newDate))
+                    {
+                        isDate = true;
+                    }
+                    else if (lines[i].Contains(MarathonTags.newAutoplay))
+                    {
+                        isDataToAutoPlay = true;
+                    }
+                    else if (lines[i].Contains(MarathonTags.newSelection_key))
+                    {
+                        isSelectionKey = true;
+                    }
+                    else if (lines[i].Contains(MarathonTags.newValueCoef))
+                    {
+                        isValueCoef = true;
+                    }
+                    else if (lines[i].Contains(MarathonTags.newFora))
+                    {
+                        isFora = true;
+                    }
+                    else if (lines[i].Contains(MarathonTags.newTotal))
+                    {
+                        isTotal = true;
+                    }
+
+
+                    //Parse
+                    if (isTypeCoff)
+                    {
+                        if (lines[i].Contains(MarathonTags.newclassToTypeCoef))
+                        {
+                            i++;
+                            string typeCoeff = string.Empty;
+                            if (lines[i].Contains("<b>"))
+                            {
+                                string start = lines[i].getValueWithoutStartTags().Trim();
+                                start = start.Replace(" ", "");
+                                string newLine = !string.IsNullOrEmpty(start) ? lines[i].Replace(start, "") : lines[i];
+                                start = start.Equals("Фора") ? "F" : start;
+                                //start = start.Equals("Тотал") ? "T" : start;
+                                typeCoeff = newLine.GetAttribut();
+                                typeCoeff = start + typeCoeff;
+                            }
+                            else
+                            {
+                                typeCoeff = lines[i].Contains("Меньше") ? "TU" : (lines[i].Contains("Больше") ? "TO" : "NOForaNOTotal");
+                                
+                            }
+                            typeCoeff = typeCoeff.Replace(" ", "");
+                            if (!string.IsNullOrEmpty(typeCoeff))
+                            {
+                                if (list_coeffType.Equals(typeCoeff))
+                                {
+                                    isTypeCoff = false;
+                                }
+                                else {
+                                    list_coeffType.Add(typeCoeff);
+                                }
+                            }
+                        }
+                    }
+                    
+
+                    if (isEventID)
+                    {
+                        string eventID = lines[i].GetEventID();
+                        if (!eventID.Equals(eventid))
+                        {
+                            teamToAdd = new ResultForForks();
+                            indexEvent = 0;
+                        }
+                        teamToAdd.EventId = eventID;
+                        indexEvent = 0;
+                        isTypeCoff = false;
+                        isEventID = false;
+                        eventid = eventID;
+
+                    }
+
+                    /*if (isTeamName)
+                    {
+                        
+                        if (string.IsNullOrEmpty(teamToAdd.Event))
+                        {
+                            var teamName = lines[i].GetAttribut();
+                            //teamToAdd.Event = teamName.Trim(' ');
+                        }
+                        else
+                        {
+                            i++;
+                            var teamName = lines[i].GetAttribut();
+                            //teamToAdd.Event += " - " + teamName.Trim(' ');
+                            isTeamName = false;
+                        }
+                    }*/
+                    if (isDate)
+                    {
+                        i++;
+                        teamToAdd.MatchDateTime = lines[i].Replace(" ", "");
+                        isDate = false;
+                    }
+                    if (isDataToAutoPlay || isSelectionKey)
+                    {
+                        if (lines[i].Contains(Tags_DataMarathonForAutoPlays.data_sel))
+                        {
+                            obj = ParseForAutoPlay(lines[i], Tags_DataMarathonForAutoPlays.data_sel);
+                            isDataToAutoPlay = false;
+                        }
+                        else if (lines[i].Contains(Tags_DataMarathonForAutoPlays.data_selection_key))
+                        {
+                            obj = ParseForAutoPlay(lines[i], Tags_DataMarathonForAutoPlays.data_selection_key, obj);
+                            teamToAdd.marathonAutoPlay = obj;
+                            isSelectionKey = false;
+                        }
+
+                    }
+                    if (isValueCoef)
+                    {
+                        var valueCoeff = lines[i].GetAttribut2();
+                        teamToAdd.Coef = valueCoeff;
+                        isValueCoef = false;
+                        if (!isFora && !isTotal && string.IsNullOrEmpty(teamToAdd.Type))
+                        {
+                            indexEvent = (indexEvent >= list_coeffType.Count) ? 0 : indexEvent;
+                            var typecoeff = list_coeffType[indexEvent];
+                            teamToAdd.Type = typecoeff;
+                            indexEvent++;
+                        }
+                        isValueCoef = false;
+                    }
+                    if (isFora || isTotal)
+                    {
+                        i++;
+                        indexEvent = (indexEvent >= list_coeffType.Count) ? 0 : indexEvent;
+                        string totalOrFora = lines[i].getValueWithoutStartTags();
+                        var typecoeff = list_coeffType[indexEvent] + totalOrFora.Replace(" ","");
+                        teamToAdd.Type = typecoeff;
+                        indexEvent++;
+                        isFora = false;
+                        isTotal = false;
+                    }
+
+                    if (teamToAdd != null)
+                    {
+                        if (teamToAdd.isFullData())
+                        {
+                            teamToAdd.League = "NON";
+                            teamToAdd.SportType = sportType.ToString();
+                            teamToAdd.Bookmaker = Site.MarathonBet.ToString();
+                            if (englishNameTeams_Dictionary.ContainsKey(teamToAdd.EventId))
+                            {
+                                teamToAdd.Event = englishNameTeams_Dictionary[teamToAdd.EventId].name1 + " - " + englishNameTeams_Dictionary[teamToAdd.EventId].name2;
+                            }
+                            else
+                            {
+                                MessageBox.Show("Event not found!!!    EventID :  " + teamToAdd.EventId);
+                            }
+                            var newteamToAdd = teamToAdd;
+                            result.Add(new ResultForForks() {
+                                Bookmaker = newteamToAdd.Bookmaker,
+                                Type = newteamToAdd.Type,
+                                Coef = newteamToAdd.Coef,
+                                Event = newteamToAdd.Event,
+                                EventId = newteamToAdd.EventId,
+                                League = newteamToAdd.League,
+                                MatchDateTime = newteamToAdd.MatchDateTime,
+                                marathonAutoPlay = newteamToAdd.marathonAutoPlay,
+                                SportType = newteamToAdd.SportType});
+
+                            teamToAdd.Coef = string.Empty;
+                            teamToAdd.Type = string.Empty;
+                            teamToAdd.marathonAutoPlay = null;
+
+                            isTypeCoff = false;
+                            canParseDataToTeam = false;
+                            isEventID = false;
+                            //isTeamName = false;
+                            isDate = false;
+                            isDataToAutoPlay = false;
+                            isSelectionKey = false;
+                            isValueCoef = false;
+                            isFora = false;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    /* if (!File.Exists("log.txt"))
+                     {
+                         File.Create("log.txt");
+                     }
+                     using (StreamWriter sw = new StreamWriter("log.txt", true))
+                     {
+                         sw.WriteLine("EXCEPTION: " + teamToAdd.EventToString());
+                         sw.Close();
+                     }*/
+                    MessageBox.Show(e.StackTrace + "/n" + e.Message);
+                }
+            }
+            return result;
+        }
+        private async Task<List<ResultForForks>> GetNameTeamsAndDateAsync1(SportType sportType)
+        {
+
             result.Clear();
 
             //strings
@@ -68,172 +341,228 @@ namespace DataParser.DefaultRealization
             string res = null;
 
             DataMarathonForAutoPlays obj = new DataMarathonForAutoPlays();
-
+            ResultForForks ev = null;
 
             foreach (var line in lines)
             {
-                //-------------------LIGA-----------------
-
-                if (line._Contains(MarathonTags.Liga))
+                try
                 {
-                    if (!changeLiga)
+                    if (line.Contains(">Итоги<") || line.Contains(">Итоги.<"))
+                        break;
+                    //-------------------LIGA-----------------
+
+                    if (line._Contains(MarathonTags.Liga))
                     {
-                        league = null;
-                        changeLiga = true;
+                        if (!changeLiga)
+                        {
+                            league = null;
+                            changeLiga = true;
+                        }
+                        oldLiga = league;
+                        league += GetAttribut(line);
+                        if (league != oldLiga)
+                            countTypeCoff = new List<string>();
                     }
-                    oldLiga = league;
-                    league += GetAttribut(line);
-                    if (league != oldLiga)
-                        countTypeCoff = new List<string>();
-                }
-                else
-                {
-                    if (!String.IsNullOrEmpty(line))
-                        changeLiga = false;
-                }
-
-
-                //------------------LigaID-----------------
-
-                if (line._Contains(MarathonTags.Liga_ContainerID))
-                {
-                    //liga_ContainerID = line.Substrings(MarathonTags.Liga_ContainerID + "=\"", "\">");
-                    liga_ContainerID = line.TagsContent(MarathonTags.Liga_ContainerID);
-                }
-
-
-                //----------------TYPE-COEFF---------------
-
-                if (countTypeCoff.Count < 10)
-                {
-                    if (isTypeCoff)
-                    {
-                        string coeff = ((line.IndexOf('<') != -1) ? line.Replace("<b>", "").Replace("</b>", "") : line).Trim();
-                        if (!countTypeCoff.Contains(coeff))
-                            countTypeCoff.Add(coeff);
-                        isTypeCoff = false;
-                    }
-                    if (line._Contains(MarathonTags.TypeCoff))
-                        isTypeCoff = true;
-                }
-
-                //---------------EVENT---------------------
-                if (line._Contains(MarathonTags.EventID))
-                {
-                    _eventid = line.GetEventID();
-                    oldEvent = _eventid;
-                }
-
-                //---------------Live---------------------
-
-                if (line._Contains(MarathonTags.IsLive))
-                {
-                    isLive = line.Substrings(MarathonTags.IsLive + "=\"", "\">");
-                }
-
-                //---------------DATE----------------------
-                if (isDate)
-                {
-                    date = line;
-                    isDate = false;
-                }
-                if (line._Contains(MarathonTags.Date))
-                {
-                    isDate = true;
-                }
-
-                //--------------Coeff--Value----------------
-
-                if (line.Contains(MarathonTags.Coff) /*&& line.Contains("Match_Result")*/)
-                {
-                    res = line.Substrings(MarathonTags.Coff, "\"");
-                    koff.Add(res);
-                }
-                if (line.Contains("<span>&mdash;</span>") || line.Contains("—"))
-                {
-                    res = "-";
-                    koff.Add(res);
-                }
-
-                //-------------------FORA-------------------
-                if (isFora)
-                {
-                    foraName1 = (isForaforteam1 ? "F1" : "F2") + GetAttribut(line).Trim();
-                    isFora = false;
-                    isForaforteam1 = !isForaforteam1;
-                }
-                if (line.Contains(MarathonTags.Fora))
-                {
-                    isFora = true;
-                }
-
-
-                //------------------TOTAL-----------------
-                if (isTotal)
-                {
-                    totalName = (isTotalUnder ? "TU" : "TO") + GetAttribut(line).Trim();
-                    isTotalUnder = !isTotalUnder;
-                    isTotal = false;
-                }
-                if (line.Contains(MarathonTags.Total))
-                {
-                    isTotal = true;
-                }
-
-                //-----------------Auto Play---------------------------------
-
-
-                if (line.Contains(Tags_DataMarathonForAutoPlays.data_sel))
-                {
-                    obj = ParseForAutoPlay(line, Tags_DataMarathonForAutoPlays.data_sel);
-                }
-                if (line.Contains(Tags_DataMarathonForAutoPlays.data_selection_key))
-                {
-                    obj = ParseForAutoPlay(line, Tags_DataMarathonForAutoPlays.data_selection_key, obj);
-                }
-
-
-
-                //---------------Add to list RESULT--------------------------
-                if (date != null && res != null && _eventid != null && englishNameTeams_Dictionary.ContainsKey(_eventid) && obj.CheckFullData())
-                {
-                    if (i >= countTypeCoff.Count)
-                        i = 0;
-                    string q1 = englishNameTeams_Dictionary[_eventid].name1;
-                    string q2 = englishNameTeams_Dictionary[_eventid].name2;
-
-                    result.Add(new ResultForForks(_eventid, englishNameTeams_Dictionary[_eventid].name1,
-                                                  englishNameTeams_Dictionary[_eventid].name2,
-                                                  date,
-                                                  (!string.IsNullOrEmpty(totalName) || !string.IsNullOrEmpty(foraName1)) ? (!string.IsNullOrEmpty(totalName) ? totalName : foraName1) : countTypeCoff[i],  //  Type coff
-                                                  res,                //   znaczenia
-                                                  sportType.ToString(),
-                                                  Site.MarathonBet.ToString(),
-                                                  league,
-                                                  obj
-                                                  ));
-                    obj = null;
-
-                    // var nextElement = this.PhantomFireFox(url, "event_" + _eventid);
-                    /* if (!string.IsNullOrEmpty(date))
-                     {
-                         //PhantomDriver
-                         //PhantomFireFox
-                         var nextElement = this.PhantomFireFox(url, _eventid, liga_ContainerID, this.IsToday(date), sportType);
-                     }*/
-                    if (i < countTypeCoff.Count)
-                        i++;
                     else
-                        i = 0;
+                    {
+                        if (!String.IsNullOrEmpty(line))
+                            changeLiga = false;
+                    }
 
-                    totalName = null;
-                    foraName1 = null;
-                    res = null;
+
+                    //------------------LigaID-----------------
+
+                    if (line._Contains(MarathonTags.Liga_ContainerID))
+                    {
+                        //liga_ContainerID = line.Substrings(MarathonTags.Liga_ContainerID + "=\"", "\">");
+                        liga_ContainerID = line.TagsContent(MarathonTags.Liga_ContainerID);
+                    }
+
+
+                    //----------------TYPE-COEFF---------------
+
+                    if (countTypeCoff.Count < 10)
+                    {
+                        if (isTypeCoff)
+                        {
+                            string coeff = ((line.IndexOf('<') != -1) ? line.Replace("<b>", "").Replace("</b>", "") : line).Trim();
+                            if (!countTypeCoff.Contains(coeff))
+                                countTypeCoff.Add(coeff);
+                            isTypeCoff = false;
+                        }
+                        if (line._Contains(MarathonTags.TypeCoff))
+                            isTypeCoff = true;
+                    }
+
+                    //---------------EVENT---------------------
+                    if (line._Contains(MarathonTags.EventID))
+                    {
+                        _eventid = line.GetEventID();
+                        oldEvent = _eventid;
+                    }
+
+                    //---------------Live---------------------
+
+                    if (line._Contains(MarathonTags.IsLive))
+                    {
+                        isLive = line.Substrings(MarathonTags.IsLive + "=\"", "\">");
+                    }
+
+                    //---------------DATE----------------------
+                    if (isDate)
+                    {
+                        date = line;
+                        isDate = false;
+                    }
+                    if (line._Contains(MarathonTags.Date))
+                    {
+                        isDate = true;
+                    }
+
+                    //--------------Coeff--Value----------------
+
+                    if (line.Contains(MarathonTags.Coff) /*&& line.Contains("Match_Result")*/)
+                    {
+                        res = line.Substrings(MarathonTags.Coff, "\"");
+                        koff.Add(res);
+                    }
+                    if (line.Contains("<span>&mdash;</span>") || line.Contains("—"))
+                    {
+                        res = "-";
+                        koff.Add(res);
+                    }
+
+                    //-------------------FORA-------------------
+                    if (isFora)
+                    {
+                        foraName1 = (isForaforteam1 ? "F1" : "F2") + GetAttribut(line).Trim();
+                        isFora = false;
+                        isForaforteam1 = !isForaforteam1;
+                    }
+                    if (line.Contains(MarathonTags.Fora))
+                    {
+                        isFora = true;
+                    }
+
+
+                    //------------------TOTAL-----------------
+                    if (isTotal)
+                    {
+                        totalName = (isTotalUnder ? "TU" : "TO") + GetAttribut(line).Trim();
+                        isTotalUnder = !isTotalUnder;
+                        isTotal = false;
+                    }
+                    if (line.Contains(MarathonTags.Total))
+                    {
+                        isTotal = true;
+                    }
+
+                    //-----------------Auto Play---------------------------------
+
+
+                    if (line.Contains(Tags_DataMarathonForAutoPlays.data_sel))
+                    {
+                        obj = ParseForAutoPlay(line, Tags_DataMarathonForAutoPlays.data_sel);
+                    }
+                    if (line.Contains(Tags_DataMarathonForAutoPlays.data_selection_key))
+                    {
+                        obj = ParseForAutoPlay(line, Tags_DataMarathonForAutoPlays.data_selection_key, obj);
+                    }
+
+
+
+                    //---------------Add to list RESULT--------------------------
+                    if (date != null && res != null && _eventid != null && englishNameTeams_Dictionary.ContainsKey(_eventid) && obj.CheckFullData())
+                    {
+                        if (i >= countTypeCoff.Count)
+                            i = 0;
+                        string q1 = englishNameTeams_Dictionary[_eventid].name1;
+                        string q2 = englishNameTeams_Dictionary[_eventid].name2;
+
+                        ev = new ResultForForks(_eventid, englishNameTeams_Dictionary[_eventid].name1,
+                                                      englishNameTeams_Dictionary[_eventid].name2,
+                                                      date,
+                                                      (!string.IsNullOrEmpty(totalName) || !string.IsNullOrEmpty(foraName1)) ? (!string.IsNullOrEmpty(totalName) ? totalName : foraName1) : countTypeCoff[i],  //  Type coff
+                                                      res,                //   znaczenia
+                                                      sportType.ToString(),
+                                                      Site.MarathonBet.ToString(),
+                                                      league,
+                                                      obj
+                                                      );
+
+                        result.Add(ev);
+                        ev = null;
+                        obj = null;
+
+                        // var nextElement = this.PhantomFireFox(url, "event_" + _eventid);
+                        /* if (!string.IsNullOrEmpty(date))
+                         {
+                             //PhantomDriver
+                             //PhantomFireFox
+                             var nextElement = this.PhantomFireFox(url, _eventid, liga_ContainerID, this.IsToday(date), sportType);
+                         }*/
+                        if (i < countTypeCoff.Count)
+                            i++;
+                        else
+                            i = 0;
+
+                        totalName = null;
+                        foraName1 = null;
+                        res = null;
+                    }
+
+                    this.oldLine = line;
                 }
-
-                this.oldLine = line;
+                catch
+                {
+                    if (!File.Exists("log.txt"))
+                    {
+                        File.Create("log.txt");
+                    }
+                    using (StreamWriter sw = new StreamWriter("log.txt", true))
+                    {
+                        sw.WriteLine("EXCEPTION: " + ev.EventToString());
+                        sw.Close();
+                    }
+                }
             }
+            winik.AddRange(result);
+            //WriteToDocument(result);
             return result;
+        }
+
+        public static void WriteToDocument(List<ResultForForks> teams, string namefile = "check.txt")
+        {
+            if (File.Exists(namefile))
+                File.Delete(namefile);
+            //File.Create(namefile);
+            StringBuilder sb = new StringBuilder();
+            //StreamWriter sw = new StreamWriter(namefile, true);
+
+            foreach (var team in teams)
+            {
+                sb.AppendLine(team.EventToString());
+            }
+            sb.AppendLine();
+            sb.AppendLine();
+            sb.AppendLine();
+            sb.AppendLine();
+
+
+            if (!string.IsNullOrEmpty(sb.ToString()))
+            {
+                var a = sb.ToString().Split('\n');
+                var b = sb.ToString();
+                //sw.WriteLineAsync(b);
+                // File.WriteAllLines(namefile, a);
+
+                StreamWriter writer = null;
+                writer = new StreamWriter(namefile);
+                writer.WriteLine(b);
+                writer.Close();
+
+
+            }
         }
 
         private const int countCoff1 = 10;
@@ -276,9 +605,11 @@ namespace DataParser.DefaultRealization
         {
 
             this.englishNameTeams_Dictionary = await this.GetEnglishNameTEams(sportType).ConfigureAwait(false);
-            try {
+            try
+            {
                 var result = await GetNameTeamsAndDateAsync(sportType).ConfigureAwait(false);
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 var ee = e.StackTrace;
                 var eee = e.Message;
@@ -302,10 +633,12 @@ namespace DataParser.DefaultRealization
                 Debug.Assert(response != null, "response != null");
                 reader = new StreamReader(response.GetResponseStream());
                 HTML = await reader.ReadToEndAsync().ConfigureAwait(false);
+                reader.Close();
             }
             catch (FileLoadException ex)
             {
                 _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
+                //reader.Close();
             }
             finally
             {

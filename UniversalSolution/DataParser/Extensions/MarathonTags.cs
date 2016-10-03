@@ -16,5 +16,34 @@
 
         public static readonly string IsLive = "data-live";
         public static readonly string Liga_ContainerID = "data-category-treeId";
+
+
+
+
+
+
+        public static readonly string newTypeCoeff = "coupone-labels";
+        public static readonly string newTag_TypeCoeff = "</tr>";
+        public static readonly string newFora = "\"HANDICAP\"";
+        public static readonly string newTotal = "\"TOTAL\"";
+        public static readonly string newclassToTypeCoef = "\"hint\"";
+
+
+
+        public static readonly string mainTagForEvent = "tbody";
+        public static readonly string newEventID = "data-event-treeId";
+
+        public static readonly string newTeamName = "member-name nowrap";
+
+        public static readonly string newDate = "class=\"date\"";
+
+        public static readonly string newIssLive = "isLive";
+
+        public static readonly string newAutoplay = "data-sel=";
+        public static string newSelection_key = "data-selection-key";
+
+        public static readonly string newValueCoef = "data-selection-price";
+
+
     }
 }

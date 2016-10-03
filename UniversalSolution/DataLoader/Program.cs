@@ -42,6 +42,10 @@ namespace DataLoader
             _forkFormulas = new TwoOutComeForkFormulas();
             GetUserData();
             StartLoadDictionary();
+
+
+            MarathonParser.WriteToDocument(MarathonParser.winik);
+            MarathonParser.winik = new List<ResultForForks>();
         }
 
         private static void GetUserData()
@@ -66,8 +70,8 @@ namespace DataLoader
 
         private static void StartLoadDictionary()
         {
-            while (true)
-            {
+            //while (true)
+            //{
                 Console.WriteLine("Start Loading with Dictionary");
                 Console.WriteLine($"User Login = '{UserLogin}'");
                 Console.WriteLine($"User Password = '{UserPass}'");
@@ -84,7 +88,7 @@ namespace DataLoader
                     SaveNewForks(forks, sportType);
                 }
 
-            }
+           //}
             // ReSharper disable once FunctionNeverReturns
         }
 
@@ -116,7 +120,6 @@ namespace DataLoader
             Console.WriteLine($"Start Loading {sportType} Events from Marathon");
 
             var resList = _marathon.InitiAsync(sportType).Result;
-
             Console.WriteLine("Loading finished");
             Console.WriteLine($"Was founded {resList.Count} {sportType} Events from Marathon");
 

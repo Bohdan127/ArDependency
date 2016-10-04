@@ -55,7 +55,6 @@ namespace FormulasCollection.Realizations
                     Extentions.GetStringSimilarityInPercent(eventItem.Event, key, true) >= 85);
                 if (pinKey == null)
                     continue;
-
                 if (CheckIsMustToBeRevert(eventItem.Event,
                     pinKey))
                     RevertValues(pinnacle,
@@ -74,7 +73,7 @@ namespace FormulasCollection.Realizations
                             League = eventItem.League,
                             MarathonEventId = eventItem.EventId,
                             PinnacleEventId = pin.EventId,
-                            Event = eventItem.Event,
+                            Event = pinKey+ "*" + eventItem.Event,
                             TypeFirst = eventItem.Type,
                             CoefFirst = eventItem.Coef,
                             TypeSecond = pinEventKey.ConvertToStringOrNull(),

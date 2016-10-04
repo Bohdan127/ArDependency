@@ -130,7 +130,7 @@ namespace DataLoader
         {
             Console.WriteLine($"Start Loading {sportType} Events from Pinnacle");
 
-            var newList = _pinnacle.GetAllPinacleEventsDictionaryAsync(sportType, UserLogin, UserPass).Result;
+            var newList = _pinnacle.GetAllPinacleEventsDictionary(sportType, UserLogin, UserPass);
 
             Console.WriteLine("Loading finished");
             Console.WriteLine($"Was founded {newList.Count} {sportType} Events from Pinnacle");

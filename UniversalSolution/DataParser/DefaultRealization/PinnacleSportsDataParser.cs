@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Json;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using ToolsPortable;
 
 namespace DataParser.DefaultRealization
@@ -31,90 +30,114 @@ namespace DataParser.DefaultRealization
             {
                 var sportEvents = (JsonObject)JsonValue.Load(totalResp.GetResponseStream());
 
-                if (sportEvents == null || sportEvents["leagues"] == null) return resList;
+                if (sportEvents == null
+                    || !sportEvents.ContainsKey("leagues")
+                    || sportEvents["leagues"] == null)
+                    return resList;
 
                 foreach (var league in sportEvents["leagues"])
                 {
-                    if (league.Value == null)
+                    if (league.Value == null
+                        || !league.Value.ContainsKey("events"))
                         continue;
                     foreach (var sportEvent in league.Value["events"])
                     {
-                        if (sportEvent.Value == null || sportEvent.Value["id"] == null)
+                        if (sportEvent.Value == null
+                            || !sportEvent.Value.ContainsKey("id")
+                            || sportEvent.Value["id"] == null)
                             continue;
-                        ;
-                        var id = Convert.ToInt64(sportEvent.Value["id"]);
+
+                        var id = Convert.ToInt64(sportEvent.Value["id"].ToString());
+
                         if (!resList.ContainsKey(id))
                             resList.Add(id, new List<EventWithTotalDictionary>());
 
+                        if (!sportEvent.Value.ContainsKey("periods"))
+                            continue;
+
                         foreach (var period in sportEvent.Value["periods"])
                         {
-                            if (period.Value["cutoff"] == null)
+                            if (!period.Value.ContainsKey("cutoff") || period.Value["cutoff"] == null)
                                 continue;
-                            if (period.Value["lineId"] == null)
+                            if (!period.Value.ContainsKey("lineId") || period.Value["lineId"] == null)
                                 continue;
+
                             var matchDateTime = period.Value["cutoff"].ToString();
                             var lineId = period.Value["lineId"].ToString();
 
-                            if (period.Value["moneyline"] != null)
+                            if (period.Value.ContainsKey("moneyline")
+                                && period.Value["moneyline"] != null)
                             {
                                 var moneyLine = period.Value["moneyline"];
-                                resList[id].Add(new EventWithTotalDictionary
-                                {
-                                    LineId = lineId,
-                                    TotalType = "1",
-                                    TotalValue = moneyLine["home"].ToString(),
-                                    MatchDateTime = matchDateTime
-                                });
-                                resList[id].Add(new EventWithTotalDictionary
-                                {
-                                    LineId = lineId,
-                                    TotalType = "2",
-                                    TotalValue = moneyLine["away"].ToString(),
-                                    MatchDateTime = matchDateTime
-                                });
-                                resList[id].Add(new EventWithTotalDictionary
-                                {
-                                    LineId = lineId,
-                                    TotalType = "X",
-                                    TotalValue = moneyLine["draw"].ToString(),
-                                    MatchDateTime = matchDateTime
-                                });
+                                if (moneyLine.ContainsKey("home"))
+                                    resList[id].Add(new EventWithTotalDictionary
+                                    {
+                                        LineId = lineId,
+                                        TotalType = "1",
+                                        TotalValue = moneyLine["home"].ToString(),
+                                        MatchDateTime = matchDateTime
+                                    });
+                                if (moneyLine.ContainsKey("away"))
+                                    resList[id].Add(new EventWithTotalDictionary
+                                    {
+                                        LineId = lineId,
+                                        TotalType = "2",
+                                        TotalValue = moneyLine["away"].ToString(),
+                                        MatchDateTime = matchDateTime
+                                    });
+                                if (moneyLine.ContainsKey("draw"))
+                                    resList[id].Add(new EventWithTotalDictionary
+                                    {
+                                        LineId = lineId,
+                                        TotalType = "X",
+                                        TotalValue = moneyLine["draw"].ToString(),
+                                        MatchDateTime = matchDateTime
+                                    });
                             }
-                            if (period.Value["spreads"] != null)
+                            if (period.Value.ContainsKey("spreads") && period.Value["spreads"] != null)
                                 foreach (var spread in period.Value["spreads"])
                                 {
-                                    resList[id].Add(new EventWithTotalDictionary
-                                    {
-                                        LineId = lineId,
-                                        TotalType = $"F2({spread.Value["hdp"]})",
-                                        TotalValue = spread.Value["away"].ToString(),
-                                        MatchDateTime = matchDateTime
-                                    });
-                                    resList[id].Add(new EventWithTotalDictionary
-                                    {
-                                        LineId = lineId,
-                                        TotalType = $"F1({spread.Value["hdp"]})",
-                                        TotalValue = spread.Value["home"].ToString(),
-                                        MatchDateTime = matchDateTime
-                                    });
+                                    if (!spread.Value.ContainsKey("hdp"))
+                                        continue;
+
+                                    if (spread.Value.ContainsKey("away"))
+                                        resList[id].Add(new EventWithTotalDictionary
+                                        {
+                                            LineId = lineId,
+                                            TotalType = $"F2({spread.Value["hdp"]})",
+                                            TotalValue = spread.Value["away"].ToString(),
+                                            MatchDateTime = matchDateTime
+                                        });
+                                    if (spread.Value.ContainsKey("home"))
+                                        resList[id].Add(new EventWithTotalDictionary
+                                        {
+                                            LineId = lineId,
+                                            TotalType = $"F1({spread.Value["hdp"]})",
+                                            TotalValue = spread.Value["home"].ToString(),
+                                            MatchDateTime = matchDateTime
+                                        });
                                 }
-                            if (period.Value["totals"] != null)
+                            if (period.Value.ContainsKey("totals") && period.Value["totals"] != null)
                                 foreach (var total in period.Value["totals"])
                                 {
-                                    resList[id].Add(new EventWithTotalDictionary
-                                    {
-                                        LineId = lineId,
-                                        TotalType = $"TO({total.Value["points"]})",
-                                        TotalValue = total.Value["over"].ToString(),
-                                        MatchDateTime = matchDateTime
-                                    });
-                                    resList[id].Add(new EventWithTotalDictionary
-                                    {
-                                        LineId = lineId,
-                                        TotalType = $"TU({total.Value["points"]})",
-                                        TotalValue = total.Value["under"].ToString(),
-                                        MatchDateTime = matchDateTime
-                                    });
+                                    if (!total.Value.ContainsKey("points"))
+                                        continue;
+                                    if (total.Value.ContainsKey("over"))
+                                        resList[id].Add(new EventWithTotalDictionary
+                                        {
+                                            LineId = lineId,
+                                            TotalType = $"TO({total.Value["points"]})",
+                                            TotalValue = total.Value["over"].ToString(),
+                                            MatchDateTime = matchDateTime
+                                        });
+                                    if (total.Value.ContainsKey("under"))
+                                        resList[id].Add(new EventWithTotalDictionary
+                                        {
+                                            LineId = lineId,
+                                            TotalType = $"TU({total.Value["points"]})",
+                                            TotalValue = total.Value["under"].ToString(),
+                                            MatchDateTime = matchDateTime
+                                        });
                                 }
                         }
                     }
@@ -238,15 +261,15 @@ namespace DataParser.DefaultRealization
             return prefix + Extentions.Round(_converter.ConvertAmericanToDecimal(totalType.ConvertToDoubleOrNull())) + ")";
         }
 
-        public async Task<Dictionary<string, ResultForForksDictionary>> GetAllPinacleEventsDictionaryAsync(
+        public Dictionary<string, ResultForForksDictionary> GetAllPinacleEventsDictionary(
             SportType sportType, string userLogin, string userPass)
         {
-            var resDic = new Dictionary<string, ResultForForksDictionary>();
+            Dictionary<string, ResultForForksDictionary> resDic;
             _sportType = sportType;
             try
             {
-                var totalResp = await GetAllTotalsAsync(userLogin, userPass).ConfigureAwait(false);
-                var teamNamesResp = await GetAllTeamNamesAsync(userLogin, userPass).ConfigureAwait(false);
+                var totalResp = GetAllTotals(userLogin, userPass);
+                var teamNamesResp = GetAllTeamNames(userLogin, userPass);
                 resDic = GroupResponsesDictionary(totalResp, teamNamesResp);
                 var listForRemove = new List<string>();
 
@@ -279,39 +302,38 @@ namespace DataParser.DefaultRealization
         /// This function get events with their team names
         /// </summary>
         /// <returns></returns>
-        protected virtual async Task<HttpWebResponse> GetAllTeamNamesAsync(string userLogin, string userPass)
+        protected virtual HttpWebResponse GetAllTeamNames(string userLogin, string userPass)
         {
             var request = (HttpWebRequest)WebRequest.Create("https://api.pinnaclesports.com/v1/fixtures?sportid=" + (int)_sportType);
-            string credentials = String.Format("{0}:{1}", userLogin, userPass);//for test "VB794327", "artem89@"
-            byte[] bytes = Encoding.UTF8.GetBytes(credentials);
-            string base64 = Convert.ToBase64String(bytes);
-            string authorization = String.Concat("Basic ", base64);
+            var credentials = $"{userLogin}:{userPass}";//for test "VB794327", "artem89@"
+            var bytes = Encoding.UTF8.GetBytes(credentials);
+            var base64 = Convert.ToBase64String(bytes);
+            var authorization = string.Concat("Basic ", base64);
             request.Headers.Add("Authorization", authorization);
             request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)";
             request.Method = "GET";
             request.Accept = "application/json";
             request.ContentType = "application/json; charset=utf-8";
-            return
-                    ((HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false));
+            return (HttpWebResponse)request.GetResponse();
         }
 
         /// <summary>
         /// This function get events with their totals
         /// </summary>
         /// <returns></returns>
-        protected virtual async Task<HttpWebResponse> GetAllTotalsAsync(string userLogin, string userPass)
+        protected virtual HttpWebResponse GetAllTotals(string userLogin, string userPass)
         {
             var request = (HttpWebRequest)WebRequest.Create("https://api.pinnaclesports.com/v1/odds?sportid=" + (int)_sportType);
-            string credentials = $"{userLogin}:{userPass}";//for test "VB794327", "artem89@"
-            byte[] bytes = Encoding.UTF8.GetBytes(credentials);
-            string base64 = Convert.ToBase64String(bytes);
-            string authorization = String.Concat("Basic ", base64);
+            var credentials = $"{userLogin}:{userPass}";//for test "VB794327", "artem89@"
+            var bytes = Encoding.UTF8.GetBytes(credentials);
+            var base64 = Convert.ToBase64String(bytes);
+            var authorization = string.Concat("Basic ", base64);
             request.Headers.Add("Authorization", authorization);
             request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)";
             request.Method = "GET";
             request.Accept = "application/json";
             request.ContentType = "application/json; charset=utf-8";
-            return (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
+            return (HttpWebResponse)request.GetResponse();
         }
     }
 }

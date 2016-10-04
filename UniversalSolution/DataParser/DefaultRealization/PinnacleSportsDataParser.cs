@@ -31,126 +31,100 @@ namespace DataParser.DefaultRealization
             {
                 var sportEvents = (JsonObject)JsonValue.Load(totalResp.GetResponseStream());
 
-                if (sportEvents?["leagues"] == null) return resList;
+                if (sportEvents == null || sportEvents["leagues"] == null) return resList;
 
                 foreach (var league in sportEvents["leagues"])
                 {
-                    try
+                    if (league.Value == null)
+                        continue;
+                    foreach (var sportEvent in league.Value["events"])
                     {
-                        foreach (var sportEvent in league.Value?["events"])
+                        if (sportEvent.Value == null || sportEvent.Value["id"] == null)
+                            continue;
+                        ;
+                        var id = Convert.ToInt64(sportEvent.Value["id"]);
+                        if (!resList.ContainsKey(id))
+                            resList.Add(id, new List<EventWithTotalDictionary>());
+
+                        foreach (var period in sportEvent.Value["periods"])
                         {
-                            try
-                            {
-                                //if id null - all ok will be exception and we go to the next item in foreach
-                                var id = sportEvent.Value["id"].ConvertToLongOrNull().Value;
-                                if (!resList.ContainsKey(id))
-                                    resList.Add(id, new List<EventWithTotalDictionary>());
+                            if (period.Value["cutoff"] == null)
+                                continue;
+                            if (period.Value["lineId"] == null)
+                                continue;
+                            var matchDateTime = period.Value["cutoff"].ToString();
+                            var lineId = period.Value["lineId"].ToString();
 
-                                foreach (var period in sportEvent.Value?["periods"])
+                            if (period.Value["moneyline"] != null)
+                            {
+                                var moneyLine = period.Value["moneyline"];
+                                resList[id].Add(new EventWithTotalDictionary
                                 {
-                                    var matchDateTime = period.Value?["cutoff"]?.ToString();
-
-                                    try
+                                    LineId = lineId,
+                                    TotalType = "1",
+                                    TotalValue = moneyLine["home"].ToString(),
+                                    MatchDateTime = matchDateTime
+                                });
+                                resList[id].Add(new EventWithTotalDictionary
+                                {
+                                    LineId = lineId,
+                                    TotalType = "2",
+                                    TotalValue = moneyLine["away"].ToString(),
+                                    MatchDateTime = matchDateTime
+                                });
+                                resList[id].Add(new EventWithTotalDictionary
+                                {
+                                    LineId = lineId,
+                                    TotalType = "X",
+                                    TotalValue = moneyLine["draw"].ToString(),
+                                    MatchDateTime = matchDateTime
+                                });
+                            }
+                            if (period.Value["spreads"] != null)
+                                foreach (var spread in period.Value["spreads"])
+                                {
+                                    resList[id].Add(new EventWithTotalDictionary
                                     {
-                                        resList[id].Add(new EventWithTotalDictionary
-                                        {
-                                            LineId = period.Value?["lineId"]?.ToString(),
-                                            TotalType = "1",
-                                            TotalValue = period.Value?["moneyline"]?["home"]?.ToString(),
-                                            MatchDateTime = matchDateTime
-                                        });
-                                        resList[id].Add(new EventWithTotalDictionary
-                                        {
-                                            LineId = period.Value?["lineId"]?.ToString(),
-                                            TotalType = "2",
-                                            TotalValue = period.Value?["moneyline"]?["away"]?.ToString(),
-                                            MatchDateTime = matchDateTime
-                                        });
-                                        resList[id].Add(new EventWithTotalDictionary
-                                        {
-                                            LineId = period.Value?["lineId"]?.ToString(),
-                                            TotalType = "X",
-                                            TotalValue = period.Value?["moneyline"]?["draw"]?.ToString(),
-                                            MatchDateTime = matchDateTime
-                                        });
-                                    }
-                                    catch (Exception ex)
+                                        LineId = lineId,
+                                        TotalType = $"F2({spread.Value["hdp"]})",
+                                        TotalValue = spread.Value["away"].ToString(),
+                                        MatchDateTime = matchDateTime
+                                    });
+                                    resList[id].Add(new EventWithTotalDictionary
                                     {
-                                        _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
-                                    }
-
-                                    try
-                                    {
-                                        foreach (var spread in period.Value?["spreads"])
-                                        {
-                                            try
-                                            {
-                                                resList[id].Add(new EventWithTotalDictionary
-                                                {
-                                                    LineId = period.Value?["lineId"]?.ToString(),
-                                                    TotalType = $"F2({spread.Value?["hdp"]})",
-                                                    TotalValue = spread.Value?["away"]?.ToString(),
-                                                    MatchDateTime = matchDateTime
-                                                });
-                                                resList[id].Add(new EventWithTotalDictionary
-                                                {
-                                                    LineId = period.Value?["lineId"]?.ToString(),
-                                                    TotalType = $"F1({spread.Value?["hdp"]})",
-                                                    TotalValue = spread.Value?["home"]?.ToString(),
-                                                    MatchDateTime = matchDateTime
-                                                });
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
-                                            }
-                                        }
-                                        foreach (var total in period.Value?["totals"])
-                                        {
-                                            try
-                                            {
-                                                resList[id].Add(new EventWithTotalDictionary
-                                                {
-                                                    LineId = period.Value?["lineId"]?.ToString(),
-                                                    TotalType = $"TO({total.Value?["points"]})",
-                                                    TotalValue = total.Value?["over"]?.ToString(),
-                                                    MatchDateTime = matchDateTime
-                                                });
-                                                resList[id].Add(new EventWithTotalDictionary
-                                                {
-                                                    LineId = period.Value?["lineId"]?.ToString(),
-                                                    TotalType = $"TU({total.Value?["points"]})",
-                                                    TotalValue = total.Value?["under"]?.ToString(),
-                                                    MatchDateTime = matchDateTime
-                                                });
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
-                                            }
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
-                                    }
+                                        LineId = lineId,
+                                        TotalType = $"F1({spread.Value["hdp"]})",
+                                        TotalValue = spread.Value["home"].ToString(),
+                                        MatchDateTime = matchDateTime
+                                    });
                                 }
-                            }
-                            catch (Exception ex)
-                            {
-                                _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
-                            }
+                            if (period.Value["totals"] != null)
+                                foreach (var total in period.Value["totals"])
+                                {
+                                    resList[id].Add(new EventWithTotalDictionary
+                                    {
+                                        LineId = lineId,
+                                        TotalType = $"TO({total.Value["points"]})",
+                                        TotalValue = total.Value["over"].ToString(),
+                                        MatchDateTime = matchDateTime
+                                    });
+                                    resList[id].Add(new EventWithTotalDictionary
+                                    {
+                                        LineId = lineId,
+                                        TotalType = $"TU({total.Value["points"]})",
+                                        TotalValue = total.Value["under"].ToString(),
+                                        MatchDateTime = matchDateTime
+                                    });
+                                }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
+                _logger.Error(ex.Message);
+                _logger.Error(ex.StackTrace);
+                throw;
             }
             return resList;
         }
@@ -161,36 +135,27 @@ namespace DataParser.DefaultRealization
             try
             {
                 var jsonValue = ((JsonObject)JsonValue.
-                    Load(teamNamesResp.GetResponseStream()))?["league"];
+                    Load(teamNamesResp.GetResponseStream()))["league"];
 
                 if (jsonValue == null) return resList;
 
                 foreach (var league in jsonValue)
                 {
-                    try
+                    var sportEvents = league.Value["events"];
+
+                    if (sportEvents == null) continue;
+
+                    foreach (var sportEvent in sportEvents)
                     {
-                        var sportEvents = league.Value?["events"];
+                        var convertToLongOrNull = sportEvent.Value["id"].ConvertToStringOrNull();
 
-                        if (sportEvents == null) continue;
+                        if (convertToLongOrNull == null) continue;
 
-                        foreach (var sportEvent in sportEvents)
-                        {
-                            //if id null - all ok will be exception and we go to the next item in foreach
-                            var convertToLongOrNull = sportEvent.Value["id"].ConvertToLongOrNull();
+                        var id = Convert.ToInt64(convertToLongOrNull);
 
-                            if (convertToLongOrNull == null) continue;
-
-                            var id = convertToLongOrNull.Value;
-
-                            if (!resList.ContainsKey(id))
-                                resList.Add(id, $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"
-                                    .Replace("\"", ""));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error(ex.Message);
-                        _logger.Error(ex.StackTrace);
+                        if (!resList.ContainsKey(id))
+                            resList.Add(id, $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"
+                                .Replace("\"", ""));
                     }
                 }
             }
@@ -198,6 +163,7 @@ namespace DataParser.DefaultRealization
             {
                 _logger.Error(ex.Message);
                 _logger.Error(ex.StackTrace);
+                throw;
             }
             return resList;
         }
@@ -208,15 +174,15 @@ namespace DataParser.DefaultRealization
             var eventsWithTotal = ParseEventWithTotalsDictionaty(totalResp);
 
             var resDic = new Dictionary<string, ResultForForksDictionary>();
-
-            foreach (var eventWithName in eventsWithNames)
+            try
             {
-                if (!eventsWithTotal.ContainsKey(eventWithName.Key)) continue;
-
-                foreach (var eventWithTotal in eventsWithTotal[eventWithName.Key])
+                foreach (var eventWithName in eventsWithNames)
                 {
-                    try
+                    if (!eventsWithTotal.ContainsKey(eventWithName.Key)) continue;
+
+                    foreach (var eventWithTotal in eventsWithTotal[eventWithName.Key])
                     {
+
                         var key = $"{eventWithName.Value}";
                         if (!resDic.ContainsKey(key))
                         {
@@ -249,12 +215,15 @@ namespace DataParser.DefaultRealization
                                 resDic[key].TypeLineIdDictionary.Add(eventWithTotal.TotalType, eventWithTotal.LineId);
 
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
+
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                _logger.Error(ex.StackTrace);
+                throw;
             }
             return resDic;
         }
@@ -301,6 +270,7 @@ namespace DataParser.DefaultRealization
             {
                 _logger.Error(ex.Message);
                 _logger.Error(ex.StackTrace);
+                throw;
             }
             return resDic;
         }

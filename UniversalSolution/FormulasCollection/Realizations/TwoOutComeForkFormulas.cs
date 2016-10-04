@@ -60,7 +60,7 @@ namespace FormulasCollection.Realizations
                     pinKey))
                     RevertValues(pinnacle,
                         pinKey);
-
+                //todo cache old pinKey and marathonEvent for faster compating, maybe better to use some list of them
                 var pin = pinnacle[pinKey];
                 try
                 {

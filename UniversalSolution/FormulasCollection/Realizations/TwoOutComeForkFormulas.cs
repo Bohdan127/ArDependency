@@ -51,8 +51,13 @@ namespace FormulasCollection.Realizations
             var resList = new List<Fork>();
             foreach (var eventItem in marathon)
             {
-                var pinKey = pinnacle.Keys.FirstOrDefault(key =>
-                    Extentions.GetStringSimilarityInPercent(eventItem.Event, key, true) >= 85);
+                var pinKey = pinnacle.FirstOrDefault(pinnacleEvent =>
+                    Extentions.GetStringSimilarityForSportTeams(eventItem.Event,
+                        pinnacleEvent.Key,
+                        true,
+                        Convert.ToDateTime(eventItem.MatchDateTime),
+                        pinnacleEvent.Value.MatchDateTime) >= 85)
+                    .Key;
                 if (pinKey == null)
                     continue;
                 if (CheckIsMustToBeRevert(eventItem.Event,
@@ -73,7 +78,7 @@ namespace FormulasCollection.Realizations
                             League = eventItem.League,
                             MarathonEventId = eventItem.EventId,
                             PinnacleEventId = pin.EventId,
-                            Event = pinKey+ "*" + eventItem.Event,
+                            Event = pinKey + "*" + eventItem.Event,
                             TypeFirst = eventItem.Type,
                             CoefFirst = eventItem.Coef,
                             TypeSecond = pinEventKey.ConvertToStringOrNull(),
@@ -112,10 +117,6 @@ namespace FormulasCollection.Realizations
                     tmpDic.Add("F2" + typeCoef.Key.Remove(0, 2), typeCoef.Value);
                 else if (typeCoef.Key.StartsWith("F2"))
                     tmpDic.Add("F1" + typeCoef.Key.Remove(0, 2), typeCoef.Value);
-                else if (typeCoef.Key.StartsWith("TO"))
-                    tmpDic.Add("TU" + typeCoef.Key.Remove(0, 2), typeCoef.Value);
-                else if (typeCoef.Key.StartsWith("TU"))
-                    tmpDic.Add("TO" + typeCoef.Key.Remove(0, 2), typeCoef.Value);
                 else
                     tmpDic.Add(typeCoef.Key, typeCoef.Value);
             }

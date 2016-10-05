@@ -140,8 +140,8 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="ToolsPortable, Version=1.0.0.8, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ToolsPortable.1.0.0.8\lib\portable45-net45+win8+wp8+wpa81\ToolsPortable.dll</HintPath>
+    <Reference Include="ToolsPortable, Version=1.0.0.10, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ToolsPortable.1.0.0.10\lib\portable45-net45+win8+wp8+wpa81\ToolsPortable.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

@@ -51,12 +51,12 @@ namespace FormulasCollection.Realizations
             var resList = new List<Fork>();
             foreach (var eventItem in marathon)
             {
-                var pinKey = pinnacle.FirstOrDefault(pinnacleEvent =>
+                var pinKey = pinnacle.FirstOrDefault(pinEvent =>
                     Extentions.GetStringSimilarityForSportTeams(eventItem.Event,
-                        pinnacleEvent.Key,
+                        pinEvent.Key,
                         true,
                         Convert.ToDateTime(eventItem.MatchDateTime),
-                        pinnacleEvent.Value.MatchDateTime) >= 85)
+                        pinEvent.Value.MatchDateTime) >= 85)
                     .Key;
                 if (pinKey == null)
                     continue;
@@ -65,7 +65,7 @@ namespace FormulasCollection.Realizations
                     RevertValues(pinnacle,
                         pinKey);
                 //todo cache old pinKey and marathonEvent for faster compating, maybe better to use some list of them
-                var pin = pinnacle[pinKey];
+                var pinnacleEvent = pinnacle[pinKey];
                 try
                 {
                     var pinEventKey = IsAnyForkAll(eventItem, pinnacle[pinKey], eventItem.SportType.EnumParse<SportType>());
@@ -77,18 +77,18 @@ namespace FormulasCollection.Realizations
                         {
                             League = eventItem.League,
                             MarathonEventId = eventItem.EventId,
-                            PinnacleEventId = pin.EventId,
+                            PinnacleEventId = pinnacleEvent.EventId,
                             Event = pinKey + "*" + eventItem.Event,
                             TypeFirst = eventItem.Type,
                             CoefFirst = eventItem.Coef,
                             TypeSecond = pinEventKey.ConvertToStringOrNull(),
-                            CoefSecond = pin.TypeCoefDictionary[pinEventKey].ConvertToStringOrNull(),
+                            CoefSecond = pinnacleEvent.TypeCoefDictionary[pinEventKey].ConvertToStringOrNull(),
                             Sport = eventItem.SportType,
-                            MatchDateTime = pin.MatchDateTime.ToString(CultureInfo.CurrentCulture),
+                            MatchDateTime = pinnacleEvent.MatchDateTime.ToString(CultureInfo.CurrentCulture),
                             BookmakerFirst = "https://www.marathonbet.com/",
                             BookmakerSecond = "http://www.pinnaclesports.com/",
                             Type = ForkType.Current,
-                            LineId = pin.TypeLineIdDictionary[pinEventKey]
+                            LineId = pinnacleEvent.TypeLineIdDictionary[pinEventKey]
                         };
                         resList.Add(fork);
                     }

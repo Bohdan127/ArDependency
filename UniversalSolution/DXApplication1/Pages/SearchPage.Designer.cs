@@ -48,8 +48,6 @@
             this.colCoef2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colProfit = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEditPercent = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
-            this.colSave = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.repositoryItemCheckEditSave = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.colEventIdFOrMarathon = new DevExpress.XtraGrid.Columns.GridColumn();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlGroup3 = new DevExpress.XtraLayout.LayoutControlGroup();
@@ -65,7 +63,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemHyperLinkEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEditPercent)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEditSave)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
@@ -112,7 +109,6 @@
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
-            this.repositoryItemCheckEditSave,
             this.repositoryItemHyperLinkEdit1,
             this.repositoryItemTextEditPercent});
             this.gridControl1.Size = new System.Drawing.Size(595, 317);
@@ -134,7 +130,6 @@
             this.colRate2,
             this.colCoef2,
             this.colProfit,
-            this.colSave,
             this.colEventIdFOrMarathon});
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
@@ -255,23 +250,6 @@
             this.repositoryItemTextEditPercent.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.repositoryItemTextEditPercent.Name = "repositoryItemTextEditPercent";
             // 
-            // colSave
-            // 
-            this.colSave.Caption = "Сохранить";
-            this.colSave.ColumnEdit = this.repositoryItemCheckEditSave;
-            this.colSave.FieldName = "Type";
-            this.colSave.Name = "colSave";
-            this.colSave.Visible = true;
-            this.colSave.VisibleIndex = 11;
-            // 
-            // repositoryItemCheckEditSave
-            // 
-            this.repositoryItemCheckEditSave.AutoHeight = false;
-            this.repositoryItemCheckEditSave.Caption = "";
-            this.repositoryItemCheckEditSave.CheckStyle = DevExpress.XtraEditors.Controls.CheckStyles.Style6;
-            this.repositoryItemCheckEditSave.Name = "repositoryItemCheckEditSave";
-            this.repositoryItemCheckEditSave.NullStyle = DevExpress.XtraEditors.Controls.StyleIndeterminate.Unchecked;
-            // 
             // colEventIdFOrMarathon
             // 
             this.colEventIdFOrMarathon.Caption = "Event Id for Marathon";
@@ -354,7 +332,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemHyperLinkEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEditPercent)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEditSave)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
@@ -388,8 +365,6 @@
         private DevExpress.XtraGrid.Columns.GridColumn colRate2;
         private DevExpress.XtraGrid.Columns.GridColumn colCoef2;
         private DevExpress.XtraGrid.Columns.GridColumn colProfit;
-        private DevExpress.XtraGrid.Columns.GridColumn colSave;
-        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEditSave;
         private DevExpress.XtraGrid.Columns.GridColumn colLeague;
         private DevExpress.XtraEditors.Repository.RepositoryItemHyperLinkEdit repositoryItemHyperLinkEdit1;
         private DevExpress.XtraGrid.Columns.GridColumn colEventIdFOrMarathon;

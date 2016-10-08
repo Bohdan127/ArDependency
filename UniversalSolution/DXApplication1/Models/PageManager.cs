@@ -130,9 +130,7 @@ namespace DXApplication1.Models
         {
             _accountingPage.StartLoading();
             var resList = await DataManager.
-                GetForksForAllSportsAsync(_filterPage?.Filter, ForkType.Merged).ConfigureAwait(true);
-            resList.AddRange(await DataManager.
-                GetForksForAllSportsAsync(_filterPage?.Filter, ForkType.Saved).ConfigureAwait(true));
+                GetForksForAllSportsAsync(_filterPage?.Filter, ForkType.Saved).ConfigureAwait(true);
             /*
              * We should just update changed rows,
              * not all as it is now
@@ -165,9 +163,7 @@ namespace DXApplication1.Models
         {
             _searchPage.StartLoading();
             var resList = await DataManager.
-                GetForksForAllSportsAsync(_filterPage?.Filter, ForkType.Merged).ConfigureAwait(true);
-            resList.AddRange(await DataManager.
-                GetForksForAllSportsAsync(_filterPage?.Filter, ForkType.Current).ConfigureAwait(true));
+                GetForksForAllSportsAsync(_filterPage?.Filter, ForkType.Current).ConfigureAwait(true);
             /*
              * We should just update changed rows,
              * not all as it is now

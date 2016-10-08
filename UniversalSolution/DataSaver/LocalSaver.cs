@@ -5,7 +5,6 @@ using FormulasCollection.Enums;
 using FormulasCollection.Models;
 using NLog;
 using Raven.Abstractions.Data;
-using Raven.Abstractions.Extensions;
 using Raven.Client;
 using Raven.Client.Document;
 using Raven.Client.Linq;
@@ -59,7 +58,7 @@ namespace DataSaver
             }
         }
 
-        public virtual void InsertForks(List<Fork> forkList)
+        public void InsertForks(List<Fork> forkList)
         {
             if (forkList == null) return;
 
@@ -77,45 +76,59 @@ namespace DataSaver
             Session.SaveChanges();
         }
 
-        public virtual void ClearAndInsertForks(List<Fork> forkList, SportType sportType)
+        public void ClearAndInsertForks(List<Fork> forkList, SportType sportType)
         {
             if (forkList == null || forkList.Count == 0) return;
 
-            MoveForks(forkList, sportType);
-            ClearForks(sportType);
+            var rowsForDelete = MoveForks(forkList, sportType);
+            ClearForks(rowsForDelete);
             InsertForks(forkList);
         }
 
-        private void MoveForks(List<Fork> forkList, SportType sportType)
+        public List<ForkRow> MoveForks(List<Fork> forkList, SportType sportType)
         {
             var forks = GetAllForkRows().Where(fBase => fBase.Sport == sportType.ToString() &&
-                                            fBase.Type == ForkType.Merged).ToArray();
-
+                                            fBase.Type == ForkType.Current).ToArray();
+            var rowsForDelete = forks.ToList();
             //removing all rows with status Merged from forkList
             foreach (var fBase in forks)
             {
-                var fork = forkList.FirstOrDefault(fNew =>
-                    fNew.Event == fBase.Event
-                    && fNew.MatchDateTime == fBase.MatchDateTime);
-                if (fork != null)
-                    forkList.Remove(fork);
-                else
-                {//change all Forks in DB from Merged to Saved
-                    var forkDocument = Session.Load<ForkRow>(fBase.Id);
-                    forkDocument.Type = ForkType.Saved;
-                }
+                var fork = forkList.FirstOrDefault(fNew => IsSameFork(fNew, fBase));
+                if (fork == null)
+                    continue;
+                forkList.Remove(fork);
+                rowsForDelete.Remove(fBase);
             }
             Session.SaveChanges();
+            return rowsForDelete;
         }
 
-        private void ClearForks(SportType sportType)
+        public bool IsSameFork(Fork fNew,
+            ForkRow fBase)
         {
-            GetAllForkRows().Where(f => f.Sport == sportType.ToString() &&
-                f.Type == ForkType.Current).
-                ForEach(f => _store.DatabaseCommands.Delete(f.Id, null));
+            // ReSharper disable once JoinDeclarationAndInitializer
+            bool bRes;
+
+            bRes = fNew.Event == fBase.Event;
+            bRes = bRes && fNew.MatchDateTime == fBase.MatchDateTime;
+            bRes = bRes && fNew.TypeFirst == fBase.TypeFirst;
+            bRes = bRes && fNew.TypeSecond == fBase.TypeSecond;
+
+            return bRes;
         }
 
-        private IEnumerable<ForkRow> GetAllForkRows()
+        public void ClearForks(List<ForkRow> rowsForDelete)
+        {
+            if (rowsForDelete == null
+             || rowsForDelete.Count <= 0)
+                return;
+            rowsForDelete.ForEach(f =>
+                    _store.DatabaseCommands.Delete(f.Id,
+                        null));
+            rowsForDelete.Clear();
+        }
+
+        public IEnumerable<ForkRow> GetAllForkRows()
         {
             var jsonList = new List<JsonDocument>();
             using (_store.DatabaseCommands.DisableAllCaching())
@@ -133,12 +146,12 @@ namespace DataSaver
             return resList;
         }
 
-        public virtual async Task<List<Fork>> GetForksAsync(Filter searchCriteria, ForkType forkType)
+        public async Task<List<Fork>> GetForksAsync(Filter searchCriteria, ForkType forkType)
         {
             return await Task.Run(() => GetForks(searchCriteria, forkType));
         }
 
-        public virtual List<Fork> GetForks(Filter searchCriteria, ForkType forkType)
+        public List<Fork> GetForks(Filter searchCriteria, ForkType forkType)
         {
             return GetAllForkRows().Where(f => f.Type == forkType &&
                 ((searchCriteria.Basketball && f.Sport == SportType.Basketball.ToString()) ||
@@ -149,30 +162,31 @@ namespace DataSaver
                 .Select(MapForkRowToFork).ToList();
         }
 
-        public virtual void UpdateFork(ForkRow forkRow)
+        public void UpdateFork(ForkRow forkRow)
         {
             var forkDocument = Session.Load<ForkRow>(forkRow.Id);
             forkDocument.Type = forkRow.Type;
             Session.SaveChanges();
         }
 
-        public virtual void DeleteFork(ForkRow forkRow)
+        public void DeleteFork(ForkRow forkRow)
         {
             var forkDocument = Session.Load<ForkRow>(forkRow.Id);
             Session.Delete(forkDocument);
             Session.SaveChanges();
         }
 
-        public virtual void UpdateFork(Fork fork)
+        public void UpdateFork(Fork fork)
         {
-            UpdateFork(MapForkToForkRow(fork));}
+            UpdateFork(MapForkToForkRow(fork));
+        }
 
-        public virtual void DeleteFork(Fork fork)
+        public void DeleteFork(Fork fork)
         {
             DeleteFork(MapForkToForkRow(fork));
         }
 
-        protected virtual ForkRow MapJsonDocumentToForkRow(JsonDocument json)
+        protected ForkRow MapJsonDocumentToForkRow(JsonDocument json)
         {
             var result = new ForkRow
             {
@@ -204,7 +218,7 @@ namespace DataSaver
             };
             return result;
         }
-        protected virtual User MapJsonDocumentToUsers(JsonDocument json)
+        protected User MapJsonDocumentToUsers(JsonDocument json)
         {
             var result = new User
             {
@@ -215,7 +229,7 @@ namespace DataSaver
             return result;
         }
 
-        protected virtual ForkRow MapForkToForkRow(Fork fork)
+        protected ForkRow MapForkToForkRow(Fork fork)
         {
             var result = new ForkRow
             {
@@ -249,7 +263,7 @@ namespace DataSaver
         }
 
 
-        protected virtual Fork MapForkRowToFork(ForkRow forkRow)
+        protected Fork MapForkRowToFork(ForkRow forkRow)
         {
             var result = new Fork
             {
@@ -282,7 +296,7 @@ namespace DataSaver
             return result;
         }
 
-        public virtual void UpdateUser(User user)
+        public void UpdateUser(User user)
         {
             var userDocument = Session.Load<User>(user.Id);
             userDocument.Login = user.Login;
@@ -290,7 +304,7 @@ namespace DataSaver
             Session.SaveChanges();
         }
 
-        public virtual bool AddUserToDB(string login, string password)
+        public bool AddUserToDB(string login, string password)
         {
             var user = new User { Login = login, Password = password };
 
@@ -305,7 +319,7 @@ namespace DataSaver
             Session.SaveChanges();
             return true;
         }
-        public virtual User FindUser()
+        public User FindUser()
         {
             var jsonList = new List<JsonDocument>();
             using (_store.DatabaseCommands.DisableAllCaching())

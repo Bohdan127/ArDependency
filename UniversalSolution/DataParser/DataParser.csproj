@@ -94,7 +94,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Surebet.cs" />
-    <Compile Include="DefaultRealization\SurebetParser.cs" />
     <Compile Include="DefaultRealization\PinnacleSportsDataParser.cs" />
     <Compile Include="Models\TwoBooker.cs" />
     <Compile Include="Extensions\SurebetTags.cs" />

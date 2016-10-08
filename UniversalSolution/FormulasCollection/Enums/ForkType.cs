@@ -12,10 +12,6 @@ namespace FormulasCollection.Enums
         /// <summary>
         /// Forks available in AccountingPage only
         /// </summary>
-        Saved,
-        /// <summary>
-        /// Forks available in AccountingPage and SearchPage
-        /// </summary>
-        Merged
+        Saved
     }
 }

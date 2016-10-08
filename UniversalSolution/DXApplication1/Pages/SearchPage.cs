@@ -1,7 +1,5 @@
 ﻿using DataSaver;
 using DevExpress.XtraGrid;
-using FormulasCollection.Enums;
-using FormulasCollection.Models;
 using System;
 using System.Drawing;
 using System.Threading;
@@ -28,7 +26,6 @@ namespace DXApplication1.Pages
             Closing += SearchPage_Closing;
             backgroundWorker1.DoWork += BackgroundWorker1_DoWork;
             backgroundWorker1.WorkerSupportsCancellation = true;
-            repositoryItemCheckEditSave.EditValueChanging += RepositoryItemCheckEditSave_EditValueChanging;
             _localSaver = new LocalSaver();
 
             if (isSearchPage)
@@ -41,38 +38,12 @@ namespace DXApplication1.Pages
         {
             Text = "Учет";
             Icon = Icon.FromHandle(((Bitmap)imageList1.Images[3]).GetHicon());
-            repositoryItemCheckEditSave.ValueChecked = ForkType.Merged;
-            repositoryItemCheckEditSave.ValueUnchecked = ForkType.Current;
-            repositoryItemCheckEditSave.ValueGrayed = ForkType.Saved;
         }
 
         private void InitSearchPage()
         {
             Text = "Поиск вилок";
             Icon = Icon.FromHandle(((Bitmap)imageList1.Images[2]).GetHicon());
-            repositoryItemCheckEditSave.ValueChecked = ForkType.Merged;
-            repositoryItemCheckEditSave.ValueUnchecked = ForkType.Current;
-        }
-
-        private void RepositoryItemCheckEditSave_EditValueChanging(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e)
-        {
-            if (e.OldValue == null || e.OldValue == e.NewValue) return;
-
-            var currRow = gridView1.GetFocusedRow() as Fork;
-
-            if (currRow == null) return;
-
-            if (e.OldValue as ForkType? == ForkType.Saved)
-            {
-                _localSaver.DeleteFork(currRow);
-                gridView1.DeleteRow(gridView1.FocusedRowHandle);
-            }
-            else if (e.NewValue as ForkType? == ForkType.Current
-                  || e.NewValue as ForkType? == ForkType.Merged)
-            {
-                currRow.Type = (ForkType)e.NewValue;
-                _localSaver.UpdateFork(currRow);
-            }
         }
 
         private void BackgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)

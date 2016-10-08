@@ -26,6 +26,14 @@ namespace FormulasCollection.Realizations
             if (coef1 == null
                 || coef2 == null)
                 return false;
+            return GetProfit(coef1.Value, coef2.Value) > 0;
+
+
+        }
+
+        private double GetProfit(double coef1,
+            double coef2)
+        {
             var defRate = 100d;
             var rates = _calculatorFormulas.GetRecommendedRates(defRate, coef1, coef2);
 
@@ -37,10 +45,11 @@ namespace FormulasCollection.Realizations
             var income3 = Convert.ToDouble(_calculatorFormulas.CalculateClearRate(rate2, income1));
             var income4 = Convert.ToDouble(_calculatorFormulas.CalculateClearRate(rate1, income2));
             //todo delete this shit and refactored to one command
-            return Math.Round(Convert.ToDouble(_calculatorFormulas.CalculateSummaryIncome(income3, income4)) - defRate, 2) > 0;
-
-
+            return Math.Round(Convert.ToDouble(_calculatorFormulas.CalculateSummaryIncome(income3,
+                income4)) - defRate,
+                2);
         }
+
         private bool CheckIsMustToBeRevert(string eventMarafon, string eventPinacle) =>
         Extentions.GetStringSimilarityInPercent(eventMarafon.Split('-')[0],
                 eventPinacle.Split('-')[0], true) < 90;
@@ -52,11 +61,14 @@ namespace FormulasCollection.Realizations
             foreach (var eventItem in marathon)
             {
                 var pinKey = pinnacle.FirstOrDefault(pinEvent =>
-                    Extentions.GetStringSimilarityForSportTeams(eventItem.Event,
+                            //   Extentions.GetStringSimilarityForSportTeams(
+                            Extentions.GetStringSimilarityInPercent(
+                        eventItem.Event,
                         pinEvent.Key,
-                        true,
-                        Convert.ToDateTime(eventItem.MatchDateTime),
-                        pinEvent.Value.MatchDateTime) >= 85)
+                        true)
+                        //   Convert.ToDateTime(eventItem.MatchDateTime),
+                        //   pinEvent.Value.MatchDateTime) 
+                        >= 85)
                     .Key;
                 if (pinKey == null)
                     continue;
@@ -81,14 +93,16 @@ namespace FormulasCollection.Realizations
                             Event = pinKey + "*" + eventItem.Event,
                             TypeFirst = eventItem.Type,
                             CoefFirst = eventItem.Coef,
-                            TypeSecond = pinEventKey.ConvertToStringOrNull(),
-                            CoefSecond = pinnacleEvent.TypeCoefDictionary[pinEventKey].ConvertToStringOrNull(),
+                            TypeSecond = pinEventKey.ToString(CultureInfo.InvariantCulture),
+                            CoefSecond = pinnacleEvent.TypeCoefDictionary[pinEventKey].ToString(CultureInfo.InvariantCulture),
                             Sport = eventItem.SportType,
                             MatchDateTime = pinnacleEvent.MatchDateTime.ToString(CultureInfo.CurrentCulture),
                             BookmakerFirst = "https://www.marathonbet.com/",
                             BookmakerSecond = "http://www.pinnaclesports.com/",
                             Type = ForkType.Current,
-                            LineId = pinnacleEvent.TypeLineIdDictionary[pinEventKey]
+                            LineId = pinnacleEvent.TypeLineIdDictionary[pinEventKey],
+                            Profit = GetProfit(Convert.ToDouble(eventItem.Coef),
+                                Convert.ToDouble(pinnacleEvent.TypeCoefDictionary[pinEventKey]))
                         };
                         resList.Add(fork);
                     }

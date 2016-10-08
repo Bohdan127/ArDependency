@@ -35,7 +35,7 @@
 
         public static readonly string newTeamName = "member-name nowrap";
 
-        public static readonly string newDate = "class=\"date\"";
+        public static readonly string newDate = "class=\"date \"";
 
         public static readonly string newIssLive = "isLive";
 

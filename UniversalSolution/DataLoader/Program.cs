@@ -2,6 +2,7 @@
 using DataParser.DefaultRealization;
 using DataParser.Enums;
 using DataSaver;
+using FormulasCollection.Enums;
 using FormulasCollection.Models;
 using FormulasCollection.Realizations;
 using SiteAccess.Access;
@@ -139,6 +140,11 @@ namespace DataLoader
                     AddData = "{\"sn\":\"Bolton Wanderers To Win\",\"mn\":\"Match Result\",\"ewc\":\"1/1 1\",\"cid\":10381455169,\"prt\":\"CP\",\"ewf\":\"1.0\",\"epr\":\"1.6600000000000001\",\"prices\":{\"0\":\"33/50\",\"1\":\"1.66\",\"2\":\"-152\",\"3\":\"0.66\",\"4\":\"0.66\",\"5\":\"-1.52\"}"
                 };
                 marath.MakeBet(bet);
+                if (fork.Type != ForkType.Saved)
+                {
+                    fork.Type = ForkType.Saved;
+                    _localSaver.UpdateFork(fork);
+                }
             }
         }
 
@@ -174,6 +180,11 @@ namespace DataLoader
                     SportId = (int)(SportType)Enum.Parse(typeof(SportType), fork.Sport, false)
                 };
                 pinn.MakeBet(bet);
+                if (fork.Type != ForkType.Saved)
+                {
+                    fork.Type = ForkType.Saved;
+                    _localSaver.UpdateFork(fork);
+                }
             }
         }
 

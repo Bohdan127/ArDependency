@@ -108,7 +108,7 @@ namespace DataLoader
                     var forks = GetForksDictionary(sportType, pinSport, marSport);
 
                     SaveNewForks(forks, sportType);
-                    PlaceAllBet(forks, sportType);
+                   // PlaceAllBet(forks, sportType);
                 }
 
             }

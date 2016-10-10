@@ -24,8 +24,7 @@ namespace FormulasCollection.Realizations
 
         public bool CheckIsFork(double? coef1, double? coef2, ResultForForks marEvent, ResultForForksDictionary pinEvent)
         {
-            if (coef1 == null
-                || coef2 == null)
+            if (coef1 == null || coef2 == null)
                 return false;
             return GetProfit(coef1.Value, coef2.Value) > 0;
 
@@ -51,9 +50,11 @@ namespace FormulasCollection.Realizations
                 2);
         }
 
-        private bool CheckIsMustToBeRevert(string eventMarafon, string eventPinacle) =>
-        Extentions.GetStringSimilarityInPercent(eventMarafon.Split('-')[0],
-                eventPinacle.Split('-')[0], true) < 90;
+        private bool CheckIsMustToBeRevert(string eventMarathon, string eventPinacle) =>
+           Extentions.GetStringSimilarityInPercent(eventMarathon.Split('#')[0],
+                eventPinacle.Split('#')[0], true) < 75
+            && Extentions.GetStringSimilarityInPercent(eventMarathon.Split('#')[1],
+                eventPinacle.Split('#')[1], true) < 75;
 
         public List<Fork> GetAllForksDictionary(Dictionary<string, ResultForForksDictionary> pinnacle,
             List<ResultForForks> marathon)
@@ -71,7 +72,7 @@ namespace FormulasCollection.Realizations
                 {
                     try
                     {
-                        if (eventItem.MatchDateTime.Length > 50) //for all times like "00:00"
+                        if (eventItem.MatchDateTime.Length > 5) //for all times like "00:00"
                             pinKey = pinnacle.FirstOrDefault(pinEvent =>
                                 Extentions.GetStringSimilarityForSportTeams(
                                     eventItem.Event,

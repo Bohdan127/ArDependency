@@ -18,7 +18,8 @@
         public ResultForForks() { }
 
         public ResultForForks(string eventID, string nameTeam1, string nameTeam2, string date, string nameCoff, string coef, string type, string bookmaker, string league, DataMarathonForAutoPlays obj)
-        {this.Event = nameTeam1.Trim() + " - " + nameTeam2.Trim();
+        {
+            this.Event = nameTeam1.Trim() + " # " + nameTeam2.Trim();
             this.MatchDateTime = date;
             this.Type = nameCoff;
             this.Coef = coef;

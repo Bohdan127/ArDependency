@@ -108,7 +108,7 @@ namespace DataLoader
                     var forks = GetForksDictionary(sportType, pinSport, marSport);
 
                     SaveNewForks(forks, sportType);
-                   // PlaceAllBet(forks, sportType);
+                    // PlaceAllBet(forks, sportType);
                 }
 
             }
@@ -132,12 +132,28 @@ namespace DataLoader
 
             foreach (var fork in forks.Where(f => f.Profit > 1.0).OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
             {
+                var recomendedRates = _calculatorFormulas.GetRecommendedRates(_defRate,
+                  fork.CoefFirst.ConvertToDoubleOrNull(),
+                  fork.CoefSecond.ConvertToDoubleOrNull());
                 var bet = new MarathonBet
                 {
-                    Id = "4050540@Match_Result.1",
-                    Name = "Bolton Wanderers vs Blackpool",
-                    Stake = 1.0,
-                    AddData = "{\"sn\":\"Bolton Wanderers To Win\",\"mn\":\"Match Result\",\"ewc\":\"1/1 1\",\"cid\":10381455169,\"prt\":\"CP\",\"ewf\":\"1.0\",\"epr\":\"1.6600000000000001\",\"prices\":{\"0\":\"33/50\",\"1\":\"1.66\",\"2\":\"-152\",\"3\":\"0.66\",\"4\":\"0.66\",\"5\":\"-1.52\"}"
+                    Id = fork.MarathonEventId,
+                    Name = fork.Event,
+                    // ReSharper disable once PossibleInvalidOperationException
+                    Stake = recomendedRates.Item1.ConvertToDoubleOrNull().Value,
+                    AddData = $"{{\"sn\":\"{fork.sn}\"," +
+                              $"\"mn\":\"{fork.mn}\"," +
+                              $"\"ewc\":\"{fork.ewc}\"," +
+                              $"\"cid\":{fork.cid}," +
+                              $"\"prt\":\"{fork.prt}\"," +
+                              $"\"ewf\":\"{fork.ewf}\"," +
+                              $"\"epr\":\"{fork.epr}\"," +
+                              $"\"prices\"" +
+                                    $":{{\"0\":\"{fork.prices[0]}\"," +
+                                        $"\"1\":\"{fork.prices[1]}\"," +
+                                        $"\"2\":\"{fork.prices[2]}\"," +
+                                        $"\"3\":\"{fork.prices[3]}\"," +
+                                        $"\"4\":\"{fork.prices[4]}\"," +$"\"5\":\"{fork.prices[5]}\"}}}}"
                 };
                 marath.MakeBet(bet);
                 if (fork.Type != ForkType.Saved)

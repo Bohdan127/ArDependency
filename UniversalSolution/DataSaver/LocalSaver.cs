@@ -223,8 +223,11 @@ namespace DataSaver
             var result = new User
             {
                 Id = json.Key,
-                Login = json.DataAsJson.Value<string>("Login"),
-                Password = json.DataAsJson.Value<string>("Password")
+                LoginPinnacle = json.DataAsJson.Value<string>("LoginPinnacle"),
+                PasswordPinnacle = json.DataAsJson.Value<string>("PasswordPinnacle"),
+                LoginMarathon = json.DataAsJson.Value<string>("LoginMarathon"),
+                PasswordMarathon = json.DataAsJson.Value<string>("PasswordMarathon"),
+                AntiGateCode = json.DataAsJson.Value<string>("AntiGateCode")
             };
             return result;
         }
@@ -299,14 +302,39 @@ namespace DataSaver
         public void UpdateUser(User user)
         {
             var userDocument = Session.Load<User>(user.Id);
-            userDocument.Login = user.Login;
-            userDocument.Password = user.Password;
+
+            userDocument.LoginPinnacle = user.LoginPinnacle;
+            userDocument.PasswordPinnacle = user.PasswordPinnacle;
+            userDocument.LoginMarathon = user.LoginMarathon;
+            userDocument.PasswordMarathon = user.PasswordMarathon;
+            userDocument.AntiGateCode = user.AntiGateCode;
+
             Session.SaveChanges();
         }
 
-        public bool AddUserToDB(string login, string password)
+        /// <summary>
+        /// Add new User into Raven Db
+        /// </summary>
+        /// <param name="loginPinnacle">User pinnacle login</param>
+        /// <param name="passwordPinnacle">User pinnacle password</param>
+        /// <param name="loginMarathon">User marathon login</param>
+        /// <param name="passwordMarathon">User marathon password</param>
+        /// <param name="antiGateCode">anticaptcha user private Id</param>
+        /// <returns></returns>
+        public bool AddUserToDb(string loginPinnacle,
+            string passwordPinnacle,
+            string loginMarathon,
+            string passwordMarathon,
+            string antiGateCode)
         {
-            var user = new User { Login = login, Password = password };
+            var user = new User
+            {
+                LoginPinnacle = loginPinnacle,
+                PasswordPinnacle = passwordPinnacle,
+                LoginMarathon = loginMarathon,
+                PasswordMarathon = passwordMarathon,
+                AntiGateCode = antiGateCode
+            };
 
             try
             {
@@ -314,11 +342,29 @@ namespace DataSaver
             }
             catch (Exception ex)
             {
-                _logger.Error(ex.Message); _logger.Error(ex.StackTrace);
+                _logger.Error(ex.Message);
+                _logger.Error(ex.StackTrace);
             }
             Session.SaveChanges();
             return true;
         }
+
+        public bool AddUserToDb(User user)
+        {
+            try
+            {
+                Session.Store(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                _logger.Error(ex.StackTrace);
+            }
+            Session.SaveChanges();
+            return true;
+        }
+
+
         public User FindUser()
         {
             var jsonList = new List<JsonDocument>();

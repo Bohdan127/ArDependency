@@ -2,6 +2,7 @@
 using DataParser.DefaultRealization;
 using DataParser.Enums;
 using DataSaver;
+using DataSaver.Models;
 using FormulasCollection.Enums;
 using FormulasCollection.Models;
 using FormulasCollection.Realizations;
@@ -19,8 +20,7 @@ namespace DataLoader
 {
     internal class Program
     {
-        public static string UserLogin { get; set; }
-        public static string UserPass { get; set; }
+        private static User _currentUser { get; set; }
 
         private static PinnacleSportsDataParser _pinnacle;
         private static MarathonParser _marathon;
@@ -57,20 +57,26 @@ namespace DataLoader
 
         private static void GetUserData()
         {
-            var user = _localSaver.FindUser();
-            if (user != null)
+            _currentUser = _localSaver.FindUser();
+            if (_currentUser == null)
             {
-                UserLogin = user.Login;
-                UserPass = user.Password;
-            }
-            else
-            {
-                Console.WriteLine("Please enter user login");
-                UserLogin = Console.ReadLine();
+                _currentUser = new User();
+                Console.WriteLine("Please enter Pinnacle user login");//for test "VB794327", "artem89@"
+                _currentUser.LoginPinnacle = Console.ReadLine();
 
-                Console.WriteLine("Please enter user password");
-                UserPass = Console.ReadLine();
-                _localSaver.AddUserToDB(UserLogin, UserPass);
+                Console.WriteLine("Please enter Pinnacle user password");
+                _currentUser.PasswordPinnacle = Console.ReadLine();
+
+                Console.WriteLine("Please enter Marathon user login");//for test "2127864", "Artemgus88"
+                _currentUser.LoginMarathon = Console.ReadLine();
+
+                Console.WriteLine("Please enter Marathon user password");
+                _currentUser.PasswordMarathon = Console.ReadLine();
+
+                Console.WriteLine("Please enter Anti Gate Code");
+                _currentUser.AntiGateCode = Console.ReadLine();
+
+                _localSaver.AddUserToDb(_currentUser);
             }
             while (_defRate <= 0.0)
             {
@@ -91,9 +97,13 @@ namespace DataLoader
         {
             while (true)
             {
+
                 Console.WriteLine("Start Loading with Dictionary");
-                Console.WriteLine($"User Login = '{UserLogin}'");
-                Console.WriteLine($"User Password = '{UserPass}'");
+                Console.WriteLine($"Pinnacle Login = '{_currentUser.LoginPinnacle}'");
+                Console.WriteLine($"Pinnacle Password = '{_currentUser.PasswordPinnacle}'");
+                Console.WriteLine($"Marathon Login = '{_currentUser.LoginMarathon}'");
+                Console.WriteLine($"Marathon Password = '{_currentUser.PasswordMarathon}'");
+                Console.WriteLine($"Anti Gate Code = '{_currentUser.AntiGateCode}'");
 
                 //always loading all sports
                 var sportsToLoading = new[] { SportType.Basketball, SportType.Hockey, SportType.Soccer, SportType.Tennis };
@@ -105,7 +115,8 @@ namespace DataLoader
                     var forks = GetForksDictionary(sportType, pinSport, marSport);
 
                     SaveNewForks(forks, sportType);
-                    PlaceAllBet(forks, sportType);
+                    if (forks.Count > 0)
+                        PlaceAllBet(forks, sportType);
                 }
 
             }
@@ -124,8 +135,8 @@ namespace DataLoader
 
         private static void PlaceMarathon(List<Fork> forks)
         {
-            var marath = new MarathonAccess(new AntiGate("<your code>"));
-            marath.Login("2127864", "Artemgus88");
+            var marath = new MarathonAccess(new AntiGate(_currentUser.AntiGateCode));
+            marath.Login(_currentUser.LoginMarathon, _currentUser.PasswordMarathon);
 
             foreach (var fork in forks.Where(f => f.Profit > 1.0).OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
             {
@@ -145,14 +156,14 @@ namespace DataLoader
                               $"\"prt\":\"{fork.prt}\"," +
                               $"\"ewf\":\"{fork.ewf}\"," +
                               $"\"epr\":\"{fork.epr}\"," +
-                              $"\"prices\"" +
+                              "\"prices\"" +
                                     $":{{\"0\":\"{fork.prices[0]}\"," +
                                         $"\"1\":\"{fork.prices[1]}\"," +
                                         $"\"2\":\"{fork.prices[2]}\"," +
                                         $"\"3\":\"{fork.prices[3]}\"," +
                                         $"\"4\":\"{fork.prices[4]}\"," + $"\"5\":\"{fork.prices[5]}\"}}}}"
                 };
-                // marath.MakeBet(bet);
+                //todo Release marath.MakeBet(bet);
                 if (fork.Type != ForkType.Saved)
                 {
                     fork.Type = ForkType.Saved;
@@ -164,7 +175,7 @@ namespace DataLoader
         private static void PlacePinnacle(List<Fork> forks)
         {
             var pinn = new PinncaleAccess();
-            pinn.Login("VB794327", "artem89@");
+            pinn.Login(_currentUser.LoginPinnacle, _currentUser.PasswordPinnacle);
 
             //https://www.pinnacle.com/ru/api/manual#pbet
             foreach (var fork in forks.Where(f => f.Profit > 1.0).OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
@@ -192,7 +203,7 @@ namespace DataLoader
                     Stake = recomendedRates.Item2.ConvertToDecimalOrNull().Value,
                     SportId = (int)(SportType)Enum.Parse(typeof(SportType), fork.Sport, false)
                 };
-                //pinn.MakeBet(bet);
+                //todo Release pinn.MakeBet(bet);
                 if (fork.Type != ForkType.Saved)
                 {
                     fork.Type = ForkType.Saved;
@@ -236,7 +247,9 @@ namespace DataLoader
         {
             Console.WriteLine($"Start Loading {sportType} Events from Pinnacle");
 
-            var newList = _pinnacle.GetAllPinacleEventsDictionary(sportType, UserLogin, UserPass);
+            var newList = _pinnacle.GetAllPinacleEventsDictionary(sportType,
+                _currentUser.LoginPinnacle,
+                _currentUser.PasswordPinnacle);
 
             Console.WriteLine("Loading finished");
             Console.WriteLine($"Was founded {newList.Count} {sportType} Events from Pinnacle");

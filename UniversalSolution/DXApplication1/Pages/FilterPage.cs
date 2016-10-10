@@ -41,8 +41,11 @@ namespace DXApplication1.Pages
         private void UserBind()
         {
             var user = LocalSaver.FindUser();
-            textEditEmail.Text = user?.Login;
-            textEditPassword.Text = user?.Password;
+            textEditLoginPinnacle.Text = user?.LoginPinnacle;
+            textEditPasswordPinnacle.Text = user?.PasswordPinnacle;
+            textEditLoginMarathon.Text = user?.LoginMarathon;
+            textEditPasswordMarathon.Text = user?.PasswordMarathon;
+            textEditAntiGateCode.Text = user?.AntiGateCode;
             _userId = user?.Id;
         }
 
@@ -61,8 +64,6 @@ namespace DXApplication1.Pages
                 tennisToggleSwitch.EditValue = Filter.Tennis;
                 fasterDateTimePicker.EditValue = Filter.FaterThen;
                 longerDateTimePicker.EditValue = Filter.LongerThen;
-                outCome2ToggleSwitch.EditValue = Filter.OutCome2;
-                outcome3ToggleSwitch.EditValue = Filter.OutCome3;
                 textEditAutoUpdate.EditValue = Filter.AutoUpdateTime;
                 textEditRate.EditValue = Filter.DefaultRate;
             }
@@ -74,8 +75,6 @@ namespace DXApplication1.Pages
             fasterDateTimePicker.EditValueChanging += Faster_Changing;
             maxTextEdit.EditValueChanging += Max_Changing;
             minTextEdit.EditValueChanging += Min_Changing;
-            outCome2ToggleSwitch.Toggled += OutCome2_Toggled;
-            outcome3ToggleSwitch.Toggled += OutCome3_Toggled;
             pinnacleSportsToggleSwitch.Toggled += PinnacleSports_Toggled;
             marathonBetToggleSwitch.Toggled += MarathonBet_Toggled;
             basketballToggleSwitch.Toggled += Basketball_Toggled;
@@ -87,8 +86,11 @@ namespace DXApplication1.Pages
             textEditAutoUpdate.EditValueChanging += TextEditAutoUpdate_EditValueChanging;
             textEditAutoUpdate.EditValueChanging += TextEditAutoUpdate_EditValueChanging;
             textEditAutoUpdate.EditValueChanging += TextEditAutoUpdate_EditValueChanging;
-            textEditEmail.EditValueChanged += User_EditValueChanged;
-            textEditPassword.EditValueChanged += User_EditValueChanged;
+            textEditLoginPinnacle.EditValueChanged += User_EditValueChanged;
+            textEditPasswordPinnacle.EditValueChanged += User_EditValueChanged;
+            textEditLoginMarathon.EditValueChanged += User_EditValueChanged;
+            textEditPasswordMarathon.EditValueChanged += User_EditValueChanged;
+            textEditAntiGateCode.EditValueChanged += User_EditValueChanged;
             textEditRate.EditValueChanging += SpinEditRate_EditValueChanging;
         }
 
@@ -97,8 +99,11 @@ namespace DXApplication1.Pages
             var user = new User
             {
                 Id = _userId,
-                Login = textEditEmail.Text,
-                Password = textEditPassword.Text
+                LoginPinnacle = textEditLoginPinnacle.Text,
+                PasswordPinnacle = textEditPasswordPinnacle.Text,
+                LoginMarathon = textEditLoginMarathon.Text,
+                PasswordMarathon = textEditPasswordMarathon.Text,
+                AntiGateCode = textEditAntiGateCode.Text
             };
             LocalSaver.UpdateUser(user);
         }
@@ -109,8 +114,6 @@ namespace DXApplication1.Pages
             fasterDateTimePicker.EditValueChanging -= Faster_Changing;
             maxTextEdit.EditValueChanging -= Max_Changing;
             minTextEdit.EditValueChanging -= Min_Changing;
-            outCome2ToggleSwitch.Toggled -= OutCome2_Toggled;
-            outcome3ToggleSwitch.Toggled -= OutCome3_Toggled;
             pinnacleSportsToggleSwitch.Toggled -= PinnacleSports_Toggled;
             marathonBetToggleSwitch.Toggled -= MarathonBet_Toggled;
             basketballToggleSwitch.Toggled -= Basketball_Toggled;
@@ -119,8 +122,11 @@ namespace DXApplication1.Pages
             volleyballToggleSwitch.Toggled -= Volleyball_Toggled;
             tennisToggleSwitch.Toggled -= Tennis_Toggled;
             hockeyToggleSwitch.Toggled -= Hockey_Toggled;
-            textEditEmail.EditValueChanged -= User_EditValueChanged;
-            textEditPassword.EditValueChanged -= User_EditValueChanged;
+            textEditLoginPinnacle.EditValueChanged -= User_EditValueChanged;
+            textEditPasswordPinnacle.EditValueChanged -= User_EditValueChanged;
+            textEditLoginMarathon.EditValueChanged += User_EditValueChanged;
+            textEditPasswordMarathon.EditValueChanged += User_EditValueChanged;
+            textEditAntiGateCode.EditValueChanged += User_EditValueChanged;
             textEditRate.EditValueChanging -= SpinEditRate_EditValueChanging;
         }
 

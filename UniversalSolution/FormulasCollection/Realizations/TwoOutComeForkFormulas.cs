@@ -72,16 +72,18 @@ namespace FormulasCollection.Realizations
                 {
                     try
                     {
-                        if (eventItem.MatchDateTime.Length > 5) //for all times like "00:00"
-                            pinKey = pinnacle.FirstOrDefault(pinEvent =>
-                                Extentions.GetStringSimilarityForSportTeams(
-                                    eventItem.Event,
-                                    pinEvent.Key,
-                                    true,
-                                    ConvertToDateTimeFromMarathon(eventItem.MatchDateTime),
-                                    pinEvent.Value.MatchDateTime)
-                                >= 85)
-                                .Key;
+                        if (eventItem.MatchDateTime.Length <= 5) //for all times like "00:00"
+                            eventItem.MatchDateTime = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+
+                        pinKey = pinnacle.FirstOrDefault(pinEvent =>
+                            Extentions.GetStringSimilarityForSportTeams(
+                                eventItem.Event,
+                                pinEvent.Key,
+                                true,
+                                ConvertToDateTimeFromMarathon(eventItem.MatchDateTime),
+                                pinEvent.Value.MatchDateTime)
+                            >= 85)
+                            .Key;
 
                     }
                     catch (Exception ex)
@@ -90,14 +92,6 @@ namespace FormulasCollection.Realizations
                         _logger.Error(ex.Message);
                         _logger.Error(ex.StackTrace);
                     }
-                    if (pinKey == null)
-                        pinKey = pinnacle.FirstOrDefault(pinEvent =>
-                            Extentions.GetStringSimilarityInPercent(
-                                eventItem.Event,
-                                pinEvent.Key,
-                                true)
-                            >= 85)
-                            .Key;
                 }
                 if (pinKey == null)
                     continue;

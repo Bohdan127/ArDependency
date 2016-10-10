@@ -177,7 +177,7 @@ namespace DataParser.DefaultRealization
                         var id = Convert.ToInt64(convertToLongOrNull);
 
                         if (!resList.ContainsKey(id))
-                            resList.Add(id, $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"
+                            resList.Add(id, $"{sportEvent.Value["home"]} # {sportEvent.Value["away"]}"
                                 .Replace("\"", ""));
                     }
                 }

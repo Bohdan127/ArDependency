@@ -105,7 +105,7 @@ namespace DataLoader
                     var forks = GetForksDictionary(sportType, pinSport, marSport);
 
                     SaveNewForks(forks, sportType);
-                    // PlaceAllBet(forks, sportType);
+                    PlaceAllBet(forks, sportType);
                 }
 
             }
@@ -150,9 +150,9 @@ namespace DataLoader
                                         $"\"1\":\"{fork.prices[1]}\"," +
                                         $"\"2\":\"{fork.prices[2]}\"," +
                                         $"\"3\":\"{fork.prices[3]}\"," +
-                                        $"\"4\":\"{fork.prices[4]}\"," +$"\"5\":\"{fork.prices[5]}\"}}}}"
+                                        $"\"4\":\"{fork.prices[4]}\"," + $"\"5\":\"{fork.prices[5]}\"}}}}"
                 };
-                marath.MakeBet(bet);
+                // marath.MakeBet(bet);
                 if (fork.Type != ForkType.Saved)
                 {
                     fork.Type = ForkType.Saved;
@@ -192,7 +192,7 @@ namespace DataLoader
                     Stake = recomendedRates.Item2.ConvertToDecimalOrNull().Value,
                     SportId = (int)(SportType)Enum.Parse(typeof(SportType), fork.Sport, false)
                 };
-                pinn.MakeBet(bet);
+                //pinn.MakeBet(bet);
                 if (fork.Type != ForkType.Saved)
                 {
                     fork.Type = ForkType.Saved;
@@ -225,7 +225,7 @@ namespace DataLoader
         {
             Console.WriteLine($"Start Loading {sportType} Events from Marathon");
 
-            var resList = _marathon.Initi(sportType);
+            var resList = _marathon.InitiAsync(sportType).Result;
             Console.WriteLine("Loading finished");
             Console.WriteLine($"Was founded {resList.Count} {sportType} Events from Marathon");
 

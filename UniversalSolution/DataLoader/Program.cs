@@ -53,9 +53,6 @@ namespace DataLoader
             GetUserData();
             StartLoadDictionary();
 
-
-            MarathonParser.WriteToDocument(MarathonParser.winik);
-            MarathonParser.winik = new List<ResultForForks>();
         }
 
         private static void GetUserData()
@@ -228,7 +225,7 @@ namespace DataLoader
         {
             Console.WriteLine($"Start Loading {sportType} Events from Marathon");
 
-            var resList = _marathon.InitiAsync(sportType).Result;
+            var resList = _marathon.Initi(sportType);
             Console.WriteLine("Loading finished");
             Console.WriteLine($"Was founded {resList.Count} {sportType} Events from Marathon");
 

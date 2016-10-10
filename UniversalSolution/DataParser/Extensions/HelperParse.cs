@@ -230,16 +230,28 @@ namespace DataParser.Extensions
             if (team == null) return false;
             else
             {
-                return //!string.IsNullOrEmpty(team.Event)&&
-                      !string.IsNullOrEmpty(team.Type)
-                     && !string.IsNullOrEmpty(team.Coef)
-                     && !string.IsNullOrEmpty(team.EventId)
-                     //&& !string.IsNullOrEmpty(team.League)
-                     //&& !string.IsNullOrEmpty(team.Bookmaker)
-                     //&& !string.IsNullOrEmpty(team.SportType)
-                     && !string.IsNullOrEmpty(team.MatchDateTime)
-                     && team.marathonAutoPlay.CheckFullData();
+                return !string.IsNullOrEmpty(team.Event)
+                      && !string.IsNullOrEmpty(team.Type)
+                      && !string.IsNullOrEmpty(team.Coef)
+                      && !string.IsNullOrEmpty(team.EventId)
+                      && !string.IsNullOrEmpty(team.League)
+                      && !string.IsNullOrEmpty(team.Bookmaker)
+                      && !string.IsNullOrEmpty(team.SportType)
+                      && !string.IsNullOrEmpty(team.MatchDateTime)
+                      && team.marathonAutoPlay.CheckFullData();
             }
         }
+        public static bool Validate(this ResultForForks team)
+        {
+            if (team == null) return false;
+            else
+            {
+                return !string.IsNullOrEmpty(team.EventId)
+                     && !string.IsNullOrEmpty(team.MatchDateTime)
+                     && team.marathonAutoPlay.CheckFullData();
+                     //&& team.AllCoef != null;
+            }
+        }
+
     }
 }

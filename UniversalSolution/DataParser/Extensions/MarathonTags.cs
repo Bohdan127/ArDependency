@@ -45,5 +45,15 @@
         public static readonly string newValueCoef = "data-selection-price";
 
 
+
+
+
+
+        //Fora
+        public static string fora_startTab = "block-market-table-wrapper";
+        public static string fora_nameTab = "name-field";
+        public static string fora_typeCoef = "coeff-handicap"; //+1
+        public static string fora_valueCoef = "data-selection-price";
+
     }
 }

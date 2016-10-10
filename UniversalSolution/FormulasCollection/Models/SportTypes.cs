@@ -32,17 +32,29 @@ namespace FormulasCollection.Models
                 { "X2", "1"},
                 { "1", "X2"},
                 { "2", "1X"},
-                { "X", "12"}
+                { "X", "12"},
+                { "TO","TU"},
+                {"TU","TO" },
+                {"F1","F2"},
+                {"F2","F1"}
             };
             CoefsTennis = new Dictionary<string, string>
             {
                 { "1","2"},
-                { "2","1"}
+                { "2","1"},
+                { "TO","TU"},
+                {"TU","TO" },
+                {"F1","F2"},
+                {"F2","F1"}
             };
             CoefsBasketBall = new Dictionary<string, string>
             {
                 { "1","2"},
-                { "2","1"}
+                { "2","1"},
+                { "TO","TU"},
+                {"TU","TO" },
+                {"F1","F2"},
+                {"F2","F1"}
             };
             CoefsHockey = new Dictionary<string, string>
             {
@@ -51,12 +63,20 @@ namespace FormulasCollection.Models
                 { "X2", "1"},
                 { "1", "X2"},
                 { "2", "1X"},
-                { "X", "12"}
+                { "X", "12"},
+                { "TO","TU"},
+                {"TU","TO" },
+                {"F1","F2"},
+                {"F2","F1"}
             };
             CoefsVolleyBall = new Dictionary<string, string>
             {
                 { "1","2"},
-                { "2","1"}
+                { "2","1"},
+                {"TO","TU"},
+                {"TU","TO"},
+                {"F1","F2"},
+                {"F2","F1"}
             };
         }
 

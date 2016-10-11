@@ -21,6 +21,7 @@ namespace DataParser.DefaultRealization
     {
         #region [Public field]
         public List<ResultForForks> result;
+        public List<ResultForForks> newResult;
         #endregion
 
         #region [Private field]
@@ -31,6 +32,8 @@ namespace DataParser.DefaultRealization
         OpenQA.Selenium.Firefox.FirefoxDriver firefox;
         private string isClick_IdEvent = ".";
         private string RefreshPage = "";
+
+        private List<string> errorReadEvent = null;
         #endregion
 
         #region[Static field]
@@ -64,18 +67,20 @@ namespace DataParser.DefaultRealization
             #endregion
 
             result = new List<ResultForForks>();
+            newResult = new List<ResultForForks>();
+            errorReadEvent = new List<string>();
             // Initi(sportType);
         }
         #endregion
 
         #region [Initi]
-        public async Task<List<ResultForForks>> InitiAsync(SportType sportType)
+        public List<ResultForForks> Initi(SportType sportType)
         {
 
-            this.englishNameTeams_Dictionary = await this.GetEnglishNameTEams(sportType).ConfigureAwait(false);
+            this.englishNameTeams_Dictionary = this.GetEnglishNameTEams(sportType);
             try
             {
-                var result = await GetNameTeamsAndDateAsync(sportType).ConfigureAwait(false);
+                var result = GetNameTeamsAndDateAsync(sportType);
             }
             catch (Exception e)
             {
@@ -91,7 +96,98 @@ namespace DataParser.DefaultRealization
         #endregion
 
         #region [Parse]
-        private async Task<List<ResultForForks>> GetNameTeamsAndDateAsync(SportType sportType)
+        private List<ResultForForks> GetNameTeamsAndDateAsync(SportType sportType)
+        {
+            result.Clear();
+
+            ResultForForks teamToAdd = null;
+
+            //List<string>
+            List<string> list_coeffType = new List<string>();
+
+
+            //string
+            string url = string.Empty;
+            string namefile = string.Empty;
+            //string selectedEvent = string.Empty;
+            string eventid = string.Empty;
+            //string totalOrFora = string.Empty;
+
+            //bool
+            bool isEventID = false;
+
+            DataMarathonForAutoPlays obj = new DataMarathonForAutoPlays();
+            List<ResultForForks> resEvent = null;
+
+
+            UrlAndNameFile(sportType, out url, out namefile);
+            string gotHtml = Html(url);
+            string[] lines = gotHtml.Split('\n');
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].Contains(">Итоги<") || lines[i].Contains(">Итоги.<"))
+                    break;
+                if (lines[i]._Contains(MarathonTags.mainTagForEvent, MarathonTags.newEventID))
+                {
+                    isEventID = true;
+                }
+                if (isEventID)
+                {
+                    string eventID = lines[i].GetEventID();
+                    teamToAdd = new ResultForForks();
+                    teamToAdd.EventId = eventID;
+                    teamToAdd.League = "NON";
+                    teamToAdd.SportType = sportType.ToString();
+                    teamToAdd.Bookmaker = Site.MarathonBet.ToString();
+                    if (englishNameTeams_Dictionary.ContainsKey(teamToAdd.EventId))
+                    {
+                        teamToAdd.Event = englishNameTeams_Dictionary[teamToAdd.EventId].name1 + " - " + englishNameTeams_Dictionary[teamToAdd.EventId].name2;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Event not found!!!    EventID :  " + teamToAdd.EventId);
+                    }
+                    try {
+                        resEvent = FullParse(eventID, teamToAdd, sportType);
+                    }
+                    catch(Exception e)
+                    {
+                        MessageBox.Show("GetNameTeamsAndDateAsync(SportType sportType)\n\n\n if(isEventID) :" + eventID+"\n\n\n i = " + i + "\n\n\n\n" + e.Message + "\n\n\n\n\n" + e.StackTrace);
+                    }
+                    isEventID = false;
+                    eventid = eventID;
+
+                }
+                if (resEvent != null)
+                {
+
+                    ResultForForks newTseamToAdd = teamToAdd;
+                    result.AddRange(resEvent);
+                    //result.Add(newTseamToAdd);
+                    teamToAdd = new ResultForForks();
+                    resEvent = null;
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(eventid))
+                    {
+                        errorReadEvent.Add(sportType.ToString() + " - " + eventid.ToString());
+                    }
+
+                }
+            }
+            try
+            {
+                WriteToDocument(errorReadEvent, "error.txt");
+            }
+            catch
+            {
+                int y = 0;
+            }
+            return result;
+        }
+        private List<ResultForForks> GetNameTeamsAndDateAsync2(SportType sportType)
         {
             result.Clear();
 
@@ -131,7 +227,7 @@ namespace DataParser.DefaultRealization
 
 
             UrlAndNameFile(sportType, out url, out namefile);
-            string gotHtml = await HtmlAsync(url).ConfigureAwait(false);
+            string gotHtml = Html(url);
             string[] lines = gotHtml.Split('\n');
 
             for (int i = 0; i < lines.Length; i++)
@@ -205,7 +301,7 @@ namespace DataParser.DefaultRealization
                             else
                             {
                                 typeCoeff = lines[i].Contains("Меньше") ? "TU" : (lines[i].Contains("Больше") ? "TO" : "NOForaNOTotal");
-                                
+
                             }
                             typeCoeff = typeCoeff.Replace(" ", "");
                             if (!string.IsNullOrEmpty(typeCoeff))
@@ -220,7 +316,7 @@ namespace DataParser.DefaultRealization
                             }
                         }
                     }
-                    
+
 
                     if (isEventID)
                     {
@@ -231,6 +327,7 @@ namespace DataParser.DefaultRealization
                             indexEvent = 0;
                         }
                         teamToAdd.EventId = eventID;
+                        //FullParse(eventID);
                         indexEvent = 0;
                         isTypeCoff = false;
                         isEventID = false;
@@ -278,15 +375,15 @@ namespace DataParser.DefaultRealization
                     if (isValueCoef)
                     {
                         var valueCoeff = lines[i].GetAttribut2();
-                        teamToAdd.Coef = valueCoeff;
+                        //teamToAdd.Coef = valueCoeff;
                         isValueCoef = false;
-                        if (!isFora && !isTotal && string.IsNullOrEmpty(teamToAdd.Type))
+                        /*if (!isFora && !isTotal && string.IsNullOrEmpty(teamToAdd.Type))
                         {
                             indexEvent = (indexEvent >= list_coeffType.Count) ? 0 : indexEvent;
                             var typecoeff = list_coeffType[indexEvent];
-                            teamToAdd.Type = typecoeff;
+                           // teamToAdd.Type = typecoeff;
                             indexEvent++;
-                        }
+                        }*/
                         isValueCoef = false;
                     }
                     if (isFora || isTotal)
@@ -294,8 +391,8 @@ namespace DataParser.DefaultRealization
                         i++;
                         indexEvent = (indexEvent >= list_coeffType.Count) ? 0 : indexEvent;
                         string totalOrFora = lines[i].getValueWithoutStartTags();
-                        var typecoeff = list_coeffType[indexEvent] + totalOrFora.Replace(" ","");
-                        teamToAdd.Type = typecoeff;
+                        var typecoeff = list_coeffType[indexEvent] + totalOrFora.Replace(" ", "");
+                        //teamToAdd.Type = typecoeff;
                         indexEvent++;
                         isFora = false;
                         isTotal = false;
@@ -317,19 +414,21 @@ namespace DataParser.DefaultRealization
                                 MessageBox.Show("Event not found!!!    EventID :  " + teamToAdd.EventId);
                             }
                             var newteamToAdd = teamToAdd;
-                            result.Add(new ResultForForks() {
+                            result.Add(new ResultForForks()
+                            {
                                 Bookmaker = newteamToAdd.Bookmaker,
-                                Type = newteamToAdd.Type,
-                                Coef = newteamToAdd.Coef,
+                                //Type = newteamToAdd.Type,
+                                //Coef = newteamToAdd.Coef,
                                 Event = newteamToAdd.Event,
                                 EventId = newteamToAdd.EventId,
                                 League = newteamToAdd.League,
                                 MatchDateTime = newteamToAdd.MatchDateTime,
                                 marathonAutoPlay = newteamToAdd.marathonAutoPlay,
-                                SportType = newteamToAdd.SportType});
+                                SportType = newteamToAdd.SportType
+                            });
 
-                            teamToAdd.Coef = string.Empty;
-                            teamToAdd.Type = string.Empty;
+                            //teamToAdd.Coef = string.Empty;
+                            // teamToAdd.Type = string.Empty;
                             teamToAdd.marathonAutoPlay = null;
 
                             isTypeCoff = false;
@@ -361,7 +460,444 @@ namespace DataParser.DefaultRealization
             return result;
         }
 
-        private async Task<Dictionary<string, EnglishNameTeams>> GetEnglishNameTEams(SportType sportType)
+        private List<ResultForForks> FullParse(string event_id, ResultForForks teamToAdd, SportType sportType)
+        {
+            //https://www.marathonbet.com/su/events.htm?id=4563829
+
+            string reURL = "https://www.marathonbet.com/su/events.htm?id=" + event_id;
+            string html = Html(reURL);
+            WriteToDocument(html);
+            string[] lines = html.Split('\n');
+            bool isDataToAutoPlay = false;
+            bool isSelectionKey = false;
+            List<DataMarathonForAutoPlays> list = new List<DataMarathonForAutoPlays>();
+            DataMarathonForAutoPlays obj = new DataMarathonForAutoPlays();
+
+            bool isDate = false;
+            bool isTeamName = false;
+            Dictionary<string, string> nameTeams = new Dictionary<string, string>();
+
+            MarathonEvent eventCoefList = new MarathonEvent();
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                try
+                {
+                    if (lines[i].Contains(MarathonTags.newTeamName))
+                    {
+                        isTeamName = true;
+                    }
+                    if (isTeamName)
+                    {
+                        string numberTeam = lines[i - 1].GetAttribut();
+                        var teamName = lines[i].GetAttribut();
+
+                        if (nameTeams.Count >= 2)
+                        {
+
+                            bool ifExistsID = result.Find(x => x.EventId.Equals(event_id)) != null;
+                            bool ifExists = result.Find(x => x.Event.Equals(teamName)) != null;
+                            var findTeams = ifExists ? result.Find(x => x.Event.Equals(teamName)).Event : string.Empty;
+
+                            /*MessageBox.Show("Dublicate teams !!!\n\n\n" + "Teams in dictionaries : \n\n" + "Team1 : " + nameTeams["1"] + "    Team1 : " + nameTeams["2"]
+                                + "\n\n Dublicate : " + teamName + (ifExistsID ? ("\nExistID : " + event_id) : "\n") +
+                                findTeams);*/
+                            break;
+                        }
+
+                        nameTeams.Add(numberTeam[0].ToString(), teamName);
+
+                        isTeamName = false;
+                    }
+
+                    if (lines[i].Contains(MarathonTags.newDate))
+                    {
+                        isDate = true;
+                    }
+                    if (isDate)
+                    {
+                        i++;
+                        teamToAdd.MatchDateTime = lines[i].Replace(" ", "");
+                        isDate = false;
+                    }
+
+                    if (lines[i].Contains(MarathonTags.newAutoplay))
+                    {
+                        isDataToAutoPlay = true;
+                    }
+                    else if (lines[i].Contains(MarathonTags.newSelection_key))
+                    {
+                        isSelectionKey = true;
+                    }
+
+                    if (isDataToAutoPlay || isSelectionKey)
+                    {
+                        if (lines[i].Contains(Tags_DataMarathonForAutoPlays.data_sel))
+                        {
+                            obj = ParseForAutoPlay(lines[i], Tags_DataMarathonForAutoPlays.data_sel);
+                            isDataToAutoPlay = false;
+                        }
+                        else if (lines[i].Contains(Tags_DataMarathonForAutoPlays.data_selection_key))
+                        {
+                            obj = ParseForAutoPlay(lines[i], Tags_DataMarathonForAutoPlays.data_selection_key, obj);
+                            list.Add(obj);
+                            teamToAdd.marathonAutoPlay = obj;
+                            obj = new DataMarathonForAutoPlays();
+                            isSelectionKey = false;
+                        }
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Error in FullParse(string event_id)!!" + "\n\n\n");
+                }
+            }
+            if (sportType.ToString().Equals(SportType.Volleyball.ToString()))
+            {
+                CreateEventVoleyball(list, ref eventCoefList, nameTeams, event_id);
+            }
+            else {
+                CreateEvent(list, ref eventCoefList, nameTeams, event_id);
+            }
+            eventCoefList.EventId = teamToAdd.EventId;
+            eventCoefList.Event = teamToAdd.Event;
+            eventCoefList.League = teamToAdd.League;
+            eventCoefList.MatchDateTime = teamToAdd.MatchDateTime;
+            eventCoefList.Bookmaker = teamToAdd.Bookmaker;
+            eventCoefList.SportType = teamToAdd.SportType;
+
+            return ConvertWith_MarathonEvent_To_ListResultForForks(eventCoefList);
+        }
+        List<string> dictionary = new List<string>() {
+            "Победитель матча",
+            "Победа с учетом форы",
+            "Тотал очков"
+        };
+        private void CreateEvent(List<DataMarathonForAutoPlays> list, ref MarathonEvent teamToAdd, Dictionary<string, string> nameTeams, string eventID)
+        {
+            Dictionary<string, string> mainCoef = new Dictionary<string, string>();
+            List<EventForAutoPlay> Coef = new List<EventForAutoPlay>();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                string type = string.Empty;
+                string value = string.Empty;
+                try
+                {
+                    if (list[i].CheckFullData())
+                    {
+                        switch (list[i].mn)
+                        {
+                            case "Победитель матча":
+                                if (list[i].sn.Equals(nameTeams["1"]))
+                                {
+                                    if (!mainCoef.ContainsKey("1"))
+                                    {
+                                        mainCoef.Add("1", list[i].epr);
+                                        type = "1";
+                                        value = list[i].epr;
+                                    }
+                                }
+                                else if (list[i].sn.Equals(nameTeams["2"]))
+                                {
+                                    if (!mainCoef.ContainsKey("2"))
+                                    {
+                                        mainCoef.Add("2", list[i].epr);
+                                        type = "2";
+                                        value = list[i].epr;
+                                    }
+                                }
+                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                break;
+                            case "Результат":
+                                string r = ChangeFormatResult(list[i].sn, nameTeams);
+                                if (!mainCoef.ContainsKey(r))
+                                {
+                                    mainCoef.Add(r, list[i].epr);
+                                    type = r;
+                                    value = list[i].epr;
+                                }
+                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                break;
+                            case "Победа с учетом форы":
+                                string f = ChangeFormatFora(list[i].sn, nameTeams["1"]);
+                                if (!mainCoef.ContainsKey(f))
+                                {
+                                    mainCoef.Add(f, list[i].epr);
+                                    type = f;
+                                    value = list[i].epr;
+                                }
+                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                break;
+
+                            case "Тотал очков":
+                                string t = ChangeFormatTotals(list[i].sn);
+                                if (!mainCoef.ContainsKey(t))
+                                {
+                                    mainCoef.Add(t, list[i].epr);
+                                    type = t;
+                                    value = list[i].epr;
+                                }
+                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                break;
+
+                            //Tennis
+                            case "Результат матча":
+                                string rr = ChangeFormatResult(list[i].sn, nameTeams);
+                                if (!mainCoef.ContainsKey(rr))
+                                {
+                                    mainCoef.Add(rr, list[i].epr);
+                                    type = rr;
+                                    value = list[i].epr;
+                                }
+                                break;
+                            /*case "Победа с учетом форы по сетам":
+                                string ff = ChangeFormatFora(list[i].sn, nameTeams["1"],eventID);
+                                if (!mainCoef.ContainsKey(ff))
+                                    mainCoef.Add(ff, list[i].epr);
+                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                break;
+                            case "Победа с учетом форы по геймам":
+                                string fff = ChangeFormatFora(list[i].sn, nameTeams["1"],eventID);
+                                if (!mainCoef.ContainsKey(fff))
+                                    mainCoef.Add(fff, list[i].epr);
+                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                break;*/
+                            case "Тотал по сетам":
+                                string tt = ChangeFormatTotals(list[i].sn);
+                                if (!mainCoef.ContainsKey(tt))
+                                {
+                                    mainCoef.Add(tt, list[i].epr);
+                                    type = tt;
+                                    value = list[i].epr;
+                                }
+                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                break;
+                            case "Тотал по геймам":
+                                string ttt = ChangeFormatTotals(list[i].sn);
+                                if (!mainCoef.ContainsKey(ttt))
+                                {
+                                    mainCoef.Add(ttt, list[i].epr);
+                                    type = ttt;
+                                    value = list[i].epr;
+                                }
+                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                break;
+
+                        }
+                        if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(value))
+                        {
+                            Coef.Add(new EventForAutoPlay() { EventID = eventID, Type = type, Value = value, marathonAutoPlay = list[i] });
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Error in CreateEvent(List<DataMarathonForAutoPlays> list)\n\n\n\n"
+                        + "Origin: " + "[" + i + "]" + list[i].sn + " - " + list[i].epr + "\n\n\n" +
+                        mainCoef.Keys.ToString() + " \n\n\n" + mainCoef.Values.ToString());
+                }
+            }
+
+
+            teamToAdd.Coef = Coef;
+            //teamToAdd.AllCoef = mainCoef;
+        }
+
+        private void CreateEventVoleyball(List<DataMarathonForAutoPlays> list, ref MarathonEvent teamToAdd, Dictionary<string, string> nameTeams, string eventID)
+        {
+            Dictionary<string, string> mainCoef = new Dictionary<string, string>();
+
+            List<EventForAutoPlay> Coef = new List<EventForAutoPlay>();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                string type = string.Empty;
+                string value = string.Empty;
+                try
+                {
+                    if (list[i].CheckFullData())
+                    {
+                        switch (list[i].mn)
+                        {
+                            case "Победа в матче":
+                                if (list[i].sn.Equals(nameTeams["1"]))
+                                {
+                                    if (!mainCoef.ContainsKey("1"))
+                                    {
+                                        mainCoef.Add("1", list[i].epr);
+                                        type = "1";
+                                        value = list[i].epr;
+                                    }
+                                }
+                                else if (list[i].sn.Equals(nameTeams["2"]))
+                                {
+                                    if (!mainCoef.ContainsKey("2"))
+                                    {
+                                        mainCoef.Add("2", list[i].epr);
+                                        type = "2";
+                                        value = list[i].epr;
+                                    }
+                                }
+                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                break;
+                            case "Результат":
+                                string r = ChangeFormatResult(list[i].sn, nameTeams);
+                                if (!mainCoef.ContainsKey(r))
+                                {
+                                    mainCoef.Add(r, list[i].epr);
+                                    type = r;
+                                    value = list[i].epr;
+                                }
+                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                break;
+                            case "Победа в матче с учетом форы по очкам":
+                                string f = ChangeFormatFora(list[i].sn, nameTeams["1"]);
+                                if (!mainCoef.ContainsKey(f))
+                                {
+                                    mainCoef.Add(f, list[i].epr);
+                                    type = f;
+                                    value = list[i].epr;
+                                }
+                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                break;
+
+                            case "Тотал матча по очкам":
+                                string t = ChangeFormatTotals(list[i].sn);
+                                if (!mainCoef.ContainsKey(t))
+                                {
+                                    mainCoef.Add(t, list[i].epr);
+                                    type = t;
+                                    value = list[i].epr;
+                                }
+                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                break;
+                            case "Тотал матча по партиям":
+                                string tt = ChangeFormatTotals(list[i].sn);
+                                if (!mainCoef.ContainsKey(tt))
+                                {
+                                    mainCoef.Add(tt, list[i].epr);
+                                    type = tt;
+                                    value = list[i].epr;
+                                }
+                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                break;
+                            case "Тотал 1-й партии по очкам":
+                                string ttt = ChangeFormatTotals(list[i].sn);
+                                if (!mainCoef.ContainsKey(ttt))
+                                {
+                                    mainCoef.Add(ttt, list[i].epr);
+                                    type = ttt;
+                                    value = list[i].epr;
+                                }
+                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                break;
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(value))
+                    {
+                        Coef.Add(new EventForAutoPlay() { EventID = eventID, Type = type, Value = value, marathonAutoPlay = list[i] });
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Error in CreateEvent(List<DataMarathonForAutoPlays> list)\n\n\n\n"
+                        + "Origin: " + "[" + i + "]" + list[i].sn + " - " + list[i].epr + "\n\n\n" +
+                        mainCoef.Keys.ToString() + " \n\n\n" + mainCoef.Values.ToString());
+                }
+            }
+
+
+            //teamToAdd.AllCoef = mainCoef;
+            teamToAdd.Coef = Coef;
+        }
+        private List<ResultForForks> ConvertWith_MarathonEvent_To_ListResultForForks(MarathonEvent eventCoefList)
+        {
+            List<ResultForForks> res = new List<ResultForForks>();
+            for (int i=0;i< eventCoefList.Coef.Count;i++)
+            {
+                try {
+                    res.Add(new ResultForForks()
+                    {
+                        EventId = eventCoefList.EventId,
+                        Event = eventCoefList.Event,
+                        MatchDateTime = eventCoefList.MatchDateTime,
+                        League = eventCoefList.League,
+                        Bookmaker = eventCoefList.Bookmaker,
+                        SportType = eventCoefList.SportType,
+                        Type = eventCoefList.Coef[i].Type,
+                        Coef = eventCoefList.Coef[i].Value,
+                        marathonAutoPlay = eventCoefList.Coef[i].marathonAutoPlay
+                    });
+                }
+                catch
+                {
+                    MessageBox.Show("ConvertWith_MarathonEvent_To_ListResultForForks(MarathonEvent eventCoefList)\n\n\n EventID : " + eventCoefList.EventId.ToString()
+                       +" i : " + i.ToString() );
+                }
+            }
+            return res;
+        }
+
+        private string ChangeFormatFora(string fora, string nameteam, string eventID = "")
+        {
+            string resFora = string.Empty;
+            for (int i = fora.Length - 1; i >= 0; i--)
+            {
+                if (fora[i] != ' ')
+                    resFora = fora[i] + resFora;
+                else break;
+            }
+            string type = string.Empty;
+            if (string.IsNullOrEmpty(eventID))
+            {
+                type = fora.Contains(nameteam) ? "F1" : "F2";
+            }
+            else
+            {
+                string enNameTeam1 = englishNameTeams_Dictionary[eventID].name1;
+                type = (nameteam.Contains(fora) || enNameTeam1.Contains(fora)) ? "F1" : "F2";
+            }
+            return type + resFora;
+        }
+        private string ChangeFormatTotals(string total)
+        {
+            string resFora = string.Empty;
+            for (int i = total.Length - 1; i >= 0; i--)
+            {
+                if (total[i] != ' ')
+                    resFora = total[i] + resFora;
+                else break;
+            }
+            string type = (total.Contains("Меньше") || total.Contains("Under")) ? "TU" : "TO";
+            return type + "(" + resFora + ")";
+        }
+        private string ChangeFormatResult(string result, Dictionary<string, string> nameTeam)
+        {
+            string res = string.Empty;
+            if ((result.Contains("Ничья") || result.Contains("ничья")) && result.Contains(nameTeam["1"])) res = "1X";
+            else if ((result.Contains("Ничья") || result.Contains("ничья")) && result.Contains(nameTeam["2"])) res = "X2";
+            else if (result.Contains(nameTeam["1"]) && result.Contains(nameTeam["2"])) res = "12";
+            else if (result.Contains(nameTeam["1"]))
+                res = "1";
+            else if (result.Contains(nameTeam["2"]))
+                res = "2";
+
+            //tennis
+            else if ((result.Contains("ничья") || (result.Contains("Ничья")) && nameTeam["1"].Contains(result))) res = "1X";
+            else if ((result.Contains("ничья") || (result.Contains("Ничья")) && nameTeam["2"].Contains(result))) res = "X2";
+            else if (nameTeam["1"].Contains(result) && nameTeam["2"].Contains(result)) res = "12";
+            else if (nameTeam["1"].Contains(result))
+                res = "1";
+            else if (nameTeam["2"].Contains(result))
+                res = "2";
+
+            else if (result.Contains("Ничья") || result.Contains("ничья")) res = "X";
+            return res;
+        }
+
+        private Dictionary<string, EnglishNameTeams> GetEnglishNameTEams(SportType sportType)
         {
             var resultEnglishTeams = new Dictionary<string, EnglishNameTeams>();
             var url = "";
@@ -372,7 +908,7 @@ namespace DataParser.DefaultRealization
 
 
             UrlAndNameFile(sportType, out url, out namefile, true);
-            var lines = (await HtmlAsync(url, false).ConfigureAwait(false)).Split('\n');
+            var lines = Html(url, false).Split('\n');
 
 
             foreach (var line in lines)
@@ -508,10 +1044,10 @@ namespace DataParser.DefaultRealization
         #endregion
 
         #region[Page and URL]
-        private static async Task<string> HtmlAsync(string url, bool a = true)
+        private static string Html(string url, bool a = true)
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
-            HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             List<string> result = new List<string>();
             string HTML = null;
             StreamReader reader = null;
@@ -519,7 +1055,7 @@ namespace DataParser.DefaultRealization
             {
                 Debug.Assert(response != null, "response != null");
                 reader = new StreamReader(response.GetResponseStream());
-                HTML = await reader.ReadToEndAsync().ConfigureAwait(false);
+                HTML = reader.ReadToEnd();
                 reader.Close();
             }
             catch (FileLoadException ex)
@@ -605,11 +1141,22 @@ namespace DataParser.DefaultRealization
             }
         }
 
-        private static void WriteToDocument(string html)
+        private static void WriteToDocument(string html, string nameFile = "html__.txt")
         {
-            using (StreamWriter sw = new StreamWriter("html__.txt"))
+            using (StreamWriter sw = new StreamWriter(nameFile))
             {
                 sw.WriteLine(html);
+                sw.Close();
+            }
+        }
+        private static void WriteToDocument(List<string> html, string nameFile = "html__.txt")
+        {
+            using (StreamWriter sw = new StreamWriter(nameFile))
+            {
+                foreach (var i in html)
+                {
+                    sw.WriteLine(i);
+                }
                 sw.Close();
             }
         }
@@ -753,7 +1300,7 @@ namespace DataParser.DefaultRealization
                 Directory.CreateDirectory(path + nameFolderForLigueId);
             }
             path += nameFolderForLigueId + "\\";
-            if (!File.Exists(path + nameFile))
+            /*if (!File.Exists(path + nameFile))
             {
                 path += nameFile;
                 using (StreamWriter sw = new StreamWriter(path))
@@ -761,7 +1308,7 @@ namespace DataParser.DefaultRealization
                     sw.WriteLine(data);
                     sw.Close();
                 }
-            }
+            }*/
         }
         #endregion
 

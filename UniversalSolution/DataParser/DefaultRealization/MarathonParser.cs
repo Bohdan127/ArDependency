@@ -142,7 +142,7 @@ namespace DataParser.DefaultRealization
                     teamToAdd.Bookmaker = Site.MarathonBet.ToString();
                     if (englishNameTeams_Dictionary.ContainsKey(teamToAdd.EventId))
                     {
-                        teamToAdd.Event = englishNameTeams_Dictionary[teamToAdd.EventId].name1 + " - " + englishNameTeams_Dictionary[teamToAdd.EventId].name2;
+                        teamToAdd.Event = englishNameTeams_Dictionary[teamToAdd.EventId].name1 + " # " + englishNameTeams_Dictionary[teamToAdd.EventId].name2;
                     }
                     else
                     {

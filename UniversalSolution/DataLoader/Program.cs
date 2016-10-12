@@ -1,5 +1,4 @@
-﻿using Common.Modules.AntiCaptha;
-using DataParser.DefaultRealization;
+﻿using DataParser.DefaultRealization;
 using DataParser.Enums;
 using DataSaver;
 using DataSaver.Models;
@@ -114,13 +113,27 @@ namespace DataLoader
                     var marSport = LoadMarathon(sportType);
                     var forks = GetForksDictionary(sportType, pinSport, marSport);
 
-                    SaveNewForks(forks, sportType);
+                    ClearForks(forks, sportType);
                     if (forks.Count > 0)
+                    {
                         PlaceAllBet(forks, sportType);
+                        SaveNewForks(forks, sportType);
+                    }
                 }
 
             }
             // ReSharper disable once FunctionNeverReturns
+        }
+
+        private static void ClearForks(List<Fork> forks,
+            SportType sportType)
+        {
+            Console.WriteLine($"Starting remove old forks. Sport type {sportType}");
+            if (forks == null || forks.Count == 0) return;
+
+            var rowsForDelete = _localSaver.MoveForks(forks, sportType);
+            _localSaver.ClearForks(rowsForDelete);
+            Console.WriteLine($"{forks.Count} forks left for place and save. Sport type {sportType}");
         }
 
         private static void PlaceAllBet(List<Fork> forks, SportType sportType)
@@ -130,13 +143,13 @@ namespace DataLoader
             PlaceMarathon(forks);
             PlacePinnacle(forks);
 
-            Console.WriteLine($"Starting place bets for new {forks.Count} forks. Sport type {sportType}");
+            Console.WriteLine($"End placing bet. Was placed {forks.Count(f => f.Type == ForkType.Saved)} forks. Sport type {sportType}");
         }
 
         private static void PlaceMarathon(List<Fork> forks)
         {
-            var marath = new MarathonAccess(new AntiGate(_currentUser.AntiGateCode));
-            marath.Login(_currentUser.LoginMarathon, _currentUser.PasswordMarathon);
+            //var marath = new MarathonAccess(new AntiGate(_currentUser.AntiGateCode));
+            //marath.Login(_currentUser.LoginMarathon, _currentUser.PasswordMarathon);
 
             foreach (var fork in forks.Where(f => f.Profit > 1.0).OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
             {
@@ -163,11 +176,10 @@ namespace DataLoader
                                         $"\"3\":\"{fork.prices[3]}\"," +
                                         $"\"4\":\"{fork.prices[4]}\"," + $"\"5\":\"{fork.prices[5]}\"}}}}"
                 };
-                //todo Release marath.MakeBet(bet);
+                //TODO Release marath.MakeBet(bet);
                 if (fork.Type != ForkType.Saved)
                 {
                     fork.Type = ForkType.Saved;
-                    _localSaver.UpdateFork(fork);
                 }
             }
         }
@@ -203,11 +215,10 @@ namespace DataLoader
                     Stake = recomendedRates.Item2.ConvertToDecimalOrNull().Value,
                     SportId = (int)(SportType)Enum.Parse(typeof(SportType), fork.Sport, false)
                 };
-                //todo Release pinn.MakeBet(bet);
+                //TODO Release pinn.MakeBet(bet);
                 if (fork.Type != ForkType.Saved)
                 {
                     fork.Type = ForkType.Saved;
-                    _localSaver.UpdateFork(fork);
                 }
             }
         }
@@ -227,16 +238,16 @@ namespace DataLoader
         {
             Console.WriteLine($"Start Saving Forks for {sportType} sport type");
 
-            _localSaver.ClearAndInsertForks(forks, sportType);
+            _localSaver.InsertForks(forks);
 
-            Console.WriteLine($"End Saving. {forks.Count} forks was saved");
+            Console.WriteLine($"End Saving.");
         }
 
         private static List<ResultForForks> LoadMarathon(SportType sportType)
         {
             Console.WriteLine($"Start Loading {sportType} Events from Marathon");
 
-            var resList = _marathon.InitiAsync(sportType).Result;
+            var resList = _marathon.Initi(sportType);
             Console.WriteLine("Loading finished");
             Console.WriteLine($"Was founded {resList.Count} {sportType} Events from Marathon");
 

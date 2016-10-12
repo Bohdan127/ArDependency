@@ -1,10 +1,5 @@
 ﻿using DataParser.Enums;
 using FormulasCollection.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FormulasCollection.Helpers
 {
@@ -133,7 +128,7 @@ namespace FormulasCollection.Helpers
                 else
                     return SportTypes.TypeCoefsVolleyBall[typeEventTrim];
             }
-            return null;
+            return string.Empty;
         }
     }
 }

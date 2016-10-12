@@ -8,6 +8,7 @@ using Raven.Abstractions.Data;
 using Raven.Client;
 using Raven.Client.Document;
 using Raven.Client.Linq;
+using Raven.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -188,6 +189,10 @@ namespace DataSaver
 
         protected ForkRow MapJsonDocumentToForkRow(JsonDocument json)
         {
+            var prices = new List<string>();
+            json.DataAsJson.Value<RavenJArray>("prices")
+                .ToList()
+                .ForEach(price => prices.Add(price.Value<string>()));
             var result = new ForkRow
             {
                 Id = json.Key,
@@ -205,7 +210,6 @@ namespace DataSaver
                 League = json.DataAsJson.Value<string>("League"),
                 Type = (ForkType)Enum.Parse(typeof(ForkType), json.DataAsJson.Value<string>("Type")),
                 LineId = json.DataAsJson.Value<string>("LineId"),
-
                 sn = json.DataAsJson.Value<string>("sn"),
                 mn = json.DataAsJson.Value<string>("mn"),
                 ewc = json.DataAsJson.Value<string>("ewc"),
@@ -213,7 +217,7 @@ namespace DataSaver
                 prt = json.DataAsJson.Value<string>("prt"),
                 ewf = json.DataAsJson.Value<string>("ewf"),
                 epr = json.DataAsJson.Value<string>("epr"),
-                prices = json.DataAsJson.Value<List<string>>("prices"),
+                prices = prices,
                 selection_key = json.DataAsJson.Value<string>("selection_key")
             };
             return result;

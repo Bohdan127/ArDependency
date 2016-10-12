@@ -12,7 +12,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DataParser.DefaultRealization
@@ -26,7 +25,6 @@ namespace DataParser.DefaultRealization
 
         #region [Private field]
         private Dictionary<string, EnglishNameTeams> englishNameTeams_Dictionary;
-
         private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private PhantomJSDriver _driver;
         OpenQA.Selenium.Firefox.FirefoxDriver firefox;
@@ -88,10 +86,6 @@ namespace DataParser.DefaultRealization
                 var eee = e.Message;
             }
             return result;
-
-            return new List<ResultForForks>();
-            //I guess it must be cause when Exception is not catch(Exception ex)ed, it will show Exception in program,
-            // so in my opinion it will be better to return zero Forks from this type one
         }
         #endregion
 
@@ -146,14 +140,15 @@ namespace DataParser.DefaultRealization
                     }
                     else
                     {
-                        MessageBox.Show("Event not found!!!    EventID :  " + teamToAdd.EventId);
+                       _logger.Error("Event not found!!!    EventID :  " + teamToAdd.EventId);
                     }
-                    try {
+                    try
+                    {
                         resEvent = FullParse(eventID, teamToAdd, sportType);
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
-                        MessageBox.Show("GetNameTeamsAndDateAsync(SportType sportType)\n\n\n if(isEventID) :" + eventID+"\n\n\n i = " + i + "\n\n\n\n" + e.Message + "\n\n\n\n\n" + e.StackTrace);
+                       _logger.Error("GetNameTeamsAndDateAsync(SportType sportType)\n\n\n if(isEventID) :" + eventID + "\n\n\n i = " + i + "\n\n\n\n" + e.Message + "\n\n\n\n\n" + e.StackTrace);
                     }
                     isEventID = false;
                     eventid = eventID;
@@ -310,7 +305,8 @@ namespace DataParser.DefaultRealization
                                 {
                                     isTypeCoff = false;
                                 }
-                                else {
+                                else
+                                {
                                     list_coeffType.Add(typeCoeff);
                                 }
                             }
@@ -411,7 +407,7 @@ namespace DataParser.DefaultRealization
                             }
                             else
                             {
-                                MessageBox.Show("Event not found!!!    EventID :  " + teamToAdd.EventId);
+                               _logger.Error("Event not found!!!    EventID :  " + teamToAdd.EventId);
                             }
                             var newteamToAdd = teamToAdd;
                             result.Add(new ResultForForks()
@@ -454,7 +450,7 @@ namespace DataParser.DefaultRealization
                          sw.WriteLine("EXCEPTION: " + teamToAdd.EventToString());
                          sw.Close();
                      }*/
-                    MessageBox.Show(e.StackTrace + "/n" + e.Message);
+                   _logger.Error(e.StackTrace + "/n" + e.Message);
                 }
             }
             return result;
@@ -550,14 +546,15 @@ namespace DataParser.DefaultRealization
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Error in FullParse(string event_id)!!" + "\n\n\n");
+                   _logger.Error("Error in FullParse(string event_id)!!" + "\n\n\n");
                 }
             }
             if (sportType.ToString().Equals(SportType.Volleyball.ToString()))
             {
                 CreateEventVoleyball(list, ref eventCoefList, nameTeams, event_id);
             }
-            else {
+            else
+            {
                 CreateEvent(list, ref eventCoefList, nameTeams, event_id);
             }
             eventCoefList.EventId = teamToAdd.EventId;
@@ -608,7 +605,7 @@ namespace DataParser.DefaultRealization
                                         value = list[i].epr;
                                     }
                                 }
-                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                //else_logger.Error(l.sn + " - " + l.epr);
                                 break;
                             case "Результат":
                                 string r = ChangeFormatResult(list[i].sn, nameTeams);
@@ -618,7 +615,7 @@ namespace DataParser.DefaultRealization
                                     type = r;
                                     value = list[i].epr;
                                 }
-                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                //else_logger.Error(l.sn + " - " + l.epr);
                                 break;
                             case "Победа с учетом форы":
                                 string f = ChangeFormatFora(list[i].sn, nameTeams["1"]);
@@ -628,7 +625,7 @@ namespace DataParser.DefaultRealization
                                     type = f;
                                     value = list[i].epr;
                                 }
-                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                //else_logger.Error(l.sn + " - " + l.epr);
                                 break;
 
                             case "Тотал очков":
@@ -639,7 +636,7 @@ namespace DataParser.DefaultRealization
                                     type = t;
                                     value = list[i].epr;
                                 }
-                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                //else_logger.Error(l.sn + " - " + l.epr);
                                 break;
 
                             //Tennis
@@ -656,13 +653,13 @@ namespace DataParser.DefaultRealization
                                 string ff = ChangeFormatFora(list[i].sn, nameTeams["1"],eventID);
                                 if (!mainCoef.ContainsKey(ff))
                                     mainCoef.Add(ff, list[i].epr);
-                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                //else_logger.Error(l.sn + " - " + l.epr);
                                 break;
                             case "Победа с учетом форы по геймам":
                                 string fff = ChangeFormatFora(list[i].sn, nameTeams["1"],eventID);
                                 if (!mainCoef.ContainsKey(fff))
                                     mainCoef.Add(fff, list[i].epr);
-                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                //else_logger.Error(l.sn + " - " + l.epr);
                                 break;*/
                             case "Тотал по сетам":
                                 string tt = ChangeFormatTotals(list[i].sn);
@@ -672,7 +669,7 @@ namespace DataParser.DefaultRealization
                                     type = tt;
                                     value = list[i].epr;
                                 }
-                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                //else_logger.Error(l.sn + " - " + l.epr);
                                 break;
                             case "Тотал по геймам":
                                 string ttt = ChangeFormatTotals(list[i].sn);
@@ -682,7 +679,7 @@ namespace DataParser.DefaultRealization
                                     type = ttt;
                                     value = list[i].epr;
                                 }
-                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                //else_logger.Error(l.sn + " - " + l.epr);
                                 break;
 
                         }
@@ -694,7 +691,7 @@ namespace DataParser.DefaultRealization
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Error in CreateEvent(List<DataMarathonForAutoPlays> list)\n\n\n\n"
+                   _logger.Error("Error in CreateEvent(List<DataMarathonForAutoPlays> list)\n\n\n\n"
                         + "Origin: " + "[" + i + "]" + list[i].sn + " - " + list[i].epr + "\n\n\n" +
                         mainCoef.Keys.ToString() + " \n\n\n" + mainCoef.Values.ToString());
                 }
@@ -740,7 +737,7 @@ namespace DataParser.DefaultRealization
                                         value = list[i].epr;
                                     }
                                 }
-                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                //else_logger.Error(l.sn + " - " + l.epr);
                                 break;
                             case "Результат":
                                 string r = ChangeFormatResult(list[i].sn, nameTeams);
@@ -750,7 +747,7 @@ namespace DataParser.DefaultRealization
                                     type = r;
                                     value = list[i].epr;
                                 }
-                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                //else_logger.Error(l.sn + " - " + l.epr);
                                 break;
                             case "Победа в матче с учетом форы по очкам":
                                 string f = ChangeFormatFora(list[i].sn, nameTeams["1"]);
@@ -760,7 +757,7 @@ namespace DataParser.DefaultRealization
                                     type = f;
                                     value = list[i].epr;
                                 }
-                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                //else_logger.Error(l.sn + " - " + l.epr);
                                 break;
 
                             case "Тотал матча по очкам":
@@ -771,7 +768,7 @@ namespace DataParser.DefaultRealization
                                     type = t;
                                     value = list[i].epr;
                                 }
-                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                //else_logger.Error(l.sn + " - " + l.epr);
                                 break;
                             case "Тотал матча по партиям":
                                 string tt = ChangeFormatTotals(list[i].sn);
@@ -781,7 +778,7 @@ namespace DataParser.DefaultRealization
                                     type = tt;
                                     value = list[i].epr;
                                 }
-                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                //else_logger.Error(l.sn + " - " + l.epr);
                                 break;
                             case "Тотал 1-й партии по очкам":
                                 string ttt = ChangeFormatTotals(list[i].sn);
@@ -791,7 +788,7 @@ namespace DataParser.DefaultRealization
                                     type = ttt;
                                     value = list[i].epr;
                                 }
-                                //else MessageBox.Show(l.sn + " - " + l.epr);
+                                //else_logger.Error(l.sn + " - " + l.epr);
                                 break;
                         }
                     }
@@ -802,7 +799,7 @@ namespace DataParser.DefaultRealization
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Error in CreateEvent(List<DataMarathonForAutoPlays> list)\n\n\n\n"
+                   _logger.Error("Error in CreateEvent(List<DataMarathonForAutoPlays> list)\n\n\n\n"
                         + "Origin: " + "[" + i + "]" + list[i].sn + " - " + list[i].epr + "\n\n\n" +
                         mainCoef.Keys.ToString() + " \n\n\n" + mainCoef.Values.ToString());
                 }
@@ -815,9 +812,10 @@ namespace DataParser.DefaultRealization
         private List<ResultForForks> ConvertWith_MarathonEvent_To_ListResultForForks(MarathonEvent eventCoefList)
         {
             List<ResultForForks> res = new List<ResultForForks>();
-            for (int i=0;i< eventCoefList.Coef.Count;i++)
+            for (int i = 0; i < eventCoefList.Coef.Count; i++)
             {
-                try {
+                try
+                {
                     res.Add(new ResultForForks()
                     {
                         EventId = eventCoefList.EventId,
@@ -833,8 +831,8 @@ namespace DataParser.DefaultRealization
                 }
                 catch
                 {
-                    MessageBox.Show("ConvertWith_MarathonEvent_To_ListResultForForks(MarathonEvent eventCoefList)\n\n\n EventID : " + eventCoefList.EventId.ToString()
-                       +" i : " + i.ToString() );
+                   _logger.Error("ConvertWith_MarathonEvent_To_ListResultForForks(MarathonEvent eventCoefList)\n\n\n EventID : " + eventCoefList.EventId.ToString()
+                       + " i : " + i.ToString());
                 }
             }
             return res;
@@ -1269,7 +1267,7 @@ namespace DataParser.DefaultRealization
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message.ToString());
+               _logger.Error(e.Message.ToString());
                 firefox.Close();
                 firefox = new OpenQA.Selenium.Firefox.FirefoxDriver();
                 return PhantomFireFox(urlTypeSport, id, ligaID, today, sporttype);

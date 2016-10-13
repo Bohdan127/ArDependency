@@ -1,5 +1,4 @@
-﻿using Common.Modules.AntiCaptha;
-using DataParser.DefaultRealization;
+﻿using DataParser.DefaultRealization;
 using DataParser.Enums;
 using DataSaver;
 using DataSaver.Models;
@@ -149,8 +148,8 @@ namespace DataLoader
 
         private static void PlaceMarathon(List<Fork> forks)
         {
-            var marath = new MarathonAccess(new AntiGate(_currentUser.AntiGateCode));
-            marath.Login(_currentUser.LoginMarathon, _currentUser.PasswordMarathon);
+            //var marath = new MarathonAccess(new AntiGate(_currentUser.AntiGateCode));
+            //marath.Login(_currentUser.LoginMarathon, _currentUser.PasswordMarathon);
 
             foreach (var fork in forks.Where(f => f.Profit > 1.0).OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
             {
@@ -177,7 +176,7 @@ namespace DataLoader
                                         $"\"3\":\"{fork.prices[3]}\"," +
                                         $"\"4\":\"{fork.prices[4]}\"," + $"\"5\":\"{fork.prices[5]}\"}}}}"
                 };
-                marath.MakeBet(bet);
+                //TODO release marath.MakeBet(bet);
                 if (fork.Type != ForkType.Saved)
                 {
                     fork.Type = ForkType.Saved;
@@ -216,7 +215,7 @@ namespace DataLoader
                     Stake = recomendedRates.Item2.ConvertToDecimalOrNull().Value,
                     SportId = (int)(SportType)Enum.Parse(typeof(SportType), fork.Sport, false)
                 };
-                pinn.MakeBet(bet);
+                //TODO release pinn.MakeBet(bet);
                 if (fork.Type != ForkType.Saved)
                 {
                     fork.Type = ForkType.Saved;

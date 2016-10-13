@@ -170,6 +170,8 @@ namespace DXApplication1.Models
              */
             _searchPage.MainGridControl.DataSource = null;
             _searchPage.MainGridControl.DataSource = resList;
+            if (_filterPage?.Filter.DefaultRate != null)
+                _searchPage.DefaultRate = _filterPage.Filter.DefaultRate.Value;
             _searchPage.MainGridControl.Refresh();
             _searchPage.EndLoading();
         }

@@ -78,19 +78,19 @@ namespace DataLoader
 
                 _localSaver.AddUserToDb(_currentUser);
             }
-            while (_defRate <= 0.0)
-            {
-                Console.WriteLine("Please enter user default rate (Пожалуйста, введите ставку по умолчанию)");
-                try
-                {
-                    // ReSharper disable once PossibleInvalidOperationException
-                    _defRate = Console.ReadLine().ConvertToDoubleOrNull().Value;
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
+            //while (_defRate <= 0.0)
+            //{
+            //    Console.WriteLine("Please enter user default rate (Пожалуйста, введите ставку по умолчанию)");
+            //    try
+            //    {
+            //        // ReSharper disable once PossibleInvalidOperationException
+            //        _defRate = Console.ReadLine().ConvertToDoubleOrNull().Value;
+            //    }
+            //    catch
+            //    {
+            //        // ignored
+            //    }
+            //}
         }
 
         private static void StartLoadDictionary()
@@ -117,7 +117,7 @@ namespace DataLoader
                     ClearForks(forks, sportType);
                     if (forks.Count > 0)
                     {
-                        PlaceAllBet(forks, sportType);
+                        //PlaceAllBet(forks, sportType);
                         SaveNewForks(forks, sportType);
                     }
                 }

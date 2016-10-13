@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchPage));
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.progressBarControl1 = new DevExpress.XtraEditors.ProgressBarControl();
@@ -54,8 +53,12 @@
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem9 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.imageList1 = new System.Windows.Forms.ImageList();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
+            this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.simpleButton3 = new DevExpress.XtraEditors.SimpleButton();
+            this.layoutControlItem4 = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.progressBarControl1.Properties)).BeginInit();
@@ -68,10 +71,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem9)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
             // 
+            this.dataLayoutControl1.Controls.Add(this.simpleButton3);
+            this.dataLayoutControl1.Controls.Add(this.simpleButton2);
             this.dataLayoutControl1.Controls.Add(this.progressBarControl1);
             this.dataLayoutControl1.Controls.Add(this.simpleButton1);
             this.dataLayoutControl1.Controls.Add(this.gridControl1);
@@ -88,16 +95,16 @@
             this.progressBarControl1.Location = new System.Drawing.Point(24, 363);
             this.progressBarControl1.MinimumSize = new System.Drawing.Size(30, 38);
             this.progressBarControl1.Name = "progressBarControl1";
-            this.progressBarControl1.Size = new System.Drawing.Size(464, 38);
+            this.progressBarControl1.Size = new System.Drawing.Size(244, 38);
             this.progressBarControl1.StyleController = this.dataLayoutControl1;
             this.progressBarControl1.TabIndex = 12;
             // 
             // simpleButton1
             // 
             this.simpleButton1.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton1.Image")));
-            this.simpleButton1.Location = new System.Drawing.Point(492, 363);
+            this.simpleButton1.Location = new System.Drawing.Point(506, 363);
             this.simpleButton1.Name = "simpleButton1";
-            this.simpleButton1.Size = new System.Drawing.Size(127, 38);
+            this.simpleButton1.Size = new System.Drawing.Size(113, 38);
             this.simpleButton1.StyleController = this.dataLayoutControl1;
             this.simpleButton1.TabIndex = 6;
             this.simpleButton1.Text = "Калькулятор";
@@ -272,7 +279,9 @@
             this.layoutControlGroup3.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlItem3,
             this.layoutControlItem1,
-            this.layoutControlItem9});
+            this.layoutControlItem9,
+            this.layoutControlItem2,
+            this.layoutControlItem4});
             this.layoutControlGroup3.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup3.Name = "layoutControlGroup3";
             this.layoutControlGroup3.Size = new System.Drawing.Size(623, 405);
@@ -281,9 +290,9 @@
             // layoutControlItem3
             // 
             this.layoutControlItem3.Control = this.simpleButton1;
-            this.layoutControlItem3.Location = new System.Drawing.Point(468, 321);
+            this.layoutControlItem3.Location = new System.Drawing.Point(482, 321);
             this.layoutControlItem3.Name = "layoutControlItem3";
-            this.layoutControlItem3.Size = new System.Drawing.Size(131, 42);
+            this.layoutControlItem3.Size = new System.Drawing.Size(117, 42);
             this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem3.TextVisible = false;
             // 
@@ -302,7 +311,7 @@
             this.layoutControlItem9.Control = this.progressBarControl1;
             this.layoutControlItem9.Location = new System.Drawing.Point(0, 321);
             this.layoutControlItem9.Name = "layoutControlItem9";
-            this.layoutControlItem9.Size = new System.Drawing.Size(468, 42);
+            this.layoutControlItem9.Size = new System.Drawing.Size(248, 42);
             this.layoutControlItem9.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem9.TextVisible = false;
             // 
@@ -314,6 +323,46 @@
             this.imageList1.Images.SetKeyName(1, "CalculateNow_32x32.png");
             this.imageList1.Images.SetKeyName(2, "Paste_32x32.ico");
             this.imageList1.Images.SetKeyName(3, "PieStylePie_32x32.ico");
+            // 
+            // simpleButton2
+            // 
+            this.simpleButton2.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton2.Image")));
+            this.simpleButton2.Location = new System.Drawing.Point(272, 363);
+            this.simpleButton2.Name = "simpleButton2";
+            this.simpleButton2.Size = new System.Drawing.Size(113, 38);
+            this.simpleButton2.StyleController = this.dataLayoutControl1;
+            this.simpleButton2.TabIndex = 13;
+            this.simpleButton2.Text = "Марафон";
+            this.simpleButton2.Click += new System.EventHandler(this.simpleButton2_Click);
+            // 
+            // layoutControlItem2
+            // 
+            this.layoutControlItem2.Control = this.simpleButton2;
+            this.layoutControlItem2.Location = new System.Drawing.Point(248, 321);
+            this.layoutControlItem2.Name = "layoutControlItem2";
+            this.layoutControlItem2.Size = new System.Drawing.Size(117, 42);
+            this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItem2.TextVisible = false;
+            // 
+            // simpleButton3
+            // 
+            this.simpleButton3.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton3.Image")));
+            this.simpleButton3.Location = new System.Drawing.Point(389, 363);
+            this.simpleButton3.Name = "simpleButton3";
+            this.simpleButton3.Size = new System.Drawing.Size(113, 38);
+            this.simpleButton3.StyleController = this.dataLayoutControl1;
+            this.simpleButton3.TabIndex = 14;
+            this.simpleButton3.Text = "Пиннакл";
+            this.simpleButton3.Click += new System.EventHandler(this.simpleButton3_Click);
+            // 
+            // layoutControlItem4
+            // 
+            this.layoutControlItem4.Control = this.simpleButton3;
+            this.layoutControlItem4.Location = new System.Drawing.Point(365, 321);
+            this.layoutControlItem4.Name = "layoutControlItem4";
+            this.layoutControlItem4.Size = new System.Drawing.Size(117, 42);
+            this.layoutControlItem4.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItem4.TextVisible = false;
             // 
             // SearchPage
             // 
@@ -337,6 +386,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -369,5 +420,9 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemHyperLinkEdit repositoryItemHyperLinkEdit1;
         private DevExpress.XtraGrid.Columns.GridColumn colEventIdFOrMarathon;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEditPercent;
+        private DevExpress.XtraEditors.SimpleButton simpleButton3;
+        private DevExpress.XtraEditors.SimpleButton simpleButton2;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem2;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem4;
     }
 }

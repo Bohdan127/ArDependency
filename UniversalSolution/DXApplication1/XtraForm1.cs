@@ -1,6 +1,7 @@
 ﻿using DataSaver.Models;
 using DevExpress.XtraEditors;
 using DXApplication1.Models;
+using License.Logic;
 using NLog;
 using System;
 using System.IO;
@@ -41,6 +42,14 @@ namespace DXApplication1
             PrepareData();
 
             _pageManager.GetFilterPage(_filter);
+
+
+
+            var licenseForm = new LicenseForm();
+            if (!licenseForm.CheckInstance(_filter.LicenseKey))
+                licenseForm.ShowDialog();
+            if (!licenseForm.IsRegistered)
+                Close();
         }
 
         #endregion CTOR

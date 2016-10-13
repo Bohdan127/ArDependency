@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DataSaver
@@ -37,6 +38,15 @@ namespace DataSaver
             };
             _store.Initialize();
             //_store.DatabaseCommands.DisableAllCaching();
+        }
+
+        public void ClearDatabase()
+        {
+            var indexDefinitions = _store.DatabaseCommands.GetIndexes(0, 100);
+            foreach (var indexDefinition in indexDefinitions)
+            {
+                _store.DatabaseCommands.DeleteByIndex(indexDefinition.Name, new IndexQuery());
+            }
         }
 
         internal IDocumentSession Session

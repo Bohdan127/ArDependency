@@ -1,4 +1,5 @@
-﻿using DataParser.DefaultRealization;
+﻿using Common.Modules.AntiCaptha;
+using DataParser.DefaultRealization;
 using DataParser.Enums;
 using DataSaver;
 using DataSaver.Models;
@@ -13,7 +14,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using Common.Modules.AntiCaptha;
 using ToolsPortable;
 
 namespace DataLoader
@@ -48,7 +48,7 @@ namespace DataLoader
             _calculatorFormulas = new TwoOutComeCalculatorFormulas();
             _pinnacle = new PinnacleSportsDataParser();
             _marathon = new MarathonParser();
-            _localSaver = new LocalSaver();
+            //_localSaver = new LocalSaver();
             _forkFormulas = new TwoOutComeForkFormulas();
             GetUserData();
             StartLoadDictionary();
@@ -57,7 +57,7 @@ namespace DataLoader
 
         private static void GetUserData()
         {
-            _currentUser = _localSaver.FindUser();
+            //_currentUser = _localSaver.FindUser();
             if (_currentUser == null)
             {
                 _currentUser = new User();
@@ -76,7 +76,7 @@ namespace DataLoader
                 Console.WriteLine("Please enter Anti Gate Code");
                 _currentUser.AntiGateCode = Console.ReadLine();
 
-                _localSaver.AddUserToDb(_currentUser);
+                //_localSaver.AddUserToDb(_currentUser);
             }
             while (_defRate <= 0.0)
             {
@@ -114,11 +114,11 @@ namespace DataLoader
                     var marSport = LoadMarathon(sportType);
                     var forks = GetForksDictionary(sportType, pinSport, marSport);
 
-                    ClearForks(forks, sportType);
+                    //ClearForks(forks, sportType);
                     if (forks.Count > 0)
                     {
                         PlaceAllBet(forks, sportType);
-                        SaveNewForks(forks, sportType);
+                        //SaveNewForks(forks, sportType);
                     }
                 }
 

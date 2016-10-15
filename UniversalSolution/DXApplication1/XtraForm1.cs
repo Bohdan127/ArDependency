@@ -44,12 +44,13 @@ namespace DXApplication1
             _pageManager.GetFilterPage(_filter);
 
 
-
             var licenseForm = new LicenseForm();
             if (!licenseForm.CheckInstance(_filter.LicenseKey))
                 licenseForm.ShowDialog();
             if (!licenseForm.IsRegistered)
                 Close();
+            _filter.LicenseKey = licenseForm.LicenseKey;
+
         }
 
         #endregion CTOR

@@ -113,7 +113,7 @@ namespace FormulasCollection.Realizations
                         var fork = new Fork
                         {
                             League = eventItem.League,
-                            MarathonEventId = eventItem.EventId,
+                            MarathonEventId = eventItem.FuulID,
                             PinnacleEventId = pinnacleEvent.EventId,
                             Event = pinKey + "*" + eventItem.Event,
                             TypeFirst = eventItem.Type,

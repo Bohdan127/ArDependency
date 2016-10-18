@@ -256,7 +256,7 @@ namespace SiteAccess.Access
         public bool MakeBet(MarathonBet bet)
         {
             var res = SetBet(bet);
-            if (res.ToString().Contains("ERROR"))
+            if (res != null && res.ToString().Contains("ERROR"))
                 return false;
             return true;
 

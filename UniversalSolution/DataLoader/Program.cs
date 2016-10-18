@@ -1,14 +1,10 @@
-﻿using Common.Modules.AntiCaptha;
-using DataParser.DefaultRealization;
+﻿using DataParser.DefaultRealization;
 using DataParser.Enums;
 using DataSaver;
 using DataSaver.Models;
 using FormulasCollection.Enums;
 using FormulasCollection.Models;
 using FormulasCollection.Realizations;
-using SiteAccess.Access;
-using SiteAccess.Enums;
-using SiteAccess.Model.Bets;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -48,7 +44,7 @@ namespace DataLoader
             _calculatorFormulas = new TwoOutComeCalculatorFormulas();
             _pinnacle = new PinnacleSportsDataParser();
             _marathon = new MarathonParser();
-            //_localSaver = new LocalSaver();
+            _localSaver = new LocalSaver();
             _forkFormulas = new TwoOutComeForkFormulas();
             GetUserData();
             StartLoadDictionary();
@@ -57,7 +53,7 @@ namespace DataLoader
 
         private static void GetUserData()
         {
-            //_currentUser = _localSaver.FindUser();
+            _currentUser = _localSaver.FindUser();
             if (_currentUser == null)
             {
                 _currentUser = new User();
@@ -76,7 +72,7 @@ namespace DataLoader
                 Console.WriteLine("Please enter Anti Gate Code");
                 _currentUser.AntiGateCode = Console.ReadLine();
 
-                //_localSaver.AddUserToDb(_currentUser);
+                _localSaver.AddUserToDb(_currentUser);
             }
             while (_defRate <= 0.0)
             {
@@ -114,11 +110,11 @@ namespace DataLoader
                     var marSport = LoadMarathon(sportType);
                     var forks = GetForksDictionary(sportType, pinSport, marSport);
 
-                    //ClearForks(forks, sportType);
+                    ClearForks(forks, sportType);
                     if (forks.Count > 0)
                     {
                         PlaceAllBet(forks, sportType);
-                        //SaveNewForks(forks, sportType);
+                        SaveNewForks(forks, sportType);
                     }
                 }
 
@@ -149,35 +145,35 @@ namespace DataLoader
 
         private static void PlaceMarathon(List<Fork> forks)
         {
-            var marath = new MarathonAccess(new AntiGate(_currentUser.AntiGateCode));
-            marath.Login(_currentUser.LoginMarathon, _currentUser.PasswordMarathon);
+            //var marath = new MarathonAccess(new AntiGate(_currentUser.AntiGateCode));
+            //marath.Login(_currentUser.LoginMarathon, _currentUser.PasswordMarathon);
 
             foreach (var fork in forks.Where(f => f.Profit > 1.0).OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
             {
-                var recomendedRates = _calculatorFormulas.GetRecommendedRates(_defRate,
-                  fork.CoefFirst.ConvertToDoubleOrNull(),
-                  fork.CoefSecond.ConvertToDoubleOrNull());
-                var bet = new MarathonBet
-                {
-                    Id = fork.MarathonEventId,
-                    Name = fork.Event,
-                    // ReSharper disable once PossibleInvalidOperationException
-                    Stake = recomendedRates.Item1.ConvertToDoubleOrNull().Value,
-                    AddData = $"{{\"sn\":\"{fork.sn}\"," +
-                              $"\"mn\":\"{fork.mn}\"," +
-                              $"\"ewc\":\"{fork.ewc}\"," +
-                              $"\"cid\":{fork.cid}," +
-                              $"\"prt\":\"{fork.prt}\"," +
-                              $"\"ewf\":\"{fork.ewf}\"," +
-                              $"\"epr\":\"{fork.epr}\"," +
-                              "\"prices\"" +
-                                    $":{{\"0\":\"{fork.prices[0]}\"," +
-                                        $"\"1\":\"{fork.prices[1]}\"," +
-                                        $"\"2\":\"{fork.prices[2]}\"," +
-                                        $"\"3\":\"{fork.prices[3]}\"," +
-                                        $"\"4\":\"{fork.prices[4]}\"," + $"\"5\":\"{fork.prices[5]}\"}}}}"
-                };
-                marath.MakeBet(bet);
+                //var recomendedRates = _calculatorFormulas.GetRecommendedRates(_defRate,
+                //  fork.CoefFirst.ConvertToDoubleOrNull(),
+                //  fork.CoefSecond.ConvertToDoubleOrNull());
+                //var bet = new MarathonBet
+                //{
+                //    Id = fork.MarathonEventId,
+                //    Name = fork.Event,
+                //    // ReSharper disable once PossibleInvalidOperationException
+                //    Stake = recomendedRates.Item1.ConvertToDoubleOrNull().Value,
+                //    AddData = $"{{\"sn\":\"{fork.sn}\"," +
+                //              $"\"mn\":\"{fork.mn}\"," +
+                //              $"\"ewc\":\"{fork.ewc}\"," +
+                //              $"\"cid\":{fork.cid}," +
+                //              $"\"prt\":\"{fork.prt}\"," +
+                //              $"\"ewf\":\"{fork.ewf}\"," +
+                //              $"\"epr\":\"{fork.epr}\"," +
+                //              "\"prices\"" +
+                //                    $":{{\"0\":\"{fork.prices[0]}\"," +
+                //                        $"\"1\":\"{fork.prices[1]}\"," +
+                //                        $"\"2\":\"{fork.prices[2]}\"," +
+                //                        $"\"3\":\"{fork.prices[3]}\"," +
+                //                        $"\"4\":\"{fork.prices[4]}\"," + $"\"5\":\"{fork.prices[5]}\"}}}}"
+                //};
+                //marath.MakeBet(bet);
                 if (fork.Type != ForkType.Saved)
                 {
                     fork.Type = ForkType.Saved;
@@ -187,36 +183,36 @@ namespace DataLoader
 
         private static void PlacePinnacle(List<Fork> forks)
         {
-            var pinn = new PinncaleAccess();
-            pinn.Login(_currentUser.LoginPinnacle, _currentUser.PasswordPinnacle);
+            //var pinn = new PinncaleAccess();
+            //pinn.Login(_currentUser.LoginPinnacle, _currentUser.PasswordPinnacle);
 
             //https://www.pinnacle.com/ru/api/manual#pbet
             foreach (var fork in forks.Where(f => f.Profit > 1.0).OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
             {
-                var recomendedRates = _calculatorFormulas.GetRecommendedRates(_defRate,
-                    fork.CoefFirst.ConvertToDoubleOrNull(),
-                    fork.CoefSecond.ConvertToDoubleOrNull());
-                var bet = new PinnacleBet
-                {
-                    AcceptBetterLine = true,
-                    BetType = BetType.MONEYLINE,
-                    Eventid = Convert.ToInt64(fork.PinnacleEventId),
-                    Guid = Guid.NewGuid().ToString(),
-                    OddsFormat = OddsFormat.DECIMAL,
-                    LineId = Convert.ToInt64(fork.LineId),
-                    /*
-                     * This represents the period of the match. For example, for soccer we have:
-                     * 0 - Game
-                     * 1 - 1st Half
-                     * 2 - 2nd Half
-                     */
-                    PeriodNumber = 0,
-                    WinRiskRate = WinRiskType.WIN,
-                    // ReSharper disable once PossibleInvalidOperationException
-                    Stake = recomendedRates.Item2.ConvertToDecimalOrNull().Value,
-                    SportId = (int)(SportType)Enum.Parse(typeof(SportType), fork.Sport, false)
-                };
-                pinn.MakeBet(bet);
+                //var recomendedRates = _calculatorFormulas.GetRecommendedRates(_defRate,
+                //    fork.CoefFirst.ConvertToDoubleOrNull(),
+                //    fork.CoefSecond.ConvertToDoubleOrNull());
+                //var bet = new PinnacleBet
+                //{
+                //    AcceptBetterLine = true,
+                //    BetType = BetType.MONEYLINE,
+                //    Eventid = Convert.ToInt64(fork.PinnacleEventId),
+                //    Guid = Guid.NewGuid().ToString(),
+                //    OddsFormat = OddsFormat.DECIMAL,
+                //    LineId = Convert.ToInt64(fork.LineId),
+                //    /*
+                //     * This represents the period of the match. For example, for soccer we have:
+                //     * 0 - Game
+                //     * 1 - 1st Half
+                //     * 2 - 2nd Half
+                //     */
+                //    PeriodNumber = 0,
+                //    WinRiskRate = WinRiskType.WIN,
+                //    // ReSharper disable once PossibleInvalidOperationException
+                //    Stake = recomendedRates.Item2.ConvertToDecimalOrNull().Value,
+                //    SportId = (int)(SportType)Enum.Parse(typeof(SportType), fork.Sport, false)
+                //};
+                //  pinn.MakeBet(bet);
                 if (fork.Type != ForkType.Saved)
                 {
                     fork.Type = ForkType.Saved;

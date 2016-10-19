@@ -13,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace DataSaver
@@ -98,7 +97,15 @@ namespace DataSaver
 
         public List<ForkRow> MoveForks(List<Fork> forkList, SportType sportType)
         {
-            var forks = GetAllForkRows().Where(fBase => fBase.Sport == sportType.ToString() &&
+            if (forkList == null || forkList.Count == 0)
+                return new List<ForkRow>();
+
+            var savedForks = GetAllForkRows()?.ToList();
+
+            if (savedForks == null || savedForks.Count == 0)
+                return new List<ForkRow>();
+
+            var forks = savedForks.Where(fBase => fBase.Sport == sportType.ToString() &&
                                             fBase.Type == ForkType.Current).ToArray();
             var rowsForDelete = forks.ToList();
             //removing all rows with status Merged from forkList
@@ -130,8 +137,7 @@ namespace DataSaver
 
         public void ClearForks(List<ForkRow> rowsForDelete)
         {
-            if (rowsForDelete == null
-             || rowsForDelete.Count <= 0)
+            if (rowsForDelete == null || rowsForDelete.Count <= 0)
                 return;
             rowsForDelete.ForEach(f =>
                     _store.DatabaseCommands.Delete(f.Id,

@@ -61,7 +61,8 @@ namespace SiteAccess.Access
 
             var data =
                 "schd=false&p=SINGLES&b=" + bet.GetBetData();
-            var jo = UploadJObject("/betslip/placebet.htm".TrueLink(_domain.OriginalString), data);
+            var str = UploadString("/betslip/placebet.htm".TrueLink(_domain.OriginalString), data);
+            var jo = JObject.Parse(str);
             return jo;
         }
 
@@ -182,7 +183,7 @@ namespace SiteAccess.Access
 
             try
             {
-                UploadString("/betslip/add.htm".TrueLink(_domain), data);
+                var res = UploadString("/betslip/add.htm".TrueLink(_domain), data);
             }
             catch (WebException exc)
             {
@@ -207,7 +208,7 @@ namespace SiteAccess.Access
             var data =
                 "schd=false&u=" + bet.Id + "&st=" + bet.Stake + "&ew=false&p=SINGLES&v=falsee";
 
-            UploadString("/betslip/save.htm".TrueLink(_domain), data);
+            var res = UploadString("/betslip/save.htm".TrueLink(_domain), data);
         }
 
         private void Clear()
@@ -256,7 +257,9 @@ namespace SiteAccess.Access
         public bool MakeBet(MarathonBet bet)
         {
             var res = SetBet(bet);
-            if (res != null && res.ToString().Contains("ERROR"))
+            if (res == null)
+                return false;
+            if (res.ToString().Contains("ERROR"))
                 return false;
             return true;
 

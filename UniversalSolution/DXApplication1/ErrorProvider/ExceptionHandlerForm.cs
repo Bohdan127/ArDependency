@@ -28,7 +28,8 @@ namespace DXApplication1.ErrorProvider
         {
             var form = new ExceptionHandlerForm();
 
-            form.StackTrace = ex.StackTrace;
+            form.StackTrace = ex.Message;
+            form.StackTrace += ex.StackTrace;
             form.ShowDialog();
         }
 

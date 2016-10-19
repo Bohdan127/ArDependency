@@ -159,6 +159,10 @@ namespace DataSaver
                 }
             }
             jsonList.RemoveAll(json => !json.Key.Contains("ForkRows/"));
+
+            if (jsonList.Count == 0)
+                return new List<ForkRow>();
+
             var resList = jsonList.Select(MapJsonDocumentToForkRow);
             return resList;
         }
@@ -206,7 +210,7 @@ namespace DataSaver
         protected ForkRow MapJsonDocumentToForkRow(JsonDocument json)
         {
             var prices = new List<string>();
-            json.DataAsJson.Value<RavenJArray>("prices")
+            json.DataAsJson.Value<RavenJArray>("prices")?
                 .ToList()
                 .ForEach(price => prices.Add(price.Value<string>()));
             var result = new ForkRow

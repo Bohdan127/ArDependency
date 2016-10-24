@@ -106,7 +106,7 @@ namespace SiteAccess.Access
 
             SetHeaders();
             Login(_username, _password);
-            responseText = "";
+            
             return ReadResponse(responseText);
         }
 

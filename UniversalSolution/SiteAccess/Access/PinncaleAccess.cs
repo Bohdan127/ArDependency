@@ -19,7 +19,7 @@ namespace SiteAccess.Access
         private string _username, _password, Domain, ApiDomain;
         private WebClient _testCl;
 
-        public PinncaleAccess() : base(null)
+        public PinncaleAccess( ) : base(null)
         {
             Domain = "https://www.pinnacle.com/";
             ApiDomain = "https://api.pinnaclesports.com/v1/bets/place";
@@ -27,7 +27,7 @@ namespace SiteAccess.Access
         }
 
 
-        public PinncaleAccess.Result MakeBet(PinnacleBet bet)
+        public PinncaleAccess.Result MakeBet( PinnacleBet bet )
         {
             string postJson =
             "{\"uniqueRequestId\":\"" + bet.Guid + "\"," +
@@ -41,7 +41,7 @@ namespace SiteAccess.Access
             "\"betType\":\"" + bet.BetType.ToString() + "\"," +
             "\"oddsFormat\":\"" + bet.OddsFormat.ToString() + "\"";
 
-            if (bet.BetType == BetType.TOTAL_POINTS || bet.BetType == BetType.TEAM_TOTAL_POINTS)
+            if(bet.BetType == BetType.TOTAL_POINTS || bet.BetType == BetType.TEAM_TOTAL_POINTS)
             {
                 postJson += ",\"side\":\"" + bet.Side.ToString() + "\"";
             }
@@ -50,22 +50,22 @@ namespace SiteAccess.Access
                 postJson += ",\"team\":\"" + bet.TeamType.ToString() + "\"";
             }
 
-            if (bet.SportId == 3 /*if is baseball*/)
+            if(bet.SportId == 3 /*if is baseball*/)
             {
-                if (bet.Pitcher1MustStart == null || bet.Pitcher2MustStart == null)
+                if(bet.Pitcher1MustStart == null || bet.Pitcher2MustStart == null)
                     throw new ArgumentException("Bet must contains data about pitchers: Pitcher1MustStart or Pitcher2MustStart is null");
 
                 postJson += ",\"pitcher1MustStart\":\"" + bet.Pitcher1MustStart.Value.GetString() + "\"," +
                     "\"Pitcher2MustStart\":\"" + bet.Pitcher2MustStart.Value.GetString() + "\"";
             }
 
-            if (bet.CustomerReference != null)
+            if(bet.CustomerReference != null)
             {
                 postJson += ",\"customerReference\":\"" + bet.CustomerReference + "\"";
 
             }
 
-            if (bet.AlternativeLineId != null)
+            if(bet.AlternativeLineId != null)
             {
                 postJson += ",\"altLineId\":\"" + bet.AlternativeLineId.Value.ToString() + "\"";
             }
@@ -78,41 +78,44 @@ namespace SiteAccess.Access
             try
             {
                 dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
             }
             catch
             {
                 return new Result("");
             }
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            dataStream.Close();
+
 
             HttpWebResponse response;
             try
             {
                 response = (HttpWebResponse)request.GetResponse();
             }
-            catch (WebException ex)
+            catch(WebException ex)
             {
                 response = (HttpWebResponse)ex.Response;
             }
 
             var stream = response.GetResponseStream();
             string responseText;
-            using (var reader = new StreamReader(stream))
+            using(var reader = new StreamReader(stream))
             {
                 responseText = reader.ReadToEnd();
             }
 
-
+            SetHeaders();
+            Login(_username, _password);
+            responseText = "";
             return ReadResponse(responseText);
         }
 
-        private Result ReadResponse(string response)
+        private Result ReadResponse( string response )
         {
             return new Result(response);
         }
 
-        public bool CheckAvailable()
+        public bool CheckAvailable( )
         {
             try
             {
@@ -126,9 +129,10 @@ namespace SiteAccess.Access
         }
 
 
-        public bool Login(string login, string password)
+        public bool Login( string login, string password )
         {
-
+            _username = login;
+            _password = password;
             string credentials = String.Format("{0}:{1}", login, password);
             byte[] bytes = Encoding.UTF8.GetBytes(credentials);
             string base64 = Convert.ToBase64String(bytes);
@@ -139,7 +143,7 @@ namespace SiteAccess.Access
             return true;
         }
 
-        protected override void SetHeaders()
+        protected override void SetHeaders( )
         {
             request = (HttpWebRequest)WebRequest.Create("https://api.pinnaclesports.com/v1/bets/place");
             request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)";
@@ -148,14 +152,14 @@ namespace SiteAccess.Access
             request.ContentType = "application/json; charset=utf-8";
         }
 
-        protected override void Connect()
+        protected override void Connect( )
         {
             throw new NotImplementedException();
         }
 
-        public void SetHeader(string key, string val)
+        public void SetHeader( string key, string val )
         {
-            switch (key)
+            switch(key)
             {
                 case "User-Agent": request.UserAgent = val; break;
                 case "Method": request.Method = val; break;
@@ -166,7 +170,7 @@ namespace SiteAccess.Access
 
         }
 
-        public void SetProxy(IWebProxy proxy)
+        public void SetProxy( IWebProxy proxy )
         {
             request.Proxy = proxy;
         }
@@ -181,23 +185,28 @@ namespace SiteAccess.Access
             public bool? BetterLineWasAccepted;
 
             public bool Success;
-            public Result(string json)
+            public Result( string json )
             {
                 // если будет ошибка, значит прислали NaN или другую нечисть, кроме null
+                try
+                {
+                    var jo = JObject.Parse(json);
+                    if(jo == null)
+                        return;
+                    Price = jo["price"] == null ? (decimal?)null : (decimal?)jo["price"];
+                    BetId = jo["betId"] == null ? (long?)null : (long?)jo["betId"];
+                    GUID = jo["uniqueRequestId"] == null ? null : (string)jo["uniqueRequestId"];
+                    Status = (StatusEnum)Enum.GetNames(typeof(StatusEnum)).ToList().IndexOf((string)jo["status"]);
+                    Error = (ErrorCode)Enum.GetNames(typeof(ErrorCode)).ToList().IndexOf((string)jo["errorCode"]);
+                    BetterLineWasAccepted = ((string)jo["betterLineWasAccepted"])
+                        == null ? (bool?)null : ((string)jo["betterLineWasAccepted"]).ToUpper() == "TRUE";
 
-                var jo = JObject.Parse(json);
-                if (jo == null)
+                    Success = Status.Value == StatusEnum.ACCEPTED;
+                }
+                catch
+                {
                     return;
-                Price = jo["price"] == null ? (decimal?)null : (decimal?)jo["price"];
-                BetId = jo["betId"] == null ? (long?)null : (long?)jo["betId"];
-                GUID = jo["uniqueRequestId"] == null ? null : (string)jo["uniqueRequestId"];
-                Status = (StatusEnum)Enum.GetNames(typeof(StatusEnum)).ToList().IndexOf((string)jo["status"]);
-                Error = (ErrorCode)Enum.GetNames(typeof(ErrorCode)).ToList().IndexOf((string)jo["errorCode"]);
-                BetterLineWasAccepted = ((string)jo["betterLineWasAccepted"])
-                    == null ? (bool?)null : ((string)jo["betterLineWasAccepted"]).ToUpper() == "TRUE";
-
-                Success = Status.Value == StatusEnum.ACCEPTED;
-
+                }
                 #region Response
                 /*
                  "{\"status\":\"ACCEPTED\",\"errorCode\":null,\"betId\":646820646,\"uniqueRequestId\":\"adb78385-9e54-4aad-b9f3-480754ff1ad9\",\"betterLineWasAccepted\":false,\"price\":3.6}"

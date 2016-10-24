@@ -15,7 +15,7 @@ namespace SiteAccess.Access
     public class MarathonAccess : ContentLoader, ISiteAccess<MarathonBet, bool>
     {
         private IAntiCaptcha _ac;
-        public MarathonAccess(IAntiCaptcha anti) : base(null)
+        public MarathonAccess( IAntiCaptcha anti ) : base(null)
         {
             _ac = anti;
             Encoding = Encoding.UTF8;
@@ -23,7 +23,7 @@ namespace SiteAccess.Access
             HomeReq();
         }
 
-        public void HomeReq()
+        public void HomeReq( )
         {
             Headers.Clear();
             Headers["Accept"] = "application/json, text/javascript, */*; q=0.01";
@@ -44,11 +44,18 @@ namespace SiteAccess.Access
             _html = UploadString("/betslip/view/current.htm".TrueLink(_domain), "firstLoad=true");
         }
 
-        public JObject SetBet(MarathonBet bet)
+        public JObject SetBet( MarathonBet bet )
         {
             Clear();
-            Add(bet);
-            Save(bet);
+            try
+            {
+                Add(bet);
+                Save(bet);
+            }
+            catch
+            {
+                return null;
+            }
             Headers["Accept"] = "text/plain, */*; q=0.01";
             Headers["Accept-Language"] = "ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4";
             Headers["User-Agent"] =
@@ -61,12 +68,20 @@ namespace SiteAccess.Access
 
             var data =
                 "schd=false&p=SINGLES&b=" + bet.GetBetData();
-            var str = UploadString("/betslip/placebet.htm".TrueLink(_domain.OriginalString), data);
-            var jo = JObject.Parse(str);
-            return jo;
+
+            try
+            {
+                var str = UploadString("/betslip/placebet.htm".TrueLink(_domain.OriginalString), data);
+                var jo = JObject.Parse(str);
+                return jo;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
-        public JObject SetBetOneClick(MarathonBet bet)
+        public JObject SetBetOneClick( MarathonBet bet )
         {
             Headers["Accept"] = "text/plain, */*; q=0.01";
             Headers["Accept-Language"] = "ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4";
@@ -84,7 +99,7 @@ namespace SiteAccess.Access
             return jo;
         }
 
-        public JObject PlaceTicket(string id)
+        public JObject PlaceTicket( string id )
         {
             Headers["Accept"] = "text/plain, */*; q=0.01";
             Headers["Accept-Language"] = "ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4";
@@ -101,7 +116,7 @@ namespace SiteAccess.Access
             return jo;
         }
 
-        public bool Login(string login, string password)
+        public bool Login( string login, string password )
         {
 
 
@@ -118,24 +133,33 @@ namespace SiteAccess.Access
             var data =
                 $"login={HttpUtility.UrlEncode(login)}&login_password={HttpUtility.UrlEncode(password)}&loginUrl=https%3A%2F%2Fwww.marathonbet.com%3A443%2Fsu%2Flogin.htm";
             var jo = UploadJObject("/login.htm".TrueLink(_domain.OriginalString), data);
+            if(jo == null)
+                return false;
 
-            if ((string)jo["loginResult"] == "FAIL")
+            try
+            {
+                if((string)jo["loginResult"] == "FAIL")
+                {
+                    return false;
+                }
+
+                if((string)jo["loginResult"] == "CAPTCHA_EXPECTED")
+                {
+                    LoginWithCapcha(login, password);
+                }
+
+                SetStateAfterLogin();
+                return true;
+            }
+            catch
             {
                 return false;
             }
-
-            if ((string)jo["loginResult"] == "CAPTCHA_EXPECTED")
-            {
-                LoginWithCapcha(login, password);
-            }
-
-            SetStateAfterLogin();
-            return true;
         }
 
-        private void LoginWithCapcha(string login, string password)
+        private void LoginWithCapcha( string login, string password )
         {
-            while (true)
+            while(true)
             {
                 // Получение капчи
                 Headers.Clear();
@@ -158,16 +182,18 @@ namespace SiteAccess.Access
 
                 var data =
                 $"login={HttpUtility.UrlEncode(login)}&login_password={HttpUtility.UrlEncode(password)}&captcha={res}&loginUrl=https%3A%2F%2Fwww.marathonbet.com%3A443%2Fsu%2Flogin.htm";
+
+
                 var jo = UploadJObject("/login.htm".TrueLink(_domain.OriginalString), data);
 
-                if ((string)jo["loginResult"] != "SUCCESS")
+                if((string)jo["loginResult"] != "SUCCESS")
                     continue;
 
                 break;
             }
         }
 
-        private void Add(MarathonBet bet)
+        private void Add( MarathonBet bet )
         {
             Headers["Accept"] = "text/plain, */*; q=0.01";
             Headers["Accept-Language"] = "ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4";
@@ -181,20 +207,11 @@ namespace SiteAccess.Access
             var data =
                 "ch=" + bet.GetAddData() + "&url=https%3A%2F%2Fwww.marathonbet.com%2Fsu%2Fall-events.htm&ws=true";
 
-            try
-            {
-                var res = UploadString("/betslip/add.htm".TrueLink(_domain), data);
-            }
-            catch (WebException exc)
-            {
-                if (exc.Status != WebExceptionStatus.ConnectFailure)
-                    throw new ArgumentException("Введены неверные данные");
-                else
-                    throw;
-            }
+            UploadString("/betslip/add.htm".TrueLink(_domain), data);
+
         }
 
-        private void Save(MarathonBet bet)
+        private void Save( MarathonBet bet )
         {
             Headers["Accept"] = "text/plain, */*; q=0.01";
             Headers["Accept-Language"] = "ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4";
@@ -208,10 +225,10 @@ namespace SiteAccess.Access
             var data =
                 "schd=false&u=" + bet.Id + "&st=" + bet.Stake + "&ew=false&p=SINGLES&v=falsee";
 
-            var res = UploadString("/betslip/save.htm".TrueLink(_domain), data);
+            UploadString("/betslip/save.htm".TrueLink(_domain), data);
         }
 
-        private void Clear()
+        private void Clear( )
         {
             Headers["Accept"] = "text/plain, */*; q=0.01";
             Headers["Accept-Language"] = "ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4";
@@ -225,7 +242,7 @@ namespace SiteAccess.Access
             UploadString("/betslip/clear.htm".TrueLink(_domain), "");
         }
 
-        private void SetStateAfterLogin()
+        private void SetStateAfterLogin( )
         {
             Headers["Accept"] = "*/*";
             Headers["Accept-Language"] = "ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4";
@@ -240,7 +257,7 @@ namespace SiteAccess.Access
             UploadString("/betslip/updatebetplacingmode.htm".TrueLink(_domain), data);
         }
 
-        private Int64 GetTime()
+        private Int64 GetTime( )
         {
             Int64 retval = 0;
             var st = new DateTime(1970, 1, 1);
@@ -249,17 +266,17 @@ namespace SiteAccess.Access
             return retval;
         }
 
-        public bool CheckAvailable()
+        public bool CheckAvailable( )
         {
             throw new NotImplementedException();
         }
 
-        public bool MakeBet(MarathonBet bet)
+        public bool MakeBet( MarathonBet bet )
         {
             var res = SetBet(bet);
-            if (res == null)
+            if(res == null)
                 return false;
-            if (res.ToString().Contains("ERROR"))
+            if(res.ToString().Contains("ERROR"))
                 return false;
             return true;
 
@@ -309,12 +326,12 @@ namespace SiteAccess.Access
             #endregion
         }
 
-        public void SetHeader(string key, string val)
+        public void SetHeader( string key, string val )
         {
             Headers[key] = val;
         }
 
-        public void SetProxy(IWebProxy proxy)
+        public void SetProxy( IWebProxy proxy )
         {
             Proxy = proxy as WebProxy;
         }

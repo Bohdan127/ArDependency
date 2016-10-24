@@ -24,11 +24,9 @@ namespace FormulasCollection.Realizations
 
         public bool CheckIsFork(double? coef1, double? coef2, ResultForForks marEvent, ResultForForksDictionary pinEvent)
         {
-            if (coef1 == null || coef2 == null)
-                return false;
+            if (coef1 == null || coef2 == null) return false;
+
             return GetProfit(coef1.Value, coef2.Value) > 0;
-
-
         }
 
         private double GetProfit(double coef1,
@@ -97,10 +95,6 @@ namespace FormulasCollection.Realizations
                     continue;
                 if (!_pinKeyCache.ContainsKey(eventItem.Event))
                     _pinKeyCache.Add(eventItem.Event, pinKey);
-                if (CheckIsMustToBeRevert(eventItem.Event,
-                    pinKey))
-                    RevertValues(pinnacle,
-                        pinKey);
 
                 var pinnacleEvent = pinnacle[pinKey];
                 try
@@ -115,15 +109,15 @@ namespace FormulasCollection.Realizations
                             League = eventItem.League,
                             MarathonEventId = eventItem.FuulID,
                             PinnacleEventId = pinnacleEvent.EventId,
-                            Event = pinKey + "*" + eventItem.Event,
+                            Event = string.Empty,
                             TypeFirst = eventItem.Type,
                             CoefFirst = eventItem.Coef,
                             TypeSecond = pinEventKey.ToString(CultureInfo.InvariantCulture),
                             CoefSecond = pinnacleEvent.TypeCoefDictionary[pinEventKey].ToString(CultureInfo.InvariantCulture),
                             Sport = eventItem.SportType,
                             MatchDateTime = pinnacleEvent.MatchDateTime.ToString(CultureInfo.CurrentCulture),
-                            BookmakerFirst = "https://www.marathonbet.com/",
-                            BookmakerSecond = "http://www.pinnaclesports.com/",
+                            BookmakerFirst = pinKey,
+                            BookmakerSecond = eventItem.Event,
                             Type = ForkType.Current,
                             LineId = pinnacleEvent.TypeLineIdDictionary[pinEventKey],
                             Profit = GetProfit(Convert.ToDouble(eventItem.Coef),
@@ -155,6 +149,7 @@ namespace FormulasCollection.Realizations
 
         private DateTime ConvertToDateTimeFromMarathon(string matchDateTime)
         {
+            //"20апр201714:00"
             DateTime tmpDateTime;
             if (DateTime.TryParse(matchDateTime,
                 out tmpDateTime))
@@ -212,8 +207,7 @@ namespace FormulasCollection.Realizations
                 CultureInfo.CurrentCulture);
         }
 
-        private void RevertValues(Dictionary<string, ResultForForksDictionary> pinnacle,
-            string pinKey)
+        private void RevertValues(Dictionary<string, ResultForForksDictionary> pinnacle, string pinKey)
         {
             var pin = pinnacle[pinKey];
             var tmpDic = new Dictionary<string, double>();
@@ -254,7 +248,8 @@ namespace FormulasCollection.Realizations
             {
                 _logger.Error(ex.Message);
                 _logger.Error(ex.StackTrace);
-                return null;}
+                return null;
+            }
         }
     }
 }

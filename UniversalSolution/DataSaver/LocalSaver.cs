@@ -109,15 +109,16 @@ namespace DataSaver
                                             fBase.Type == ForkType.Current).ToArray();
             var rowsForDelete = forks.ToList();
             //removing all rows with status Merged from forkList
-            foreach (var fBase in forks)
-            {
-                var fork = forkList.FirstOrDefault(fNew => IsSameFork(fNew, fBase));
-                if (fork == null)
-                    continue;
-                forkList.Remove(fork);
-                rowsForDelete.Remove(fBase);
-            }
-            Session.SaveChanges();
+            // 24.10.2016 - all Current rows will be always deleted and inserted one more time because it is probably less than 1% of profit
+            //foreach (var fBase in forks)
+            //{
+            //    var fork = forkList.FirstOrDefault(fNew => IsSameFork(fNew, fBase));
+            //    if (fork == null)
+            //        continue;
+            //    forkList.Remove(fork);
+            //    rowsForDelete.Remove(fBase);
+            //}
+            //Session.SaveChanges();
             return rowsForDelete;
         }
 

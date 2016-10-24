@@ -163,7 +163,7 @@
             // 
             // colTeams
             // 
-            this.colTeams.Caption = "Команды";
+            this.colTeams.Caption = "Время Ставки";
             this.colTeams.FieldName = "Event";
             this.colTeams.Name = "colTeams";
             this.colTeams.OptionsColumn.ReadOnly = true;

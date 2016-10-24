@@ -1,19 +1,19 @@
-﻿using DataParser.DefaultRealization;
+﻿using Common.Modules.AntiCaptha;
+using DataParser.DefaultRealization;
 using DataParser.Enums;
 using DataSaver;
 using DataSaver.Models;
 using FormulasCollection.Enums;
 using FormulasCollection.Models;
 using FormulasCollection.Realizations;
+using SiteAccess.Access;
+using SiteAccess.Enums;
+using SiteAccess.Model.Bets;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using Common.Modules.AntiCaptha;
-using SiteAccess.Access;
-using SiteAccess.Enums;
-using SiteAccess.Model.Bets;
 using ToolsPortable;
 
 namespace DataLoader

@@ -149,11 +149,17 @@ namespace FormulasCollection.Realizations
 
         private DateTime ConvertToDateTimeFromMarathon(string matchDateTime)
         {
-            //"20апр201714:00"
             DateTime tmpDateTime;
             if (DateTime.TryParse(matchDateTime,
                 out tmpDateTime))
                 return tmpDateTime;
+            var year = 2000;
+            //its for "20апр201714:00" types of time
+            if (matchDateTime.Length == "20апр201714:00".Length)
+            {
+                year = Convert.ToInt32(matchDateTime.Substring(5, 4));
+                matchDateTime = matchDateTime.Remove(5, 4);
+            }
             var day = matchDateTime.Substring(0, 2);
             string month;
             switch (matchDateTime.Substring(2, 3))
@@ -199,7 +205,9 @@ namespace FormulasCollection.Realizations
                     break;
             }
             var time = matchDateTime.Substring(5);
-            var fullTime = $"{day}/{month}/{DateTime.Now.Year - 2000} {time}";
+            var fullTime = year != 2000
+                           ? $"{day}/{month}/{year - 2000} {time}"
+                           : $"{day}/{month}/{DateTime.Now.Year - 2000} {time}";
             var timeFormat = "dd/MM/yy HH:mm";
 
             return DateTime.ParseExact(fullTime,

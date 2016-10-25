@@ -31,6 +31,8 @@ namespace DataParser.DefaultRealization
         private string isClick_IdEvent = ".";
         private string RefreshPage = "";
 
+        
+
         private List<string> errorReadEvent = null;
         #endregion
 
@@ -69,6 +71,11 @@ namespace DataParser.DefaultRealization
             errorReadEvent = new List<string>();
             // Initi(sportType);
         }
+
+        public MarathonParser(SportType sportType)
+        {
+
+        }
         #endregion
 
         #region [Initi]
@@ -89,7 +96,84 @@ namespace DataParser.DefaultRealization
         }
         #endregion
 
+        #region [Load Event for ID]
+        public List<ResultForForks> LoadEvent(string eventID, SportType sportType, Dictionary<string, EnglishNameTeams> englishNameTeams_Dictionary)
+        {
+            ResultForForks teamToAdd = null;
+
+            DataMarathonForAutoPlays obj = new DataMarathonForAutoPlays();
+            List<ResultForForks> resEvent = null;
+            teamToAdd = new ResultForForks();
+            teamToAdd.EventId = eventID;
+            teamToAdd.League = "NON";
+            teamToAdd.SportType = sportType.ToString();
+            teamToAdd.Bookmaker = Site.MarathonBet.ToString();
+            if (englishNameTeams_Dictionary.ContainsKey(teamToAdd.EventId))
+            {
+                teamToAdd.Event = englishNameTeams_Dictionary[teamToAdd.EventId].name1 + " # " + englishNameTeams_Dictionary[teamToAdd.EventId].name2;
+            }
+            else
+            {
+                _logger.Error("Event not found!!!    EventID :  " + teamToAdd.EventId);
+            }
+            try
+            {
+                resEvent = FullParse(eventID, teamToAdd, sportType);
+            }
+            catch (Exception e)
+            {
+                _logger.Error("GetNameTeamsAndDateAsync(SportType sportType)\n\n\n if(isEventID) :" + eventID + "\n\n\n\n" + e.Message + "\n\n\n\n\n" + e.StackTrace);
+            }
+            return resEvent;
+        }
+        public List<string> LoadID(SportType sportType)
+        {
+            List<string> ListIDforSelectedSport = new List<string>();
+            //string
+            string url = string.Empty;
+            string namefile = string.Empty;
+            //string selectedEvent = string.Empty;
+            string eventid = string.Empty;
+            //string totalOrFora = string.Empty;
+
+            //bool
+            bool isEventID = false;
+
+
+            UrlAndNameFile(sportType, out url, out namefile);
+            string gotHtml = Html(url);
+            string[] lines = gotHtml.Split('\n');
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].Contains(">Итоги<") || lines[i].Contains(">Итоги.<"))
+                    break;
+                if (lines[i]._Contains(MarathonTags.mainTagForEvent, MarathonTags.newEventID))
+                {
+                    isEventID = true;
+                }
+                if (isEventID)
+                {
+                    string eventID = lines[i].GetEventID();
+                    try
+                    {
+                        ListIDforSelectedSport.Add(eventID);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.Error("GetNameTeamsAndDateAsync(SportType sportType)\n\n\n if(isEventID) :" + eventID + "\n\n\n i = " + i + "\n\n\n\n" + e.Message + "\n\n\n\n\n" + e.StackTrace);
+                    }
+                    isEventID = false;
+                    eventid = eventID;
+
+                }
+            }
+            return ListIDforSelectedSport;
+        }
+        #endregion
+
         #region [Parse]
+
         private List<ResultForForks> GetNameTeamsAndDateAsync(SportType sportType)
         {
             result.Clear();
@@ -140,7 +224,7 @@ namespace DataParser.DefaultRealization
                     }
                     else
                     {
-                       _logger.Error("Event not found!!!    EventID :  " + teamToAdd.EventId);
+                        _logger.Error("Event not found!!!    EventID :  " + teamToAdd.EventId);
                     }
                     try
                     {
@@ -148,7 +232,7 @@ namespace DataParser.DefaultRealization
                     }
                     catch (Exception e)
                     {
-                       _logger.Error("GetNameTeamsAndDateAsync(SportType sportType)\n\n\n if(isEventID) :" + eventID + "\n\n\n i = " + i + "\n\n\n\n" + e.Message + "\n\n\n\n\n" + e.StackTrace);
+                        _logger.Error("GetNameTeamsAndDateAsync(SportType sportType)\n\n\n if(isEventID) :" + eventID + "\n\n\n i = " + i + "\n\n\n\n" + e.Message + "\n\n\n\n\n" + e.StackTrace);
                     }
                     isEventID = false;
                     eventid = eventID;
@@ -407,7 +491,7 @@ namespace DataParser.DefaultRealization
                             }
                             else
                             {
-                               _logger.Error("Event not found!!!    EventID :  " + teamToAdd.EventId);
+                                _logger.Error("Event not found!!!    EventID :  " + teamToAdd.EventId);
                             }
                             var newteamToAdd = teamToAdd;
                             result.Add(new ResultForForks()
@@ -450,7 +534,7 @@ namespace DataParser.DefaultRealization
                          sw.WriteLine("EXCEPTION: " + teamToAdd.EventToString());
                          sw.Close();
                      }*/
-                   _logger.Error(e.StackTrace + "/n" + e.Message);
+                    _logger.Error(e.StackTrace + "/n" + e.Message);
                 }
             }
             return result;
@@ -546,7 +630,7 @@ namespace DataParser.DefaultRealization
                 }
                 catch (Exception e)
                 {
-                   _logger.Error("Error in FullParse(string event_id)!!" + "\n\n\n");
+                    _logger.Error("Error in FullParse(string event_id)!!" + "\n\n\n");
                 }
             }
             if (sportType.ToString().Equals(SportType.Volleyball.ToString()))
@@ -691,9 +775,9 @@ namespace DataParser.DefaultRealization
                 }
                 catch (Exception e)
                 {
-                   _logger.Error("Error in CreateEvent(List<DataMarathonForAutoPlays> list)\n\n\n\n"
-                        + "Origin: " + "[" + i + "]" + list[i].sn + " - " + list[i].epr + "\n\n\n" +
-                        mainCoef.Keys.ToString() + " \n\n\n" + mainCoef.Values.ToString());
+                    _logger.Error("Error in CreateEvent(List<DataMarathonForAutoPlays> list)\n\n\n\n"
+                         + "Origin: " + "[" + i + "]" + list[i].sn + " - " + list[i].epr + "\n\n\n" +
+                         mainCoef.Keys.ToString() + " \n\n\n" + mainCoef.Values.ToString());
                 }
             }
 
@@ -799,9 +883,9 @@ namespace DataParser.DefaultRealization
                 }
                 catch (Exception e)
                 {
-                   _logger.Error("Error in CreateEvent(List<DataMarathonForAutoPlays> list)\n\n\n\n"
-                        + "Origin: " + "[" + i + "]" + list[i].sn + " - " + list[i].epr + "\n\n\n" +
-                        mainCoef.Keys.ToString() + " \n\n\n" + mainCoef.Values.ToString());
+                    _logger.Error("Error in CreateEvent(List<DataMarathonForAutoPlays> list)\n\n\n\n"
+                         + "Origin: " + "[" + i + "]" + list[i].sn + " - " + list[i].epr + "\n\n\n" +
+                         mainCoef.Keys.ToString() + " \n\n\n" + mainCoef.Values.ToString());
                 }
             }
 
@@ -831,8 +915,8 @@ namespace DataParser.DefaultRealization
                 }
                 catch
                 {
-                   _logger.Error("ConvertWith_MarathonEvent_To_ListResultForForks(MarathonEvent eventCoefList)\n\n\n EventID : " + eventCoefList.EventId.ToString()
-                       + " i : " + i.ToString());
+                    _logger.Error("ConvertWith_MarathonEvent_To_ListResultForForks(MarathonEvent eventCoefList)\n\n\n EventID : " + eventCoefList.EventId.ToString()
+                        + " i : " + i.ToString());
                 }
             }
             return res;
@@ -895,7 +979,7 @@ namespace DataParser.DefaultRealization
             return res;
         }
 
-        private Dictionary<string, EnglishNameTeams> GetEnglishNameTEams(SportType sportType)
+        public Dictionary<string, EnglishNameTeams> GetEnglishNameTEams(SportType sportType)
         {
             var resultEnglishTeams = new Dictionary<string, EnglishNameTeams>();
             var url = "";
@@ -1267,7 +1351,7 @@ namespace DataParser.DefaultRealization
             }
             catch (Exception e)
             {
-               _logger.Error(e.Message.ToString());
+                _logger.Error(e.Message.ToString());
                 firefox.Close();
                 firefox = new OpenQA.Selenium.Firefox.FirefoxDriver();
                 return PhantomFireFox(urlTypeSport, id, ligaID, today, sporttype);

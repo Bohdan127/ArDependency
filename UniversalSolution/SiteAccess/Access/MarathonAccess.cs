@@ -3,6 +3,7 @@ using Common.Core.Helpers;
 using Common.Core.Parsing;
 using Common.Modules.AntiCaptha;
 using Newtonsoft.Json.Linq;
+using NLog;
 using SiteAccess.Model;
 using SiteAccess.Model.Bets;
 using System;
@@ -15,6 +16,9 @@ namespace SiteAccess.Access
     public class MarathonAccess : ContentLoader, ISiteAccess<MarathonBet, bool>
     {
         private IAntiCaptcha _ac;
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
+        private static int countAttemptToLogin = 5;
+
         public MarathonAccess( IAntiCaptcha anti ) : base(null)
         {
             _ac = anti;
@@ -52,8 +56,9 @@ namespace SiteAccess.Access
                 Add(bet);
                 Save(bet);
             }
-            catch
+            catch (Exception e)
             {
+                _logger.Error(e, $"Marathon access, can't add or save bet", bet);
                 return null;
             }
             Headers["Accept"] = "text/plain, */*; q=0.01";
@@ -75,8 +80,9 @@ namespace SiteAccess.Access
                 var jo = JObject.Parse(str);
                 return jo;
             }
-            catch
+            catch(Exception e)
             {
+                _logger.Error(e, $"Marathon access, can't place bet", bet);
                 return null;
             }
         }
@@ -134,12 +140,16 @@ namespace SiteAccess.Access
                 $"login={HttpUtility.UrlEncode(login)}&login_password={HttpUtility.UrlEncode(password)}&loginUrl=https%3A%2F%2Fwww.marathonbet.com%3A443%2Fsu%2Flogin.htm";
             var jo = UploadJObject("/login.htm".TrueLink(_domain.OriginalString), data);
             if(jo == null)
+            {
+                _logger.Error("Marathon access, Answer from server was null, when login");
                 return false;
+            }
 
             try
             {
                 if((string)jo["loginResult"] == "FAIL")
                 {
+                    _logger.Error("Marathon access, login result is FAIL");
                     return false;
                 }
 
@@ -159,7 +169,7 @@ namespace SiteAccess.Access
 
         private void LoginWithCapcha( string login, string password )
         {
-            while(true)
+            for(int i = 0; i < countAttemptToLogin; i++)
             {
                 // Получение капчи
                 Headers.Clear();
@@ -187,7 +197,10 @@ namespace SiteAccess.Access
                 var jo = UploadJObject("/login.htm".TrueLink(_domain.OriginalString), data);
 
                 if((string)jo["loginResult"] != "SUCCESS")
+                {
+                    _logger.Error("Marathon access, can't login with captcha in " + (i + 1) + "attempt.");
                     continue;
+                }
 
                 break;
             }
@@ -275,9 +288,16 @@ namespace SiteAccess.Access
         {
             var res = SetBet(bet);
             if(res == null)
+            {
+                _logger.Error("Marathon access, place bet failed due to previous errors.", bet);
                 return false;
+            }
             if(res.ToString().Contains("ERROR"))
+            {
+                _logger.Error("Marathon access, place bet result is ERROR.", res);
                 return false;
+            }
+            _logger.Info<MarathonBet>("Place bet success", bet);
             return true;
 
 

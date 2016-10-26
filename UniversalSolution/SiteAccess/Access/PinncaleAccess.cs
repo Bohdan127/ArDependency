@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
-
+using NLog;
 using SiteAccess.Enums;
 using SiteAccess.Helpers;
 using SiteAccess.Model.Bets;
@@ -18,12 +18,14 @@ namespace SiteAccess.Access
         private HttpWebRequest request;
         private string _username, _password, Domain, ApiDomain;
         private WebClient _testCl;
+        private static Logger _logger;
 
         public PinncaleAccess( ) : base(null)
         {
             Domain = "https://www.pinnacle.com/";
             ApiDomain = "https://api.pinnaclesports.com/v1/bets/place";
             _testCl = new WebClient();
+            _logger = LogManager.GetCurrentClassLogger();
         }
 
 
@@ -83,6 +85,7 @@ namespace SiteAccess.Access
             }
             catch
             {
+                _logger.Error("Pinnacle access, Writing request stream was failed");
                 return new Result("");
             }
 
@@ -94,6 +97,7 @@ namespace SiteAccess.Access
             }
             catch(WebException ex)
             {
+                _logger.Error("Pinnacle access, Error while get response");
                 response = (HttpWebResponse)ex.Response;
             }
 

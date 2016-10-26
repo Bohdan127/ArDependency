@@ -149,8 +149,8 @@ namespace DataLoader
 
         private static void PlaceMarathon(List<Fork> forks)
         {
-            var marath = new MarathonAccess(new AntiGate(_currentUser.AntiGateCode));
-            marath.Login(_currentUser.LoginMarathon, _currentUser.PasswordMarathon);
+            //var marath = new MarathonAccess(new AntiGate(_currentUser.AntiGateCode));
+            //marath.Login(_currentUser.LoginMarathon, _currentUser.PasswordMarathon);
 
             foreach (var fork in forks.Where(f => f.Profit > 1.0).OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
             {
@@ -177,7 +177,7 @@ namespace DataLoader
                                         $"\"3\":\"{fork.prices[3]}\"," +
                                         $"\"4\":\"{fork.prices[4]}\"," + $"\"5\":\"{fork.prices[5]}\"}}}}"
                 };
-                marath.MakeBet(bet);
+                //marath.MakeBet(bet);
                 if (fork.Type != ForkType.Saved)
                 {
                     fork.Type = ForkType.Saved;
@@ -187,8 +187,8 @@ namespace DataLoader
 
         private static void PlacePinnacle(List<Fork> forks)
         {
-            var pinn = new PinncaleAccess();
-            pinn.Login(_currentUser.LoginPinnacle, _currentUser.PasswordPinnacle);
+            //var pinn = new PinncaleAccess();
+            //pinn.Login(_currentUser.LoginPinnacle, _currentUser.PasswordPinnacle);
 
             //https://www.pinnacle.com/ru/api/manual#pbet
             foreach (var fork in forks.Where(f => f.Profit > 1.0).OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
@@ -216,7 +216,7 @@ namespace DataLoader
                     Stake = recomendedRates.Item2.ConvertToDecimalOrNull().Value,
                     SportId = (int)(SportType)Enum.Parse(typeof(SportType), fork.Sport, false)
                 };
-                pinn.MakeBet(bet);
+                //pinn.MakeBet(bet);
                 if (fork.Type != ForkType.Saved)
                 {
                     fork.Type = ForkType.Saved;
@@ -248,7 +248,7 @@ namespace DataLoader
         {
             Console.WriteLine($"Start Loading {sportType} Events from Marathon");
 
-            var resList = _marathon.Initi(sportType);
+            var resList = _marathon.InitiMultiThread(sportType);
             Console.WriteLine("Loading finished");
             Console.WriteLine($"Was founded {resList.Count} {sportType} Events from Marathon");
 

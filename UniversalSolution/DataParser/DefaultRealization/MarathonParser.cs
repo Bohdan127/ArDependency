@@ -10,9 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
-using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace DataParser.DefaultRealization
 {
@@ -31,7 +32,7 @@ namespace DataParser.DefaultRealization
         private string isClick_IdEvent = ".";
         private string RefreshPage = "";
 
-        
+
 
         private List<string> errorReadEvent = null;
         #endregion
@@ -79,6 +80,50 @@ namespace DataParser.DefaultRealization
         #endregion
 
         #region [Initi]
+
+        public List<ResultForForks> InitiMultiThread(SportType sportType)
+        {
+            var result2 = new List<ResultForForks>();
+
+            try
+            {
+                //var ids = LoadID(SportType.Basketball);
+                result2.AddRange(GetAllEvents(sportType));
+            }
+            catch (Exception e)
+            {
+                var ee = e.StackTrace;
+                var eee = e.Message;
+            }
+            return result2;
+        }
+
+        private IEnumerable<ResultForForks> GetAllEvents(SportType sportType)
+        {
+            var result = new List<ResultForForks>();
+            var englishTeams = GetEnglishNameTEams(sportType);
+
+            var ids = englishTeams.Keys.ToList();
+
+            var tasks = new Task<List<ResultForForks>>[ids.Count];
+            var idCounter = 0;
+
+            for (var index = 0; index < ids.Count; index++)
+            {
+                // ReSharper disable once AccessToModifiedClosure
+                tasks[index] = Task.Factory.StartNew(() => LoadEvent(ids[idCounter++], sportType, englishTeams));
+            }
+            Task.WaitAll(tasks);
+            foreach (var task in tasks)
+            {
+                if (task.Result != null)
+                    result.AddRange(task.Result);
+            }
+
+
+            return result;
+        }
+
         public List<ResultForForks> Initi(SportType sportType)
         {
 
@@ -258,7 +303,7 @@ namespace DataParser.DefaultRealization
             }
             try
             {
-                WriteToDocument(errorReadEvent, "error.txt");
+                //WriteToDocument(errorReadEvent, "error.txt");
             }
             catch
             {
@@ -546,7 +591,7 @@ namespace DataParser.DefaultRealization
 
             string reURL = "https://www.marathonbet.com/su/events.htm?id=" + event_id;
             string html = Html(reURL);
-            WriteToDocument(html);
+            //WriteToDocument(html);
             string[] lines = html.Split('\n');
             bool isDataToAutoPlay = false;
             bool isSelectionKey = false;
@@ -1149,7 +1194,7 @@ namespace DataParser.DefaultRealization
             {
                 reader?.Close();
             }
-            WriteToDocument(HTML);
+            //WriteToDocument(HTML);
             return HTML;
         }
         private void UrlAndNameFile(SportType sportType, out string url, out string namefile, bool isEnglish = false)
@@ -1223,25 +1268,25 @@ namespace DataParser.DefaultRealization
             }
         }
 
-        private static void WriteToDocument(string html, string nameFile = "html__.txt")
-        {
-            using (StreamWriter sw = new StreamWriter(nameFile))
-            {
-                sw.WriteLine(html);
-                sw.Close();
-            }
-        }
-        private static void WriteToDocument(List<string> html, string nameFile = "html__.txt")
-        {
-            using (StreamWriter sw = new StreamWriter(nameFile))
-            {
-                foreach (var i in html)
-                {
-                    sw.WriteLine(i);
-                }
-                sw.Close();
-            }
-        }
+        //private static void WriteToDocument(string html, string nameFile = "html__.txt")
+        //{
+        //    using (StreamWriter sw = new StreamWriter(nameFile))
+        //    {
+        //        sw.WriteLine(html);
+        //        sw.Close();
+        //    }
+        //}
+        //private static void WriteToDocument(List<string> html, string nameFile = "html__.txt")
+        //{
+        //    using (StreamWriter sw = new StreamWriter(nameFile))
+        //    {
+        //        foreach (var i in html)
+        //        {
+        //            sw.WriteLine(i);
+        //        }
+        //        sw.Close();
+        //    }
+        //}
         #endregion
 
         #region [Help]

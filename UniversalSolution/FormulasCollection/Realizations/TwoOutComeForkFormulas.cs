@@ -61,6 +61,7 @@ namespace FormulasCollection.Realizations
             var resList = new List<Fork>();
             foreach (var eventItem in marathon)
             {
+                if (eventItem.Event == null) continue;
                 string pinKey = null;
                 if (_pinKeyCache.ContainsKey(eventItem.Event))
                 {

@@ -155,7 +155,7 @@ namespace DataParser.DefaultRealization
             teamToAdd.Bookmaker = Site.MarathonBet.ToString();
             if (englishNameTeams_Dictionary.ContainsKey(teamToAdd.EventId))
             {
-                teamToAdd.Event = englishNameTeams_Dictionary[teamToAdd.EventId].name1 + " # " + englishNameTeams_Dictionary[teamToAdd.EventId].name2;
+                teamToAdd.Event = englishNameTeams_Dictionary[teamToAdd.EventId].name1 + " - " + englishNameTeams_Dictionary[teamToAdd.EventId].name2;
             }
             else
             {
@@ -1035,15 +1035,15 @@ namespace DataParser.DefaultRealization
 
 
             UrlAndNameFile(sportType, out url, out namefile, true);
-            var lines = Html(url, false).Split('\n');
-
+            string html = Html(url, false);
+            var lines = html.Split('\n');
 
             foreach (var line in lines)
             {
-                if (line._Contains(MarathonTags.EventID))
+                if (line._Contains(MarathonTags.newEventID))
                     _eventid = line.GetEventID();
 
-                if (line._Contains(MarathonTags.NameTeam))
+                if (line._Contains(MarathonTags.newTeamName))
                 {
                     if (name1 == null)
                         name1 = GetAttribut(line);// line.Substrings(Tags.NameTeam);
@@ -1054,6 +1054,7 @@ namespace DataParser.DefaultRealization
                     var teams = new EnglishNameTeams();
                     teams.name1 = name1;
                     teams.name2 = name2;
+                    teams.eventid = _eventid;
                     resultEnglishTeams.Add(_eventid, teams);
                     _eventid = null;
                     name1 = null;

@@ -85,7 +85,7 @@ namespace SiteAccess.Access
             }
             catch
             {
-                _logger.Error("Pinnacle access, Writing request stream was failed");
+                _logger.Error("Writing request stream was failed");
                 return new Result("");
             }
 
@@ -97,7 +97,7 @@ namespace SiteAccess.Access
             }
             catch(WebException ex)
             {
-                _logger.Error("Pinnacle access, Error while get response");
+                _logger.Error("Error while get response");
                 response = (HttpWebResponse)ex.Response;
             }
 

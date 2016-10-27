@@ -56,9 +56,9 @@ namespace SiteAccess.Access
                 Add(bet);
                 Save(bet);
             }
-            catch (Exception e)
+            catch (Exception e)   
             {
-                _logger.Error(e, $"Marathon access, can't add or save bet", bet);
+                _logger.Error(e, $"Can't add or save bet", bet);
                 return null;
             }
             Headers["Accept"] = "text/plain, */*; q=0.01";
@@ -82,7 +82,7 @@ namespace SiteAccess.Access
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"Marathon access, can't place bet", bet);
+                _logger.Error(e, $"Can't place bet", bet);
                 return null;
             }
         }
@@ -141,7 +141,7 @@ namespace SiteAccess.Access
             var jo = UploadJObject("/login.htm".TrueLink(_domain.OriginalString), data);
             if(jo == null)
             {
-                _logger.Error("Marathon access, Answer from server was null, when login");
+                _logger.Error("Answer from server was null, when login");
                 return false;
             }
 
@@ -149,7 +149,7 @@ namespace SiteAccess.Access
             {
                 if((string)jo["loginResult"] == "FAIL")
                 {
-                    _logger.Error("Marathon access, login result is FAIL");
+                    _logger.Error("Login result is FAIL");
                     return false;
                 }
 
@@ -198,7 +198,7 @@ namespace SiteAccess.Access
 
                 if((string)jo["loginResult"] != "SUCCESS")
                 {
-                    _logger.Error("Marathon access, can't login with captcha in " + (i + 1) + "attempt.");
+                    _logger.Error("Can't login with captcha in " + (i + 1) + "attempt.");
                     continue;
                 }
 
@@ -220,7 +220,7 @@ namespace SiteAccess.Access
             var data =
                 "ch=" + bet.GetAddData() + "&url=https%3A%2F%2Fwww.marathonbet.com%2Fsu%2Fall-events.htm&ws=true";
 
-            UploadString("/betslip/add.htm".TrueLink(_domain), data);
+            var res = UploadString("/betslip/add.htm".TrueLink(_domain), data);
 
         }
 
@@ -289,12 +289,12 @@ namespace SiteAccess.Access
             var res = SetBet(bet);
             if(res == null)
             {
-                _logger.Error("Marathon access, place bet failed due to previous errors.", bet);
+                _logger.Error("Place bet failed due to previous errors.", bet);
                 return false;
             }
             if(res.ToString().Contains("ERROR"))
             {
-                _logger.Error("Marathon access, place bet result is ERROR.", res);
+                _logger.Error("Place bet result is ERROR.", res);
                 return false;
             }
             _logger.Info<MarathonBet>("Place bet success", bet);

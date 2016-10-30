@@ -1091,7 +1091,7 @@ namespace DataParser.DefaultRealization
 
                 for (int i = 0; i < price.Length; i++)
                 {
-                    obj.prices.Add(price[i]);
+                    obj.prices.Add(price[i].Replace("\"", ""));
                 }
             }
             if (tag.Equals(Tags_DataMarathonForAutoPlays.data_selection_key))

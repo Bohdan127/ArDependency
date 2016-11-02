@@ -1,6 +1,7 @@
 ﻿using DataSaver.Models;
 using DevExpress.XtraEditors;
 using DXApplication1.Models;
+using License.Logic;
 using NLog;
 using System;
 using System.IO;
@@ -36,13 +37,18 @@ namespace DXApplication1
             Closing += XtraForm1_Closing;
 
             _pageManager = new PageManager(this);
-
             DeserializeAll();
             PrepareData();
 
             _pageManager.GetFilterPage(_filter);
-        }
 
+            var licenseForm = new LicenseForm();
+            if (!licenseForm.CheckInstance(_filter.LicenseKey))
+                licenseForm.ShowDialog();
+            if (!licenseForm.IsRegistered)
+                Close();
+            _filter.LicenseKey = licenseForm.LicenseKey;
+        }
         #endregion CTOR
 
         #region Events
@@ -133,8 +139,6 @@ namespace DXApplication1
             var bRes = true;
             try
             {
-                _filter.LicenseKey = licenseKey;
-
                 var writer = File.Create(SettingsPath + SettingsFile);
 
                 new XmlSerializer(typeof(Filter)).Serialize(

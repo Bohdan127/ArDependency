@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using Common.Modules.AntiCaptha;
+using SiteAccess.Access;
 using ToolsPortable;
 
 namespace DataLoader

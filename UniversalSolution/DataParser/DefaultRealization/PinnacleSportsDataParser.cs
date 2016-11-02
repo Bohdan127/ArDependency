@@ -51,7 +51,7 @@ namespace DataParser.DefaultRealization
                         {
                             if (!period.Value.ContainsKey("cutoff") || period.Value["cutoff"] == null) continue;
                             if (!period.Value.ContainsKey("lineId") || period.Value["lineId"] == null) continue;
-                            if (Convert.ToInt32(period.Value["number"]) != 0) continue;
+                            if (Convert.ToInt32(period.Value["number"].ToString()) != 0) continue;
                             var matchDateTime = period.Value["cutoff"].ToString();
                             var lineId = period.Value["lineId"].ToString();
 

@@ -1,12 +1,10 @@
-﻿using Common.Modules.AntiCaptha;
-using DataParser.DefaultRealization;
+﻿using DataParser.DefaultRealization;
 using DataParser.Enums;
 using DataSaver;
 using DataSaver.Models;
 using FormulasCollection.Enums;
 using FormulasCollection.Models;
 using FormulasCollection.Realizations;
-using SiteAccess.Access;
 using SiteAccess.Enums;
 using SiteAccess.Model.Bets;
 using System;
@@ -20,7 +18,7 @@ namespace DataLoader
 {
     internal class Program
     {
-        private static User _currentUser { get; set; }
+        private static User _currentUser;
 
         private static PinnacleSportsDataParser _pinnacle;
         private static MarathonParser _marathon;

@@ -97,28 +97,22 @@ namespace DataSaver
 
         public List<ForkRow> MoveForks(List<Fork> forkList, SportType sportType)
         {
-            if (forkList == null || forkList.Count == 0)
-                return new List<ForkRow>();
+            if (forkList == null || forkList.Count == 0) return new List<ForkRow>();
 
-            var savedForks = GetAllForkRows()?.ToList();
+            var savedForks = GetAllForkRows()
+                ?.ToList();
 
-            if (savedForks == null || savedForks.Count == 0)
-                return new List<ForkRow>();
+            if (savedForks == null || savedForks.Count == 0) return new List<ForkRow>();
 
-            var forks = savedForks.Where(fBase => fBase.Sport == sportType.ToString() &&
-                                            fBase.Type == ForkType.Current).ToArray();
-            var rowsForDelete = forks.ToList();
-            //removing all rows with status Merged from forkList
-            // 24.10.2016 - all Current rows will be always deleted and inserted one more time because it is probably less than 1% of profit
-            //foreach (var fBase in forks)
-            //{
-            //    var fork = forkList.FirstOrDefault(fNew => IsSameFork(fNew, fBase));
-            //    if (fork == null)
-            //        continue;
-            //    forkList.Remove(fork);
-            //    rowsForDelete.Remove(fBase);
-            //}
-            //Session.SaveChanges();
+            var rowsForDelete = savedForks.Where(fBase => fBase.Sport == sportType.ToString())
+                                          .ToList();
+            foreach (var fBase in rowsForDelete.Where(f => f.Type == ForkType.Saved))
+            {
+                var fork = forkList.FirstOrDefault(fNew => IsSameFork(fNew, fBase));
+                if (fork == null) continue;
+                forkList.Remove(fork);
+            }
+            rowsForDelete.RemoveAll(f => f.Type == ForkType.Saved);
             return rowsForDelete;
         }
 

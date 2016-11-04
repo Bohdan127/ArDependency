@@ -124,21 +124,6 @@ namespace DataParser.DefaultRealization
             return result;
         }
 
-        public List<ResultForForks> Initi(SportType sportType)
-        {
-
-            this.englishNameTeams_Dictionary = this.GetEnglishNameTEams(sportType);
-            try
-            {
-                var result = GetNameTeamsAndDateAsync(sportType);
-            }
-            catch (Exception e)
-            {
-                var ee = e.StackTrace;
-                var eee = e.Message;
-            }
-            return result;
-        }
         #endregion
 
         #region [Load Event for ID]

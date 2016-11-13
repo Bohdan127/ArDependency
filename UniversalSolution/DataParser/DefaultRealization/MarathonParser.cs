@@ -102,6 +102,7 @@ namespace DataParser.DefaultRealization
         {
             var result = new List<ResultForForks>();
             var englishTeams = GetEnglishNameTEams(sportType);
+            var russianTeams = GetEnglishNameTEams(sportType, true);
 
             var ids = englishTeams.Keys.ToList();
 
@@ -111,7 +112,7 @@ namespace DataParser.DefaultRealization
             for (var index = 0; index < ids.Count; index++)
             {
                 // ReSharper disable once AccessToModifiedClosure
-                tasks[index] = Task.Factory.StartNew(() => LoadEvent(ids[idCounter++], sportType, englishTeams));
+                tasks[index] = Task.Factory.StartNew(() => LoadEvent(ids[idCounter++], sportType, englishTeams, russianTeams));
             }
             Task.WaitAll(tasks);
             foreach (var task in tasks)
@@ -127,7 +128,7 @@ namespace DataParser.DefaultRealization
         #endregion
 
         #region [Load Event for ID]
-        public List<ResultForForks> LoadEvent(string eventID, SportType sportType, Dictionary<string, EnglishNameTeams> englishNameTeams_Dictionary)
+        public List<ResultForForks> LoadEvent(string eventID, SportType sportType, Dictionary<string, EnglishNameTeams> englishNameTeams_Dictionary, Dictionary<string, EnglishNameTeams> russianNameTeams_Dictionary)
         {
             ResultForForks teamToAdd = null;
 
@@ -141,6 +142,8 @@ namespace DataParser.DefaultRealization
             if (englishNameTeams_Dictionary.ContainsKey(teamToAdd.EventId))
             {
                 teamToAdd.Event = englishNameTeams_Dictionary[teamToAdd.EventId].name1 + " - " + englishNameTeams_Dictionary[teamToAdd.EventId].name2;
+                // teamToAdd.Event_RU = russianNameTeams_Dictionary[teamToAdd.EventId].name1 + " - " + russianNameTeams_Dictionary[teamToAdd.EventId].name2;
+                teamToAdd.Event_RU = russianNameTeams_Dictionary[teamToAdd.EventId].eventRU;
             }
             else
             {
@@ -156,18 +159,20 @@ namespace DataParser.DefaultRealization
             }
             return resEvent;
         }
-        public List<string> LoadID(SportType sportType)
+        public Dictionary<string,string> LoadID(SportType sportType)
         {
-            List<string> ListIDforSelectedSport = new List<string>();
+            Dictionary<string, string> ListIDforSelectedSport = new Dictionary<string, string>();
             //string
             string url = string.Empty;
             string namefile = string.Empty;
             //string selectedEvent = string.Empty;
             string eventid = string.Empty;
+            string _teamName = string.Empty;
             //string totalOrFora = string.Empty;
 
             //bool
             bool isEventID = false;
+            bool isTeamName = false;
 
 
             UrlAndNameFile(sportType, out url, out namefile);
@@ -182,12 +187,16 @@ namespace DataParser.DefaultRealization
                 {
                     isEventID = true;
                 }
+                if (lines[i].Contains(MarathonTags.newTeamName))
+                {
+                    isTeamName = true;
+                }
                 if (isEventID)
                 {
                     string eventID = lines[i].GetEventID();
                     try
                     {
-                        ListIDforSelectedSport.Add(eventID);
+                        //ListIDforSelectedSport.Add(eventID);
                     }
                     catch (Exception e)
                     {
@@ -196,6 +205,26 @@ namespace DataParser.DefaultRealization
                     isEventID = false;
                     eventid = eventID;
 
+                }
+                if (isTeamName)
+                {
+
+                    if (string.IsNullOrEmpty(_teamName))
+                    {
+                        var teamName = lines[i].GetAttribut();
+                        _teamName = teamName.Trim(' ');
+                    }
+                    else
+                    {
+                        i++;
+                        var teamName = lines[i].GetAttribut();
+                        _teamName += " - " + teamName.Trim(' ');
+                        isTeamName = false;
+                    }
+                }
+                if(!isTeamName && !string.IsNullOrEmpty(_teamName) && !isEventID && !string.IsNullOrEmpty(eventid))
+                {
+                    ListIDforSelectedSport[eventid] = _teamName;
                 }
             }
             return ListIDforSelectedSport;
@@ -673,6 +702,7 @@ namespace DataParser.DefaultRealization
             }
             eventCoefList.EventId = teamToAdd.EventId;
             eventCoefList.Event = teamToAdd.Event;
+            eventCoefList.Event_RU = teamToAdd.Event_RU;
             eventCoefList.League = teamToAdd.League;
             eventCoefList.MatchDateTime = teamToAdd.MatchDateTime;
             eventCoefList.Bookmaker = teamToAdd.Bookmaker;
@@ -934,6 +964,7 @@ namespace DataParser.DefaultRealization
                     {
                         EventId = eventCoefList.EventId,
                         Event = eventCoefList.Event,
+                        Event_RU = eventCoefList.Event_RU,
                         MatchDateTime = eventCoefList.MatchDateTime,
                         League = eventCoefList.League,
                         Bookmaker = eventCoefList.Bookmaker,
@@ -1009,7 +1040,7 @@ namespace DataParser.DefaultRealization
             return res;
         }
 
-        public Dictionary<string, EnglishNameTeams> GetEnglishNameTEams(SportType sportType)
+        public Dictionary<string, EnglishNameTeams> GetEnglishNameTEams(SportType sportType, bool isRU = false)
         {
             var resultEnglishTeams = new Dictionary<string, EnglishNameTeams>();
             var url = "";
@@ -1017,16 +1048,27 @@ namespace DataParser.DefaultRealization
             string name1 = null;
             string name2 = null;
             string _eventid = null;
+            string ru = null;
 
-
-            UrlAndNameFile(sportType, out url, out namefile, true);
+            if (!isRU)
+            {
+                UrlAndNameFile(sportType, out url, out namefile, true);
+            }
+            else
+            {
+                UrlAndNameFile(sportType, out url, out namefile);
+            }
             string html = Html(url, false);
             var lines = html.Split('\n');
 
             foreach (var line in lines)
             {
                 if (line._Contains(MarathonTags.newEventID))
+                {
                     _eventid = line.GetEventID();
+
+                    ru = line.TagsContent("data-event-name=");
+                }
 
                 if (line._Contains(MarathonTags.newTeamName))
                 {
@@ -1040,10 +1082,12 @@ namespace DataParser.DefaultRealization
                     teams.name1 = name1;
                     teams.name2 = name2;
                     teams.eventid = _eventid;
+                    teams.eventRU = ru;
                     resultEnglishTeams.Add(_eventid, teams);
                     _eventid = null;
                     name1 = null;
                     name2 = null;
+                    ru = null;
                 }
             }
 

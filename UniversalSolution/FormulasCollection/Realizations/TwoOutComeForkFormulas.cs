@@ -108,9 +108,9 @@ namespace FormulasCollection.Realizations
                         var fork = new Fork
                         {
                             League = eventItem.League,
-                            MarathonEventId = eventItem.FuulID,
+                            MarathonEventId = eventItem.EventId,
                             PinnacleEventId = pinnacleEvent.EventId,
-                            Event = string.Empty,
+                            Event = eventItem.Event,
                             TypeFirst = eventItem.Type,
                             CoefFirst = eventItem.Coef,
                             TypeSecond = pinEventKey.ToString(CultureInfo.InvariantCulture),
@@ -118,7 +118,7 @@ namespace FormulasCollection.Realizations
                             Sport = eventItem.SportType,
                             MatchDateTime = pinnacleEvent.MatchDateTime.ToString(CultureInfo.CurrentCulture),
                             BookmakerFirst = pinKey,
-                            BookmakerSecond = eventItem.Event,
+                            BookmakerSecond = eventItem.Event_RU,
                             Type = ForkType.Current,
                             LineId = pinnacleEvent.TypeLineIdDictionary[pinEventKey],
                             Profit = GetProfit(Convert.ToDouble(eventItem.Coef),

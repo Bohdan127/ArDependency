@@ -13,6 +13,8 @@ namespace DataParser.Models
 
         public string Event { get; set; }
 
+        public string Event_RU { get; set; }
+
         public string MatchDateTime { get; set; }
 
         public string League { get; set; }

@@ -4,6 +4,8 @@
     {
         public string Event { get; set; }
 
+        public string Event_RU { get; set; }
+
         public string Type { get; set; }
 
         public string Coef { get; set; }

@@ -166,7 +166,7 @@ namespace DataLoader
 
                 var betM = new MarathonBet
                 {
-                    Id = fork.MarathonEventId,
+                    Id = fork.selection_key,
                     Name = fork.BookmakerSecond,
                     // ReSharper disable once PossibleInvalidOperationException
                     Stake = recomendedRates.Item1.ConvertToDoubleOrNull()

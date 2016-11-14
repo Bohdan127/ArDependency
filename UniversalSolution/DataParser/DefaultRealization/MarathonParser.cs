@@ -1061,20 +1061,22 @@ namespace DataParser.DefaultRealization
             string html = Html(url, false);
             var lines = html.Split('\n');
 
-            foreach (var line in lines)
+            for (int i = 0; i < lines.Length; i++)
             {
-                if (line._Contains(MarathonTags.newEventID))
+                if (lines[i].Contains(">Ante Post<") || lines[i].Contains(">Ante Post.<"))
+                    break;
+                if (lines[i]._Contains(MarathonTags.newEventID))
                 {
-                    _eventid = line.GetEventID();
+                    _eventid = lines[i].GetEventID();
 
-                    ru = line.TagsContent("data-event-name=");
+                    ru = lines[i].TagsContent("data-event-name=");
                 }
 
-                if (line._Contains(MarathonTags.newTeamName))
+                if (lines[i]._Contains(MarathonTags.newTeamName))
                 {
                     if (name1 == null)
-                        name1 = GetAttribut(line);// line.Substrings(Tags.NameTeam);
-                    else name2 = GetAttribut(line);//line.Substrings(Tags.NameTeam);
+                        name1 = GetAttribut(lines[i]);// line.Substrings(Tags.NameTeam);
+                    else name2 = GetAttribut(lines[i]);//line.Substrings(Tags.NameTeam);
                 }
                 if (!string.IsNullOrEmpty(name1) && !string.IsNullOrEmpty(name2) && !string.IsNullOrEmpty(_eventid))
                 {

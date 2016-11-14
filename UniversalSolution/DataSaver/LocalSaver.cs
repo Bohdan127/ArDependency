@@ -233,7 +233,11 @@ namespace DataSaver
                 ewf = json.DataAsJson.Value<string>("ewf"),
                 epr = json.DataAsJson.Value<string>("epr"),
                 prices = prices,
-                selection_key = json.DataAsJson.Value<string>("selection_key")
+                selection_key = json.DataAsJson.Value<string>("selection_key"),
+                MarRate = json.DataAsJson.Value<string>("MarRate"),
+                MarSuccess = json.DataAsJson.Value<string>("MarSuccess"),
+                PinRate = json.DataAsJson.Value<string>("PinRate"),
+                PinSuccess = json.DataAsJson.Value<string>("PinSuccess")
             };
             return result;
         }
@@ -279,7 +283,13 @@ namespace DataSaver
                 ewf = fork.ewf,
                 epr = fork.epr,
                 prices = fork.prices,
-                selection_key = fork.selection_key
+                selection_key = fork.selection_key,
+
+
+                MarRate = fork.MarRate,
+                PinRate = fork.PinRate,
+                MarSuccess = fork.MarSuccess,
+                PinSuccess = fork.PinSuccess
             };
             return result;
         }
@@ -313,7 +323,12 @@ namespace DataSaver
                 ewf = forkRow.ewf,
                 epr = forkRow.epr,
                 prices = forkRow.prices,
-                selection_key = forkRow.selection_key
+                selection_key = forkRow.selection_key,
+
+                MarRate = forkRow.MarRate,
+                PinRate = forkRow.PinRate,
+                MarSuccess = forkRow.MarSuccess,
+                PinSuccess = forkRow.PinSuccess
             };
             return result;
         }

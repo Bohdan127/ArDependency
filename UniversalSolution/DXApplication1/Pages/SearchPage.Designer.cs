@@ -40,15 +40,19 @@
             this.colLeague = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colTeams = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colBookmaker = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.repositoryItemHyperLinkEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemHyperLinkEdit();
             this.colRate1 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colCoef1 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colMarRate = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colMarSuccess = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colBookmaker2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colRate2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colCoef2 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colPinRate = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colProfit = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEditPercent = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
+            this.colPinSuccess = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colEventIdFOrMarathon = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemHyperLinkEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemHyperLinkEdit();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlGroup3 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
@@ -61,8 +65,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.progressBarControl1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemHyperLinkEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEditPercent)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemHyperLinkEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
@@ -126,9 +130,13 @@
             this.colBookmaker,
             this.colRate1,
             this.colCoef1,
+            this.colMarRate,
+            this.colMarSuccess,
             this.colBookmaker2,
             this.colRate2,
             this.colCoef2,
+            this.colPinRate,
+            this.colPinSuccess,
             this.colProfit,
             this.colEventIdFOrMarathon});
             this.gridView1.GridControl = this.gridControl1;
@@ -173,19 +181,11 @@
             // colBookmaker
             // 
             this.colBookmaker.Caption = "Букмекер 1";
-            this.colBookmaker.ColumnEdit = this.repositoryItemHyperLinkEdit1;
             this.colBookmaker.FieldName = "BookmakerFirst";
             this.colBookmaker.Name = "colBookmaker";
             this.colBookmaker.OptionsColumn.ReadOnly = true;
             this.colBookmaker.Visible = true;
             this.colBookmaker.VisibleIndex = 4;
-            // 
-            // repositoryItemHyperLinkEdit1
-            // 
-            this.repositoryItemHyperLinkEdit1.AutoHeight = false;
-            this.repositoryItemHyperLinkEdit1.Name = "repositoryItemHyperLinkEdit1";
-            this.repositoryItemHyperLinkEdit1.StartKey = new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None);
-            this.repositoryItemHyperLinkEdit1.StartLinkOnClickingEmptySpace = false;
             // 
             // colRate1
             // 
@@ -205,15 +205,30 @@
             this.colCoef1.Visible = true;
             this.colCoef1.VisibleIndex = 6;
             // 
+            // colMarRate
+            // 
+            this.colMarRate.Caption = "Ставка на Марафон";
+            this.colMarRate.FieldName = "MarRate";
+            this.colMarRate.Name = "colMarRate";
+            this.colMarRate.Visible = true;
+            this.colMarRate.VisibleIndex = 7;
+            // 
+            // colMarSuccess
+            // 
+            this.colMarSuccess.Caption = "Успех на Марафоне";
+            this.colMarSuccess.FieldName = "MarSuccess";
+            this.colMarSuccess.Name = "colMarSuccess";
+            this.colMarSuccess.Visible = true;
+            this.colMarSuccess.VisibleIndex = 8;
+            // 
             // colBookmaker2
             // 
             this.colBookmaker2.Caption = "Букмекер 2";
-            this.colBookmaker2.ColumnEdit = this.repositoryItemHyperLinkEdit1;
             this.colBookmaker2.FieldName = "BookmakerSecond";
             this.colBookmaker2.Name = "colBookmaker2";
             this.colBookmaker2.OptionsColumn.ReadOnly = true;
             this.colBookmaker2.Visible = true;
-            this.colBookmaker2.VisibleIndex = 7;
+            this.colBookmaker2.VisibleIndex = 9;
             // 
             // colRate2
             // 
@@ -222,7 +237,7 @@
             this.colRate2.Name = "colRate2";
             this.colRate2.OptionsColumn.ReadOnly = true;
             this.colRate2.Visible = true;
-            this.colRate2.VisibleIndex = 8;
+            this.colRate2.VisibleIndex = 10;
             // 
             // colCoef2
             // 
@@ -231,7 +246,15 @@
             this.colCoef2.Name = "colCoef2";
             this.colCoef2.OptionsColumn.ReadOnly = true;
             this.colCoef2.Visible = true;
-            this.colCoef2.VisibleIndex = 9;
+            this.colCoef2.VisibleIndex = 11;
+            // 
+            // colPinRate
+            // 
+            this.colPinRate.Caption = "Ставка на Пиннакл";
+            this.colPinRate.FieldName = "PinRate";
+            this.colPinRate.Name = "colPinRate";
+            this.colPinRate.Visible = true;
+            this.colPinRate.VisibleIndex = 12;
             // 
             // colProfit
             // 
@@ -241,7 +264,7 @@
             this.colProfit.Name = "colProfit";
             this.colProfit.OptionsColumn.ReadOnly = true;
             this.colProfit.Visible = true;
-            this.colProfit.VisibleIndex = 10;
+            this.colProfit.VisibleIndex = 14;
             // 
             // repositoryItemTextEditPercent
             // 
@@ -250,11 +273,26 @@
             this.repositoryItemTextEditPercent.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.repositoryItemTextEditPercent.Name = "repositoryItemTextEditPercent";
             // 
+            // colPinSuccess
+            // 
+            this.colPinSuccess.Caption = "Успех на Пиннакле";
+            this.colPinSuccess.FieldName = "PinSuccess";
+            this.colPinSuccess.Name = "colPinSuccess";
+            this.colPinSuccess.Visible = true;
+            this.colPinSuccess.VisibleIndex = 13;
+            // 
             // colEventIdFOrMarathon
             // 
             this.colEventIdFOrMarathon.Caption = "Event Id for Marathon";
             this.colEventIdFOrMarathon.FieldName = "EventId";
             this.colEventIdFOrMarathon.Name = "colEventIdFOrMarathon";
+            // 
+            // repositoryItemHyperLinkEdit1
+            // 
+            this.repositoryItemHyperLinkEdit1.AutoHeight = false;
+            this.repositoryItemHyperLinkEdit1.Name = "repositoryItemHyperLinkEdit1";
+            this.repositoryItemHyperLinkEdit1.StartKey = new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None);
+            this.repositoryItemHyperLinkEdit1.StartLinkOnClickingEmptySpace = false;
             // 
             // layoutControlGroup1
             // 
@@ -330,8 +368,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.progressBarControl1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemHyperLinkEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEditPercent)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemHyperLinkEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
@@ -369,5 +407,9 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemHyperLinkEdit repositoryItemHyperLinkEdit1;
         private DevExpress.XtraGrid.Columns.GridColumn colEventIdFOrMarathon;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEditPercent;
+        private DevExpress.XtraGrid.Columns.GridColumn colMarRate;
+        private DevExpress.XtraGrid.Columns.GridColumn colPinRate;
+        private DevExpress.XtraGrid.Columns.GridColumn colMarSuccess;
+        private DevExpress.XtraGrid.Columns.GridColumn colPinSuccess;
     }
 }

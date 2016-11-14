@@ -212,10 +212,14 @@ namespace DataLoader
                 var resP = pinn.MakeBet(betP);
 
                 Console.WriteLine($"Place result {resM} for {recomendedRates.Item1} into {fork.BookmakerSecond}");
-                if (resP.Success)
-                    Console.WriteLine($"Place result {resP.Success} for {recomendedRates.Item1} into {fork.BookmakerFirst}");
-                else
-                    Console.WriteLine($"Place result {resP.Success} with code {resP.Status} and description {resP.Error} for {recomendedRates.Item1} into {fork.BookmakerFirst}");
+                Console.WriteLine(resP.Success
+                                      ? $"Place result {resP.Success} for {recomendedRates.Item2} into {fork.BookmakerFirst}"
+                                      : $"Place result {resP.Success} with code {resP.Status} and description {resP.Error} for {recomendedRates.Item1} into {fork.BookmakerFirst}");
+
+                fork.MarRate = recomendedRates.Item1;
+                fork.PinRate = recomendedRates.Item2;
+                fork.MarSuccess = resM.ToString();
+                fork.PinSuccess = $"{resP.Success} {resP.Status} {resP.Error}";
 
                 if (fork.Type != ForkType.Saved) { fork.Type = ForkType.Saved; }
             }

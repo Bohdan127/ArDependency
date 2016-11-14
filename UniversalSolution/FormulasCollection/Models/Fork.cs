@@ -105,5 +105,13 @@ namespace FormulasCollection.Models
         public List<string> prices { get; set; }
 
         public string selection_key { get; set; }
+
+        public string MarRate { get; set; }
+
+        public string PinRate { get; set; }
+
+        public string MarSuccess { get; set; }
+
+        public string PinSuccess { get; set; }
     }
 }

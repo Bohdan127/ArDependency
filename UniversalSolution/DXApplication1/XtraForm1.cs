@@ -1,6 +1,7 @@
 ﻿using DataSaver.Models;
 using DevExpress.XtraEditors;
 using DXApplication1.Models;
+using GlobalResources.uk_UA;
 using License.Logic;
 using NLog;
 using System;
@@ -42,7 +43,7 @@ namespace DXApplication1
 
             _pageManager.GetFilterPage(_filter);
 
-            var licenseForm = new LicenseForm();
+            var licenseForm = new LicenseForm("uk_UA", uk_UA.ResourceManager);
             if (!licenseForm.CheckInstance(_filter.LicenseKey))
                 licenseForm.ShowDialog();
             if (!licenseForm.IsRegistered)

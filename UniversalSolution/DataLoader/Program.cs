@@ -79,7 +79,7 @@ namespace DataLoader
             }
             while (_defRate <= 0.0 || _defRate > 2.0)
             {
-                Console.WriteLine("Please enter user default rate (Пожалуйста, введите ставку по умолчанию)");
+                Console.WriteLine("Please enter user default rate");
                 try
                 {
                     // ReSharper disable once PossibleInvalidOperationException
@@ -211,8 +211,11 @@ namespace DataLoader
                 var resM = marath.MakeBet(betM);
                 var resP = pinn.MakeBet(betP);
 
-                Console.WriteLine($"Place result {resM} {recomendedRates.Item1} for {fork.BookmakerSecond}");
-                Console.WriteLine($"Place result {resP.Success} {recomendedRates.Item1} for {fork.BookmakerFirst}");
+                Console.WriteLine($"Place result {resM} for {recomendedRates.Item1} into {fork.BookmakerSecond}");
+                if (resP.Success)
+                    Console.WriteLine($"Place result {resP.Success} for {recomendedRates.Item1} into {fork.BookmakerFirst}");
+                else
+                    Console.WriteLine($"Place result {resP.Success} with code {resP.Status} and description {resP.Error} for {recomendedRates.Item1} into {fork.BookmakerFirst}");
 
                 if (fork.Type != ForkType.Saved) { fork.Type = ForkType.Saved; }
             }

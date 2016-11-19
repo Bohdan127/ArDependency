@@ -29,10 +29,6 @@ namespace DXApplication1.Pages
             Filter = filter;
             LocalSaver = new LocalSaver();
 
-            //New Requirements: parser for this two site only
-            Filter.MarathonBet = true;
-            Filter.PinnacleSports = true;
-
             FirstBind();
             UserBind();
             InitializeEvents();
@@ -55,8 +51,6 @@ namespace DXApplication1.Pages
             {
                 minTextEdit.EditValue = Filter.Min;
                 maxTextEdit.EditValue = Filter.Max;
-                marathonBetToggleSwitch.EditValue = Filter.MarathonBet;
-                pinnacleSportsToggleSwitch.EditValue = Filter.PinnacleSports;
                 footballToggleSwitch.EditValue = Filter.Football;
                 basketballToggleSwitch.EditValue = Filter.Basketball;
                 volleyballToggleSwitch.EditValue = Filter.Volleyball;
@@ -65,7 +59,8 @@ namespace DXApplication1.Pages
                 fasterDateTimePicker.EditValue = Filter.FaterThen;
                 longerDateTimePicker.EditValue = Filter.LongerThen;
                 textEditAutoUpdate.EditValue = Filter.AutoUpdateTime;
-                textEditRate.EditValue = Filter.DefaultRate;
+                textEditMinMarBet.EditValue = Filter.MinMarBet;
+                textEditMinPinBet.EditValue = Filter.MinPinBet;
             }
         }
 
@@ -75,8 +70,6 @@ namespace DXApplication1.Pages
             fasterDateTimePicker.EditValueChanging += Faster_Changing;
             maxTextEdit.EditValueChanging += Max_Changing;
             minTextEdit.EditValueChanging += Min_Changing;
-            pinnacleSportsToggleSwitch.Toggled += PinnacleSports_Toggled;
-            marathonBetToggleSwitch.Toggled += MarathonBet_Toggled;
             basketballToggleSwitch.Toggled += Basketball_Toggled;
             footballToggleSwitch.Toggled += Football_Toggled;
             longerDateTimePicker.EditValueChanging += Later_Changing;
@@ -91,7 +84,46 @@ namespace DXApplication1.Pages
             textEditLoginMarathon.EditValueChanged += User_EditValueChanged;
             textEditPasswordMarathon.EditValueChanged += User_EditValueChanged;
             textEditAntiGateCode.EditValueChanged += User_EditValueChanged;
-            textEditRate.EditValueChanging += SpinEditRate_EditValueChanging;
+            textEditMinMarBet.EditValueChanging += TextEditMinMarBet_EditValueChanging;
+            textEditMinPinBet.EditValueChanging += TextEditMinPinBet_EditValueChanging;
+        }
+
+
+        public void DeInitializeEvents()
+        {
+            Closing -= FilterPage_Closing;
+            fasterDateTimePicker.EditValueChanging -= Faster_Changing;
+            maxTextEdit.EditValueChanging -= Max_Changing;
+            minTextEdit.EditValueChanging -= Min_Changing;
+            basketballToggleSwitch.Toggled -= Basketball_Toggled;
+            footballToggleSwitch.Toggled -= Football_Toggled;
+            longerDateTimePicker.EditValueChanging -= Later_Changing;
+            volleyballToggleSwitch.Toggled -= Volleyball_Toggled;
+            tennisToggleSwitch.Toggled -= Tennis_Toggled;
+            hockeyToggleSwitch.Toggled -= Hockey_Toggled;
+            textEditLoginPinnacle.EditValueChanged -= User_EditValueChanged;
+            textEditPasswordPinnacle.EditValueChanged -= User_EditValueChanged;
+            textEditLoginMarathon.EditValueChanged -= User_EditValueChanged;
+            textEditPasswordMarathon.EditValueChanged -= User_EditValueChanged;
+            textEditAntiGateCode.EditValueChanging -= User_EditValueChanged;
+            textEditMinMarBet.EditValueChanging -= TextEditMinMarBet_EditValueChanging;
+            textEditMinPinBet.EditValueChanging -= TextEditMinPinBet_EditValueChanging;
+        }
+
+        private void TextEditMinPinBet_EditValueChanging(object sender, ChangingEventArgs e)
+        {
+            lock (Filter)
+            {
+                Filter.MinPinBet = e.NewValue.ConvertToDecimalOrNull();
+            }
+        }
+
+        private void TextEditMinMarBet_EditValueChanging(object sender, ChangingEventArgs e)
+        {
+            lock (Filter)
+            {
+                Filter.MinMarBet = e.NewValue.ConvertToDecimalOrNull();
+            }
         }
 
         private void User_EditValueChanged(object sender, EventArgs e)
@@ -106,36 +138,6 @@ namespace DXApplication1.Pages
                 AntiGateCode = textEditAntiGateCode.Text
             };
             LocalSaver.UpdateUser(user);
-        }
-
-        public void DeInitializeEvents()
-        {
-            Closing -= FilterPage_Closing;
-            fasterDateTimePicker.EditValueChanging -= Faster_Changing;
-            maxTextEdit.EditValueChanging -= Max_Changing;
-            minTextEdit.EditValueChanging -= Min_Changing;
-            pinnacleSportsToggleSwitch.Toggled -= PinnacleSports_Toggled;
-            marathonBetToggleSwitch.Toggled -= MarathonBet_Toggled;
-            basketballToggleSwitch.Toggled -= Basketball_Toggled;
-            footballToggleSwitch.Toggled -= Football_Toggled;
-            longerDateTimePicker.EditValueChanging -= Later_Changing;
-            volleyballToggleSwitch.Toggled -= Volleyball_Toggled;
-            tennisToggleSwitch.Toggled -= Tennis_Toggled;
-            hockeyToggleSwitch.Toggled -= Hockey_Toggled;
-            textEditLoginPinnacle.EditValueChanged -= User_EditValueChanged;
-            textEditPasswordPinnacle.EditValueChanged -= User_EditValueChanged;
-            textEditLoginMarathon.EditValueChanged += User_EditValueChanged;
-            textEditPasswordMarathon.EditValueChanged += User_EditValueChanged;
-            textEditAntiGateCode.EditValueChanged += User_EditValueChanged;
-            textEditRate.EditValueChanging -= SpinEditRate_EditValueChanging;
-        }
-
-        private void SpinEditRate_EditValueChanging(object sender, ChangingEventArgs e)
-        {
-            lock (Filter)
-            {
-                Filter.DefaultRate = e.NewValue.ConvertToIntOrNull();
-            }
         }
 
         private void TextEditAutoUpdate_EditValueChanging(object sender, ChangingEventArgs e)
@@ -157,7 +159,12 @@ namespace DXApplication1.Pages
         {
             lock (Filter)
             {
-                Filter.Min = e.NewValue.ConvertToIntOrNull();
+                Filter.Min = e.NewValue.ConvertToDecimalOrNull();
+                e.Cancel = Filter.Min != null
+                           && Filter.Max != null
+                           && ((Filter.Max.Value != 0
+                                && Filter.Max < Filter.Min)
+                               || Filter.Min.Value < 0);
             }
         }
 
@@ -165,23 +172,12 @@ namespace DXApplication1.Pages
         {
             lock (Filter)
             {
-                Filter.Max = e.NewValue.ConvertToIntOrNull();
-            }
-        }
-
-        private void MarathonBet_Toggled(object sender, EventArgs e)
-        {
-            lock (Filter)
-            {
-                Filter.MarathonBet = marathonBetToggleSwitch.EditValue.ConvertToBool();
-            }
-        }
-
-        private void PinnacleSports_Toggled(object sender, EventArgs e)
-        {
-            lock (Filter)
-            {
-                Filter.PinnacleSports = pinnacleSportsToggleSwitch.EditValue.ConvertToBool();
+                Filter.Max = e.NewValue.ConvertToDecimalOrNull();
+                e.Cancel = Filter.Min != null
+                           && Filter.Max != null
+                           && ((Filter.Min.Value != 0
+                                && Filter.Min > Filter.Max)
+                               || Filter.Max.Value < 0);
             }
         }
 
@@ -250,22 +246,6 @@ namespace DXApplication1.Pages
                 {
                     Filter.LongerThen = dateValue;
                 }
-            }
-        }
-
-        private void OutCome2_Toggled(object sender, EventArgs e)
-        {
-            lock (Filter)
-            {
-                Filter.OutCome2 = !Filter.OutCome2;
-            }
-        }
-
-        private void OutCome3_Toggled(object sender, EventArgs e)
-        {
-            lock (Filter)
-            {
-                Filter.OutCome3 = !Filter.OutCome3;
             }
         }
     }

@@ -150,9 +150,7 @@ namespace DXApplication1.Models
 
             var fork = (Fork)sender;
             var profit = fork.Profit;
-            fork.Profit = _filterPage.Filter.DefaultRate != null
-                ? (double)_filterPage.Filter.DefaultRate
-                : 0;
+            fork.Profit = 100;
 
             GetCalculatorPage(reload: true).Fork = fork;
             GetCalculatorPage().Show();

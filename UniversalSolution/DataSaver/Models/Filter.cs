@@ -4,13 +4,9 @@ namespace DataSaver.Models
 {
     public class Filter
     {
-        public int? Min { get; set; }
+        public decimal? Min { get; set; }
 
-        public int? Max { get; set; }
-
-        public bool MarathonBet { get; set; }
-
-        public bool PinnacleSports { get; set; }
+        public decimal? Max { get; set; }
 
         public bool Football { get; set; }
 
@@ -32,11 +28,14 @@ namespace DataSaver.Models
 
         public string LicenseKey { get; set; }
 
-
         public int? AutoUpdateTime { get; set; }
 
-        public int? DefaultRate { get; set; }
         public int? RecommendedRate1 { get; set; }
+
         public int? RecommendedRate2 { get; set; }
+
+        public decimal? MinPinBet { get; set; }
+
+        public decimal? MinMarBet { get; set; }
     }
 }

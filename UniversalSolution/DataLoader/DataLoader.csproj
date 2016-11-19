@@ -105,7 +105,7 @@
       <Name>DataParser</Name>
     </ProjectReference>
     <ProjectReference Include="..\DataSaver\DataSaver.csproj">
-      <Project>{6C968817-C8BB-4BFF-9284-C786DBF5E90D}</Project>
+      <Project>{6c968817-c8bb-4bff-9284-c786dbf5e90d}</Project>
       <Name>DataSaver</Name>
     </ProjectReference>
     <ProjectReference Include="..\FormulasCollection\FormulasCollection.csproj">

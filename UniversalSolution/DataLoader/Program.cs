@@ -1,4 +1,5 @@
-﻿using Common.Modules.AntiCaptha;
+﻿//#define PlaceBets
+
 using DataParser.DefaultRealization;
 using DataParser.Enums;
 using DataSaver;
@@ -6,9 +7,6 @@ using DataSaver.Models;
 using FormulasCollection.Enums;
 using FormulasCollection.Models;
 using FormulasCollection.Realizations;
-using SiteAccess.Access;
-using SiteAccess.Enums;
-using SiteAccess.Model.Bets;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -140,14 +138,14 @@ namespace DataLoader
         {
             Console.WriteLine($"Starting place bets for new {forks.Count} forks. Sport type {sportType}");
 
-
+#if PlaceBets
             var marath = new MarathonAccess(new AntiGate(_currentUser.AntiGateCode));
             //https://www.pinnacle.com/ru/api/manual#pbet
             var pinn = new PinncaleAccess();
 
             marath.Login(_currentUser.LoginMarathon, _currentUser.PasswordMarathon);
             pinn.Login(_currentUser.LoginPinnacle, _currentUser.PasswordPinnacle);
-
+#endif
 
             foreach (var fork in forks.Where(f => f.Profit > 1.0)
                                       .OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
@@ -163,7 +161,7 @@ namespace DataLoader
                     // ReSharper disable once PossibleInvalidOperationException
                 } while (recomendedRates.Item1.ConvertToDoubleOrNull().Value > 1.0);
 
-
+#if PlaceBets
                 var betM = new MarathonBet
                 {
                     Id = fork.selection_key,
@@ -220,7 +218,7 @@ namespace DataLoader
                 fork.PinRate = recomendedRates.Item2;
                 fork.MarSuccess = resM.ToString();
                 fork.PinSuccess = $"{resP.Success} {resP.Status} {resP.Error}";
-
+#endif
                 if (fork.Type != ForkType.Saved) { fork.Type = ForkType.Saved; }
             }
             Console.WriteLine($"End placing bet. Was placed {forks.Count(f => f.Type == ForkType.Saved)} forks. Sport type {sportType}");

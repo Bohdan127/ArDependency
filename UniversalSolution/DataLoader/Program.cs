@@ -1,4 +1,4 @@
-﻿//#define PlaceBets
+﻿#define PlaceBets
 
 using DataParser.DefaultRealization;
 using DataParser.Enums;
@@ -12,6 +12,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+#if PlaceBets
+using Common.Modules.AntiCaptha;
+using SiteAccess.Access;
+using SiteAccess.Enums;
+using SiteAccess.Model.Bets;
+#endif
 using ToolsPortable;
 
 namespace DataLoader
@@ -127,7 +133,8 @@ namespace DataLoader
             SportType sportType)
         {
             Console.WriteLine($"Starting remove old forks. Sport type {sportType}");
-            if (forks == null || forks.Count == 0) return;
+            if (forks == null || forks.Count == 0)
+                return;
 
             var rowsForDelete = _localSaver.MoveForks(forks, sportType);
             _localSaver.ClearForks(rowsForDelete);
@@ -219,7 +226,8 @@ namespace DataLoader
                 fork.MarSuccess = resM.ToString();
                 fork.PinSuccess = $"{resP.Success} {resP.Status} {resP.Error}";
 #endif
-                if (fork.Type != ForkType.Saved) { fork.Type = ForkType.Saved; }
+                if (fork.Type != ForkType.Saved)
+                { fork.Type = ForkType.Saved; }
             }
             Console.WriteLine($"End placing bet. Was placed {forks.Count(f => f.Type == ForkType.Saved)} forks. Sport type {sportType}");
         }

@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchPage));
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.progressBarControl1 = new DevExpress.XtraEditors.ProgressBarControl();
@@ -48,9 +47,9 @@
             this.colRate2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colCoef2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colPinRate = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colPinSuccess = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colProfit = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEditPercent = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
-            this.colPinSuccess = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colEventIdFOrMarathon = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemHyperLinkEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemHyperLinkEdit();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
@@ -58,7 +57,7 @@
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem9 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.imageList1 = new System.Windows.Forms.ImageList();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
@@ -147,10 +146,12 @@
             // 
             this.colDateAndTime.Caption = "Дата и время события";
             this.colDateAndTime.FieldName = "MatchDateTime";
+            this.colDateAndTime.MinWidth = 140;
             this.colDateAndTime.Name = "colDateAndTime";
             this.colDateAndTime.OptionsColumn.ReadOnly = true;
             this.colDateAndTime.Visible = true;
             this.colDateAndTime.VisibleIndex = 0;
+            this.colDateAndTime.Width = 140;
             // 
             // colSportType
             // 
@@ -171,16 +172,14 @@
             // 
             // colTeams
             // 
-            this.colTeams.Caption = "Время Ставки";
+            this.colTeams.Caption = "Событие";
             this.colTeams.FieldName = "Event";
             this.colTeams.Name = "colTeams";
             this.colTeams.OptionsColumn.ReadOnly = true;
-            this.colTeams.Visible = true;
-            this.colTeams.VisibleIndex = 3;
             // 
             // colBookmaker
             // 
-            this.colBookmaker.Caption = "Букмекер 1";
+            this.colBookmaker.Caption = "Событие из Марафона";
             this.colBookmaker.FieldName = "BookmakerFirst";
             this.colBookmaker.Name = "colBookmaker";
             this.colBookmaker.OptionsColumn.ReadOnly = true;
@@ -189,21 +188,23 @@
             // 
             // colRate1
             // 
-            this.colRate1.Caption = "Тип ставки 1";
+            this.colRate1.Caption = "Тип ставки на  Марафон";
             this.colRate1.FieldName = "TypeFirst";
             this.colRate1.Name = "colRate1";
             this.colRate1.OptionsColumn.ReadOnly = true;
             this.colRate1.Visible = true;
-            this.colRate1.VisibleIndex = 5;
+            this.colRate1.VisibleIndex = 4;
+            this.colRate1.Width = 32;
             // 
             // colCoef1
             // 
-            this.colCoef1.Caption = "Коэффициент 1";
+            this.colCoef1.Caption = "Коэффициент из Марафона";
             this.colCoef1.FieldName = "CoefFirst";
             this.colCoef1.Name = "colCoef1";
             this.colCoef1.OptionsColumn.ReadOnly = true;
             this.colCoef1.Visible = true;
-            this.colCoef1.VisibleIndex = 6;
+            this.colCoef1.VisibleIndex = 5;
+            this.colCoef1.Width = 32;
             // 
             // colMarRate
             // 
@@ -223,7 +224,7 @@
             // 
             // colBookmaker2
             // 
-            this.colBookmaker2.Caption = "Букмекер 2";
+            this.colBookmaker2.Caption = "Событие из Пиннакла";
             this.colBookmaker2.FieldName = "BookmakerSecond";
             this.colBookmaker2.Name = "colBookmaker2";
             this.colBookmaker2.OptionsColumn.ReadOnly = true;
@@ -232,21 +233,23 @@
             // 
             // colRate2
             // 
-            this.colRate2.Caption = "Тип ставки 2";
+            this.colRate2.Caption = "Тип ставки на Пиннакл";
             this.colRate2.FieldName = "TypeSecond";
             this.colRate2.Name = "colRate2";
             this.colRate2.OptionsColumn.ReadOnly = true;
             this.colRate2.Visible = true;
-            this.colRate2.VisibleIndex = 10;
+            this.colRate2.VisibleIndex = 9;
+            this.colRate2.Width = 32;
             // 
             // colCoef2
             // 
-            this.colCoef2.Caption = "Коэффициент 2";
+            this.colCoef2.Caption = "Коэффициент из Пиннакла";
             this.colCoef2.FieldName = "CoefSecond";
             this.colCoef2.Name = "colCoef2";
             this.colCoef2.OptionsColumn.ReadOnly = true;
             this.colCoef2.Visible = true;
-            this.colCoef2.VisibleIndex = 11;
+            this.colCoef2.VisibleIndex = 10;
+            this.colCoef2.Width = 32;
             // 
             // colPinRate
             // 
@@ -256,6 +259,14 @@
             this.colPinRate.Visible = true;
             this.colPinRate.VisibleIndex = 12;
             // 
+            // colPinSuccess
+            // 
+            this.colPinSuccess.Caption = "Успех на Пиннакле";
+            this.colPinSuccess.FieldName = "PinSuccess";
+            this.colPinSuccess.Name = "colPinSuccess";
+            this.colPinSuccess.Visible = true;
+            this.colPinSuccess.VisibleIndex = 13;
+            // 
             // colProfit
             // 
             this.colProfit.Caption = "Процент";
@@ -264,7 +275,8 @@
             this.colProfit.Name = "colProfit";
             this.colProfit.OptionsColumn.ReadOnly = true;
             this.colProfit.Visible = true;
-            this.colProfit.VisibleIndex = 14;
+            this.colProfit.VisibleIndex = 13;
+            this.colProfit.Width = 53;
             // 
             // repositoryItemTextEditPercent
             // 
@@ -272,14 +284,6 @@
             this.repositoryItemTextEditPercent.Mask.EditMask = "P";
             this.repositoryItemTextEditPercent.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.repositoryItemTextEditPercent.Name = "repositoryItemTextEditPercent";
-            // 
-            // colPinSuccess
-            // 
-            this.colPinSuccess.Caption = "Успех на Пиннакле";
-            this.colPinSuccess.FieldName = "PinSuccess";
-            this.colPinSuccess.Name = "colPinSuccess";
-            this.colPinSuccess.Visible = true;
-            this.colPinSuccess.VisibleIndex = 13;
             // 
             // colEventIdFOrMarathon
             // 

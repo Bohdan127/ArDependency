@@ -37,13 +37,17 @@ namespace DXApplication1.Pages
         private void InitAccountingPage()
         {
             Text = "Учет";
-            Icon = Icon.FromHandle(((Bitmap)imageList1.Images[3]).GetHicon());
+            Icon = Icon.FromHandle(( (Bitmap)imageList1.Images[3] ).GetHicon());
         }
 
         private void InitSearchPage()
         {
             Text = "Поиск вилок";
-            Icon = Icon.FromHandle(((Bitmap)imageList1.Images[2]).GetHicon());
+            Icon = Icon.FromHandle(( (Bitmap)imageList1.Images[2] ).GetHicon());
+            colMarRate.Visible = false;
+            colMarSuccess.Visible = false;
+            colPinRate.Visible = false;
+            colPinSuccess.Visible = false;
         }
 
         private void BackgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -51,7 +55,8 @@ namespace DXApplication1.Pages
             for (var i = progressBarControl1.Properties.Minimum; i <= progressBarControl1.Properties.Maximum; i++)
             {
                 Thread.Sleep(5);
-                progressBarControl1.Invoke(new MethodInvoker(delegate { progressBarControl1.EditValue = i; }));
+                progressBarControl1.Invoke(new MethodInvoker(delegate
+                { progressBarControl1.EditValue = i; }));
             }
         }
 

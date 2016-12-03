@@ -40,12 +40,10 @@ namespace FormulasCollection.Realizations
             var allRate = _calculatorFormulas.CalculateSummaryRate(rate1, rate2);
             var income1 = Convert.ToDouble(_calculatorFormulas.CalculateRate(allRate, allRate - rate2, coef1));
             var income2 = Convert.ToDouble(_calculatorFormulas.CalculateRate(allRate, allRate - rate1, coef2));
-            var income3 = Convert.ToDouble(_calculatorFormulas.CalculateClearRate(rate2, income1));
-            var income4 = Convert.ToDouble(_calculatorFormulas.CalculateClearRate(rate1, income2));
             //todo delete this shit and refactored to one command
-            return Math.Round(Convert.ToDouble(_calculatorFormulas.CalculateSummaryIncome(income3,
-                income4)) - defRate,
-                2);
+            return income1 < income2
+                ? income1
+                : income2;
         }
 
         private bool CheckIsMustToBeRevert(string eventMarathon, string eventPinacle) =>

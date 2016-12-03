@@ -63,6 +63,7 @@
       <HintPath>..\packages\System.Json.4.0.20126.16343\lib\net40\System.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -94,6 +95,10 @@
     <ProjectReference Include="..\DataSaver\DataSaver.csproj">
       <Project>{6C968817-C8BB-4BFF-9284-C786DBF5E90D}</Project>
       <Name>DataSaver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DXApplication1\DXApplication1.csproj">
+      <Project>{566460EE-3982-494B-8F10-6882E751097F}</Project>
+      <Name>DXApplication1</Name>
     </ProjectReference>
     <ProjectReference Include="..\FormulasCollection\FormulasCollection.csproj">
       <Project>{c6982ab9-704a-474f-a303-89b4c4a3d11e}</Project>

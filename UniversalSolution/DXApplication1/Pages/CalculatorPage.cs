@@ -1,6 +1,7 @@
 ﻿using FormulasCollection.Models;
 using FormulasCollection.Realizations;
 using System;
+using System.Globalization;
 using System.Windows.Forms;
 using ToolsPortable;
 
@@ -90,30 +91,32 @@ namespace DXApplication1.Pages
 
             //Get first Income
             textEditIncome1.Text = _calculatorFormulas.CalculateRate(
-                 textEditAllRate.Text.ConvertToDoubleOrNull(),
-                 textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate2.Text.ConvertToDoubleOrNull() ?? 0d,
-                 lbCoef1.Text.ConvertToDoubleOrNull());
+                textEditAllRate.Text.ConvertToDoubleOrNull(),
+                textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate2.Text.ConvertToDoubleOrNull() ?? 0d,
+                lbCoef1.Text.ConvertToDoubleOrNull());
 
             //Get second Income
             textEditIncome2.Text = _calculatorFormulas.CalculateRate(
-                 textEditAllRate.Text.ConvertToDoubleOrNull(),
-                 textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate1.Text.ConvertToDoubleOrNull() ?? 0d,
-                 lbCoef2.Text.ConvertToDoubleOrNull());
+                textEditAllRate.Text.ConvertToDoubleOrNull(),
+                textEditAllRate.Text.ConvertToDoubleOrNull() - textEditRate1.Text.ConvertToDoubleOrNull() ?? 0d,
+                lbCoef2.Text.ConvertToDoubleOrNull());
 
             //Get clear income for first one
             textEditIncome3.Text = _calculatorFormulas.CalculateClearRate(
-                 textEditRate2.Text.ConvertToDoubleOrNull() ?? 0d,
-                 textEditIncome1.Text.ConvertToDoubleOrNull() ?? 0d);
+                textEditRate2.Text.ConvertToDoubleOrNull() ?? 0d,
+                textEditIncome1.Text.ConvertToDoubleOrNull() ?? 0d);
 
             //get clear income for second one
             textEditIncome4.Text = _calculatorFormulas.CalculateClearRate(
-                 textEditRate1.Text.ConvertToDoubleOrNull() ?? 0d,
-                 textEditIncome2.Text.ConvertToDoubleOrNull() ?? 0d);
+                textEditRate1.Text.ConvertToDoubleOrNull() ?? 0d,
+                textEditIncome2.Text.ConvertToDoubleOrNull() ?? 0d);
 
             //get summary income
-            textEditAllIncome.Text = _calculatorFormulas.CalculateSummaryIncome(
-                textEditIncome3.Text.ConvertToDoubleOrNull() ?? 0d,
-                textEditIncome4.Text.ConvertToDoubleOrNull() ?? 0d);
+            textEditAllIncome.Text = ((textEditIncome1.Text.ConvertToDoubleOrNull() ?? 0d) <
+                                      (textEditIncome2.Text.ConvertToDoubleOrNull() ?? 0d)
+                ? (textEditIncome1.Text.ConvertToDoubleOrNull() ?? 0d)
+                : (textEditIncome2.Text.ConvertToDoubleOrNull() ?? 0d))
+                .ToString(CultureInfo.CurrentCulture);
         }
 
         public void DeInitializeEvents()

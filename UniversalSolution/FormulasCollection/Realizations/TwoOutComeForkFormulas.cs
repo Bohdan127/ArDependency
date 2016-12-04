@@ -26,25 +26,9 @@ namespace FormulasCollection.Realizations
         {
             if (coef1 == null || coef2 == null) return false;
 
-            return GetProfit(coef1.Value, coef2.Value) > 0;
+            return _calculatorFormulas.GetProfit(coef1.Value, coef2.Value) > 0;
         }
 
-        private double GetProfit(double coef1,
-            double coef2)
-        {
-            var defRate = 100d;
-            var rates = _calculatorFormulas.GetRecommendedRates(defRate, coef1, coef2);
-
-            var rate1 = Convert.ToDouble(rates.Item1);
-            var rate2 = Convert.ToDouble(rates.Item2);
-            var allRate = _calculatorFormulas.CalculateSummaryRate(rate1, rate2);
-            var income1 = Convert.ToDouble(_calculatorFormulas.CalculateRate(allRate, allRate - rate2, coef1));
-            var income2 = Convert.ToDouble(_calculatorFormulas.CalculateRate(allRate, allRate - rate1, coef2));
-            //todo delete this shit and refactored to one command
-            return income1 < income2
-                ? income1
-                : income2;
-        }
 
         private bool CheckIsMustToBeRevert(string eventMarathon, string eventPinacle) =>
            Extentions.GetStringSimilarityInPercent(eventMarathon.Split('#')[0],
@@ -119,7 +103,7 @@ namespace FormulasCollection.Realizations
                             BookmakerFirst = eventItem.Event_RU,
                             Type = ForkType.Current,
                             LineId = pinnacleEvent.TypeLineIdDictionary[pinEventKey],
-                            Profit = GetProfit(Convert.ToDouble(eventItem.Coef),
+                            Profit = _calculatorFormulas.GetProfit(Convert.ToDouble(eventItem.Coef),
                                 Convert.ToDouble(pinnacleEvent.TypeCoefDictionary[pinEventKey])),
                             sn = eventItem.marathonAutoPlay.sn,
                             mn = eventItem.marathonAutoPlay.mn,

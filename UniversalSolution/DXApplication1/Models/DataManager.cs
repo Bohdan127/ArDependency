@@ -4,6 +4,7 @@ using FormulasCollection.Models;
 using FormulasCollection.Realizations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ToolsPortable;
 
 namespace DXApplication1.Models
 {
@@ -17,7 +18,6 @@ namespace DXApplication1.Models
             _calculatorFormulas = new TwoOutComeCalculatorFormulas();
             _localSaver = new LocalSaver();
         }
-
         public async Task<List<Fork>> GetForksForAllSportsAsync(Filter filterPage, ForkType forkType)
         {
             if (filterPage == null)
@@ -28,6 +28,9 @@ namespace DXApplication1.Models
 
             foreach (var fork in forks)
             {
+                fork.Profit = _calculatorFormulas.GetProfit(
+                    fork.CoefFirst.ConvertToDoubleOrNull() ?? 0d,
+                    fork.CoefSecond.ConvertToDoubleOrNull() ?? 0d);
                 fork.prices = null;
             }
 

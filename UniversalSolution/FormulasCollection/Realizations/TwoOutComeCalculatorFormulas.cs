@@ -75,5 +75,22 @@ namespace FormulasCollection.Realizations
                 forks.RemoveAll(f => f.PinRate.ConvertToDecimalOrNull() < filterPage.MinPinBet);
             return forks;
         }
+
+        public double GetProfit(double coef1,
+            double coef2)
+        {
+            var defRate = 100d;
+            var rates = GetRecommendedRates(defRate, coef1, coef2);
+
+            var rate1 = Convert.ToDouble(rates.Item1);
+            var rate2 = Convert.ToDouble(rates.Item2);
+            var allRate = CalculateSummaryRate(rate1, rate2);
+            var income1 = Convert.ToDouble(CalculateRate(allRate, allRate - rate2, coef1));
+            var income2 = Convert.ToDouble(CalculateRate(allRate, allRate - rate1, coef2));
+            //todo delete this shit and refactored to one command
+            return income1 < income2
+                ? income1
+                : income2;
+        }
     }
 }

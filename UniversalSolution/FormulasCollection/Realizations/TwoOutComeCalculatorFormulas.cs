@@ -1,6 +1,9 @@
-﻿using System;
+﻿using FormulasCollection.Models;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using ToolsPortable;
 
 namespace FormulasCollection.Realizations
 {
@@ -44,6 +47,33 @@ namespace FormulasCollection.Realizations
         public string CalculateClearRate(double? v1, double? v2)
         {
             return (v1 + v2).ToString();
+        }
+
+        public List<Fork> FilteredForks(List<Fork> forks, Filter filterPage)
+        {
+            if (filterPage.Min != null)
+                forks.RemoveAll(f => Convert.ToDecimal(f.Profit) <= filterPage.Min.Value);
+            if (filterPage.Max != null)
+                forks.RemoveAll(f => Convert.ToDecimal(f.Profit) >= filterPage.Max.Value);
+            if (filterPage.FaterThen != null)
+            {
+                DateTime dateFater;
+                forks.RemoveAll(a => DateTime.Compare(DateTime.TryParse(a.MatchDateTime.Trim(), out dateFater)
+                                                          ? dateFater
+                                                          : DateTime.Now, filterPage.FaterThen.Value) < 0);
+            }
+            if (filterPage.LongerThen != null)
+            {
+                DateTime dateLonger;
+                forks.RemoveAll(a => DateTime.Compare(DateTime.TryParse(a.MatchDateTime.Trim(), out dateLonger)
+                                                          ? dateLonger
+                                                          : DateTime.Now, filterPage.LongerThen.Value) > 0);
+            }
+            if (filterPage.MinMarBet != null)
+                forks.RemoveAll(f => Convert.ToDecimal(f.MarRate) < filterPage.MinMarBet);
+            if (filterPage.MinPinBet != null)
+                forks.RemoveAll(f => f.PinRate.ConvertToDecimalOrNull() < filterPage.MinPinBet);
+            return forks;
         }
     }
 }

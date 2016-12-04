@@ -50,7 +50,8 @@ namespace DXApplication1.Models
         public FilterPage GetFilterPage(Filter filter, Form mdiParent = null, bool reload = false)
         {
             _timer.Stop();
-            if (filter == null) filter = new Filter();
+            if (filter.Id == null) DataManager.MapFilter(filter);
+
 
             return _filterPage ?? (_filterPage = new FilterPage(filter)
             {

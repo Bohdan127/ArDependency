@@ -1,4 +1,4 @@
-﻿#define PlaceBets
+﻿//#define PlaceBets
 
 using DataParser.DefaultRealization;
 using DataParser.Enums;
@@ -31,8 +31,12 @@ namespace DataLoader
         private static TwoOutComeForkFormulas _forkFormulas;
         private static LocalSaver _localSaver;
         private static TwoOutComeCalculatorFormulas _calculatorFormulas;
-
+#if PlaceBets
+        private static MarathonAccess _marath;
+        private static PinncaleAccess _pinn;
+#endif
         private static double _defRate;
+        private static Filter _filter;
 
         private static void Main()
         {
@@ -111,8 +115,41 @@ namespace DataLoader
                 //always loading all sports
                 var sportsToLoading = new[] { SportType.Basketball, SportType.Hockey, SportType.Soccer, SportType.Tennis, SportType.Volleyball };
 
+
+#if PlaceBets
+                _marath = new MarathonAccess(new AntiGate(_currentUser.AntiGateCode));
+                //https://www.pinnacle.com/ru/api/manual#pbet
+                _pinn = new PinncaleAccess();
+
+                _marath.Login(_currentUser.LoginMarathon, _currentUser.PasswordMarathon);
+                _pinn.Login(_currentUser.LoginPinnacle, _currentUser.PasswordPinnacle);
+#endif
+
                 foreach (var sportType in sportsToLoading)
                 {
+                    _filter = _localSaver.FindFilter();
+                    switch (sportType)
+                    {
+                        case SportType.Soccer:
+                            if (!_filter.Football) continue;
+                            break;
+                        case SportType.Basketball:
+                            if (!_filter.Basketball) continue;
+                            break;
+                        case SportType.Hockey:
+                            if (!_filter.Hockey) continue;
+                            break;
+                        case SportType.Tennis:
+                            if (!_filter.Tennis) continue;
+                            break;
+                        case SportType.Volleyball:
+                            if (!_filter.Volleyball) continue;
+                            break;
+                        case SportType.NoType:
+                            throw new ArgumentOutOfRangeException(sportType.ToString());
+                        default:
+                            throw new ArgumentOutOfRangeException(sportType.ToString());
+                    }
                     var pinSport = LoadPinacleDictionary(sportType);
                     var marSport = LoadMarathon(sportType);
                     var forks = GetForksDictionary(sportType, pinSport, marSport);
@@ -124,13 +161,11 @@ namespace DataLoader
                         SaveNewForks(forks, sportType);
                     }
                 }
-
             }
             // ReSharper disable once FunctionNeverReturns
         }
 
-        private static void ClearForks(List<Fork> forks,
-            SportType sportType)
+        private static void ClearForks(List<Fork> forks, SportType sportType)
         {
             Console.WriteLine($"Starting remove old forks. Sport type {sportType}");
             if (forks == null || forks.Count == 0)
@@ -145,25 +180,18 @@ namespace DataLoader
         {
             Console.WriteLine($"Starting place bets for new {forks.Count} forks. Sport type {sportType}");
 
-#if PlaceBets
-            var marath = new MarathonAccess(new AntiGate(_currentUser.AntiGateCode));
-            //https://www.pinnacle.com/ru/api/manual#pbet
-            var pinn = new PinncaleAccess();
 
-            marath.Login(_currentUser.LoginMarathon, _currentUser.PasswordMarathon);
-            pinn.Login(_currentUser.LoginPinnacle, _currentUser.PasswordPinnacle);
-#endif
-
-            foreach (var fork in forks.Where(f => f.Profit > 1.0)
-                                      .OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
+            foreach (
+                var fork in
+                    _calculatorFormulas.FilteredForks(forks.Select(f => f).ToList(), _filter)
+                        .OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
             {
                 var tmpRate = _defRate;
                 Tuple<string, string> recomendedRates = null;
                 do
                 {
                     recomendedRates = _calculatorFormulas.GetRecommendedRates(tmpRate,
-                                                                              fork.CoefFirst.ConvertToDoubleOrNull(),
-                                                                              fork.CoefSecond.ConvertToDoubleOrNull());
+                        fork.CoefFirst.ConvertToDoubleOrNull(), fork.CoefSecond.ConvertToDoubleOrNull());
                     tmpRate -= 0.1;
                     // ReSharper disable once PossibleInvalidOperationException
                 } while (recomendedRates.Item1.ConvertToDoubleOrNull().Value > 1.0);
@@ -174,33 +202,17 @@ namespace DataLoader
                     Id = fork.selection_key,
                     Name = fork.BookmakerSecond,
                     // ReSharper disable once PossibleInvalidOperationException
-                    Stake = recomendedRates.Item1.ConvertToDoubleOrNull()
-                                                      .Value,
-                    AddData = $"{{\"sn\":\"{fork.sn}\"," +
-                                         $"\"mn\":\"{fork.mn}\"," +
-                                         $"\"ewc\":\"{fork.ewc}\"," +
-                                         $"\"cid\":{fork.cid}," +
-                                         $"\"prt\":\"{fork.prt}\"," +
-                                         $"\"ewf\":\"{fork.ewf}\"," +
-                                         $"\"epr\":\"{fork.epr}\"," +
-                                         "\"prices\"" +
-                                         $":{{\"0\":\"{fork.prices[0]}\"," +
-                                         $"\"1\":\"{fork.prices[1]}\"," +
-                                         $"\"2\":\"{fork.prices[2]}\"," +
-                                         $"\"3\":\"{fork.prices[3]}\"," +
-                                         $"\"4\":\"{fork.prices[4]}\"," + $"\"5\":\"{fork.prices[5]}\"}}}}"
-
+                    Stake = recomendedRates.Item1.ConvertToDoubleOrNull().Value,
+                    AddData = $"{{\"sn\":\"{fork.sn}\"," + $"\"mn\":\"{fork.mn}\"," + $"\"ewc\":\"{fork.ewc}\"," + $"\"cid\":{fork.cid}," + $"\"prt\":\"{fork.prt}\"," + $"\"ewf\":\"{fork.ewf}\"," + $"\"epr\":\"{fork.epr}\"," + "\"prices\"" + $":{{\"0\":\"{fork.prices[0]}\"," + $"\"1\":\"{fork.prices[1]}\"," + $"\"2\":\"{fork.prices[2]}\"," + $"\"3\":\"{fork.prices[3]}\"," + $"\"4\":\"{fork.prices[4]}\"," + $"\"5\":\"{fork.prices[5]}\"}}}}"
                 };
                 var betP = new PinnacleBet
                 {
                     AcceptBetterLine = true,
                     BetType = BetType.MONEYLINE,
                     Eventid = Convert.ToInt64(fork.PinnacleEventId),
-                    Guid = Guid.NewGuid()
-                                          .ToString(),
+                    Guid = Guid.NewGuid().ToString(),
                     OddsFormat = OddsFormat.DECIMAL,
-                    LineId = Convert.ToInt64(fork.LineId),
-                    /*
+                    LineId = Convert.ToInt64(fork.LineId), /*
                      * This represents the period of the match. For example, for soccer we have:
                      * 0 - Game
                      * 1 - 1st Half
@@ -213,23 +225,29 @@ namespace DataLoader
                     SportId = (int)(SportType)Enum.Parse(typeof(SportType), fork.Sport, false)
                 };
 
-                var resM = marath.MakeBet(betM);
-                var resP = pinn.MakeBet(betP);
+                var resM = _marath.MakeBet(betM);
+                var resP = _pinn.MakeBet(betP);
 
                 Console.WriteLine($"Place result {resM} for {recomendedRates.Item1} into {fork.BookmakerSecond}");
-                Console.WriteLine(resP.Success
-                                      ? $"Place result {resP.Success} for {recomendedRates.Item2} into {fork.BookmakerFirst}"
-                                      : $"Place result {resP.Success} with code {resP.Status} and description {resP.Error} for {recomendedRates.Item1} into {fork.BookmakerFirst}");
+                Console.WriteLine(resP.Success ? $"Place result {resP.Success} for {recomendedRates.Item2} into {fork.BookmakerFirst}" : $"Place result {resP.Success} with code {resP.Status} and description {resP.Error} for {recomendedRates.Item1} into {fork.BookmakerFirst}");
 
                 fork.MarRate = recomendedRates.Item1;
                 fork.PinRate = recomendedRates.Item2;
                 fork.MarSuccess = resM.ToString();
                 fork.PinSuccess = $"{resP.Success} {resP.Status} {resP.Error}";
 #endif
-                if (fork.Type != ForkType.Saved)
-                { fork.Type = ForkType.Saved; }
+                var outF =
+                    forks.First(
+                        f =>
+                            f.MarathonEventId == fork.MarathonEventId
+                            && f.PinnacleEventId == fork.PinnacleEventId
+                            && f.TypeFirst == fork.TypeFirst
+                            && f.TypeSecond == fork.TypeSecond);
+                if (outF.Type != ForkType.Saved)
+                    outF.Type = ForkType.Saved;
             }
-            Console.WriteLine($"End placing bet. Was placed {forks.Count(f => f.Type == ForkType.Saved)} forks. Sport type {sportType}");
+            Console.WriteLine(
+                $"End placing bet. Was placed {forks.Count(f => f.Type == ForkType.Saved)} forks. Sport type {sportType}");
         }
 
         private static List<Fork> GetForksDictionary(SportType sportType, Dictionary<string, ResultForForksDictionary> pinSport, List<ResultForForks> marSport)
@@ -267,9 +285,7 @@ namespace DataLoader
         {
             Console.WriteLine($"Start Loading {sportType} Events from Pinnacle");
 
-            var newList = _pinnacle.GetAllPinacleEventsDictionary(sportType,
-                _currentUser.LoginPinnacle,
-                _currentUser.PasswordPinnacle);
+            var newList = _pinnacle.GetAllPinacleEventsDictionary(sportType, _currentUser.LoginPinnacle, _currentUser.PasswordPinnacle);
 
             Console.WriteLine("Loading finished");
             Console.WriteLine($"Was founded {newList.Count} {sportType} Events from Pinnacle");

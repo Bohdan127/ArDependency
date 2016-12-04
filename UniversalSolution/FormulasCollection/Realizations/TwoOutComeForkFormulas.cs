@@ -105,7 +105,7 @@ namespace FormulasCollection.Realizations
                         //fork variable is created for debug, please don't refactor it into resList.Add function
                         var fork = new Fork
                         {
-                            League = eventItem.League,
+                            League = pinnacleEvent.LeagueName,
                             MarathonEventId = eventItem.EventId,
                             PinnacleEventId = pinnacleEvent.EventId,
                             Event = eventItem.Event,

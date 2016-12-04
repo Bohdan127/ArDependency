@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataSaver.Models
+namespace FormulasCollection.Models
 {
     public class Filter
     {
@@ -24,10 +24,6 @@ namespace DataSaver.Models
 
         public DateTime? LongerThen { get; set; }
 
-        public bool OutCome2 { get; set; }
-
-        public bool OutCome3 { get; set; }
-
         public string LicenseKey { get; set; }
 
         public int? AutoUpdateTime { get; set; }
@@ -39,5 +35,6 @@ namespace DataSaver.Models
         public decimal? MinPinBet { get; set; }
 
         public decimal? MinMarBet { get; set; }
+
     }
 }

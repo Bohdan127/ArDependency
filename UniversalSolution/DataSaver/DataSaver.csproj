@@ -79,7 +79,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Filter.cs" />
     <Compile Include="LocalSaver.cs" />
     <Compile Include="Models\ForkRow.cs" />
     <Compile Include="Models\User.cs" />

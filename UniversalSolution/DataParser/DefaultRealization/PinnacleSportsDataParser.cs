@@ -33,6 +33,7 @@ namespace DataParser.DefaultRealization
 
                 foreach (var league in sportEvents["leagues"])
                 {
+                    var leagueId = league.Value["id"].ConvertToLongOrNull();
                     if (league.Value == null
                         || !league.Value.ContainsKey("events")) continue;
                     foreach (var sportEvent in league.Value["events"])
@@ -65,7 +66,8 @@ namespace DataParser.DefaultRealization
                                         LineId = lineId,
                                         TotalType = "1",
                                         TotalValue = moneyLine["home"].ToString(),
-                                        MatchDateTime = matchDateTime
+                                        MatchDateTime = matchDateTime,
+                                        LeagueId = leagueId
                                     });
                                 if (moneyLine.ContainsKey("away"))
                                     resList[id].Add(new EventWithTotalDictionary
@@ -73,7 +75,8 @@ namespace DataParser.DefaultRealization
                                         LineId = lineId,
                                         TotalType = "2",
                                         TotalValue = moneyLine["away"].ToString(),
-                                        MatchDateTime = matchDateTime
+                                        MatchDateTime = matchDateTime,
+                                        LeagueId = leagueId
                                     });
                                 if (moneyLine.ContainsKey("draw"))
                                     resList[id].Add(new EventWithTotalDictionary
@@ -81,7 +84,8 @@ namespace DataParser.DefaultRealization
                                         LineId = lineId,
                                         TotalType = "X",
                                         TotalValue = moneyLine["draw"].ToString(),
-                                        MatchDateTime = matchDateTime
+                                        MatchDateTime = matchDateTime,
+                                        LeagueId = leagueId
                                     });
                             }
                             if (period.Value.ContainsKey("spreads") && period.Value["spreads"] != null)
@@ -95,7 +99,8 @@ namespace DataParser.DefaultRealization
                                             LineId = lineId,
                                             TotalType = $"F2({spread.Value["hdp"]})",
                                             TotalValue = spread.Value["away"].ToString(),
-                                            MatchDateTime = matchDateTime
+                                            MatchDateTime = matchDateTime,
+                                            LeagueId = leagueId
                                         });
                                     if (spread.Value.ContainsKey("home"))
                                         resList[id].Add(new EventWithTotalDictionary
@@ -103,7 +108,8 @@ namespace DataParser.DefaultRealization
                                             LineId = lineId,
                                             TotalType = $"F1({spread.Value["hdp"]})",
                                             TotalValue = spread.Value["home"].ToString(),
-                                            MatchDateTime = matchDateTime
+                                            MatchDateTime = matchDateTime,
+                                            LeagueId = leagueId
                                         });
                                 }
                             if (period.Value.ContainsKey("totals") && period.Value["totals"] != null)
@@ -116,7 +122,8 @@ namespace DataParser.DefaultRealization
                                             LineId = lineId,
                                             TotalType = $"TO({total.Value["points"]})",
                                             TotalValue = total.Value["over"].ToString(),
-                                            MatchDateTime = matchDateTime
+                                            MatchDateTime = matchDateTime,
+                                            LeagueId = leagueId
                                         });
                                     if (total.Value.ContainsKey("under"))
                                         resList[id].Add(new EventWithTotalDictionary
@@ -124,7 +131,8 @@ namespace DataParser.DefaultRealization
                                             LineId = lineId,
                                             TotalType = $"TU({total.Value["points"]})",
                                             TotalValue = total.Value["under"].ToString(),
-                                            MatchDateTime = matchDateTime
+                                            MatchDateTime = matchDateTime,
+                                            LeagueId = leagueId
                                         });
                                 }
                         }
@@ -145,11 +153,8 @@ namespace DataParser.DefaultRealization
             var resList = new Dictionary<long, string>();
             try
             {
-                var jsonValue = ((JsonObject)JsonValue.
-                                                  Load(teamNamesResp.GetResponseStream()))["league"];
-
+                var jsonValue = ((JsonObject)JsonValue.Load(teamNamesResp.GetResponseStream()))["league"];
                 if (jsonValue == null) return resList;
-
                 foreach (var league in jsonValue)
                 {
                     var sportEvents = league.Value["events"];
@@ -158,15 +163,11 @@ namespace DataParser.DefaultRealization
 
                     foreach (var sportEvent in sportEvents)
                     {
-                        var convertToLongOrNull = sportEvent.Value["id"].ConvertToStringOrNull();
-
-                        if (convertToLongOrNull == null) continue;
-
-                        var id = Convert.ToInt64(convertToLongOrNull);
-
-                        if (!resList.ContainsKey(id))
-                            resList.Add(id, $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"
-                                                .Replace("\"", ""));
+                        var id = sportEvent.Value["id"].ConvertToLongOrNull();
+                        if (id == null) continue;
+                        if (!resList.ContainsKey(id.Value))
+                            resList.Add(id.Value, $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"
+                                .Replace("\"", ""));
                     }
                 }
             }
@@ -179,10 +180,35 @@ namespace DataParser.DefaultRealization
             return resList;
         }
 
-        private Dictionary<string, ResultForForksDictionary> GroupResponsesDictionary(HttpWebResponse totalResp, HttpWebResponse teamNamesResp)
+        private Dictionary<long, string> ParseEventWithLeguesNamesDictionary(HttpWebResponse leaguesNamesResp)
+        {
+            var resList = new Dictionary<long, string>();
+            try
+            {
+                var jsonValue = ((JsonObject)JsonValue.Load(leaguesNamesResp.GetResponseStream()))["leagues"];
+                if (jsonValue == null) return resList;
+                foreach (var league in jsonValue)
+                {
+                    var id = league.Value["id"].ConvertToLongOrNull();
+                    if (id == null) continue;
+                    if (!resList.ContainsKey(id.Value))
+                        resList.Add(id.Value, league.Value["name"].ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                _logger.Error(ex.StackTrace);
+                throw;
+            }
+            return resList;
+        }
+
+        private Dictionary<string, ResultForForksDictionary> GroupResponsesDictionary(HttpWebResponse totalResp, HttpWebResponse teamNamesResp, HttpWebResponse leaguesNamesResp)
         {
             var eventsWithNames = ParseEventWithNamesDictionary(teamNamesResp);
             var eventsWithTotal = ParseEventWithTotalsDictionaty(totalResp);
+            var eventsWithLeaguesNames = ParseEventWithLeguesNamesDictionary(leaguesNamesResp);
 
             var resDic = new Dictionary<string, ResultForForksDictionary>();
             try
@@ -193,7 +219,6 @@ namespace DataParser.DefaultRealization
 
                     foreach (var eventWithTotal in eventsWithTotal[eventWithName.Key])
                     {
-
                         var key = $"{eventWithName.Value}";
                         if (!resDic.ContainsKey(key))
                         {
@@ -212,6 +237,8 @@ namespace DataParser.DefaultRealization
                                                                    _converter.ConvertAmericanToDecimal(eventWithTotal.TotalValue.ConvertToDoubleOrNull()));
                             }
                             resDic[key].TypeLineIdDictionary.Add(eventWithTotal.TotalType, eventWithTotal.LineId);
+                            if (eventWithTotal.LeagueId != null && eventsWithLeaguesNames.ContainsKey(eventWithTotal.LeagueId.Value))
+                                resDic[key].LeagueName = eventsWithLeaguesNames[eventWithTotal.LeagueId.Value];
                         }
                         else
                         {
@@ -255,7 +282,8 @@ namespace DataParser.DefaultRealization
             {
                 var totalResp = GetAllTotals(userLogin, userPass);
                 var teamNamesResp = GetAllTeamNames(userLogin, userPass);
-                resDic = GroupResponsesDictionary(totalResp, teamNamesResp);
+                var leaguesNamesResp = GetAllLeaguesNames(userLogin, userPass);
+                resDic = GroupResponsesDictionary(totalResp, teamNamesResp, leaguesNamesResp);
                 var listForRemove = new List<string>();
 
                 foreach (var key in resDic.Keys)
@@ -307,6 +335,26 @@ namespace DataParser.DefaultRealization
         protected virtual HttpWebResponse GetAllTotals(string userLogin, string userPass)
         {
             var request = (HttpWebRequest)WebRequest.Create("https://api.pinnaclesports.com/v1/odds?sportid=" + (int)_sportType);
+            var credentials = $"{userLogin}:{userPass}"; //for test "VB794327", "artem89@"
+            var bytes = Encoding.UTF8.GetBytes(credentials);
+            var base64 = Convert.ToBase64String(bytes);
+            var authorization = string.Concat("Basic ", base64);
+            request.Headers.Add("Authorization", authorization);
+            request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)";
+            request.Method = "GET";
+            request.Accept = "application/json";
+            request.ContentType = "application/json; charset=utf-8";
+            return (HttpWebResponse)request.GetResponse();
+        }
+
+
+        /// <summary>
+        /// This function get events with their totals
+        /// </summary>
+        /// <returns></returns>
+        protected virtual HttpWebResponse GetAllLeaguesNames(string userLogin, string userPass)
+        {
+            var request = (HttpWebRequest)WebRequest.Create("https://api.pinnacle.com/v2/leagues?sportid=" + (int)_sportType);
             var credentials = $"{userLogin}:{userPass}"; //for test "VB794327", "artem89@"
             var bytes = Encoding.UTF8.GetBytes(credentials);
             var base64 = Convert.ToBase64String(bytes);

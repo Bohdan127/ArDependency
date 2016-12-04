@@ -176,11 +176,11 @@ namespace DataSaver
         public List<Fork> GetForks(Filter searchCriteria, ForkType forkType)
         {
             return GetAllForkRows().Where(f => f.Type == forkType &&
-                ( ( searchCriteria.Basketball && f.Sport == SportType.Basketball.ToString() ) ||
-                ( searchCriteria.Football && f.Sport == SportType.Soccer.ToString() ) ||
-                ( searchCriteria.Hockey && f.Sport == SportType.Hockey.ToString() ) ||
-                ( searchCriteria.Volleyball && f.Sport == SportType.Volleyball.ToString() ) ||
-                ( searchCriteria.Tennis && f.Sport == SportType.Tennis.ToString() ) ))
+                ((searchCriteria.Basketball && f.Sport == SportType.Basketball.ToString()) ||
+                (searchCriteria.Football && f.Sport == SportType.Soccer.ToString()) ||
+                (searchCriteria.Hockey && f.Sport == SportType.Hockey.ToString()) ||
+                (searchCriteria.Volleyball && f.Sport == SportType.Volleyball.ToString()) ||
+                (searchCriteria.Tennis && f.Sport == SportType.Tennis.ToString())))
                 .Select(MapForkRowToFork).ToList();
         }
 
@@ -445,6 +445,21 @@ namespace DataSaver
             return true;
         }
 
+        public bool AddFilterToDb(Filter filter)
+        {
+            try
+            {
+                Session.Store(filter);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                _logger.Error(ex.StackTrace);
+            }
+            Session.SaveChanges();
+            return true;
+        }
+
 
         public User FindUser()
         {
@@ -460,7 +475,7 @@ namespace DataSaver
                 }
             }
             jsonList.RemoveAll(json => !json.Key.Contains("users/"));
-            var resList = jsonList.Select(MapJsonDocumentToUser);
+            var resList = jsonList.Select(MapJsonDocumentToUser).ToArray();
             return resList.FirstOrDefault();
         }
 
@@ -470,16 +485,20 @@ namespace DataSaver
             using (_store.DatabaseCommands.DisableAllCaching())
             {
                 for (var i = 0;
-                    i <=
-                    Session.Query<Filter>().Customize(x => x.WaitForNonStaleResultsAsOfNow()).GetPageCount(PageSize);
+                    i <= Session.Query<Filter>().Customize(x => x.WaitForNonStaleResultsAsOfNow()).GetPageCount(PageSize);
                     i += PageSize)
                 {
                     jsonList.AddRange(_store.DatabaseCommands.GetDocuments(i, PageSize));
                 }
             }
             jsonList.RemoveAll(json => !json.Key.Contains("filters/"));
-            var resList = jsonList.Select(MapJsonDocumentToFilter);
-            return resList.FirstOrDefault();
+            var resList = jsonList.Select(MapJsonDocumentToFilter).ToArray();
+
+            if (resList.FirstOrDefault() != null)
+                return resList.FirstOrDefault();
+
+            AddFilterToDb(new Filter());
+            return FindFilter();
         }
     }
 }

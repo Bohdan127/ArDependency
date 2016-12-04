@@ -9,5 +9,7 @@
         public string MatchDateTime { get; set; }
 
         public string LineId { get; set; }
+
+        public long? LeagueId { get; set; }
     }
 }

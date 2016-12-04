@@ -1,13 +1,12 @@
-﻿using DataSaver.Models;
+﻿using DataSaver;
+using DataSaver.Models;
 using DevExpress.XtraEditors;
 using DXApplication1.Models;
 using GlobalResources.uk_UA;
 using License.Logic;
 using NLog;
-using System;
-using System.IO;
 using System.Windows.Forms;
-using System.Xml.Serialization;
+using FormulasCollection.Models;
 
 namespace DXApplication1
 {
@@ -23,7 +22,6 @@ namespace DXApplication1
 
         private Filter _filter;
         private PageManager _pageManager;
-        private string licenseKey = string.Empty;
 
         #endregion Members
 
@@ -37,19 +35,17 @@ namespace DXApplication1
             Closed += XtraForm1_Closed;
             Closing += XtraForm1_Closing;
 
-            _pageManager = new PageManager(this);
-            DeserializeAll();
-            PrepareData();
-
+            _pageManager = new PageManager(this);_filter = new Filter();
             _pageManager.GetFilterPage(_filter);
 
             var licenseForm = new LicenseForm("uk_UA", uk_UA.ResourceManager);
-            if (!licenseForm.CheckInstance(_filter.LicenseKey))
+            if (!licenseForm.CheckInstance(_filter.LicenseKey ?? string.Empty))
                 licenseForm.ShowDialog();
             if (!licenseForm.IsRegistered)
                 Close();
             _filter.LicenseKey = licenseForm.LicenseKey;
         }
+
         #endregion CTOR
 
         #region Events
@@ -57,7 +53,7 @@ namespace DXApplication1
         private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             var page = _pageManager.GetSearchPage();
-            page.Hide();//if already shown right now
+            page.Hide(); //if already shown right now
             page.Show();
             page.OnUpdate();
         }
@@ -65,7 +61,7 @@ namespace DXApplication1
         private void barButtonItem3_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             var page = _pageManager.GetAccountPage();
-            page.Hide();//if already shown right now
+            page.Hide(); //if already shown right now
             page.Show();
             page.OnUpdate();
         }
@@ -85,78 +81,16 @@ namespace DXApplication1
 
         private void XtraForm1_Closed(object sender, System.EventArgs e)
         {
-            SerializeAll();
+            new LocalSaver().UpdateFilter(_filter);
         }
 
         private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             var page = _pageManager.GetFilterPage(_filter);
-            page.Hide();//if already shown right now
+            page.Hide(); //if already shown right now
             page.Show();
         }
 
         #endregion Events
-
-        #region Functions
-
-        private void PrepareData()
-        {
-            if (_filter == null)
-                _filter = new Filter();
-        }
-
-        /// <summary>
-        /// Save changes to XML output file
-        /// </summary>
-        /// <returns></returns>
-        protected bool DeserializeAll()
-        {
-            //todo Show Message if bRes == False that can't read old data
-            var bRes = true;
-            try
-            {
-                _filter = (Filter)new XmlSerializer(typeof(Filter))
-                    .Deserialize(new StreamReader(SettingsPath + SettingsFile));
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message);
-                _logger.Error(ex.StackTrace);
-                bRes = false;
-            }
-
-            bRes &= _filter != null;
-
-            return bRes;
-        }
-
-        /// <summary>
-        /// Read previous data from XML
-        /// </summary>
-        /// <returns></returns>
-        protected bool SerializeAll()
-        {
-            //todo Show Message if bRes == False that can't read old data
-            var bRes = true;
-            try
-            {
-                var writer = File.Create(SettingsPath + SettingsFile);
-
-                new XmlSerializer(typeof(Filter)).Serialize(
-                   writer, _filter);
-
-                writer.Close();
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message);
-                _logger.Error(ex.StackTrace);
-                bRes = false;
-            }
-
-            return bRes;
-        }
-
-        #endregion Functions
     }
 }

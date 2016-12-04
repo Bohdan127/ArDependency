@@ -1,12 +1,9 @@
 ﻿using DataSaver;
-using DataSaver.Models;
 using FormulasCollection.Enums;
 using FormulasCollection.Models;
 using FormulasCollection.Realizations;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ToolsPortable;
 
 namespace DXApplication1.Models
 {
@@ -34,34 +31,33 @@ namespace DXApplication1.Models
                 fork.prices = null;
             }
 
-            return FilteredForks(forks, filterPage);
+            return _calculatorFormulas.FilteredForks(forks, filterPage);
         }
 
-        private List<Fork> FilteredForks(List<Fork> forks, Filter filterPage)
+        public Filter GetFilter()
         {
-            if (filterPage.Min != null)
-                forks.RemoveAll(f => Convert.ToDecimal(f.Profit) <= filterPage.Min.Value);
-            if (filterPage.Max != null)
-                forks.RemoveAll(f => Convert.ToDecimal(f.Profit) >= filterPage.Max.Value);
-            if (filterPage.FaterThen != null)
-            {
-                DateTime dateFater;
-                forks.RemoveAll(a => DateTime.Compare(DateTime.TryParse(a.MatchDateTime.Trim(), out dateFater)
-                                                          ? dateFater
-                                                          : DateTime.Now, filterPage.FaterThen.Value) < 0);
-            }
-            if (filterPage.LongerThen != null)
-            {
-                DateTime dateLonger;
-                forks.RemoveAll(a => DateTime.Compare(DateTime.TryParse(a.MatchDateTime.Trim(), out dateLonger)
-                                                          ? dateLonger
-                                                          : DateTime.Now, filterPage.LongerThen.Value) > 0);
-            }
-            if (filterPage.MinMarBet != null)
-                forks.RemoveAll(f => Convert.ToDecimal(f.MarRate) < filterPage.MinMarBet);
-            if (filterPage.MinPinBet != null)
-                forks.RemoveAll(f => f.PinRate.ConvertToDecimalOrNull() < filterPage.MinPinBet);
-            return forks;
+            return _localSaver.FindFilter();
+        }
+
+        public void MapFilter(Filter filter)
+        {
+            var dbFilter = GetFilter();
+            filter.Id = dbFilter.Id;
+            filter.Min = dbFilter.Min;
+            filter.Max = dbFilter.Max;
+            filter.Football = dbFilter.Football;
+            filter.Basketball = dbFilter.Basketball;
+            filter.Volleyball = dbFilter.Volleyball;
+            filter.Hockey = dbFilter.Hockey;
+            filter.Tennis = dbFilter.Tennis;
+            filter.FaterThen = dbFilter.FaterThen;
+            filter.LongerThen = dbFilter.LongerThen;
+            filter.LicenseKey = dbFilter.LicenseKey;
+            filter.AutoUpdateTime = dbFilter.AutoUpdateTime;
+            filter.RecommendedRate1 = dbFilter.RecommendedRate1;
+            filter.RecommendedRate2 = dbFilter.RecommendedRate2;
+            filter.MinPinBet = dbFilter.MinPinBet;
+            filter.MinMarBet = dbFilter.MinMarBet;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DataSaver;
 using DataSaver.Models;
 using DevExpress.XtraEditors.Controls;
+using FormulasCollection.Models;
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -18,17 +19,13 @@ namespace DXApplication1.Pages
 
         public bool ToClose { get; set; }
 
-        public FilterPage()
-        {
-            InitializeComponent();
-        }
+        public EventHandler FilterUpdated;
 
         public FilterPage(Filter filter)
-                : this()
         {
+            InitializeComponent(); LocalSaver = new LocalSaver();
+            FilterUpdated += (sender, args) => { if (Filter != null) LocalSaver.UpdateFilter(Filter); };
             Filter = filter;
-            LocalSaver = new LocalSaver();
-
             FirstBind();
             UserBind();
             InitializeEvents();
@@ -37,12 +34,12 @@ namespace DXApplication1.Pages
         private void UserBind()
         {
             var user = LocalSaver.FindUser();
+            _userId = user?.Id;
             textEditLoginPinnacle.Text = user?.LoginPinnacle;
             textEditPasswordPinnacle.Text = user?.PasswordPinnacle;
             textEditLoginMarathon.Text = user?.LoginMarathon;
             textEditPasswordMarathon.Text = user?.PasswordMarathon;
             textEditAntiGateCode.Text = user?.AntiGateCode;
-            _userId = user?.Id;
         }
 
         protected void FirstBind()
@@ -115,6 +112,7 @@ namespace DXApplication1.Pages
             lock (Filter)
             {
                 Filter.MinPinBet = e.NewValue.ConvertToDecimalOrNull();
+                FilterUpdated?.Invoke(sender, e);
             }
         }
 
@@ -123,6 +121,7 @@ namespace DXApplication1.Pages
             lock (Filter)
             {
                 Filter.MinMarBet = e.NewValue.ConvertToDecimalOrNull();
+                FilterUpdated?.Invoke(sender, e);
             }
         }
 
@@ -145,6 +144,7 @@ namespace DXApplication1.Pages
             lock (Filter)
             {
                 Filter.AutoUpdateTime = e.NewValue.ConvertToIntOrNull();
+                FilterUpdated?.Invoke(sender, e);
             }
         }
 
@@ -165,6 +165,7 @@ namespace DXApplication1.Pages
                            && ((Filter.Max.Value != 0
                                 && Filter.Max < Filter.Min)
                                || Filter.Min.Value < 0);
+                if (!e.Cancel) FilterUpdated?.Invoke(sender, e);
             }
         }
 
@@ -177,7 +178,7 @@ namespace DXApplication1.Pages
                            && Filter.Max != null
                            && ((Filter.Min.Value != 0
                                 && Filter.Min > Filter.Max)
-                               || Filter.Max.Value < 0);
+                               || Filter.Max.Value < 0);if (!e.Cancel) FilterUpdated?.Invoke(sender, e);
             }
         }
 
@@ -186,6 +187,7 @@ namespace DXApplication1.Pages
             lock (Filter)
             {
                 Filter.Football = footballToggleSwitch.EditValue.ConvertToBool();
+                FilterUpdated?.Invoke(sender, e);
             }
         }
 
@@ -194,6 +196,7 @@ namespace DXApplication1.Pages
             lock (Filter)
             {
                 Filter.Basketball = basketballToggleSwitch.EditValue.ConvertToBool();
+                FilterUpdated?.Invoke(sender, e);
             }
         }
 
@@ -202,6 +205,7 @@ namespace DXApplication1.Pages
             lock (Filter)
             {
                 Filter.Volleyball = volleyballToggleSwitch.EditValue.ConvertToBool();
+                FilterUpdated?.Invoke(sender, e);
             }
         }
 
@@ -210,6 +214,7 @@ namespace DXApplication1.Pages
             lock (Filter)
             {
                 Filter.Hockey = hockeyToggleSwitch.EditValue.ConvertToBool();
+                FilterUpdated?.Invoke(sender, e);
             }
         }
 
@@ -218,6 +223,7 @@ namespace DXApplication1.Pages
             lock (Filter)
             {
                 Filter.Tennis = tennisToggleSwitch.EditValue.ConvertToBool();
+                FilterUpdated?.Invoke(sender, e);
             }
         }
 
@@ -232,6 +238,7 @@ namespace DXApplication1.Pages
                 {
                     Filter.FaterThen = dateValue;
                 }
+                FilterUpdated?.Invoke(sender, e);
             }
         }
 
@@ -246,6 +253,7 @@ namespace DXApplication1.Pages
                 {
                     Filter.LongerThen = dateValue;
                 }
+                FilterUpdated?.Invoke(sender, e);
             }
         }
     }

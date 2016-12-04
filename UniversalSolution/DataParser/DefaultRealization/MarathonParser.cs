@@ -159,7 +159,7 @@ namespace DataParser.DefaultRealization
             }
             return resEvent;
         }
-        public Dictionary<string,string> LoadID(SportType sportType)
+        public Dictionary<string, string> LoadID(SportType sportType)
         {
             Dictionary<string, string> ListIDforSelectedSport = new Dictionary<string, string>();
             //string
@@ -222,7 +222,7 @@ namespace DataParser.DefaultRealization
                         isTeamName = false;
                     }
                 }
-                if(!isTeamName && !string.IsNullOrEmpty(_teamName) && !isEventID && !string.IsNullOrEmpty(eventid))
+                if (!isTeamName && !string.IsNullOrEmpty(_teamName) && !isEventID && !string.IsNullOrEmpty(eventid))
                 {
                     ListIDforSelectedSport[eventid] = _teamName;
                 }
@@ -690,6 +690,8 @@ namespace DataParser.DefaultRealization
                 catch (Exception e)
                 {
                     _logger.Error("Error in FullParse(string event_id)!!" + "\n\n\n");
+                    _logger.Error(e.Message);
+                    _logger.Error(e.StackTrace);
                 }
             }
             if (sportType.ToString().Equals(SportType.Volleyball.ToString()))
@@ -838,6 +840,8 @@ namespace DataParser.DefaultRealization
                     _logger.Error("Error in CreateEvent(List<DataMarathonForAutoPlays> list)\n\n\n\n"
                          + "Origin: " + "[" + i + "]" + list[i].sn + " - " + list[i].epr + "\n\n\n" +
                          mainCoef.Keys.ToString() + " \n\n\n" + mainCoef.Values.ToString());
+                    _logger.Error(e.Message);
+                    _logger.Error(e.StackTrace);
                 }
             }
 
@@ -946,6 +950,8 @@ namespace DataParser.DefaultRealization
                     _logger.Error("Error in CreateEvent(List<DataMarathonForAutoPlays> list)\n\n\n\n"
                          + "Origin: " + "[" + i + "]" + list[i].sn + " - " + list[i].epr + "\n\n\n" +
                          mainCoef.Keys.ToString() + " \n\n\n" + mainCoef.Values.ToString());
+                    _logger.Error(e.Message);
+                    _logger.Error(e.StackTrace);
                 }
             }
 
@@ -1264,7 +1270,6 @@ namespace DataParser.DefaultRealization
             }
         }
         #endregion
-
         #region [Documents]
         public static void WriteToDocument(List<ResultForForks> teams, string namefile = "check.txt")
         {
@@ -1394,6 +1399,8 @@ namespace DataParser.DefaultRealization
             }
             catch (Exception e)
             {
+                _logger.Error(e.Message);
+                _logger.Error(e.StackTrace);
                 /*MessageBox.Show(e.Message.ToString());
                 _driver.Close();
                 _driver = new PhantomJSDriver();*/

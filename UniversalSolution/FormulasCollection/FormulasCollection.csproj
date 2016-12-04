@@ -66,6 +66,7 @@
     <Compile Include="Helpers\SportsConverterTypes.cs" />
     <Compile Include="Models\CoefsWhichMustBeRevert.cs" />
     <Compile Include="Models\DataMarathonForAutoPlays.cs" />
+    <Compile Include="Models\Filter.cs" />
     <Compile Include="Models\SportTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\ResultForForks.cs" />

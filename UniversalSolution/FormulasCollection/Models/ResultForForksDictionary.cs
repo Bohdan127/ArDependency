@@ -11,6 +11,8 @@ namespace FormulasCollection.Models
 
         public string EventId { get; set; }
 
+        public string LeagueName { get; set; }
+
         public Dictionary<string, double> TypeCoefDictionary { get; set; }
 
         public Dictionary<string, string> TypeLineIdDictionary { get; set; }

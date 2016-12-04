@@ -136,7 +136,10 @@ namespace DXApplication1.Pages
                 PasswordMarathon = textEditPasswordMarathon.Text,
                 AntiGateCode = textEditAntiGateCode.Text
             };
-            LocalSaver.UpdateUser(user);
+            if (_userId.IsBlank())
+                LocalSaver.AddUserToDb(user);
+            else
+                LocalSaver.UpdateUser(user);
         }
 
         private void TextEditAutoUpdate_EditValueChanging(object sender, ChangingEventArgs e)
@@ -178,7 +181,7 @@ namespace DXApplication1.Pages
                            && Filter.Max != null
                            && ((Filter.Min.Value != 0
                                 && Filter.Min > Filter.Max)
-                               || Filter.Max.Value < 0);if (!e.Cancel) FilterUpdated?.Invoke(sender, e);
+                               || Filter.Max.Value < 0); if (!e.Cancel) FilterUpdated?.Invoke(sender, e);
             }
         }
 

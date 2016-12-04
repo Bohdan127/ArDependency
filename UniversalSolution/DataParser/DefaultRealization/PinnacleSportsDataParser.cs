@@ -34,13 +34,10 @@ namespace DataParser.DefaultRealization
                 foreach (var league in sportEvents["leagues"])
                 {
                     var leagueId = league.Value["id"].ConvertToLongOrNull();
-                    if (league.Value == null
-                        || !league.Value.ContainsKey("events")) continue;
+                    if (league.Value == null || !league.Value.ContainsKey("events")) continue;
                     foreach (var sportEvent in league.Value["events"])
                     {
-                        if (sportEvent.Value == null
-                            || !sportEvent.Value.ContainsKey("id")
-                            || sportEvent.Value["id"] == null) continue;
+                        if (sportEvent.Value == null || !sportEvent.Value.ContainsKey("id") || sportEvent.Value["id"] == null) continue;
 
                         var id = Convert.ToInt64(sportEvent.Value["id"].ToString());
 
@@ -56,11 +53,10 @@ namespace DataParser.DefaultRealization
                             var matchDateTime = period.Value["cutoff"].ToString();
                             var lineId = period.Value["lineId"].ToString();
 
-                            if (period.Value.ContainsKey("moneyline")
-                                && period.Value["moneyline"] != null)
+                            if (period.Value.ContainsKey("moneyline") && period.Value["moneyline"] != null)
                             {
                                 var moneyLine = period.Value["moneyline"];
-                                if (moneyLine.ContainsKey("home"))
+                                if (moneyLine.ContainsKey("home") && moneyLine["home"] != null)
                                     resList[id].Add(new EventWithTotalDictionary
                                     {
                                         LineId = lineId,
@@ -69,7 +65,7 @@ namespace DataParser.DefaultRealization
                                         MatchDateTime = matchDateTime,
                                         LeagueId = leagueId
                                     });
-                                if (moneyLine.ContainsKey("away"))
+                                if (moneyLine.ContainsKey("away") && moneyLine["away"] != null)
                                     resList[id].Add(new EventWithTotalDictionary
                                     {
                                         LineId = lineId,
@@ -78,7 +74,7 @@ namespace DataParser.DefaultRealization
                                         MatchDateTime = matchDateTime,
                                         LeagueId = leagueId
                                     });
-                                if (moneyLine.ContainsKey("draw"))
+                                if (moneyLine.ContainsKey("draw") && moneyLine["draw"] != null)
                                     resList[id].Add(new EventWithTotalDictionary
                                     {
                                         LineId = lineId,
@@ -91,9 +87,9 @@ namespace DataParser.DefaultRealization
                             if (period.Value.ContainsKey("spreads") && period.Value["spreads"] != null)
                                 foreach (var spread in period.Value["spreads"])
                                 {
-                                    if (!spread.Value.ContainsKey("hdp")) continue;
+                                    if (!spread.Value.ContainsKey("hdp") || spread.Value["hdp"] == null) continue;
 
-                                    if (spread.Value.ContainsKey("away"))
+                                    if (spread.Value.ContainsKey("away") && spread.Value["away"] != null)
                                         resList[id].Add(new EventWithTotalDictionary
                                         {
                                             LineId = lineId,
@@ -102,7 +98,7 @@ namespace DataParser.DefaultRealization
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId
                                         });
-                                    if (spread.Value.ContainsKey("home"))
+                                    if (spread.Value.ContainsKey("home") && spread.Value["home"] != null)
                                         resList[id].Add(new EventWithTotalDictionary
                                         {
                                             LineId = lineId,
@@ -115,8 +111,8 @@ namespace DataParser.DefaultRealization
                             if (period.Value.ContainsKey("totals") && period.Value["totals"] != null)
                                 foreach (var total in period.Value["totals"])
                                 {
-                                    if (!total.Value.ContainsKey("points")) continue;
-                                    if (total.Value.ContainsKey("over"))
+                                    if (!total.Value.ContainsKey("points") || total.Value["points"] == null) continue;
+                                    if (total.Value.ContainsKey("over") && total.Value["over"] != null)
                                         resList[id].Add(new EventWithTotalDictionary
                                         {
                                             LineId = lineId,
@@ -125,7 +121,7 @@ namespace DataParser.DefaultRealization
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId
                                         });
-                                    if (total.Value.ContainsKey("under"))
+                                    if (total.Value.ContainsKey("under") && total.Value["under"] != null)
                                         resList[id].Add(new EventWithTotalDictionary
                                         {
                                             LineId = lineId,
@@ -135,6 +131,56 @@ namespace DataParser.DefaultRealization
                                             LeagueId = leagueId
                                         });
                                 }
+                            if (period.Value.ContainsKey("teamTotal") && period.Value["teamTotal"] != null)
+                            {
+                                var teamTotal = period.Value["teamTotal"];
+                                if (teamTotal.ContainsKey("home") && teamTotal["home"] != null)
+                                {
+                                    var home = teamTotal["home"];
+                                    if (!home.ContainsKey("points") || home["points"] == null) continue;
+                                    if (home.ContainsKey("over") && home["over"] != null)
+                                        resList[id].Add(new EventWithTotalDictionary
+                                        {
+                                            LineId = lineId,
+                                            TotalType = $"TF1O({home["points"]})",
+                                            TotalValue = home["over"].ToString(),
+                                            MatchDateTime = matchDateTime,
+                                            LeagueId = leagueId
+                                        });
+                                    if (home.ContainsKey("under") && home["under"] != null)
+                                        resList[id].Add(new EventWithTotalDictionary
+                                        {
+                                            LineId = lineId,
+                                            TotalType = $"TF1U({home["points"]})",
+                                            TotalValue = home["under"].ToString(),
+                                            MatchDateTime = matchDateTime,
+                                            LeagueId = leagueId
+                                        });
+                                }
+                                if (teamTotal.ContainsKey("away") && teamTotal["away"] != null)
+                                {
+                                    var away = teamTotal["away"];
+                                    if (!away.ContainsKey("points") || away["points"] == null) continue;
+                                    if (away.ContainsKey("over") && away["over"] != null)
+                                        resList[id].Add(new EventWithTotalDictionary
+                                        {
+                                            LineId = lineId,
+                                            TotalType = $"TF2O({away["points"]})",
+                                            TotalValue = away["over"].ToString(),
+                                            MatchDateTime = matchDateTime,
+                                            LeagueId = leagueId
+                                        });
+                                    if (away.ContainsKey("under") && away["under"] != null)
+                                        resList[id].Add(new EventWithTotalDictionary
+                                        {
+                                            LineId = lineId,
+                                            TotalType = $"TF2U({away["points"]})",
+                                            TotalValue = away["under"].ToString(),
+                                            MatchDateTime = matchDateTime,
+                                            LeagueId = leagueId
+                                        });
+                                }
+                            }
                         }
                     }
                 }

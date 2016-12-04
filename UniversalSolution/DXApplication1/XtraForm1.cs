@@ -1,12 +1,9 @@
 ﻿using DataSaver;
-using DataSaver.Models;
 using DevExpress.XtraEditors;
 using DXApplication1.Models;
-using GlobalResources.uk_UA;
-using License.Logic;
+using FormulasCollection.Models;
 using NLog;
 using System.Windows.Forms;
-using FormulasCollection.Models;
 
 namespace DXApplication1
 {
@@ -35,15 +32,15 @@ namespace DXApplication1
             Closed += XtraForm1_Closed;
             Closing += XtraForm1_Closing;
 
-            _pageManager = new PageManager(this);_filter = new Filter();
+            _pageManager = new PageManager(this); _filter = new Filter();
             _pageManager.GetFilterPage(_filter);
 
-            var licenseForm = new LicenseForm("uk_UA", uk_UA.ResourceManager);
-            if (!licenseForm.CheckInstance(_filter.LicenseKey ?? string.Empty))
-                licenseForm.ShowDialog();
-            if (!licenseForm.IsRegistered)
-                Close();
-            _filter.LicenseKey = licenseForm.LicenseKey;
+            //var licenseForm = new LicenseForm("uk_UA", uk_UA.ResourceManager);
+            //if (!licenseForm.CheckInstance(_filter.LicenseKey ?? string.Empty))
+            //    licenseForm.ShowDialog();
+            //if (!licenseForm.IsRegistered)
+            //    Close();
+            //_filter.LicenseKey = licenseForm.LicenseKey;
         }
 
         #endregion CTOR

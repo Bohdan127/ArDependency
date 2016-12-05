@@ -29,17 +29,9 @@ namespace FormulasCollection.Realizations
             return _calculatorFormulas.GetProfit(coef1.Value, coef2.Value) > 0;
         }
 
-
-        private bool CheckIsMustToBeRevert(string eventMarathon, string eventPinacle) =>
-           Extentions.GetStringSimilarityInPercent(eventMarathon.Split('#')[0],
-                eventPinacle.Split('#')[0], true) < 75
-            && Extentions.GetStringSimilarityInPercent(eventMarathon.Split('#')[1],
-                eventPinacle.Split('#')[1], true) < 75;
-
         public List<Fork> GetAllForksDictionary(Dictionary<string, ResultForForksDictionary> pinnacle,
             List<ResultForForks> marathon)
         {
-            var start = DateTime.Now;
             var resList = new List<Fork>();
             foreach (var eventItem in marathon)
             {
@@ -124,9 +116,6 @@ namespace FormulasCollection.Realizations
                     _logger.Error(ex.StackTrace);
                 }
             }
-            var fd = marathon.FirstOrDefault();
-            if (fd != null)
-                _logger.Fatal($"{fd.SportType} {DateTime.Now - start}");
             return resList;
         }
 

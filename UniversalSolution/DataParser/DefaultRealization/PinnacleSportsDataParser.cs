@@ -6,6 +6,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Json;
+using System.Linq;
 using System.Net;
 using System.Text;
 using ToolsPortable;
@@ -228,6 +229,7 @@ namespace DataParser.DefaultRealization
 
         private Dictionary<long, string> ParseEventWithLeguesNamesDictionary(HttpWebResponse leaguesNamesResp)
         {
+            if (leaguesNamesResp == null) return new Dictionary<long, string>();
             var resList = new Dictionary<long, string>();
             try
             {
@@ -328,7 +330,17 @@ namespace DataParser.DefaultRealization
             {
                 var totalResp = GetAllTotals(userLogin, userPass);
                 var teamNamesResp = GetAllTeamNames(userLogin, userPass);
-                var leaguesNamesResp = GetAllLeaguesNames(userLogin, userPass);
+                HttpWebResponse leaguesNamesResp = null;
+                try
+                {
+                    leaguesNamesResp = GetAllLeaguesNames(userLogin, userPass);
+                }
+                catch (Exception ex)
+                {
+                    //we can simple go ahead, it's just a leagues
+                    _logger.Error(ex.Message);
+                    _logger.Error(ex.StackTrace);
+                }
                 resDic = GroupResponsesDictionary(totalResp, teamNamesResp, leaguesNamesResp);
                 var listForRemove = new List<string>();
 
@@ -336,12 +348,10 @@ namespace DataParser.DefaultRealization
                 {
                     listForRemove.Clear();
 
-                    foreach (var typeCoefKey in resDic[key].TypeCoefDictionary.Keys)
-                    {
-                        var coef = resDic[key].TypeCoefDictionary[typeCoefKey];
-
-                        if (Math.Abs(coef) < 0.01 || Math.Abs(coef - _converter.IncorrectAmericanOdds) < 0.01) listForRemove.Add(typeCoefKey);
-                    }
+                    listForRemove.AddRange(from typeCoefKey in resDic[key].TypeCoefDictionary.Keys
+                                           let coef = resDic[key].TypeCoefDictionary[typeCoefKey]
+                                           where Math.Abs(coef) < 0.01 || Math.Abs(coef - _converter.IncorrectAmericanOdds) < 0.01
+                                           select typeCoefKey);
 
                     foreach (var keyForRemove in listForRemove) resDic[key].TypeCoefDictionary.Remove(keyForRemove);
                 }
@@ -350,7 +360,7 @@ namespace DataParser.DefaultRealization
             {
                 _logger.Error(ex.Message);
                 _logger.Error(ex.StackTrace);
-                throw;
+                return new Dictionary<string, ResultForForksDictionary>();
             }
             return resDic;
         }

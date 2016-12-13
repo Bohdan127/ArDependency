@@ -70,10 +70,9 @@ namespace FormulasCollection.Realizations
                     continue;
                 if (!_pinKeyCache.ContainsKey(eventItem.Event))
                     _pinKeyCache.Add(eventItem.Event, pinKey);
-
-                var pinnacleEvent = pinnacle[pinKey];
                 try
                 {
+                    var pinnacleEvent = pinnacle[pinKey];
                     var pinEventKey = IsAnyForkAll(eventItem, pinnacle[pinKey], eventItem.SportType.EnumParse<SportType>());
                     if (pinEventKey == null) continue;
                     if (pinEventKey.IsNotBlank())

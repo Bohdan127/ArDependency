@@ -1,6 +1,7 @@
 ﻿using DataSaver;
 using DataSaver.Models;
-using DevExpress.XtraEditors.Controls;
+using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.DXErrorProvider;
 using FormulasCollection.Models;
 using System;
 using System.ComponentModel;
@@ -11,24 +12,45 @@ namespace DXApplication1.Pages
 {
     public partial class FilterPage : Form
     {
-        public Filter Filter { get; private set; }
+        public Filter Filter { get; }
 
-        public LocalSaver LocalSaver { get; private set; }
-
-        private string _userId;
+        public LocalSaver LocalSaver { get; }
 
         public bool ToClose { get; set; }
 
+        private string _userId;
+
         public EventHandler FilterUpdated;
+        public EventHandler ReloadingData;
 
         public FilterPage(Filter filter)
         {
-            InitializeComponent(); LocalSaver = new LocalSaver();
-            FilterUpdated += (sender, args) => { if (Filter != null) LocalSaver.UpdateFilter(Filter); };
+            InitializeComponent();
+            Closing += FilterPage_Closing;
+            LocalSaver = new LocalSaver();
+            FilterUpdated += (sender, args) => { LocalSaver.UpdateFilter(Filter); };
+            ReloadingData += (sender, args) => { UpdateFilter(LocalSaver.FindFilter()); FirstBind(); UserBind(); };
             Filter = filter;
             FirstBind();
             UserBind();
-            InitializeEvents();
+
+        }
+
+        private void UpdateFilter(Filter dbFilter)
+        {
+            Filter.MinPercent = dbFilter.MinPercent;
+            Filter.MaxPercent = dbFilter.MaxPercent;
+            Filter.MaxRate = dbFilter.MaxRate;
+            Filter.MinRate = dbFilter.MinRate;
+            Filter.AutoUpdateTime = dbFilter.AutoUpdateTime;
+            Filter.Basketball = dbFilter.Basketball;
+            Filter.Football = dbFilter.Football;
+            Filter.Hockey = dbFilter.Hockey;
+            Filter.LicenseKey = dbFilter.LicenseKey;
+            Filter.RecommendedRate1 = dbFilter.RecommendedRate1;
+            Filter.RecommendedRate2 = dbFilter.RecommendedRate2;
+            Filter.Tennis = dbFilter.Tennis;
+            Filter.Volleyball = dbFilter.Volleyball;
         }
 
         private void UserBind()
@@ -46,86 +68,21 @@ namespace DXApplication1.Pages
         {
             lock (Filter)
             {
-                minTextEdit.EditValue = Filter.Min;
-                maxTextEdit.EditValue = Filter.Max;
+                textEditMinPercent.EditValue = Filter.MinPercent;
+                textEditMaxPercent.EditValue = Filter.MaxPercent;
                 footballToggleSwitch.EditValue = Filter.Football;
                 basketballToggleSwitch.EditValue = Filter.Basketball;
                 volleyballToggleSwitch.EditValue = Filter.Volleyball;
                 hockeyToggleSwitch.EditValue = Filter.Hockey;
                 tennisToggleSwitch.EditValue = Filter.Tennis;
-                fasterDateTimePicker.EditValue = Filter.FaterThen;
-                longerDateTimePicker.EditValue = Filter.LongerThen;
                 textEditAutoUpdate.EditValue = Filter.AutoUpdateTime;
-                textEditMinMarBet.EditValue = Filter.MinMarBet;
-                textEditMinPinBet.EditValue = Filter.MinPinBet;
+                textEditMinRate.EditValue = Filter.MinRate;
+                textEditMaxRate.EditValue = Filter.MaxRate;
             }
         }
 
-        public void InitializeEvents()
-        {
-            Closing += FilterPage_Closing;
-            fasterDateTimePicker.EditValueChanging += Faster_Changing;
-            maxTextEdit.EditValueChanging += Max_Changing;
-            minTextEdit.EditValueChanging += Min_Changing;
-            basketballToggleSwitch.Toggled += Basketball_Toggled;
-            footballToggleSwitch.Toggled += Football_Toggled;
-            longerDateTimePicker.EditValueChanging += Later_Changing;
-            volleyballToggleSwitch.Toggled += Volleyball_Toggled;
-            tennisToggleSwitch.Toggled += Tennis_Toggled;
-            hockeyToggleSwitch.Toggled += Hockey_Toggled;
-            textEditAutoUpdate.EditValueChanging += TextEditAutoUpdate_EditValueChanging;
-            textEditAutoUpdate.EditValueChanging += TextEditAutoUpdate_EditValueChanging;
-            textEditAutoUpdate.EditValueChanging += TextEditAutoUpdate_EditValueChanging;
-            textEditLoginPinnacle.EditValueChanged += User_EditValueChanged;
-            textEditPasswordPinnacle.EditValueChanged += User_EditValueChanged;
-            textEditLoginMarathon.EditValueChanged += User_EditValueChanged;
-            textEditPasswordMarathon.EditValueChanged += User_EditValueChanged;
-            textEditAntiGateCode.EditValueChanged += User_EditValueChanged;
-            textEditMinMarBet.EditValueChanging += TextEditMinMarBet_EditValueChanging;
-            textEditMinPinBet.EditValueChanging += TextEditMinPinBet_EditValueChanging;
-        }
 
-
-        public void DeInitializeEvents()
-        {
-            Closing -= FilterPage_Closing;
-            fasterDateTimePicker.EditValueChanging -= Faster_Changing;
-            maxTextEdit.EditValueChanging -= Max_Changing;
-            minTextEdit.EditValueChanging -= Min_Changing;
-            basketballToggleSwitch.Toggled -= Basketball_Toggled;
-            footballToggleSwitch.Toggled -= Football_Toggled;
-            longerDateTimePicker.EditValueChanging -= Later_Changing;
-            volleyballToggleSwitch.Toggled -= Volleyball_Toggled;
-            tennisToggleSwitch.Toggled -= Tennis_Toggled;
-            hockeyToggleSwitch.Toggled -= Hockey_Toggled;
-            textEditLoginPinnacle.EditValueChanged -= User_EditValueChanged;
-            textEditPasswordPinnacle.EditValueChanged -= User_EditValueChanged;
-            textEditLoginMarathon.EditValueChanged -= User_EditValueChanged;
-            textEditPasswordMarathon.EditValueChanged -= User_EditValueChanged;
-            textEditAntiGateCode.EditValueChanging -= User_EditValueChanged;
-            textEditMinMarBet.EditValueChanging -= TextEditMinMarBet_EditValueChanging;
-            textEditMinPinBet.EditValueChanging -= TextEditMinPinBet_EditValueChanging;
-        }
-
-        private void TextEditMinPinBet_EditValueChanging(object sender, ChangingEventArgs e)
-        {
-            lock (Filter)
-            {
-                Filter.MinPinBet = e.NewValue.ConvertToDecimalOrNull();
-                FilterUpdated?.Invoke(sender, e);
-            }
-        }
-
-        private void TextEditMinMarBet_EditValueChanging(object sender, ChangingEventArgs e)
-        {
-            lock (Filter)
-            {
-                Filter.MinMarBet = e.NewValue.ConvertToDecimalOrNull();
-                FilterUpdated?.Invoke(sender, e);
-            }
-        }
-
-        private void User_EditValueChanged(object sender, EventArgs e)
+        private void SaveUser()
         {
             var user = new User
             {
@@ -142,15 +99,6 @@ namespace DXApplication1.Pages
                 LocalSaver.UpdateUser(user);
         }
 
-        private void TextEditAutoUpdate_EditValueChanging(object sender, ChangingEventArgs e)
-        {
-            lock (Filter)
-            {
-                Filter.AutoUpdateTime = e.NewValue.ConvertToIntOrNull();
-                FilterUpdated?.Invoke(sender, e);
-            }
-        }
-
         private void FilterPage_Closing(object sender, CancelEventArgs e)
         {
             e.Cancel = !ToClose;
@@ -158,106 +106,153 @@ namespace DXApplication1.Pages
                 Hide();
         }
 
-        private void Min_Changing(object sender, ChangingEventArgs e)
+        private void BindControlsIntoFilter()
         {
             lock (Filter)
             {
-                Filter.Min = e.NewValue.ConvertToDecimalOrNull();
-                e.Cancel = Filter.Min != null
-                           && Filter.Max != null
-                           && ((Filter.Max.Value != 0
-                                && Filter.Max < Filter.Min)
-                               || Filter.Min.Value < 0);
-                if (!e.Cancel) FilterUpdated?.Invoke(sender, e);
-            }
-        }
-
-        private void Max_Changing(object sender, ChangingEventArgs e)
-        {
-            lock (Filter)
-            {
-                Filter.Max = e.NewValue.ConvertToDecimalOrNull();
-                e.Cancel = Filter.Min != null
-                           && Filter.Max != null
-                           && ((Filter.Min.Value != 0
-                                && Filter.Min > Filter.Max)
-                               || Filter.Max.Value < 0); if (!e.Cancel) FilterUpdated?.Invoke(sender, e);
-            }
-        }
-
-        private void Football_Toggled(object sender, EventArgs e)
-        {
-            lock (Filter)
-            {
+                Filter.MinPercent = textEditMinPercent.EditValue.ConvertToDecimalOrNull();
+                Filter.MaxPercent = textEditMaxPercent.EditValue.ConvertToDecimalOrNull();
                 Filter.Football = footballToggleSwitch.EditValue.ConvertToBool();
-                FilterUpdated?.Invoke(sender, e);
-            }
-        }
-
-        private void Basketball_Toggled(object sender, EventArgs e)
-        {
-            lock (Filter)
-            {
                 Filter.Basketball = basketballToggleSwitch.EditValue.ConvertToBool();
-                FilterUpdated?.Invoke(sender, e);
-            }
-        }
-
-        private void Volleyball_Toggled(object sender, EventArgs e)
-        {
-            lock (Filter)
-            {
                 Filter.Volleyball = volleyballToggleSwitch.EditValue.ConvertToBool();
-                FilterUpdated?.Invoke(sender, e);
-            }
-        }
-
-        private void Hockey_Toggled(object sender, EventArgs e)
-        {
-            lock (Filter)
-            {
                 Filter.Hockey = hockeyToggleSwitch.EditValue.ConvertToBool();
-                FilterUpdated?.Invoke(sender, e);
-            }
-        }
-
-        private void Tennis_Toggled(object sender, EventArgs e)
-        {
-            lock (Filter)
-            {
                 Filter.Tennis = tennisToggleSwitch.EditValue.ConvertToBool();
-                FilterUpdated?.Invoke(sender, e);
+                Filter.AutoUpdateTime = textEditAutoUpdate.EditValue.ConvertToIntOrNull();
+                Filter.MinRate = textEditMinRate.EditValue.ConvertToDecimalOrNull();
+                Filter.MaxRate = textEditMaxRate.EditValue.ConvertToDecimalOrNull();
             }
         }
 
-        private void Faster_Changing(object sender, ChangingEventArgs e)
+        private bool ValidateAllControls()
         {
-            lock (Filter)
-            {
-                DateTime dateValue;
-                if (e.NewValue == null)
-                    Filter.FaterThen = null;
-                else if (DateTime.TryParse(e.NewValue?.ToString(), out dateValue))
-                {
-                    Filter.FaterThen = dateValue;
-                }
-                FilterUpdated?.Invoke(sender, e);
-            }
+            var bRes = ValidateMinRate();
+            bRes &= ValidateMaxRate();
+            bRes &= ValidateMinPercent();
+            bRes &= ValidateMaxPercent();
+            return bRes && ValidateAllNumbers();
         }
 
-        private void Later_Changing(object sender, ChangingEventArgs e)
+        private bool ValidateAllNumbers()
         {
-            lock (Filter)
+            var bRes = SetErrorIfNegative(Filter.MinPercent, textEditMinPercent);
+            bRes &= SetErrorIfNegative(Filter.MaxPercent, textEditMaxPercent);
+            bRes &= SetErrorIfNegative(Filter.MinRate, textEditMinRate);
+            bRes &= SetErrorIfNegative(Filter.MaxRate, textEditMaxRate);
+            bRes &= SetErrorIfNegative(Filter.AutoUpdateTime, textEditAutoUpdate);
+
+            return bRes;
+        }
+
+        private bool SetErrorIfNegative(decimal? minPercent, TextEdit textEdit)
+        {
+            var bRes = true;
+
+            if (minPercent < 0)
             {
-                DateTime dateValue;
-                if (e.NewValue == null)
-                    Filter.LongerThen = null;
-                else if (DateTime.TryParse(e.NewValue?.ToString(), out dateValue))
-                {
-                    Filter.LongerThen = dateValue;
-                }
-                FilterUpdated?.Invoke(sender, e);
+                bRes = false;
+                textEdit.ErrorIcon = DXErrorProvider.GetErrorIconInternal(ErrorType.Critical);
+                textEdit.ErrorText = "Значение должно быть положительным";
             }
+            else
+            {
+                textEdit.ErrorIcon = null;
+                textEdit.ErrorText = null;
+            }
+
+            return bRes;
+        }
+
+        private bool ValidateMaxPercent()
+        {
+            if (Filter.MinPercent == null) return true;
+            if (Filter.MaxPercent == null) return true;
+            var bRes = Filter.MinPercent.Value <= Filter.MaxPercent.Value;
+
+            if (!bRes)
+            {
+                textEditMaxPercent.ErrorIcon = DXErrorProvider.GetErrorIconInternal(ErrorType.Critical);
+                textEditMaxPercent.ErrorText = "Максимальный процент меньше минимального!";
+            }
+            else
+            {
+                textEditMaxPercent.ErrorIcon = null;
+                textEditMaxPercent.ErrorText = null;
+            }
+
+            return bRes;
+        }
+
+        private bool ValidateMinPercent()
+        {
+            if (Filter.MinPercent == null) return true;
+            if (Filter.MaxPercent == null) return true;
+            var bRes = Filter.MinPercent.Value <= Filter.MaxPercent.Value;
+
+            if (!bRes)
+            {
+                textEditMinPercent.ErrorIcon = DXErrorProvider.GetErrorIconInternal(ErrorType.Critical);
+                textEditMinPercent.ErrorText = "Минимальный процент больше максимального!";
+            }
+            else
+            {
+                textEditMinPercent.ErrorIcon = null;
+                textEditMinPercent.ErrorText = null;
+            }
+
+            return bRes;
+        }
+
+        private bool ValidateMaxRate()
+        {
+            if (Filter.MinRate == null) return true;
+            if (Filter.MaxRate == null) return true;
+            var bRes = Filter.MinRate.Value <= Filter.MaxRate.Value;
+
+            if (!bRes)
+            {
+                textEditMaxRate.ErrorIcon = DXErrorProvider.GetErrorIconInternal(ErrorType.Critical);
+                textEditMaxRate.ErrorText = "Максимальная ставка меньше минимальной";
+            }
+            else
+            {
+                textEditMaxRate.ErrorIcon = null;
+                textEditMaxRate.ErrorText = null;
+            }
+
+            return bRes;
+        }
+
+        private bool ValidateMinRate()
+        {
+            if (Filter.MinRate == null) return true;
+            if (Filter.MaxRate == null) return true;
+            var bRes = Filter.MinRate.Value <= Filter.MaxRate.Value;
+
+            if (!bRes)
+            {
+                textEditMinRate.ErrorIcon = DXErrorProvider.GetErrorIconInternal(ErrorType.Critical);
+                textEditMinRate.ErrorText = "Минимальная ставка больше максимальной";
+            }
+            else
+            {
+                textEditMinRate.ErrorIcon = null;
+                textEditMinRate.ErrorText = null;
+            }
+
+            return bRes;
+        }
+
+        private void simpleButtonSave_Click(object sender, EventArgs e)
+        {
+            BindControlsIntoFilter();
+            if (!ValidateAllControls()) return;
+            SaveUser();
+            FilterUpdated?.Invoke(sender, e);
+        }
+
+        private void simpleButtonCancel_Click(object sender, EventArgs e)
+        {
+            ReloadingData?.Invoke(sender, e);
         }
     }
 }

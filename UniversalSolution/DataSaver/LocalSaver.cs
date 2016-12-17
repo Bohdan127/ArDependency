@@ -266,18 +266,17 @@ namespace DataSaver
             var result = new Filter
             {
                 Id = json.Key,
-                Min = json.DataAsJson.Value<decimal?>("Min"),
-                Max = json.DataAsJson.Value<decimal?>("Max"),
-                MinMarBet = json.DataAsJson.Value<decimal?>("MinMarBet"),
-                MinPinBet = json.DataAsJson.Value<decimal?>("MinPinBet"),
+                MinPercent = json.DataAsJson.Value<decimal?>("MinPercent"),
+                MaxPercent = json.DataAsJson.Value<decimal?>("MaxPercent"),
+                MinRate = json.DataAsJson.Value<decimal?>("MinRate"),
+                MaxRate = json.DataAsJson.Value<decimal?>("MaxRate"),
                 Basketball = json.DataAsJson.Value<bool>("Basketball"),
-                FaterThen = json.DataAsJson.Value<DateTime?>("FaterThen"),
                 Football = json.DataAsJson.Value<bool>("Football"),
                 Hockey = json.DataAsJson.Value<bool>("Hockey"),
                 LicenseKey = json.DataAsJson.Value<string>("LicenseKey"),
-                LongerThen = json.DataAsJson.Value<DateTime?>("LongerThen"),
                 Tennis = json.DataAsJson.Value<bool>("Tennis"),
-                Volleyball = json.DataAsJson.Value<bool>("Volleyball")
+                Volleyball = json.DataAsJson.Value<bool>("Volleyball"),
+                AutoUpdateTime = json.DataAsJson.Value<int?>("AutoUpdateTime")
             };
             return result;
         }
@@ -378,17 +377,16 @@ namespace DataSaver
             var userDocument = Session.Load<Filter>(filter.Id);
 
             userDocument.Basketball = filter.Basketball;
-            userDocument.FaterThen = filter.FaterThen;
-            userDocument.LongerThen = filter.LongerThen;
-            userDocument.Min = filter.Min;
-            userDocument.Max = filter.Max;
-            userDocument.MinMarBet = filter.MinMarBet;
-            userDocument.MinPinBet = filter.MinPinBet;
+            userDocument.MinPercent = filter.MinPercent;
+            userDocument.MaxPercent = filter.MaxPercent;
+            userDocument.MinRate = filter.MinRate;
+            userDocument.MaxRate = filter.MaxRate;
             userDocument.Football = filter.Football;
             userDocument.Hockey = filter.Hockey;
             userDocument.LicenseKey = filter.LicenseKey;
             userDocument.Tennis = filter.Tennis;
             userDocument.Volleyball = filter.Volleyball;
+            userDocument.AutoUpdateTime = filter.AutoUpdateTime;
 
             Session.SaveChanges();
         }

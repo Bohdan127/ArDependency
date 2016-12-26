@@ -174,8 +174,6 @@ namespace DataLoader
             var tmpRate = _filter.MaxRate ?? _filter.MinRate;
             if (tmpRate == null) return;
 
-            var rate = tmpRate.Value;
-
             foreach (
             var fork in
                 _calculatorFormulas.FilteredForks(forks.Select(f => f).ToList(), _filter)
@@ -183,6 +181,7 @@ namespace DataLoader
             {
                 bool resM;
 #if PlaceBets
+                var rate = tmpRate.Value;
                 do
                 {
                     var betM = new MarathonBet

@@ -1,4 +1,4 @@
-﻿//#define CalculatorProgram
+﻿#define CalculatorProgram
 
 using FormulasCollection.Models;
 using FormulasCollection.Realizations;

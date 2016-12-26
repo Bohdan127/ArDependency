@@ -75,9 +75,9 @@ namespace FormulasCollection.Realizations
 
                 try
                 {
-                    var pinEventKey = IsAnyForkAll(eventItem, pinnacle[pinKey], eventItem.SportType.EnumParse<SportType>());
-                    if (pinEventKey == null) continue;
-                    if (pinEventKey.IsNotBlank())
+                    var pinEventKeys = IsAnyForkAll(eventItem, pinnacle[pinKey], eventItem.SportType.EnumParse<SportType>());
+                    if (pinEventKeys.Count == 0) continue;
+                    foreach (var pinEventKey in pinEventKeys)
                     {
                         //fork variable is created for debug, please don't refactor it into resList.Add function
                         var fork = new Fork
@@ -208,29 +208,32 @@ namespace FormulasCollection.Realizations
             pin.TypeCoefDictionary = tmpDic;
         }
 
-        private string IsAnyForkAll(ResultForForks marEvent, ResultForForksDictionary pinEvent, SportType st)
+        private List<string> IsAnyForkAll(ResultForForks marEvent, ResultForForksDictionary pinEvent, SportType st)
         {
+            var resList = new List<string>();
             try
             {
                 marEvent.Type = marEvent.Type.Trim();
-                var resType = SportsConverterTypes.TypeParseAll(marEvent.Type,
-                    st);
-                if (!pinEvent.TypeCoefDictionary.ContainsKey(resType))
-                    return null;
-                var isFork = CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(),
-                    pinEvent.TypeCoefDictionary[resType],
-                    marEvent,
-                    pinEvent);
-                return isFork
-                    ? resType
-                    : null;
+                var resTypes = SportsConverterTypes.TypeParseAll(marEvent.Type,
+                    st)/*remove it =>*/.Select(c => c.ToString()).ToList();
+                foreach (var resType in resTypes)
+                {
+                    if (!pinEvent.TypeCoefDictionary.ContainsKey(resType))
+                        continue;
+                    var isFork = CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(),
+                        pinEvent.TypeCoefDictionary[resType],
+                        marEvent,
+                        pinEvent);
+                    if (isFork)
+                        resList.Add(resType);
+                }
             }
             catch (Exception ex)
             {
                 _logger.Error(ex.Message);
                 _logger.Error(ex.StackTrace);
-                return null;
             }
+            return resList;
         }
     }
 }

@@ -260,7 +260,7 @@ namespace DXApplication1.Pages
             SaveUser();
             FilterUpdated?.Invoke(sender, e);
             // ReSharper disable once PossibleInvalidOperationException
-            _autoDeleteTimer.Interval = Filter.AutoUpdateTime.Value;
+            _autoDeleteTimer.Interval = Filter.AutoDeleteTime.Value;
             _autoDeleteTimer.Enabled = Filter.AutoDelete;
         }
 

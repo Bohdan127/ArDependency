@@ -10,10 +10,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Json;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DataParser.DefaultRealization
 {
@@ -679,7 +681,17 @@ namespace DataParser.DefaultRealization
                         else if (lines[i].Contains(Tags_DataMarathonForAutoPlays.data_selection_key))
                         {
                             obj = ParseForAutoPlay(lines[i], Tags_DataMarathonForAutoPlays.data_selection_key, obj);
-                            list.Add(obj);
+                            if (obj.cid != null)
+                            {
+                                if (obj.sn.ToLower().Contains("азиат") || obj.mn.ToLower().Contains("азиат"))
+                                {
+                                    var asiatEvent = RecreateAsiatEvent(obj);
+                                    list.AddRange(asiatEvent);
+                                }
+                                else {
+                                    list.Add(obj);
+                                }
+                            }
                             teamToAdd.marathonAutoPlay = obj;
                             obj = new DataMarathonForAutoPlays();
                             isSelectionKey = false;
@@ -712,6 +724,81 @@ namespace DataParser.DefaultRealization
 
             return ConvertWith_MarathonEvent_To_ListResultForForks(eventCoefList);
         }
+        private List<DataMarathonForAutoPlays> RecreateAsiatEvent(DataMarathonForAutoPlays obj)
+        {
+            List<DataMarathonForAutoPlays> result = new List<DataMarathonForAutoPlays>();
+            string sn = string.Empty;
+            sn = obj.sn;
+            char _znak1 = default(char);
+            char _znak2 = default(char);
+            double _num1 = default(double);
+            double _num2 = default(double);
+            string newSN1 = string.Empty;
+            string newSN2 = string.Empty;
+            string newSN3 = string.Empty;
+            string _name = string.Empty;
+            bool isTotal = !(obj.sn.Contains("(") && obj.sn.Contains(")"));
+            try
+            {
+
+                string[] midleSN = isTotal?obj.sn.Split(' ')[1].Split(','):obj.sn.Split('(', ')')[1].Split(',');
+
+                if ( !isTotal && (midleSN[0].Contains('-') || midleSN[0].Contains('+')))
+                    _znak1 = midleSN[0][0];
+                if (!isTotal && midleSN[1].Contains('-') || midleSN[1].Contains('+'))
+                    _znak2 = midleSN[1][0];
+
+                if (_znak1 != default(char))
+                    _num1 = Convert.ToDouble(midleSN[0].Substring(1));
+                else
+                    _num1 = Convert.ToDouble(midleSN[0]);
+                if (_znak2 != default(char))
+                    _num2 = Convert.ToDouble(midleSN[1].Substring(1));
+                else
+                    _num2 = Convert.ToDouble(midleSN[1]);
+                _name = isTotal ? obj.sn.Split(' ')[0].Trim() : obj.sn.Split('(', ')')[0].Trim();
+
+                char resZnak = _znak1 != default(char) ? _znak1 : _znak2;
+                if (_name.Contains(";"))
+                {
+                    int index = _name.IndexOf(";");
+                    _name = _name.Substring(index + 1);
+                }
+                if (isTotal)
+                {
+                    newSN1 = _name + " " + _num1.ToString();
+                    newSN2 = _name + " " + _num2.ToString();
+                    newSN3 = _name + " " + ((_num1 + _num2) / 2).ToString();
+                }
+                else {
+                    newSN1 = _name + "(" + _znak1.ToString() + _num1.ToString() + ")";
+                    newSN2 = _name + "(" + _znak2.ToString() + _num2.ToString() + ")";
+                    newSN3 = _name + "(" + resZnak.ToString() + ((_num1 + _num2) / 2).ToString() + ")";
+                }
+
+                string mn = obj.mn;
+                string ewc = obj.ewc;
+                string cid = obj.cid;
+                string prt = obj.prt;
+                string ewf = obj.ewf;
+                string epr = obj.epr;
+                List<string> prices = obj.prices;
+                string selection_key = obj.selection_key;
+
+                result.Add(new DataMarathonForAutoPlays() { mn = mn, ewc = ewc, cid = cid, prt = prt, ewf = ewf, epr = epr, prices = prices, selection_key = selection_key, sn = newSN1 });
+                result.Add(new DataMarathonForAutoPlays() { mn = mn, ewc = ewc, cid = cid, prt = prt, ewf = ewf, epr = epr, prices = prices, selection_key = selection_key, sn = newSN2 });
+                result.Add(new DataMarathonForAutoPlays() { mn = mn, ewc = ewc, cid = cid, prt = prt, ewf = ewf, epr = epr, prices = prices, selection_key = selection_key, sn = newSN3 });
+
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+                _logger.Error(e.StackTrace);
+            }
+            return result;
+        }
+
+
         List<string> dictionary = new List<string>() {
             "Победитель матча",
             "Победа с учетом форы",
@@ -774,16 +861,24 @@ namespace DataParser.DefaultRealization
                                 //else_logger.Error(l.sn + " - " + l.epr);
                                 break;
 
-                            case "Тотал очков":
-                                string t = ChangeFormatTotals(list[i].sn);
-                                if (!mainCoef.ContainsKey(t))
-                                {
-                                    mainCoef.Add(t, list[i].epr);
-                                    type = t;
-                                    value = list[i].epr;
-                                }
-                                //else_logger.Error(l.sn + " - " + l.epr);
-                                break;
+                            /* case "Тотал очков":
+                                 int numTeam = nameTeams.GetKeyContainsDictionaryValue(list[i].mn);
+                                 string t = string.Empty;
+                                 if (numTeam != -1)
+                                 {
+                                      t = ChangeFormatTotals(list[i].sn, true, numTeam);
+                                 }
+                                 else {
+                                      t = ChangeFormatTotals(list[i].sn);
+                                 }
+                                 if (!mainCoef.ContainsKey(t))
+                                 {
+                                     mainCoef.Add(t, list[i].epr);
+                                     type = t;
+                                     value = list[i].epr;
+                                 }
+                                 //else_logger.Error(l.sn + " - " + l.epr);
+                                 break;*/
 
                             //Tennis
                             case "Результат матча":
@@ -829,6 +924,29 @@ namespace DataParser.DefaultRealization
                                 break;
 
                         }
+                        if (list[i].mn.Contains("Тотал очков"))
+                        {
+                            int numTeam = nameTeams.GetKeyContainsDictionaryValue(list[i].mn);
+                            string t = string.Empty;
+                            Total totalType = this.GetTotalType(list[i].selection_key);
+                            if (numTeam != -1)
+                            {
+                                t = ChangeFormatTotals(list[i].sn, true, numTeam);
+                            }
+                            else if (totalType != Total.unknown_T)
+                            {
+                                t = ChangeFormatTotalsOthers(list[i].mn, list[i].sn, totalType);
+                            }
+                            else {
+                                t = ChangeFormatTotals(list[i].sn);
+                            }
+                            if (!mainCoef.ContainsKey(t))
+                            {
+                                mainCoef.Add(t, list[i].epr);
+                                type = t;
+                                value = list[i].epr;
+                            }
+                        }
                         if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(value))
                         {
                             Coef.Add(new EventForAutoPlay() { EventID = eventID, Type = type, Value = value, marathonAutoPlay = list[i] });
@@ -848,6 +966,69 @@ namespace DataParser.DefaultRealization
 
             teamToAdd.Coef = Coef;
             //teamToAdd.AllCoef = mainCoef;
+        }
+        private string ChangeFormatTotalsOthers(string line, string total, Total totalType)
+        {
+            string res = string.Empty;
+            switch (totalType)
+            {
+                case Total.time_T:
+                    res += "TT" + line.GetNumberWithTotal(); // Футбол тотал таймів
+                    break;
+                case Total.period_T:
+                    res += "TPR" + line.GetNumberWithTotal(); // Хокей тотал періодів
+                    break;
+                case Total.half_T:
+                    res += "TH" + line.GetNumberWithTotal();
+                    break;
+                case Total.part_T:
+                    res += "TPT" + line.GetNumberWithTotal(); //Баскетбол тотал половин
+                    break;
+                case Total.set_T:
+                    res += "TS" + line.GetNumberWithTotal(); //Теніс тотал сетів
+                    break;
+                case Total.game_T:
+                    res += "TG" + line.GetNumberWithTotal(); //Теніс тотал геймов
+                    break;
+            }
+            string resFora = string.Empty;
+            for (int i = total.Length - 1; i >= 0; i--)
+            {
+                if (total[i] != ' ')
+                    resFora = total[i] + resFora;
+                else break;
+            }
+            string type = (total.Contains("Меньше") || total.Contains("Under")) ? res + "U" : res + "O";
+            return type + "(" + resFora + ")";
+        }
+        private Total GetTotalType(string line)
+        {
+            Total result = Total.unknown_T;
+            if (line.ToLower().Contains("half"))  // Футбол тотал таймів
+            {
+                result = Total.time_T;
+            }
+            else if (line.ToLower().Contains("period")) // Хокей тотал періодів
+            {
+                result = Total.period_T;
+            }
+            else if (line.ToLower().Contains("половина"))
+            {
+                result = Total.half_T;
+            }
+            else if (line.ToLower().Contains("points")) //Баскетбол тотал половин
+            {
+                result = Total.part_T;
+            }
+            else if (line.ToLower().Contains("sets")) //Теніс тотал сетів
+            {
+                result = Total.set_T;
+            }
+            else if (line.ToLower().Contains("games")) //Теніс тотал геймов 
+            {
+                result = Total.game_T;
+            }
+            return result;
         }
 
         private void CreateEventVoleyball(List<DataMarathonForAutoPlays> list, ref MarathonEvent teamToAdd, Dictionary<string, string> nameTeams, string eventID)
@@ -1010,7 +1191,7 @@ namespace DataParser.DefaultRealization
             }
             return type + resFora;
         }
-        private string ChangeFormatTotals(string total)
+        private string ChangeFormatTotals(string total, bool isTeamTotal = false, int team_num = -1)
         {
             string resFora = string.Empty;
             for (int i = total.Length - 1; i >= 0; i--)
@@ -1019,7 +1200,15 @@ namespace DataParser.DefaultRealization
                     resFora = total[i] + resFora;
                 else break;
             }
-            string type = (total.Contains("Меньше") || total.Contains("Under")) ? "TU" : "TO";
+            string type = string.Empty;
+            if (!isTeamTotal)
+            {
+                type = (total.Contains("Меньше") || total.Contains("Under")) ? "TU" : "TO";
+            }
+            else
+            {
+                type = (total.Contains("Меньше") || total.Contains("Under")) ? "TF" + team_num + "U" : "TF" + team_num + "O";
+            }
             return type + "(" + resFora + ")";
         }
         private string ChangeFormatResult(string result, Dictionary<string, string> nameTeam)
@@ -1110,25 +1299,13 @@ namespace DataParser.DefaultRealization
             if (tag.Equals(Tags_DataMarathonForAutoPlays.data_sel))
             {
                 line = line.TagsContent2(Tags_DataMarathonForAutoPlays.data_sel);
-                var a = getString(line);
-
-                var b = a.Split(':');
-
-                var b1 = b[0].Replace("[", "").Replace("]", "").Split(',');
-                var price = b[1].Replace("[", "").Replace("]", "").Split(',');
-
-                var subj = line.Split(',');
-                obj.sn = b1[0];
-                obj.mn = b1[1];
-                obj.ewc = b1[2];
-                obj.cid = b1[3];
-                obj.prt = b1[4];
-                obj.ewf = b1[5];
-                obj.epr = b1[6];
-
-                for (int i = 0; i < price.Length; i++)
+                try
                 {
-                    obj.prices.Add(price[i].Replace("\"", ""));
+                    obj = PraseJsonAutoPlay(line);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("ParseForAutoPlay /n/n/n/n" + e.Message + "/n/n/n/n" + e.StackTrace);
                 }
             }
             if (tag.Equals(Tags_DataMarathonForAutoPlays.data_selection_key))
@@ -1151,59 +1328,25 @@ namespace DataParser.DefaultRealization
         "3":"0.83",
         "4":"0.83",
         "5":"-1.21"}}*/
-        private string getString(string line)
+
+        private DataMarathonForAutoPlays PraseJsonAutoPlay(string line)
         {
-            line = line.Trim('{');
-            string result = "";
-            bool find_ = false; // :
-            bool _find = false; // {
-            string element = "";
-            string price = "";
-            foreach (var l in line)
+            DataMarathonForAutoPlays result = new DataMarathonForAutoPlays();
+            var json = (JsonObject)JsonValue.Parse(line);
+            result.sn = json["sn"].ToString().Trim('\"');
+            result.mn = json["mn"].ToString().Trim('\"');
+            result.ewc = json["ewc"].ToString().Trim('\"').Replace("\\", "");
+            result.cid = json["cid"].ToString().Trim('\"');
+            result.prt = json["prt"].ToString().Trim('\"');
+            result.ewf = json["ewf"].ToString().Trim('\"');
+            result.epr = json["epr"].ToString().Trim('\"');
+            List<string> prices = new List<string>();
+            var json_prices = (JsonObject)JsonValue.Parse(json["prices"].ToString());
+            for (int i = 0; i < 6; i++)
             {
-
-                if (l == ',')
-                {
-
-                    if (find_ && !_find)
-                    {
-                        find_ = false;
-                        result += (!string.IsNullOrEmpty(result)) ? "," : "[";
-                        result += element.Trim('\"');
-                        element = "";
-                    }
-                    if (find_ && _find)
-                    {
-                        find_ = false;
-                        price += (!string.IsNullOrEmpty(price)) ? "," : "[";
-                        price += element.Trim('\"');
-                        element = "";
-                    }
-
-                }
-                if (l == '{' || l == '}')
-                {
-                    find_ = false;
-                }
-                if (find_)
-                {
-
-                    element += l;
-
-                }
-                if (l == ':')
-                {
-                    find_ = true;
-                }
-                if (l == '{')
-                {
-                    _find = true;
-                }
-
+                prices.Add(json_prices[i.ToString()].ToString().Trim('\"').Replace("\\", ""));
             }
-            result += "]:";
-            result += (price + "," + element + "]");
-
+            result.prices = prices;
             return result;
         }
         #endregion
@@ -1479,4 +1622,5 @@ namespace DataParser.DefaultRealization
         #endregion
 
     }
+    public enum Total { main_T, time_T, set_T, period_T, part_T, half_T, game_T, unknown_T }
 }

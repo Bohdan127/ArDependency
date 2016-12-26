@@ -1,4 +1,6 @@
 ﻿using FormulasCollection.Models;
+using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace DataParser.Extensions
@@ -251,6 +253,39 @@ namespace DataParser.Extensions
                      && team.marathonAutoPlay.CheckFullData();
                      //&& team.AllCoef != null;
             }
+        }
+        public static int GetKeyContainsDictionaryValue(this Dictionary<string,string> teams, string line)
+        {
+            int num = -1;
+            foreach(var team in teams)
+            {
+                if (line.Contains(team.Value))
+                {
+                    num = Convert.ToInt32(team.Key);
+                }
+            }
+            return num;
+        }
+        public static string GetNumberWithTotal(this string line)
+        {
+            string result = string.Empty;
+            bool start = false;
+            foreach(char l in line)
+            {
+                if (l.ToString().Equals("@"))
+                    start = true;
+                if (start)
+                {
+                    int number;
+                    bool check = Int32.TryParse(l.ToString(), out number);
+                    if (check)
+                    {
+                        result += number.ToString();
+                        return result;
+                    }
+                }
+            }
+            return result;
         }
 
     }

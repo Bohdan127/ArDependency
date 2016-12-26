@@ -113,7 +113,7 @@
       <Name>FormulasCollection</Name>
     </ProjectReference>
     <ProjectReference Include="..\SiteAccess\SiteAccess.csproj">
-      <Project>{DDC82E86-35CB-4465-B23C-6C341FE9CC36}</Project>
+      <Project>{ddc82e86-35cb-4465-b23c-6c341fe9cc36}</Project>
       <Name>SiteAccess</Name>
     </ProjectReference>
   </ItemGroup>

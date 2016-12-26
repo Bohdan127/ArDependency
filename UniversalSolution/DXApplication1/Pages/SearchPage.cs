@@ -20,8 +20,7 @@ namespace DXApplication1.Pages
 
         public virtual void OnCalculatorCall() => CalculatorCall?.Invoke(gridView1.GetFocusedRow(), null);
 
-        public SearchPage(bool isSearchPage = true)
-        {
+        public SearchPage(bool isSearchPage = true){
             InitializeComponent();
             Closing += SearchPage_Closing;
             backgroundWorker1.DoWork += BackgroundWorker1_DoWork;

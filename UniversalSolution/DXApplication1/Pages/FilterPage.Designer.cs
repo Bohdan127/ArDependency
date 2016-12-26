@@ -76,6 +76,13 @@ namespace DXApplication1.Pages
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
             this.emptySpaceItem4 = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.toggleSwitchAutoDelete = new DevExpress.XtraEditors.ToggleSwitch();
+            this.layoutControlItemAutoDelete = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlGroupAutoDelete = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.textEditAutoDeleteTime = new DevExpress.XtraEditors.TextEdit();
+            this.layoutControlItemAutoDeleteTime = new DevExpress.XtraLayout.LayoutControlItem();
+            this.simpleButtonDeleteForks = new DevExpress.XtraEditors.SimpleButton();
+            this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.textEditAntiGateCode.Properties)).BeginInit();
@@ -120,10 +127,19 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitchAutoDelete.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoDelete)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupAutoDelete)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditAutoDeleteTime.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoDeleteTime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
             // 
+            this.dataLayoutControl1.Controls.Add(this.simpleButtonDeleteForks);
+            this.dataLayoutControl1.Controls.Add(this.textEditAutoDeleteTime);
+            this.dataLayoutControl1.Controls.Add(this.toggleSwitchAutoDelete);
             this.dataLayoutControl1.Controls.Add(this.simpleButtonSave);
             this.dataLayoutControl1.Controls.Add(this.textEditAntiGateCode);
             this.dataLayoutControl1.Controls.Add(this.textEditPasswordMarathon);
@@ -145,7 +161,7 @@ namespace DXApplication1.Pages
             this.dataLayoutControl1.Location = new System.Drawing.Point(0, 0);
             this.dataLayoutControl1.Name = "dataLayoutControl1";
             this.dataLayoutControl1.Root = this.layoutControlGroup1;
-            this.dataLayoutControl1.Size = new System.Drawing.Size(600, 416);
+            this.dataLayoutControl1.Size = new System.Drawing.Size(600, 471);
             this.dataLayoutControl1.TabIndex = 0;
             this.dataLayoutControl1.Text = "dataLayoutControl1";
             // 
@@ -272,6 +288,7 @@ namespace DXApplication1.Pages
             0,
             0});
             this.textEditMinPercent.Location = new System.Drawing.Point(108, 42);
+            this.textEditMinPercent.MaximumSize = new System.Drawing.Size(90, 20);
             this.textEditMinPercent.Name = "textEditMinPercent";
             this.textEditMinPercent.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.True;
             this.textEditMinPercent.Properties.Mask.EditMask = "P0";
@@ -288,9 +305,10 @@ namespace DXApplication1.Pages
             0,
             0});
             this.textEditMaxPercent.Location = new System.Drawing.Point(108, 66);
+            this.textEditMaxPercent.MaximumSize = new System.Drawing.Size(90, 20);
             this.textEditMaxPercent.Name = "textEditMaxPercent";
-            this.textEditMaxPercent.Properties.EditValueChangedFiringMode = DevExpress.XtraEditors.Controls.EditValueChangedFiringMode.Buffered;
             this.textEditMaxPercent.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.True;
+            this.textEditMaxPercent.Properties.EditValueChangedFiringMode = DevExpress.XtraEditors.Controls.EditValueChangedFiringMode.Buffered;
             this.textEditMaxPercent.Properties.Mask.EditMask = "P0";
             this.textEditMaxPercent.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.textEditMaxPercent.Size = new System.Drawing.Size(90, 20);
@@ -305,6 +323,7 @@ namespace DXApplication1.Pages
             0,
             0});
             this.textEditMinRate.Location = new System.Drawing.Point(108, 90);
+            this.textEditMinRate.MaximumSize = new System.Drawing.Size(90, 20);
             this.textEditMinRate.Name = "textEditMinRate";
             this.textEditMinRate.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.True;
             this.textEditMinRate.Properties.Mask.EditMask = "n2";
@@ -321,6 +340,7 @@ namespace DXApplication1.Pages
             0,
             0});
             this.textEditMaxRate.Location = new System.Drawing.Point(108, 114);
+            this.textEditMaxRate.MaximumSize = new System.Drawing.Size(90, 20);
             this.textEditMaxRate.Name = "textEditMaxRate";
             this.textEditMaxRate.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.True;
             this.textEditMaxRate.Properties.Mask.EditMask = "n2";
@@ -354,10 +374,11 @@ namespace DXApplication1.Pages
             this.emptySpaceItem2,
             this.emptySpaceItem1,
             this.layoutControlGroupActions,
-            this.emptySpaceItem4});
+            this.emptySpaceItem4,
+            this.layoutControlGroupAutoDelete});
             this.layoutControlGroup1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup1.Name = "Root";
-            this.layoutControlGroup1.Size = new System.Drawing.Size(600, 416);
+            this.layoutControlGroup1.Size = new System.Drawing.Size(600, 471);
             this.layoutControlGroup1.TextVisible = false;
             // 
             // layoutControlGroupIncome
@@ -572,9 +593,9 @@ namespace DXApplication1.Pages
             // 
             this.emptySpaceItem2.AllowHotTrack = false;
             this.emptySpaceItem2.CustomizationFormText = "emptySpaceItem1";
-            this.emptySpaceItem2.Location = new System.Drawing.Point(0, 320);
+            this.emptySpaceItem2.Location = new System.Drawing.Point(0, 440);
             this.emptySpaceItem2.Name = "emptySpaceItem2";
-            this.emptySpaceItem2.Size = new System.Drawing.Size(202, 76);
+            this.emptySpaceItem2.Size = new System.Drawing.Size(202, 11);
             this.emptySpaceItem2.Text = "emptySpaceItem1";
             this.emptySpaceItem2.TextSize = new System.Drawing.Size(0, 0);
             // 
@@ -583,7 +604,7 @@ namespace DXApplication1.Pages
             this.emptySpaceItem1.AllowHotTrack = false;
             this.emptySpaceItem1.Location = new System.Drawing.Point(202, 338);
             this.emptySpaceItem1.Name = "emptySpaceItem1";
-            this.emptySpaceItem1.Size = new System.Drawing.Size(240, 58);
+            this.emptySpaceItem1.Size = new System.Drawing.Size(240, 113);
             this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlGroupActions
@@ -621,14 +642,86 @@ namespace DXApplication1.Pages
             this.emptySpaceItem4.AllowHotTrack = false;
             this.emptySpaceItem4.Location = new System.Drawing.Point(442, 0);
             this.emptySpaceItem4.Name = "emptySpaceItem4";
-            this.emptySpaceItem4.Size = new System.Drawing.Size(138, 396);
+            this.emptySpaceItem4.Size = new System.Drawing.Size(138, 451);
             this.emptySpaceItem4.TextSize = new System.Drawing.Size(0, 0);
+            // 
+            // toggleSwitchAutoDelete
+            // 
+            this.toggleSwitchAutoDelete.Location = new System.Drawing.Point(100, 362);
+            this.toggleSwitchAutoDelete.Name = "toggleSwitchAutoDelete";
+            this.toggleSwitchAutoDelete.Properties.OffText = "Off";
+            this.toggleSwitchAutoDelete.Properties.OnText = "On";
+            this.toggleSwitchAutoDelete.Size = new System.Drawing.Size(98, 24);
+            this.toggleSwitchAutoDelete.StyleController = this.dataLayoutControl1;
+            this.toggleSwitchAutoDelete.TabIndex = 20;
+            // 
+            // layoutControlItemAutoDelete
+            // 
+            this.layoutControlItemAutoDelete.Control = this.toggleSwitchAutoDelete;
+            this.layoutControlItemAutoDelete.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemAutoDelete.Name = "layoutControlItemAutoDelete";
+            this.layoutControlItemAutoDelete.Size = new System.Drawing.Size(178, 28);
+            this.layoutControlItemAutoDelete.Text = "Удаление";
+            this.layoutControlItemAutoDelete.TextSize = new System.Drawing.Size(73, 13);
+            // 
+            // layoutControlGroupAutoDelete
+            // 
+            this.layoutControlGroupAutoDelete.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItemAutoDelete,
+            this.layoutControlItemAutoDeleteTime,
+            this.layoutControlItem3});
+            this.layoutControlGroupAutoDelete.Location = new System.Drawing.Point(0, 320);
+            this.layoutControlGroupAutoDelete.Name = "layoutControlGroupAutoDelete";
+            this.layoutControlGroupAutoDelete.Size = new System.Drawing.Size(202, 120);
+            this.layoutControlGroupAutoDelete.Text = "Автоматическое Удаление";
+            // 
+            // textEditAutoDeleteTime
+            // 
+            this.textEditAutoDeleteTime.Location = new System.Drawing.Point(100, 390);
+            this.textEditAutoDeleteTime.Name = "textEditAutoDeleteTime";
+            this.textEditAutoDeleteTime.Properties.Mask.BeepOnError = true;
+            this.textEditAutoDeleteTime.Properties.Mask.EditMask = "[1-9]\\d?+";
+            this.textEditAutoDeleteTime.Properties.Mask.IgnoreMaskBlank = false;
+            this.textEditAutoDeleteTime.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx;
+            this.textEditAutoDeleteTime.Properties.Mask.ShowPlaceHolders = false;
+            this.textEditAutoDeleteTime.Size = new System.Drawing.Size(98, 20);
+            this.textEditAutoDeleteTime.StyleController = this.dataLayoutControl1;
+            this.textEditAutoDeleteTime.TabIndex = 21;
+            // 
+            // layoutControlItemAutoDeleteTime
+            // 
+            this.layoutControlItemAutoDeleteTime.Control = this.textEditAutoDeleteTime;
+            this.layoutControlItemAutoDeleteTime.Location = new System.Drawing.Point(0, 28);
+            this.layoutControlItemAutoDeleteTime.Name = "layoutControlItemAutoDeleteTime";
+            this.layoutControlItemAutoDeleteTime.Size = new System.Drawing.Size(178, 24);
+            this.layoutControlItemAutoDeleteTime.Text = "Время(сек)";
+            this.layoutControlItemAutoDeleteTime.TextSize = new System.Drawing.Size(73, 13);
+            // 
+            // simpleButtonDeleteForks
+            // 
+            this.simpleButtonDeleteForks.Image = ((System.Drawing.Image)(resources.GetObject("simpleButtonDeleteForks.Image")));
+            this.simpleButtonDeleteForks.Location = new System.Drawing.Point(24, 414);
+            this.simpleButtonDeleteForks.Name = "simpleButtonDeleteForks";
+            this.simpleButtonDeleteForks.Size = new System.Drawing.Size(174, 22);
+            this.simpleButtonDeleteForks.StyleController = this.dataLayoutControl1;
+            this.simpleButtonDeleteForks.TabIndex = 22;
+            this.simpleButtonDeleteForks.Text = "Удалить все Вилки";
+            this.simpleButtonDeleteForks.Click += new System.EventHandler(this.simpleButtonDeleteForks_Click);
+            // 
+            // layoutControlItem3
+            // 
+            this.layoutControlItem3.Control = this.simpleButtonDeleteForks;
+            this.layoutControlItem3.Location = new System.Drawing.Point(0, 52);
+            this.layoutControlItem3.Name = "layoutControlItem3";
+            this.layoutControlItem3.Size = new System.Drawing.Size(178, 26);
+            this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItem3.TextVisible = false;
             // 
             // FilterPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(600, 416);
+            this.ClientSize = new System.Drawing.Size(600, 471);
             this.Controls.Add(this.dataLayoutControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FilterPage";
@@ -678,6 +771,12 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitchAutoDelete.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoDelete)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupAutoDelete)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditAutoDeleteTime.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoDeleteTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -729,5 +828,12 @@ namespace DXApplication1.Pages
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem2;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroupActions;
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem4;
+        private TextEdit textEditAutoDeleteTime;
+        private ToggleSwitch toggleSwitchAutoDelete;
+        private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroupAutoDelete;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemAutoDelete;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemAutoDeleteTime;
+        private SimpleButton simpleButtonDeleteForks;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem3;
     }
 }

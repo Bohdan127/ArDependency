@@ -34,7 +34,7 @@ namespace DXApplication1.Models
                 fork.prices = null;
             }
 
-            return _calculatorFormulas.FilteredForks(forks, filterPage);
+            return forks;
         }
 
         public Filter GetFilter()
@@ -59,6 +59,8 @@ namespace DXApplication1.Models
             filter.RecommendedRate2 = dbFilter.RecommendedRate2;
             filter.MinRate = dbFilter.MinRate;
             filter.MaxRate = dbFilter.MaxRate;
+            filter.AutoDelete = dbFilter.AutoDelete;
+            filter.AutoDeleteTime = dbFilter.AutoDeleteTime;
         }
     }
 }

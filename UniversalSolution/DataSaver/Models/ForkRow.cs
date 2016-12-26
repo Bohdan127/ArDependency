@@ -109,5 +109,7 @@ namespace DataSaver.Models
         public string MarSuccess { get; set; }
 
         public string PinSuccess { get; set; }
+
+
     }
 }

@@ -19,6 +19,7 @@ namespace DXApplication1.Pages
         public bool ToClose { get; set; }
 
         private string _userId;
+        private Timer _autoDeleteTimer;
 
         public EventHandler FilterUpdated;
         public EventHandler ReloadingData;
@@ -33,7 +34,11 @@ namespace DXApplication1.Pages
             Filter = filter;
             FirstBind();
             UserBind();
-
+            _autoDeleteTimer = new Timer();
+            _autoDeleteTimer.Tick += simpleButtonDeleteForks_Click;
+            // ReSharper disable once PossibleInvalidOperationException
+            _autoDeleteTimer.Interval = Filter.AutoDeleteTime.Value;
+            _autoDeleteTimer.Enabled = Filter.AutoDelete;
         }
 
         private void UpdateFilter(Filter dbFilter)
@@ -51,6 +56,8 @@ namespace DXApplication1.Pages
             Filter.RecommendedRate2 = dbFilter.RecommendedRate2;
             Filter.Tennis = dbFilter.Tennis;
             Filter.Volleyball = dbFilter.Volleyball;
+            Filter.AutoDelete = dbFilter.AutoDelete;
+            Filter.AutoDeleteTime = dbFilter.AutoDeleteTime;
         }
 
         private void UserBind()
@@ -78,6 +85,8 @@ namespace DXApplication1.Pages
                 textEditAutoUpdate.EditValue = Filter.AutoUpdateTime;
                 textEditMinRate.EditValue = Filter.MinRate;
                 textEditMaxRate.EditValue = Filter.MaxRate;
+                toggleSwitchAutoDelete.EditValue = Filter.AutoDelete;
+                textEditAutoDeleteTime.EditValue = Filter.AutoDeleteTime;
             }
         }
 
@@ -120,6 +129,8 @@ namespace DXApplication1.Pages
                 Filter.AutoUpdateTime = textEditAutoUpdate.EditValue.ConvertToIntOrNull();
                 Filter.MinRate = textEditMinRate.EditValue.ConvertToDecimalOrNull();
                 Filter.MaxRate = textEditMaxRate.EditValue.ConvertToDecimalOrNull();
+                Filter.AutoDelete = toggleSwitchAutoDelete.EditValue.ConvertToBool();
+                Filter.AutoDeleteTime = textEditAutoDeleteTime.EditValue.ConvertToIntOrNull();
             }
         }
 
@@ -248,11 +259,19 @@ namespace DXApplication1.Pages
             if (!ValidateAllControls()) return;
             SaveUser();
             FilterUpdated?.Invoke(sender, e);
+            // ReSharper disable once PossibleInvalidOperationException
+            _autoDeleteTimer.Interval = Filter.AutoUpdateTime.Value;
+            _autoDeleteTimer.Enabled = Filter.AutoDelete;
         }
 
         private void simpleButtonCancel_Click(object sender, EventArgs e)
         {
             ReloadingData?.Invoke(sender, e);
+        }
+
+        private void simpleButtonDeleteForks_Click(object sender, EventArgs e)
+        {
+            LocalSaver.GetAllForkRows().ForEach(LocalSaver.DeleteFork);
         }
     }
 }

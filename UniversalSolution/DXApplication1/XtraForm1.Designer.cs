@@ -28,17 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(XtraForm1));
-            this.applicationMenu1 = new DevExpress.XtraBars.Ribbon.ApplicationMenu(this.components);
+            this.applicationMenu1 = new DevExpress.XtraBars.Ribbon.ApplicationMenu();
             this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
+            this.imageCollection1 = new DevExpress.Utils.ImageCollection();
             this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem2 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
-            this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.applicationMenu1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
@@ -65,8 +64,22 @@
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
-            this.ribbonControl1.Size = new System.Drawing.Size(678, 141);
+            this.ribbonControl1.Size = new System.Drawing.Size(752, 141);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
+            // 
+            // imageCollection1
+            // 
+            this.imageCollection1.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection1.ImageStream")));
+            this.imageCollection1.InsertGalleryImage("pie2_32x32.png", "images/chart/pie2_32x32.png", DevExpress.Images.ImageResourceCache.Default.GetImage("images/chart/pie2_32x32.png"), 0);
+            this.imageCollection1.Images.SetKeyName(0, "pie2_32x32.png");
+            this.imageCollection1.InsertGalleryImage("customizegrid_32x32.png", "images/grid/customizegrid_32x32.png", DevExpress.Images.ImageResourceCache.Default.GetImage("images/grid/customizegrid_32x32.png"), 1);
+            this.imageCollection1.Images.SetKeyName(1, "customizegrid_32x32.png");
+            this.imageCollection1.InsertGalleryImage("converttorange_32x32.png", "images/actions/converttorange_32x32.png", DevExpress.Images.ImageResourceCache.Default.GetImage("images/actions/converttorange_32x32.png"), 2);
+            this.imageCollection1.Images.SetKeyName(2, "converttorange_32x32.png");
+            this.imageCollection1.InsertGalleryImage("customizegrid_16x16.png", "images/grid/customizegrid_16x16.png", DevExpress.Images.ImageResourceCache.Default.GetImage("images/grid/customizegrid_16x16.png"), 3);
+            this.imageCollection1.Images.SetKeyName(3, "customizegrid_16x16.png");
+            this.imageCollection1.InsertGalleryImage("paste_32x32.png", "images/edit/paste_32x32.png", DevExpress.Images.ImageResourceCache.Default.GetImage("images/edit/paste_32x32.png"), 4);
+            this.imageCollection1.Images.SetKeyName(4, "paste_32x32.png");
             // 
             // barButtonItem1
             // 
@@ -113,30 +126,16 @@
             // 
             // ribbonStatusBar1
             // 
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 511);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 669);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(678, 27);
-            // 
-            // imageCollection1
-            // 
-            this.imageCollection1.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection1.ImageStream")));
-            this.imageCollection1.InsertGalleryImage("pie2_32x32.png", "images/chart/pie2_32x32.png", DevExpress.Images.ImageResourceCache.Default.GetImage("images/chart/pie2_32x32.png"), 0);
-            this.imageCollection1.Images.SetKeyName(0, "pie2_32x32.png");
-            this.imageCollection1.InsertGalleryImage("customizegrid_32x32.png", "images/grid/customizegrid_32x32.png", DevExpress.Images.ImageResourceCache.Default.GetImage("images/grid/customizegrid_32x32.png"), 1);
-            this.imageCollection1.Images.SetKeyName(1, "customizegrid_32x32.png");
-            this.imageCollection1.InsertGalleryImage("converttorange_32x32.png", "images/actions/converttorange_32x32.png", DevExpress.Images.ImageResourceCache.Default.GetImage("images/actions/converttorange_32x32.png"), 2);
-            this.imageCollection1.Images.SetKeyName(2, "converttorange_32x32.png");
-            this.imageCollection1.InsertGalleryImage("customizegrid_16x16.png", "images/grid/customizegrid_16x16.png", DevExpress.Images.ImageResourceCache.Default.GetImage("images/grid/customizegrid_16x16.png"), 3);
-            this.imageCollection1.Images.SetKeyName(3, "customizegrid_16x16.png");
-            this.imageCollection1.InsertGalleryImage("paste_32x32.png", "images/edit/paste_32x32.png", DevExpress.Images.ImageResourceCache.Default.GetImage("images/edit/paste_32x32.png"), 4);
-            this.imageCollection1.Images.SetKeyName(4, "paste_32x32.png");
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(752, 27);
             // 
             // XtraForm1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(678, 538);
+            this.ClientSize = new System.Drawing.Size(752, 696);
             this.Controls.Add(this.ribbonControl1);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Name = "XtraForm1";

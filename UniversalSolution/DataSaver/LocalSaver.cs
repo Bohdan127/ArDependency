@@ -276,7 +276,9 @@ namespace DataSaver
                 LicenseKey = json.DataAsJson.Value<string>("LicenseKey"),
                 Tennis = json.DataAsJson.Value<bool>("Tennis"),
                 Volleyball = json.DataAsJson.Value<bool>("Volleyball"),
-                AutoUpdateTime = json.DataAsJson.Value<int?>("AutoUpdateTime")
+                AutoUpdateTime = json.DataAsJson.Value<int?>("AutoUpdateTime"),
+                AutoDelete = json.DataAsJson.Value<bool>("AutoDelete"),
+                AutoDeleteTime = json.DataAsJson.Value<int?>("AutoDeleteTime")
             };
             return result;
         }
@@ -355,6 +357,7 @@ namespace DataSaver
                 PinRate = forkRow.PinRate,
                 MarSuccess = forkRow.MarSuccess,
                 PinSuccess = forkRow.PinSuccess
+
             };
             return result;
         }
@@ -386,6 +389,8 @@ namespace DataSaver
             userDocument.LicenseKey = filter.LicenseKey;
             userDocument.Tennis = filter.Tennis;
             userDocument.Volleyball = filter.Volleyball;
+            userDocument.AutoUpdateTime = filter.AutoUpdateTime;
+            userDocument.AutoDelete = filter.AutoDelete;
             userDocument.AutoUpdateTime = filter.AutoUpdateTime;
 
             Session.SaveChanges();

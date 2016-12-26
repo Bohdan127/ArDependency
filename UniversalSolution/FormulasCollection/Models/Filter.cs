@@ -30,5 +30,18 @@
 
         public decimal? MaxRate { get; set; }
 
+        public bool AutoDelete { get; set; }
+
+
+        private int defaultAutoDeleteTime = 1200;
+
+        private int? _autoDeleteTime;
+
+        public int? AutoDeleteTime
+        {
+            get { return _autoDeleteTime ?? (_autoDeleteTime = defaultAutoDeleteTime); }
+            set { _autoDeleteTime = value; }
+        }
+
     }
 }

@@ -17,10 +17,8 @@ using NLog;
 #if PlaceBets
 using Common.Modules.AntiCaptha;
 using SiteAccess.Access;
-using SiteAccess.Enums;
 using SiteAccess.Model.Bets;
 #endif
-using ToolsPortable;
 
 namespace DataLoader
 {
@@ -35,7 +33,6 @@ namespace DataLoader
         private static TwoOutComeCalculatorFormulas _calculatorFormulas;
 #if PlaceBets
         private static MarathonAccess _marath;
-        private static PinncaleAccess _pinn;
 #endif
         private static double _defRate;
         private static Filter _filter;
@@ -61,7 +58,6 @@ namespace DataLoader
             _marathon = new MarathonParser();
             _localSaver = new LocalSaver();
             _forkFormulas = new TwoOutComeForkFormulas();
-            GetUserData();
             StartLoadDictionary();
 
         }
@@ -69,44 +65,31 @@ namespace DataLoader
         private static void GetUserData()
         {
             _currentUser = _localSaver.FindUser();
-            if (_currentUser == null)
-            {
-                _currentUser = new User();
-                Console.WriteLine("Please enter Pinnacle user login");//for test "VB794327", "artem89@"
-                _currentUser.LoginPinnacle = Console.ReadLine();
+            if (_currentUser != null) return;
 
-                Console.WriteLine("Please enter Pinnacle user password");
-                _currentUser.PasswordPinnacle = Console.ReadLine();
+            _currentUser = new User();
+            Console.WriteLine("Please enter Pinnacle user login");//for test "VB794327", "artem89@"
+            _currentUser.LoginPinnacle = Console.ReadLine();
 
-                Console.WriteLine("Please enter Marathon user login");//for test "2127864", "Artemgus88"
-                _currentUser.LoginMarathon = Console.ReadLine();
-                Console.WriteLine("Please enter Marathon user password");
-                _currentUser.PasswordMarathon = Console.ReadLine();
+            Console.WriteLine("Please enter Pinnacle user password");
+            _currentUser.PasswordPinnacle = Console.ReadLine();
 
-                Console.WriteLine("Please enter Anti Gate Code");
-                _currentUser.AntiGateCode = Console.ReadLine();
+            Console.WriteLine("Please enter Marathon user login");//for test "2127864", "Artemgus88"
+            _currentUser.LoginMarathon = Console.ReadLine();
+            Console.WriteLine("Please enter Marathon user password");
+            _currentUser.PasswordMarathon = Console.ReadLine();
 
-                _localSaver.AddUserToDb(_currentUser);
-            }
-            while (_defRate <= 0.0 || _defRate > 2.0)
-            {
-                Console.WriteLine("Please enter user default rate");
-                try
-                {
-                    // ReSharper disable once PossibleInvalidOperationException
-                    _defRate = Console.ReadLine().ConvertToDoubleOrNull().Value;
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
+            Console.WriteLine("Please enter Anti Gate Code");
+            _currentUser.AntiGateCode = Console.ReadLine();
+
+            _localSaver.AddUserToDb(_currentUser);
         }
 
         private static void StartLoadDictionary()
         {
             while (true)
             {
+                GetUserData();
                 Console.WriteLine("Start Loading with Dictionary");
                 Console.WriteLine($"Pinnacle Login = '{_currentUser.LoginPinnacle}'");
                 Console.WriteLine($"Pinnacle Password = '{_currentUser.PasswordPinnacle}'");
@@ -120,11 +103,7 @@ namespace DataLoader
 
 #if PlaceBets
                 _marath = new MarathonAccess(new AntiGate(_currentUser.AntiGateCode));
-                //https://www.pinnacle.com/ru/api/manual#pbet
-                _pinn = new PinncaleAccess();
-
                 _marath.Login(_currentUser.LoginMarathon, _currentUser.PasswordMarathon);
-                _pinn.Login(_currentUser.LoginPinnacle, _currentUser.PasswordPinnacle);
 #endif
 
                 foreach (var sportType in sportsToLoading)
@@ -132,6 +111,10 @@ namespace DataLoader
                     var watch = new Stopwatch();
                     watch.Start();
                     _filter = _localSaver.FindFilter();
+                    Console.WriteLine($"Min Percent {_filter.MinPercent}");
+                    Console.WriteLine($"Max Percent {_filter.MaxPercent}");
+                    Console.WriteLine($"Min Rate {_filter.MinRate}");
+                    Console.WriteLine($"Max Rate {_filter.MaxRate}");
                     switch (sportType)
                     {
                         case SportType.Soccer:
@@ -149,10 +132,6 @@ namespace DataLoader
                         case SportType.Volleyball:
                             if (!_filter.Volleyball) continue;
                             break;
-                        case SportType.NoType:
-                            throw new ArgumentOutOfRangeException(sportType.ToString());
-                        default:
-                            throw new ArgumentOutOfRangeException(sportType.ToString());
                     }
                     var pinSport = LoadPinacleDictionary(sportType);
                     var marSport = LoadMarathon(sportType);
@@ -192,60 +171,41 @@ namespace DataLoader
             var watch = new Stopwatch();
             watch.Start();
 
+            var tmpRate = _filter.MaxRate ?? _filter.MinRate;
+            if (tmpRate == null) return;
+
+            var rate = tmpRate.Value;
+
             foreach (
-                var fork in
-                    _calculatorFormulas.FilteredForks(forks.Select(f => f).ToList(), _filter)
-                        .OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
+            var fork in
+                _calculatorFormulas.FilteredForks(forks.Select(f => f).ToList(), _filter)
+                    .OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
             {
-                var tmpRate = _defRate;
-                Tuple<string, string> recomendedRates = null;
+                bool resM;
+#if PlaceBets
                 do
                 {
-                    recomendedRates = _calculatorFormulas.GetRecommendedRates(tmpRate,
-                        fork.CoefFirst.ConvertToDoubleOrNull(), fork.CoefSecond.ConvertToDoubleOrNull());
-                    tmpRate -= 0.1;
-                    // ReSharper disable once PossibleInvalidOperationException
-                } while (recomendedRates.Item1.ConvertToDoubleOrNull().Value > 1.0);
+                    var betM = new MarathonBet
+                    {
+                        Id = fork.selection_key,
+                        Name = fork.BookmakerFirst,
+                        // ReSharper disable once PossibleInvalidOperationException
+                        Stake = (double)rate,
+                        AddData =
+                            $"{{\"sn\":\"{fork.sn}\"," + $"\"mn\":\"{fork.mn}\"," + $"\"ewc\":\"{fork.ewc}\"," +
+                            $"\"cid\":{fork.cid}," + $"\"prt\":\"{fork.prt}\"," + $"\"ewf\":\"{fork.ewf}\"," +
+                            $"\"epr\":\"{fork.epr}\"," + "\"prices\"" + $":{{\"0\":\"{fork.prices[0]}\"," +
+                            $"\"1\":\"{fork.prices[1]}\"," + $"\"2\":\"{fork.prices[2]}\"," +
+                            $"\"3\":\"{fork.prices[3]}\"," + $"\"4\":\"{fork.prices[4]}\"," +
+                            $"\"5\":\"{fork.prices[5]}\"}}}}"
+                    };
+                    resM = _marath.MakeBet(betM);
+                    Console.WriteLine($"Place result {resM} for {rate} into {fork.BookmakerFirst}");
+                    if (!resM) rate -= 0.1m;
+                } while (!resM && rate >= _filter.MinRate);
 
-#if PlaceBets
-                var betM = new MarathonBet
-                {
-                    Id = fork.selection_key,
-                    Name = fork.BookmakerSecond,
-                    // ReSharper disable once PossibleInvalidOperationException
-                    Stake = recomendedRates.Item1.ConvertToDoubleOrNull().Value,
-                    AddData = $"{{\"sn\":\"{fork.sn}\"," + $"\"mn\":\"{fork.mn}\"," + $"\"ewc\":\"{fork.ewc}\"," + $"\"cid\":{fork.cid}," + $"\"prt\":\"{fork.prt}\"," + $"\"ewf\":\"{fork.ewf}\"," + $"\"epr\":\"{fork.epr}\"," + "\"prices\"" + $":{{\"0\":\"{fork.prices[0]}\"," + $"\"1\":\"{fork.prices[1]}\"," + $"\"2\":\"{fork.prices[2]}\"," + $"\"3\":\"{fork.prices[3]}\"," + $"\"4\":\"{fork.prices[4]}\"," + $"\"5\":\"{fork.prices[5]}\"}}}}"
-                };
-                var betP = new PinnacleBet
-                {
-                    AcceptBetterLine = true,
-                    BetType = BetType.MONEYLINE,
-                    Eventid = Convert.ToInt64(fork.PinnacleEventId),
-                    Guid = Guid.NewGuid().ToString(),
-                    OddsFormat = OddsFormat.DECIMAL,
-                    LineId = Convert.ToInt64(fork.LineId), /*
-                     * This represents the period of the match. For example, for soccer we have:
-                     * 0 - Game
-                     * 1 - 1st Half
-                     * 2 - 2nd Half
-                     */
-                    PeriodNumber = 0,
-                    WinRiskRate = WinRiskType.WIN,
-                    // ReSharper disable once PossibleInvalidOperationException
-                    Stake = recomendedRates.Item2.ConvertToDecimalOrNull().Value,
-                    SportId = (int)(SportType)Enum.Parse(typeof(SportType), fork.Sport, false)
-                };
-
-                var resM = _marath.MakeBet(betM);
-                var resP = _pinn.MakeBet(betP);
-
-                Console.WriteLine($"Place result {resM} for {recomendedRates.Item1} into {fork.BookmakerSecond}");
-                Console.WriteLine(resP.Success ? $"Place result {resP.Success} for {recomendedRates.Item2} into {fork.BookmakerFirst}" : $"Place result {resP.Success} with code {resP.Status} and description {resP.Error} for {recomendedRates.Item1} into {fork.BookmakerFirst}");
-
-                fork.MarRate = recomendedRates.Item1;
-                fork.PinRate = recomendedRates.Item2;
-                fork.MarSuccess = resM.ToString();
-                fork.PinSuccess = $"{resP.Success} {resP.Status} {resP.Error}";
+                fork.MarRate = rate.ToString(CultureInfo.CurrentCulture);
+                fork.MarSuccess = resM.ToString(CultureInfo.CurrentCulture);
 #endif
                 var outF =
                     forks.First(

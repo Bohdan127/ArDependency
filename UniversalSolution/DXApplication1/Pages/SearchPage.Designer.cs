@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchPage));
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.progressBarControl1 = new DevExpress.XtraEditors.ProgressBarControl();
@@ -57,7 +58,7 @@
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem9 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.imageList1 = new System.Windows.Forms.ImageList();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
@@ -184,7 +185,7 @@
             this.colBookmaker.Name = "colBookmaker";
             this.colBookmaker.OptionsColumn.ReadOnly = true;
             this.colBookmaker.Visible = true;
-            this.colBookmaker.VisibleIndex = 4;
+            this.colBookmaker.VisibleIndex = 3;
             // 
             // colRate1
             // 
@@ -212,7 +213,7 @@
             this.colMarRate.FieldName = "MarRate";
             this.colMarRate.Name = "colMarRate";
             this.colMarRate.Visible = true;
-            this.colMarRate.VisibleIndex = 7;
+            this.colMarRate.VisibleIndex = 6;
             // 
             // colMarSuccess
             // 
@@ -220,7 +221,7 @@
             this.colMarSuccess.FieldName = "MarSuccess";
             this.colMarSuccess.Name = "colMarSuccess";
             this.colMarSuccess.Visible = true;
-            this.colMarSuccess.VisibleIndex = 8;
+            this.colMarSuccess.VisibleIndex = 7;
             // 
             // colBookmaker2
             // 
@@ -229,7 +230,7 @@
             this.colBookmaker2.Name = "colBookmaker2";
             this.colBookmaker2.OptionsColumn.ReadOnly = true;
             this.colBookmaker2.Visible = true;
-            this.colBookmaker2.VisibleIndex = 9;
+            this.colBookmaker2.VisibleIndex = 8;
             // 
             // colRate2
             // 
@@ -256,16 +257,12 @@
             this.colPinRate.Caption = "Ставка на Пиннакл";
             this.colPinRate.FieldName = "PinRate";
             this.colPinRate.Name = "colPinRate";
-            this.colPinRate.Visible = true;
-            this.colPinRate.VisibleIndex = 12;
             // 
             // colPinSuccess
             // 
             this.colPinSuccess.Caption = "Успех на Пиннакле";
             this.colPinSuccess.FieldName = "PinSuccess";
             this.colPinSuccess.Name = "colPinSuccess";
-            this.colPinSuccess.Visible = true;
-            this.colPinSuccess.VisibleIndex = 13;
             // 
             // colProfit
             // 
@@ -275,7 +272,7 @@
             this.colProfit.Name = "colProfit";
             this.colProfit.OptionsColumn.ReadOnly = true;
             this.colProfit.Visible = true;
-            this.colProfit.VisibleIndex = 13;
+            this.colProfit.VisibleIndex = 11;
             this.colProfit.Width = 53;
             // 
             // repositoryItemTextEditPercent

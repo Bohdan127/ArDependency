@@ -1,5 +1,4 @@
-﻿using DataSaver;
-using System;
+﻿using System;
 
 namespace ConsoleApplication1
 {
@@ -8,10 +7,10 @@ namespace ConsoleApplication1
         [STAThread]
         private static void Main(string[] args)
         {
-            Console.WriteLine("Удаление старой базы...");
-            var saver = new LocalSaver();
-            saver.ClearDatabase();
-            Console.WriteLine("удаление успешно завершено!");
+            //Console.WriteLine("Удаление старой базы...");
+            //var saver = new LocalSaver();
+            //saver.ClearDatabase();
+            //Console.WriteLine("удаление успешно завершено!");
         }
     }
 }

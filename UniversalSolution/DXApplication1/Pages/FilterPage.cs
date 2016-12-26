@@ -271,7 +271,7 @@ namespace DXApplication1.Pages
 
         private void simpleButtonDeleteForks_Click(object sender, EventArgs e)
         {
-            LocalSaver.GetAllForkRows().ForEach(LocalSaver.DeleteFork);
+            LocalSaver.GetAllForkRows().ForEach(LocalSaver.DeleteForkWithReCheck);
         }
     }
 }

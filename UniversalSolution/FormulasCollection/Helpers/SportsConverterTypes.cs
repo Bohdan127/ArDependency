@@ -1,7 +1,7 @@
 ﻿using DataParser.Enums;
 using FormulasCollection.Models;
-using System;
 using System.Collections.Generic;
+using ToolsPortable;
 
 namespace FormulasCollection.Helpers
 {
@@ -120,7 +120,7 @@ namespace FormulasCollection.Helpers
             }
             if (!string.IsNullOrEmpty(number))
             {
-                double num = Convert.ToDouble(number);
+                double num = number.ConvertToDoubleOrNull() ?? 0;
                 double num1 = num - delta;
                 double num2 = num + delta;
 

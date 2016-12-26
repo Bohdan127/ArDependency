@@ -110,7 +110,7 @@ namespace DataSaver
                 return new List<ForkRow>();
 
             var rowsForDelete = savedForks.Where(fBase => fBase.Sport == sportType.ToString())
-                                          .ToList();
+                .ToList();
             foreach (var fBase in rowsForDelete.Where(f => f.Type == ForkType.Saved))
             {
                 var fork = forkList.FirstOrDefault(fNew => IsSameFork(fNew, fBase));
@@ -141,8 +141,8 @@ namespace DataSaver
             if (rowsForDelete == null || rowsForDelete.Count <= 0)
                 return;
             rowsForDelete.ForEach(f =>
-                    _store.DatabaseCommands.Delete(f.Id,
-                        null));
+                _store.DatabaseCommands.Delete(f.Id,
+                    null));
             rowsForDelete.Clear();
         }
 
@@ -176,11 +176,11 @@ namespace DataSaver
         public List<Fork> GetForks(Filter searchCriteria, ForkType forkType)
         {
             return GetAllForkRows().Where(f => f.Type == forkType &&
-                ((searchCriteria.Basketball && f.Sport == SportType.Basketball.ToString()) ||
-                (searchCriteria.Football && f.Sport == SportType.Soccer.ToString()) ||
-                (searchCriteria.Hockey && f.Sport == SportType.Hockey.ToString()) ||
-                (searchCriteria.Volleyball && f.Sport == SportType.Volleyball.ToString()) ||
-                (searchCriteria.Tennis && f.Sport == SportType.Tennis.ToString())))
+                                               ((searchCriteria.Basketball && f.Sport == SportType.Basketball.ToString()) ||
+                                                (searchCriteria.Football && f.Sport == SportType.Soccer.ToString()) ||
+                                                (searchCriteria.Hockey && f.Sport == SportType.Hockey.ToString()) ||
+                                                (searchCriteria.Volleyball && f.Sport == SportType.Volleyball.ToString()) ||
+                                                (searchCriteria.Tennis && f.Sport == SportType.Tennis.ToString())))
                 .Select(MapForkRowToFork).ToList();
         }
 
@@ -191,11 +191,37 @@ namespace DataSaver
             Session.SaveChanges();
         }
 
+        public void DeleteForkWithReCheck(ForkRow forkRow)
+        {
+            try
+            {
+                var forkDocument = Session.Load<ForkRow>(forkRow.Id);
+                Session.Delete(forkDocument);
+                Session.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"LocalSaver => DeleteForkWithReCheck => {forkRow.Id}");
+				_logger.Error(ex.Message);
+                _logger.Error(ex.StackTrace);
+                DeleteFork(forkRow);
+            }
+        }
+
         public void DeleteFork(ForkRow forkRow)
         {
-            var forkDocument = Session.Load<ForkRow>(forkRow.Id);
-            Session.Delete(forkDocument);
-            Session.SaveChanges();
+            try
+            {
+                var forkDocument = Session.Load<ForkRow>(forkRow.Id);
+                Session.Delete(forkDocument);
+                Session.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"LocalSaver => DeleteFork => {forkRow.Id}");
+                _logger.Error(ex.Message);
+                _logger.Error(ex.StackTrace);
+            }
         }
 
         public void UpdateFork(Fork fork)
@@ -205,7 +231,7 @@ namespace DataSaver
 
         public void DeleteFork(Fork fork)
         {
-            DeleteFork(MapForkToForkRow(fork));
+            DeleteForkWithReCheck(MapForkToForkRow(fork));
         }
 
         protected ForkRow MapJsonDocumentToForkRow(JsonDocument json)

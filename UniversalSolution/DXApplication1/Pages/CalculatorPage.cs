@@ -1,4 +1,6 @@
-﻿using FormulasCollection.Models;
+﻿//#define CalculatorProgram
+
+using FormulasCollection.Models;
 using FormulasCollection.Realizations;
 using System;
 using System.Globalization;
@@ -49,12 +51,13 @@ namespace DXApplication1.Pages
         {
             DeInitializeEvents();
 
-
+#if CalculatorProgram
             lbMain.Text = _fork?.Event;
             lbType1.Text = _fork?.TypeFirst;
             lbCoef1.Text = _fork?.CoefFirst;
             lbType2.Text = _fork?.TypeSecond;
             lbCoef2.Text = _fork?.CoefSecond;
+#endif
 
 
 
@@ -62,8 +65,8 @@ namespace DXApplication1.Pages
                     _fork?.Profit,
                      lbCoef1.Text.ConvertToDoubleOrNull(),
                      lbCoef2.Text.ConvertToDoubleOrNull());
-            textEditRate1.Text = _recommendedRates.Item1;
-            textEditRate2.Text = _recommendedRates.Item2;
+            textEditRate1.Text = _recommendedRates?.Item1;
+            textEditRate2.Text = _recommendedRates?.Item2;
             InitializeEvents();
             OnURateChanging();
         }
@@ -140,6 +143,11 @@ namespace DXApplication1.Pages
         protected virtual void TextEditRate2_EditValueChanged(object sender, EventArgs e)
         {
             OnURateChanging();
+        }
+
+        private void simpleButton1_Click(object sender, EventArgs e)
+        {
+            OnUpdateForm();
         }
     }
 }

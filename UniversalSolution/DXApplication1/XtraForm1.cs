@@ -1,9 +1,8 @@
-﻿using DataSaver;
+﻿//#define UseLicense
+using DataSaver;
 using DevExpress.XtraEditors;
 using DXApplication1.Models;
 using FormulasCollection.Models;
-using GlobalResources.uk_UA;
-using License.Logic;
 using NLog;
 using System.Windows.Forms;
 
@@ -36,13 +35,14 @@ namespace DXApplication1
 
             _pageManager = new PageManager(this); _filter = new Filter();
             _pageManager.GetFilterPage(_filter);
-
+#if UseLicense
             var licenseForm = new LicenseForm("uk_UA", uk_UA.ResourceManager);
             if (!licenseForm.CheckInstance(_filter.LicenseKey ?? string.Empty))
                 licenseForm.ShowDialog();
             if (!licenseForm.IsRegistered)
                 Close();
             _filter.LicenseKey = licenseForm.LicenseKey;
+#endif
         }
 
         #endregion CTOR

@@ -55,10 +55,11 @@ namespace DataSaver
                 if (_session == null)
                 {
                     _session = _store.OpenSession();
+                    _session.Advanced.MaxNumberOfRequestsPerSession = int.MaxValue;
                 }
 
                 // ReSharper disable once InvertIf
-                if (_session.Advanced.NumberOfRequests ==
+                if (_session.Advanced.NumberOfRequests >=
                     _session.Advanced.MaxNumberOfRequestsPerSession)
                 {
                     _session.Dispose();
@@ -148,23 +149,13 @@ namespace DataSaver
 
         public IEnumerable<ForkRow> GetAllForkRows()
         {
-            var jsonList = new List<JsonDocument>();
+            var resList = new List<ForkRow>();
             using (_store.DatabaseCommands.DisableAllCaching())
             {
-                for (var i = 0;
-                    i <=
-                    Session.Query<ForkRow>().Customize(x => x.WaitForNonStaleResultsAsOfNow()).GetPageCount(PageSize);
-                    i += PageSize)
-                {
-                    jsonList.AddRange(_store.DatabaseCommands.GetDocuments(i, PageSize));
-                }
+                resList.AddRange(Session.Query<ForkRow>()
+                                        .Customize(x => x.WaitForNonStaleResultsAsOfNow())
+                                        .GetAllRecords(PageSize));
             }
-            jsonList.RemoveAll(json => !json.Key.Contains("ForkRows/"));
-
-            if (jsonList.Count == 0)
-                return new List<ForkRow>();
-
-            var resList = jsonList.Select(MapJsonDocumentToForkRow);
             return resList;
         }
 
@@ -191,37 +182,19 @@ namespace DataSaver
             Session.SaveChanges();
         }
 
-        public void DeleteForkWithReCheck(ForkRow forkRow)
-        {
-            try
-            {
-                var forkDocument = Session.Load<ForkRow>(forkRow.Id);
-                Session.Delete(forkDocument);
-                Session.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"LocalSaver => DeleteForkWithReCheck => {forkRow.Id}");
-				_logger.Error(ex.Message);
-                _logger.Error(ex.StackTrace);
-                DeleteFork(forkRow);
-            }
-        }
-
         public void DeleteFork(ForkRow forkRow)
         {
+            var forkDocument = Session.Load<ForkRow>(forkRow.Id);
             try
             {
-                var forkDocument = Session.Load<ForkRow>(forkRow.Id);
                 Session.Delete(forkDocument);
-                Session.SaveChanges();
             }
             catch (Exception ex)
             {
-                _logger.Error($"LocalSaver => DeleteFork => {forkRow.Id}");
                 _logger.Error(ex.Message);
                 _logger.Error(ex.StackTrace);
             }
+            Session.SaveChanges();
         }
 
         public void UpdateFork(Fork fork)
@@ -231,7 +204,7 @@ namespace DataSaver
 
         public void DeleteFork(Fork fork)
         {
-            DeleteForkWithReCheck(MapForkToForkRow(fork));
+            DeleteFork(MapForkToForkRow(fork));
         }
 
         protected ForkRow MapJsonDocumentToForkRow(JsonDocument json)
@@ -492,39 +465,28 @@ namespace DataSaver
 
         public User FindUser()
         {
-            var jsonList = new List<JsonDocument>();
+            var resList = new List<User>();
             using (_store.DatabaseCommands.DisableAllCaching())
             {
-                for (var i = 0;
-                    i <=
-                    Session.Query<User>().Customize(x => x.WaitForNonStaleResultsAsOfNow()).GetPageCount(PageSize);
-                    i += PageSize)
-                {
-                    jsonList.AddRange(_store.DatabaseCommands.GetDocuments(i, PageSize));
-                }
+                resList.AddRange(Session.Query<User>()
+                                        .Customize(x => x.WaitForNonStaleResultsAsOfNow())
+                                        .GetAllRecords(PageSize));
             }
-            jsonList.RemoveAll(json => !json.Key.Contains("users/"));
-            var resList = jsonList.Select(MapJsonDocumentToUser).ToArray();
             return resList.FirstOrDefault();
         }
 
         public Filter FindFilter()
         {
-            var jsonList = new List<JsonDocument>();
+            var resList = new List<Filter>();
             using (_store.DatabaseCommands.DisableAllCaching())
             {
-                for (var i = 0;
-                    i <= Session.Query<Filter>().Customize(x => x.WaitForNonStaleResultsAsOfNow()).GetPageCount(PageSize);
-                    i += PageSize)
-                {
-                    jsonList.AddRange(_store.DatabaseCommands.GetDocuments(i, PageSize));
-                }
+                resList.AddRange(Session.Query<Filter>()
+                                        .Customize(x => x.WaitForNonStaleResultsAsOfNow())
+                                        .GetAllRecords(PageSize));
             }
-            jsonList.RemoveAll(json => !json.Key.Contains("filters/"));
-            var resList = jsonList.Select(MapJsonDocumentToFilter).ToArray();
-
-            if (resList.FirstOrDefault() != null)
-                return resList.FirstOrDefault();
+            var first = resList.FirstOrDefault();
+            if (first != null)
+                return first;
 
             AddFilterToDb(new Filter());
             return FindFilter();

@@ -5,6 +5,7 @@ using DevExpress.XtraEditors.DXErrorProvider;
 using FormulasCollection.Models;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
 using ToolsPortable;
 
@@ -37,7 +38,7 @@ namespace DXApplication1.Pages
             _autoDeleteTimer = new Timer();
             _autoDeleteTimer.Tick += simpleButtonDeleteForks_Click;
             // ReSharper disable once PossibleInvalidOperationException
-            _autoDeleteTimer.Interval = Filter.AutoDeleteTime.Value;
+            _autoDeleteTimer.Interval = Filter.AutoDeleteTime.Value * 1000;
             _autoDeleteTimer.Enabled = Filter.AutoDelete;
         }
 
@@ -103,7 +104,10 @@ namespace DXApplication1.Pages
                 AntiGateCode = textEditAntiGateCode.Text
             };
             if (_userId.IsBlank())
+            {
                 LocalSaver.AddUserToDb(user);
+                _userId = user.Id;
+            }
             else
                 LocalSaver.UpdateUser(user);
         }
@@ -260,7 +264,7 @@ namespace DXApplication1.Pages
             SaveUser();
             FilterUpdated?.Invoke(sender, e);
             // ReSharper disable once PossibleInvalidOperationException
-            _autoDeleteTimer.Interval = Filter.AutoDeleteTime.Value;
+            _autoDeleteTimer.Interval = Filter.AutoDeleteTime.Value * 1000;
             _autoDeleteTimer.Enabled = Filter.AutoDelete;
         }
 
@@ -271,7 +275,7 @@ namespace DXApplication1.Pages
 
         private void simpleButtonDeleteForks_Click(object sender, EventArgs e)
         {
-            LocalSaver.GetAllForkRows().ForEach(LocalSaver.DeleteForkWithReCheck);
+            LocalSaver.ClearForks(LocalSaver.GetAllForkRows().ToList());
         }
     }
 }

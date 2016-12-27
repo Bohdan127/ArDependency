@@ -1,4 +1,4 @@
-﻿//#define PlaceBets
+﻿#define PlaceBets
 
 using DataParser.DefaultRealization;
 using DataParser.Enums;

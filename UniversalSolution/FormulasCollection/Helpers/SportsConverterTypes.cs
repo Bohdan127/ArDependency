@@ -1,11 +1,12 @@
 ﻿using DataParser.Enums;
 using FormulasCollection.Models;
 using System.Collections.Generic;
+using System.Linq;
 using ToolsPortable;
 
 namespace FormulasCollection.Helpers
 {
-    public class SportsConverterTypes
+    public static class SportsConverterTypes
     {
         public static List<string> TypeParseAll(string typeEvent, SportType st)
         {
@@ -130,6 +131,19 @@ namespace FormulasCollection.Helpers
                 result.Add(val2);
             }
             return result;
+        }
+
+        public static string MinimalizeValue(this string typeValue)
+        {
+            if (typeValue.IsBlank()) return typeValue;
+            if (!typeValue.Contains(".")) return typeValue;
+            if (typeValue.IndexOf('.') == typeValue.Length) return typeValue;
+            if (typeValue[typeValue.IndexOf('.') + 1] != '0') return typeValue;
+
+            var firstpart = typeValue.Remove(typeValue.IndexOf('.'));
+            var secondpart = typeValue.Split('0').Last();
+
+            return firstpart + secondpart;
         }
     }
 }

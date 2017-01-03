@@ -104,7 +104,7 @@ namespace FormulasCollection.Helpers
         public static List<string> CheckAsiatType(string _type)
         {
             // перевірити азіатскі типи на баскетбол 
-           // const double delta = 0.25;
+            // const double delta = 0.25;
 
             List<string> result = new List<string>();
             result.Add(_type);
@@ -138,12 +138,18 @@ namespace FormulasCollection.Helpers
             if (typeValue.IsBlank()) return typeValue;
             if (!typeValue.Contains(".")) return typeValue;
             if (typeValue.IndexOf('.') == typeValue.Length) return typeValue;
-            if (typeValue[typeValue.IndexOf('.') + 1] != '0') return typeValue;
-
-            var firstpart = typeValue.Remove(typeValue.IndexOf('.'));
-            var secondpart = typeValue.Split('0').Last();
-
-            return firstpart + secondpart;
+            if (typeValue[typeValue.IndexOf('.') + 1] == '0')
+            {
+                var firstpart = typeValue.Remove(typeValue.IndexOf('.'));
+                var secondpart = typeValue.Split('0').Last();
+                return firstpart + secondpart;
+            }
+            else
+            {
+                var firstpart = typeValue.Remove(typeValue.IndexOf('.') + 1);
+                var secondpart = typeValue.Split('.').Last().Replace("0", string.Empty);
+                return firstpart + secondpart;
+            }
         }
     }
 }

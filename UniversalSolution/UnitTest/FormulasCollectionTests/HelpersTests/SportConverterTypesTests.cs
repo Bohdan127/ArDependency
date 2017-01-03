@@ -15,7 +15,7 @@ namespace UnitTest.FormulasCollectionTests.HelpersTests
             Assert.AreEqual(inValue.MinimalizeValue(), outValue);
 
             inValue = "F1(-1.50)";
-            outValue = "F1(-1.50)";
+            outValue = "F1(-1.5)";
             Assert.AreEqual(inValue.MinimalizeValue(), outValue);
 
             inValue = "F1(0)";

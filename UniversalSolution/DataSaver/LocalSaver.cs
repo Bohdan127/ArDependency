@@ -36,7 +36,6 @@ namespace DataSaver
                 Conventions = { ShouldCacheRequest = url => false }
             };
             _store.Initialize();
-            //_store.DatabaseCommands.DisableAllCaching();
         }
 
         public void ClearDatabase()

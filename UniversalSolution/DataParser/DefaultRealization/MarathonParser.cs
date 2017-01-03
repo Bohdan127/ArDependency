@@ -714,6 +714,10 @@ namespace DataParser.DefaultRealization
             {
                 CreateEvent(list, ref eventCoefList, nameTeams, event_id);
             }
+            if (teamToAdd.Event_RU.Contains("Манчестер Юнайтед") && teamToAdd.Event_RU.Contains("Халл Сити"))
+            {
+                int i = 0;
+            }
             eventCoefList.EventId = teamToAdd.EventId;
             eventCoefList.Event = teamToAdd.Event;
             eventCoefList.Event_RU = teamToAdd.Event_RU;
@@ -766,13 +770,13 @@ namespace DataParser.DefaultRealization
                 }
                 if (isTotal)
                 {
-                    newSN1 = _name + " " + _num1.ToString();
-                    newSN2 = _name + " " + _num2.ToString();
+                    //newSN1 = _name + " " + _num1.ToString();
+                    //newSN2 = _name + " " + _num2.ToString();
                     newSN3 = _name + " " + ((_num1 + _num2) / 2).ToString();
                 }
                 else {
-                    newSN1 = _name + "(" + _znak1.ToString() + _num1.ToString() + ")";
-                    newSN2 = _name + "(" + _znak2.ToString() + _num2.ToString() + ")";
+                    //newSN1 = _name + "(" + _znak1.ToString() + _num1.ToString() + ")";
+                    //newSN2 = _name + "(" + _znak2.ToString() + _num2.ToString() + ")";
                     newSN3 = _name + "(" + resZnak.ToString() + ((_num1 + _num2) / 2).ToString() + ")";
                 }
 
@@ -785,9 +789,9 @@ namespace DataParser.DefaultRealization
                 List<string> prices = obj.prices;
                 string selection_key = obj.selection_key;
 
-                result.Add(new DataMarathonForAutoPlays() { mn = mn, ewc = ewc, cid = cid, prt = prt, ewf = ewf, epr = epr, prices = prices, selection_key = selection_key, sn = newSN1 });
-                result.Add(new DataMarathonForAutoPlays() { mn = mn, ewc = ewc, cid = cid, prt = prt, ewf = ewf, epr = epr, prices = prices, selection_key = selection_key, sn = newSN2 });
-                result.Add(new DataMarathonForAutoPlays() { mn = mn, ewc = ewc, cid = cid, prt = prt, ewf = ewf, epr = epr, prices = prices, selection_key = selection_key, sn = newSN3 });
+               // result.Add(new DataMarathonForAutoPlays() { mn = mn, ewc = ewc, cid = cid, prt = prt, ewf = ewf, epr = epr, prices = prices, selection_key = selection_key, sn = newSN1 });
+               // result.Add(new DataMarathonForAutoPlays() { mn = mn, ewc = ewc, cid = cid, prt = prt, ewf = ewf, epr = epr, prices = prices, selection_key = selection_key, sn = newSN2 });
+                result.Add(new DataMarathonForAutoPlays() { mn = mn, ewc = ewc, cid = cid, prt = prt, ewf = ewf, epr = epr, prices = prices, selection_key = selection_key, sn = newSN3, isAsiat = true });
 
             }
             catch (Exception e)

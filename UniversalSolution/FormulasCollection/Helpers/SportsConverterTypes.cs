@@ -104,11 +104,11 @@ namespace FormulasCollection.Helpers
         public static List<string> CheckAsiatType(string _type)
         {
             // перевірити азіатскі типи на баскетбол 
-            const double delta = 0.25;
+           // const double delta = 0.25;
 
             List<string> result = new List<string>();
             result.Add(_type);
-            string znak = string.Empty;
+            /*string znak = string.Empty;
 
             if (!(_type.Contains("(") && _type.Contains(")")))
                 return result;
@@ -129,7 +129,7 @@ namespace FormulasCollection.Helpers
                 string val2 = name.Trim() + "(" + (num1 == 0 ? "" : znak) + num2.ToString() + ")";
                 result.Add(val1);
                 result.Add(val2);
-            }
+            }*/
             return result;
         }
 

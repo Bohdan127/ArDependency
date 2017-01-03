@@ -32,6 +32,8 @@ namespace FormulasCollection.Models
         public List<string> prices { get; set; }
         public string selection_key { get; set; }
 
+        public bool isAsiat { get; set; }
+
         public DataMarathonForAutoPlays()
         {
             this.prices = new List<string>();

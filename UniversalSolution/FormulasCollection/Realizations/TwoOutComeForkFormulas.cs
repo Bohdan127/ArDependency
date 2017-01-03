@@ -24,6 +24,10 @@ namespace FormulasCollection.Realizations
 
         public bool CheckIsFork(double? coef1, double? coef2, ResultForForks marEvent, ResultForForksDictionary pinEvent)
         {
+            if (marEvent.Event_RU.Contains("Манчестер Юнайтед") &&marEvent.Event_RU.Contains("Халл Сити"))
+            {
+                int i = 0;
+            }
             if (coef1 == null || coef2 == null) return false;
 
             return _calculatorFormulas.GetProfit(coef1.Value, coef2.Value) > 0;
@@ -35,6 +39,12 @@ namespace FormulasCollection.Realizations
             var resList = new List<Fork>();
             foreach (var eventItem in marathon)
             {
+                if (eventItem.Event_RU.Contains("Манчестер Юнайтед") && eventItem.Event_RU.Contains("Халл Сити"))
+                {
+                    int i = 0;
+                    var ed = marathon.Where(x => x.Event_RU.Contains("Манчестер Юнайтед") && x.Event_RU.Contains("Халл Сити")).Select(x => x).ToList();
+                }
+               
                 if (eventItem.Event == null) continue;
                 string pinKey = null;
                 if (_pinKeyCache.ContainsKey(eventItem.Event) && pinnacle.ContainsKey(_pinKeyCache[eventItem.Event]))
@@ -213,6 +223,10 @@ namespace FormulasCollection.Realizations
             var resList = new List<string>();
             try
             {
+                if(marEvent.Event_RU.Contains("Миссисипи Ребелз"))
+                {
+                    int t = 0;
+                }
                 marEvent.Type = marEvent.Type.Trim();
                 var resTypes = SportsConverterTypes.TypeParseAll(marEvent.Type,
                     st)/*remove it =>*/.Select(c => c.ToString()).ToList();

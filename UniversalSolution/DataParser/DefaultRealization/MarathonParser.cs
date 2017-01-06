@@ -144,7 +144,6 @@ namespace DataParser.DefaultRealization
             if (englishNameTeams_Dictionary.ContainsKey(teamToAdd.EventId))
             {
                 teamToAdd.Event = englishNameTeams_Dictionary[teamToAdd.EventId].name1 + " - " + englishNameTeams_Dictionary[teamToAdd.EventId].name2;
-                // teamToAdd.Event_RU = russianNameTeams_Dictionary[teamToAdd.EventId].name1 + " - " + russianNameTeams_Dictionary[teamToAdd.EventId].name2;
                 teamToAdd.Event_RU = russianNameTeams_Dictionary[teamToAdd.EventId].eventRU;
             }
             else
@@ -161,76 +160,7 @@ namespace DataParser.DefaultRealization
             }
             return resEvent;
         }
-        public Dictionary<string, string> LoadID(SportType sportType)
-        {
-            Dictionary<string, string> ListIDforSelectedSport = new Dictionary<string, string>();
-            //string
-            string url = string.Empty;
-            string namefile = string.Empty;
-            //string selectedEvent = string.Empty;
-            string eventid = string.Empty;
-            string _teamName = string.Empty;
-            //string totalOrFora = string.Empty;
 
-            //bool
-            bool isEventID = false;
-            bool isTeamName = false;
-
-
-            UrlAndNameFile(sportType, out url, out namefile);
-            string gotHtml = Html(url);
-            string[] lines = gotHtml.Split('\n');
-
-            for (int i = 0; i < lines.Length; i++)
-            {
-                if (lines[i].Contains(">Итоги<") || lines[i].Contains(">Итоги.<"))
-                    break;
-                if (lines[i]._Contains(MarathonTags.mainTagForEvent, MarathonTags.newEventID))
-                {
-                    isEventID = true;
-                }
-                if (lines[i].Contains(MarathonTags.newTeamName))
-                {
-                    isTeamName = true;
-                }
-                if (isEventID)
-                {
-                    string eventID = lines[i].GetEventID();
-                    try
-                    {
-                        //ListIDforSelectedSport.Add(eventID);
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.Error("GetNameTeamsAndDateAsync(SportType sportType)\n\n\n if(isEventID) :" + eventID + "\n\n\n i = " + i + "\n\n\n\n" + e.Message + "\n\n\n\n\n" + e.StackTrace);
-                    }
-                    isEventID = false;
-                    eventid = eventID;
-
-                }
-                if (isTeamName)
-                {
-
-                    if (string.IsNullOrEmpty(_teamName))
-                    {
-                        var teamName = lines[i].GetAttribut();
-                        _teamName = teamName.Trim(' ');
-                    }
-                    else
-                    {
-                        i++;
-                        var teamName = lines[i].GetAttribut();
-                        _teamName += " - " + teamName.Trim(' ');
-                        isTeamName = false;
-                    }
-                }
-                if (!isTeamName && !string.IsNullOrEmpty(_teamName) && !isEventID && !string.IsNullOrEmpty(eventid))
-                {
-                    ListIDforSelectedSport[eventid] = _teamName;
-                }
-            }
-            return ListIDforSelectedSport;
-        }
         #endregion
 
         #region [Parse]
@@ -586,15 +516,6 @@ namespace DataParser.DefaultRealization
                 }
                 catch (Exception e)
                 {
-                    /* if (!File.Exists("log.txt"))
-                     {
-                         File.Create("log.txt");
-                     }
-                     using (StreamWriter sw = new StreamWriter("log.txt", true))
-                     {
-                         sw.WriteLine("EXCEPTION: " + teamToAdd.EventToString());
-                         sw.Close();
-                     }*/
                     _logger.Error(e.StackTrace + "/n" + e.Message);
                 }
             }
@@ -745,9 +666,9 @@ namespace DataParser.DefaultRealization
             try
             {
 
-                string[] midleSN = isTotal?obj.sn.Split(' ')[1].Split(','):obj.sn.Split('(', ')')[1].Split(',');
+                string[] midleSN = isTotal ? obj.sn.Split(' ')[1].Split(',') : obj.sn.Split('(', ')')[1].Split(',');
 
-                if ( !isTotal && (midleSN[0].Contains('-') || midleSN[0].Contains('+')))
+                if (!isTotal && (midleSN[0].Contains('-') || midleSN[0].Contains('+')))
                     _znak1 = midleSN[0][0];
                 if (!isTotal && midleSN[1].Contains('-') || midleSN[1].Contains('+'))
                     _znak2 = midleSN[1][0];
@@ -789,8 +710,8 @@ namespace DataParser.DefaultRealization
                 List<string> prices = obj.prices;
                 string selection_key = obj.selection_key;
 
-               // result.Add(new DataMarathonForAutoPlays() { mn = mn, ewc = ewc, cid = cid, prt = prt, ewf = ewf, epr = epr, prices = prices, selection_key = selection_key, sn = newSN1 });
-               // result.Add(new DataMarathonForAutoPlays() { mn = mn, ewc = ewc, cid = cid, prt = prt, ewf = ewf, epr = epr, prices = prices, selection_key = selection_key, sn = newSN2 });
+                // result.Add(new DataMarathonForAutoPlays() { mn = mn, ewc = ewc, cid = cid, prt = prt, ewf = ewf, epr = epr, prices = prices, selection_key = selection_key, sn = newSN1 });
+                // result.Add(new DataMarathonForAutoPlays() { mn = mn, ewc = ewc, cid = cid, prt = prt, ewf = ewf, epr = epr, prices = prices, selection_key = selection_key, sn = newSN2 });
                 result.Add(new DataMarathonForAutoPlays() { mn = mn, ewc = ewc, cid = cid, prt = prt, ewf = ewf, epr = epr, prices = prices, selection_key = selection_key, sn = newSN3, isAsiat = true });
 
             }
@@ -865,25 +786,6 @@ namespace DataParser.DefaultRealization
                                 //else_logger.Error(l.sn + " - " + l.epr);
                                 break;
 
-                            /* case "Тотал очков":
-                                 int numTeam = nameTeams.GetKeyContainsDictionaryValue(list[i].mn);
-                                 string t = string.Empty;
-                                 if (numTeam != -1)
-                                 {
-                                      t = ChangeFormatTotals(list[i].sn, true, numTeam);
-                                 }
-                                 else {
-                                      t = ChangeFormatTotals(list[i].sn);
-                                 }
-                                 if (!mainCoef.ContainsKey(t))
-                                 {
-                                     mainCoef.Add(t, list[i].epr);
-                                     type = t;
-                                     value = list[i].epr;
-                                 }
-                                 //else_logger.Error(l.sn + " - " + l.epr);
-                                 break;*/
-
                             //Tennis
                             case "Результат матча":
                                 string rr = ChangeFormatResult(list[i].sn, nameTeams);
@@ -894,18 +796,6 @@ namespace DataParser.DefaultRealization
                                     value = list[i].epr;
                                 }
                                 break;
-                            /*case "Победа с учетом форы по сетам":
-                                string ff = ChangeFormatFora(list[i].sn, nameTeams["1"],eventID);
-                                if (!mainCoef.ContainsKey(ff))
-                                    mainCoef.Add(ff, list[i].epr);
-                                //else_logger.Error(l.sn + " - " + l.epr);
-                                break;
-                            case "Победа с учетом форы по геймам":
-                                string fff = ChangeFormatFora(list[i].sn, nameTeams["1"],eventID);
-                                if (!mainCoef.ContainsKey(fff))
-                                    mainCoef.Add(fff, list[i].epr);
-                                //else_logger.Error(l.sn + " - " + l.epr);
-                                break;*/
                             case "Тотал по сетам":
                                 string tt = ChangeFormatTotals(list[i].sn);
                                 if (!mainCoef.ContainsKey(tt))
@@ -977,22 +867,22 @@ namespace DataParser.DefaultRealization
             switch (totalType)
             {
                 case Total.time_T:
-                    res += "TT" + line.GetNumberWithTotal(); // Футбол тотал таймів
+                    res += DictionatyTypeCoef.TT + line.GetNumberWithTotal(); // Футбол тотал таймів
                     break;
                 case Total.period_T:
-                    res += "TPR" + line.GetNumberWithTotal(); // Хокей тотал періодів
+                    res += DictionatyTypeCoef.TPR + line.GetNumberWithTotal(); // Хокей тотал періодів
                     break;
                 case Total.half_T:
                     res += "TH" + line.GetNumberWithTotal();
                     break;
                 case Total.part_T:
-                    res += "TPT" + line.GetNumberWithTotal(); //Баскетбол тотал половин
+                    res += DictionatyTypeCoef.TPT + line.GetNumberWithTotal(); //Баскетбол тотал половин
                     break;
                 case Total.set_T:
-                    res += "TS" + line.GetNumberWithTotal(); //Теніс тотал сетів
+                    res += DictionatyTypeCoef.TS + line.GetNumberWithTotal(); //Теніс тотал сетів
                     break;
                 case Total.game_T:
-                    res += "TG" + line.GetNumberWithTotal(); //Теніс тотал геймов
+                    res += DictionatyTypeCoef.TG + line.GetNumberWithTotal(); //Теніс тотал геймов
                     break;
             }
             string resFora = string.Empty;
@@ -1162,7 +1052,8 @@ namespace DataParser.DefaultRealization
                         SportType = eventCoefList.SportType,
                         Type = eventCoefList.Coef[i].Type,
                         Coef = eventCoefList.Coef[i].Value,
-                        marathonAutoPlay = eventCoefList.Coef[i].marathonAutoPlay
+                        marathonAutoPlay = eventCoefList.Coef[i].marathonAutoPlay,
+                        parentEvent = eventCoefList
                     });
                 }
                 catch

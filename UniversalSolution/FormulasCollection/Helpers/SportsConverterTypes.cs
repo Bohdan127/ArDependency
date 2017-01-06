@@ -18,12 +18,12 @@ namespace FormulasCollection.Helpers
             bool isFora = false;
             if (typeEvent.Contains("TU"))
             {
-                typeEventTrim = "TU";
+                typeEventTrim = typeEvent.Split('(')[0];
                 isTotal = true;
             }
             else if (typeEvent.Contains("TO"))
             {
-                typeEventTrim = "TO";
+                typeEventTrim = typeEvent.Split('(')[0];
                 isTotal = true;
             }
             bool totalNum = typeEvent.Contains("(") && typeEvent.Contains(")");
@@ -34,12 +34,12 @@ namespace FormulasCollection.Helpers
 
             if (typeEvent.Contains("F1"))
             {
-                typeEventTrim = "F1";
+                typeEventTrim = typeEvent.Split('(')[0];
                 isFora = true;
             }
             else if (typeEvent.Contains("F2"))
             {
-                typeEventTrim = "F2";
+                typeEventTrim = typeEvent.Split('(')[0];
                 isFora = true;
             }
             if (isFora)
@@ -54,7 +54,7 @@ namespace FormulasCollection.Helpers
                 }
             }
 
-            if (SportTypes.TypeCoefsSoccer.ContainsKey(typeEventTrim) && st == SportType.Soccer)
+            if (st == SportType.Soccer && SportTypes.TypeCoefsSoccer.ContainsKey(typeEventTrim))
             {
                 if (isTotal || isFora)
                 {
@@ -63,7 +63,7 @@ namespace FormulasCollection.Helpers
                 else
                     return CheckAsiatType(SportTypes.TypeCoefsSoccer[typeEventTrim]);
             }
-            if (SportTypes.TypeCoefsTennis.ContainsKey(typeEventTrim) && st == SportType.Tennis)
+            if (st == SportType.Tennis && SportTypes.TypeCoefsTennis.ContainsKey(typeEventTrim))
             {
                 if (isTotal || isFora)
                 {
@@ -72,7 +72,7 @@ namespace FormulasCollection.Helpers
                 else
                     return CheckAsiatType(SportTypes.TypeCoefsTennis[typeEventTrim]);
             }
-            if (SportTypes.TypeCoefsBasketBall.ContainsKey(typeEventTrim) && st == SportType.Basketball)
+            if (st == SportType.Basketball && SportTypes.TypeCoefsBasketBall.ContainsKey(typeEventTrim))
             {
                 if (isTotal || isFora)
                 {
@@ -81,7 +81,7 @@ namespace FormulasCollection.Helpers
                 else
                     return CheckAsiatType(SportTypes.TypeCoefsBasketBall[typeEventTrim]);
             }
-            if (SportTypes.TypeCoefsHockey.ContainsKey(typeEventTrim) && st == SportType.Hockey)
+            if (st == SportType.Hockey && SportTypes.TypeCoefsHockey.ContainsKey(typeEventTrim))
             {
                 if (isTotal || isFora)
                 {
@@ -90,7 +90,7 @@ namespace FormulasCollection.Helpers
                 else
                     return CheckAsiatType(SportTypes.TypeCoefsHockey[typeEventTrim]);
             }
-            if (SportTypes.TypeCoefsVolleyBall.ContainsKey(typeEventTrim) && st == SportType.Volleyball)
+            if (st == SportType.Volleyball && SportTypes.TypeCoefsVolleyBall.ContainsKey(typeEventTrim))
             {
                 if (isTotal || isFora)
                 {

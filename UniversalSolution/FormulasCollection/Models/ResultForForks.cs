@@ -18,6 +18,7 @@
         public string FuulID { get { return "event_" + this.EventId; } }
 
         public DataMarathonForAutoPlays marathonAutoPlay { get; set; }
+        public MarathonEvent parentEvent { get; set; }
 
         public ResultForForks() { }
 

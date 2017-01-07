@@ -10,7 +10,7 @@ namespace DataParser.Models
     {
         #region[FOOTBALL]
         #region[Totals]
-        public readonly static string TT = "TT"; //Тайм
+        public readonly static string TT = "TT"; //Тайм  TTO(5) and TTU(5)
         public readonly static string TF = "TF"; // Total для 1 -2 команди нп. TF1O(5) and TF2U(5)
         #endregion
         #region[Fora]

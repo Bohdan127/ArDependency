@@ -1102,7 +1102,7 @@ namespace DataParser.DefaultRealization
             }
             else
             {
-                type = (total.Contains("Меньше") || total.Contains("Under")) ? "TF" + team_num + "U" : "TF" + team_num + "O";
+                type = (total.Contains("Меньше") || total.Contains("Under")) ? DictionatyTypeCoef.TF + team_num + "U" : DictionatyTypeCoef.TF + team_num + "O";
             }
             return type + "(" + resFora + ")";
         }

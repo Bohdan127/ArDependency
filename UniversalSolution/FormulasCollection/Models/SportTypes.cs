@@ -37,8 +37,12 @@ namespace FormulasCollection.Models
                 {"TU","TO" },
                 { "TTO", "TTU" },
                 { "TTU", "TTO" },
-                 {"F1","F2"},
-                {"F2","F1"}
+                {"F1","F2"},
+                {"F2","F1"},
+                { "TF1U", "TF1O"},
+                { "TF2U", "TF2O"},
+                { "TF1O", "TF1U"},
+                { "TF2O", "TF2U"}
             };
             CoefsTennis = new Dictionary<string, string>
             {
@@ -51,7 +55,11 @@ namespace FormulasCollection.Models
                 {"TSO","TSU" },
                 {"TSU","TSO" },
                 {"TGO","TGU" },
-                {"TGU","TGO" }
+                {"TGU","TGO" },
+                { "TF1U", "TF1O"},
+                { "TF2U", "TF2O"},
+                { "TF1O", "TF1U"},
+                { "TF2O", "TF2U"}
             };
             CoefsBasketBall = new Dictionary<string, string>
             {
@@ -62,7 +70,11 @@ namespace FormulasCollection.Models
                 {"F1","F2"},
                 {"F2","F1"},
                 { "TPTO","TPTU" },
-                { "TPTU","TPTO" }
+                { "TPTU","TPTO" },
+                { "TF1U", "TF1O"},
+                { "TF2U", "TF2O"},
+                { "TF1O", "TF1U"},
+                { "TF2O", "TF2U"}
 
             };
             CoefsHockey = new Dictionary<string, string>
@@ -78,7 +90,11 @@ namespace FormulasCollection.Models
                 {"F1","F2"},
                 {"F2","F1"},
                 { "TPRO","TPRU" },
-                { "TPRU","TPRO" }
+                { "TPRU","TPRO" },
+                { "TF1U", "TF1O"},
+                { "TF2U", "TF2O"},
+                { "TF1O", "TF1U"},
+                { "TF2O", "TF2U"}
             };
             CoefsVolleyBall = new Dictionary<string, string>
             {
@@ -87,7 +103,11 @@ namespace FormulasCollection.Models
                 {"TO","TU"},
                 {"TU","TO"},
                 {"F1","F2"},
-                {"F2","F1"}
+                {"F2","F1"},
+                { "TF1U", "TF1O"},
+                { "TF2U", "TF2O"},
+                { "TF1O", "TF1U"},
+                { "TF2O", "TF2U"}
             };
         }
 

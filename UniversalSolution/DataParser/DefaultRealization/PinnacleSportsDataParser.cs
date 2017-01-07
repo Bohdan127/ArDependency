@@ -1,15 +1,15 @@
-﻿using DataParser.Enums;
-using DataParser.Models;
-using FormulasCollection.Helpers;
-using FormulasCollection.Models;
-using FormulasCollection.Realizations;
-using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Json;
 using System.Linq;
 using System.Net;
 using System.Text;
+using DataParser.Enums;
+using DataParser.Models;
+using FormulasCollection.Helpers;
+using FormulasCollection.Models;
+using FormulasCollection.Realizations;
+using NLog;
 using ToolsPortable;
 
 namespace DataParser.DefaultRealization
@@ -18,6 +18,7 @@ namespace DataParser.DefaultRealization
     {
         private SportType _sportType = SportType.NoType;
         private readonly ConverterFormulas _converter;
+        // ReSharper disable once InconsistentNaming
         private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public PinnacleSportsDataParser() { _converter = new ConverterFormulas(); }
@@ -91,21 +92,22 @@ namespace DataParser.DefaultRealization
                                 {
                                     if (!spread.Value.ContainsKey("hdp") || spread.Value["hdp"] == null) continue;
 
-                                    if (spread.Value.ContainsKey("away") && spread.Value["away"] != null)
-                                        resList[id].Add(new EventWithTotalDictionary
-                                        {
-                                            LineId = lineId,
-                                            TotalType = $"F2({spread.Value["hdp"].ToString().MinimalizeValue()})",
-                                            TotalValue = spread.Value["away"].ToString(),
-                                            MatchDateTime = matchDateTime,
-                                            LeagueId = leagueId
-                                        });
                                     if (spread.Value.ContainsKey("home") && spread.Value["home"] != null)
                                         resList[id].Add(new EventWithTotalDictionary
                                         {
                                             LineId = lineId,
-                                            TotalType = $"F1({spread.Value["hdp"].ToString().MinimalizeValue()})",
+                                            TotalType = $"F1({spread.Value["hdp"]})".MinimalizeValue(),
                                             TotalValue = spread.Value["home"].ToString(),
+                                            MatchDateTime = matchDateTime,
+                                            LeagueId = leagueId
+                                        });
+
+                                    if (spread.Value.ContainsKey("away") && spread.Value["away"] != null)
+                                        resList[id].Add(new EventWithTotalDictionary
+                                        {
+                                            LineId = lineId,
+                                            TotalType = $"F2({spread.Value["hdp"].ToString().InvertValue()})".MinimalizeValue(),
+                                            TotalValue = spread.Value["away"].ToString(),
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId
                                         });
@@ -118,7 +120,7 @@ namespace DataParser.DefaultRealization
                                         resList[id].Add(new EventWithTotalDictionary
                                         {
                                             LineId = lineId,
-                                            TotalType = $"TO({total.Value["points"].ToString().MinimalizeValue()})",
+                                            TotalType = $"TO({total.Value["points"]})".MinimalizeValue(),
                                             TotalValue = total.Value["over"].ToString(),
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId
@@ -127,7 +129,7 @@ namespace DataParser.DefaultRealization
                                         resList[id].Add(new EventWithTotalDictionary
                                         {
                                             LineId = lineId,
-                                            TotalType = $"TU({total.Value["points"].ToString().MinimalizeValue()})",
+                                            TotalType = $"TU({total.Value["points"]})".MinimalizeValue(),
                                             TotalValue = total.Value["under"].ToString(),
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId
@@ -144,7 +146,7 @@ namespace DataParser.DefaultRealization
                                         resList[id].Add(new EventWithTotalDictionary
                                         {
                                             LineId = lineId,
-                                            TotalType = $"TF1O({home["points"].ToString().MinimalizeValue()})",
+                                            TotalType = $"TF1O({home["points"]})".MinimalizeValue(),
                                             TotalValue = home["over"].ToString(),
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId
@@ -153,7 +155,7 @@ namespace DataParser.DefaultRealization
                                         resList[id].Add(new EventWithTotalDictionary
                                         {
                                             LineId = lineId,
-                                            TotalType = $"TF1U({home["points"].ToString().MinimalizeValue()})",
+                                            TotalType = $"TF1U({home["points"]})".MinimalizeValue(),
                                             TotalValue = home["under"].ToString(),
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId
@@ -167,7 +169,7 @@ namespace DataParser.DefaultRealization
                                         resList[id].Add(new EventWithTotalDictionary
                                         {
                                             LineId = lineId,
-                                            TotalType = $"TF2O({away["points"].ToString().MinimalizeValue()})",
+                                            TotalType = $"TF2O({away["points"]})".MinimalizeValue(),
                                             TotalValue = away["over"].ToString(),
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId
@@ -176,7 +178,7 @@ namespace DataParser.DefaultRealization
                                         resList[id].Add(new EventWithTotalDictionary
                                         {
                                             LineId = lineId,
-                                            TotalType = $"TF2U({away["points"].ToString().MinimalizeValue()})",
+                                            TotalType = $"TF2U({away["points"]})".MinimalizeValue(),
                                             TotalValue = away["under"].ToString(),
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId

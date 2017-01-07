@@ -151,5 +151,18 @@ namespace FormulasCollection.Helpers
                 return firstpart + secondpart;
             }
         }
+
+        public static string InvertValue(this string typeValue)
+        {
+            if (typeValue.IsBlank()) return typeValue;
+
+            var intValue = typeValue.ConvertToIntOrNull();
+            if (intValue != null && intValue.Value == 0)
+                return typeValue;
+
+            return typeValue.StartsWith("-")
+                ? typeValue.TrimStart('-')
+                : "-" + typeValue;
+        }
     }
 }

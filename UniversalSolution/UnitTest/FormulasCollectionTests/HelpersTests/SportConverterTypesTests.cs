@@ -54,5 +54,25 @@ namespace UnitTest.FormulasCollectionTests.HelpersTests
             outValue = null;
             Assert.AreEqual(inValue.MinimalizeValue(), outValue);
         }
+
+        [TestMethod]
+        public void InvertValue_TestWithNumbers()
+        {
+            var inValue = "-2.0";
+            var outValue = "2.0";
+            Assert.AreEqual(inValue.InvertValue(), outValue);
+
+            inValue = "2.0";
+            outValue = "-2.0";
+            Assert.AreEqual(inValue.InvertValue(), outValue);
+
+            inValue = "0";
+            outValue = "0";
+            Assert.AreEqual(inValue.InvertValue(), outValue);
+
+            inValue = "0.0";
+            outValue = "0.0";
+            Assert.AreEqual(inValue.InvertValue(), outValue);
+        }
     }
 }

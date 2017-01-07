@@ -36,7 +36,7 @@ namespace FormulasCollection.Realizations
         public List<Fork> GetAllForksDictionary(Dictionary<string, ResultForForksDictionary> pinnacle,
             List<ResultForForks> marathon)
         {
-            var resList = new List<Fork>();
+             var resList = new List<Fork>();
             foreach (var eventItem in marathon)
             {               
                 if (eventItem.Event == null) continue;

@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Json;
-using System.Linq;
-using System.Net;
-using System.Text;
-using DataParser.Enums;
+﻿using DataParser.Enums;
 using DataParser.Models;
 using FormulasCollection.Helpers;
 using FormulasCollection.Models;
 using FormulasCollection.Realizations;
 using NLog;
+using System;
+using System.Collections.Generic;
+using System.Json;
+using System.Linq;
+using System.Net;
+using System.Text;
 using ToolsPortable;
 
 namespace DataParser.DefaultRealization
@@ -52,7 +52,7 @@ namespace DataParser.DefaultRealization
                         {
                             if (!period.Value.ContainsKey("cutoff") || period.Value["cutoff"] == null) continue;
                             if (!period.Value.ContainsKey("lineId") || period.Value["lineId"] == null) continue;
-                            if (Convert.ToInt32(period.Value["number"].ToString()) != 0) continue;
+                            var matchPeriod = Convert.ToInt32(period.Value["number"].ToString());
                             var matchDateTime = period.Value["cutoff"].ToString();
                             var lineId = period.Value["lineId"].ToString();
 
@@ -87,7 +87,7 @@ namespace DataParser.DefaultRealization
                                         LeagueId = leagueId
                                     });
                             }
-                            if (period.Value.ContainsKey("spreads") && period.Value["spreads"] != null)
+                            if (period.Value.ContainsKey("spreads") && period.Value["spreads"] != null && matchPeriod == 0)
                                 foreach (var spread in period.Value["spreads"])
                                 {
                                     if (!spread.Value.ContainsKey("hdp") || spread.Value["hdp"] == null) continue;
@@ -117,23 +117,84 @@ namespace DataParser.DefaultRealization
                                 {
                                     if (!total.Value.ContainsKey("points") || total.Value["points"] == null) continue;
                                     if (total.Value.ContainsKey("over") && total.Value["over"] != null)
+                                    {
+                                        var totalType = string.Empty;
+                                        //matchPeriod can be only 0,1 and 2 according API
+                                        switch (matchPeriod)
+                                        {
+                                            case 0:
+                                                totalType = $"TO({total.Value["points"]})".MinimalizeValue();
+                                                break;
+                                            default:
+                                                switch (_sportType)
+                                                {
+                                                    case SportType.Soccer:
+                                                        totalType = $"{DictionatyTypeCoef.TT}O({total.Value["points"]})".MinimalizeValue();
+                                                        break;
+                                                    case SportType.Basketball:
+                                                        totalType = $"{DictionatyTypeCoef.TPT}O({total.Value["points"]})".MinimalizeValue();
+                                                        break;
+                                                    case SportType.Hockey:
+                                                        totalType = $"{DictionatyTypeCoef.TPR}O({total.Value["points"]})".MinimalizeValue();
+                                                        break;
+                                                    case SportType.Tennis:
+                                                        totalType = $"{DictionatyTypeCoef.TS}O({total.Value["points"]})".MinimalizeValue();
+                                                        break;
+                                                    case SportType.Volleyball:
+                                                        totalType = $"TO({total.Value["points"]})".MinimalizeValue();
+                                                        break;
+                                                }
+                                                break;
+                                        }
                                         resList[id].Add(new EventWithTotalDictionary
                                         {
                                             LineId = lineId,
-                                            TotalType = $"TO({total.Value["points"]})".MinimalizeValue(),
+                                            TotalType = totalType,
                                             TotalValue = total.Value["over"].ToString(),
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId
                                         });
+                                    }
                                     if (total.Value.ContainsKey("under") && total.Value["under"] != null)
+                                    {
+                                        var totalType = string.Empty;
+                                        //matchPeriod can be only 0,1 and 2 according API
+                                        switch (matchPeriod)
+                                        {
+                                            case 0:
+                                                totalType = $"TU({total.Value["points"]})".MinimalizeValue();
+                                                break;
+                                            default:
+                                                switch (_sportType)
+                                                {
+                                                    case SportType.Soccer:
+                                                        totalType = $"{DictionatyTypeCoef.TT}U({total.Value["points"]})".MinimalizeValue();
+                                                        break;
+                                                    case SportType.Basketball:
+                                                        totalType = $"{DictionatyTypeCoef.TPT}U({total.Value["points"]})".MinimalizeValue();
+                                                        break;
+                                                    case SportType.Hockey:
+                                                        totalType = $"{DictionatyTypeCoef.TPR}U({total.Value["points"]})".MinimalizeValue();
+                                                        break;
+                                                    case SportType.Tennis:
+                                                        totalType = $"{DictionatyTypeCoef.TS}U({total.Value["points"]})".MinimalizeValue();
+                                                        break;
+                                                    case SportType.Volleyball:
+                                                        totalType = $"TU({total.Value["points"]})".MinimalizeValue();
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
                                         resList[id].Add(new EventWithTotalDictionary
                                         {
                                             LineId = lineId,
-                                            TotalType = $"TU({total.Value["points"]})".MinimalizeValue(),
+                                            TotalType = totalType,
                                             TotalValue = total.Value["under"].ToString(),
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId
                                         });
+                                    }
                                 }
                             if (period.Value.ContainsKey("teamTotal") && period.Value["teamTotal"] != null)
                             {
@@ -216,8 +277,7 @@ namespace DataParser.DefaultRealization
                         var id = sportEvent.Value["id"].ConvertToLongOrNull();
                         if (id == null) continue;
                         if (!resList.ContainsKey(id.Value))
-                            resList.Add(id.Value, $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}"
-                                .Replace("\"", ""));
+                            resList.Add(id.Value, $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}".Replace("\"", ""));
                     }
                 }
             }
@@ -273,19 +333,17 @@ namespace DataParser.DefaultRealization
                         var key = $"{eventWithName.Value}";
                         if (!resDic.ContainsKey(key))
                         {
-                            resDic.Add(key,
-                                       new ResultForForksDictionary
-                                       {
-                                           TeamNames = eventWithName.Value,
-                                           EventId = eventWithName.Key.ToString(),
-                                           MatchDateTime = DateTime.Parse(eventWithTotal.MatchDateTime.Replace("\"", "")),
-                                           TypeCoefDictionary = new Dictionary<string, double>(),
-                                           TypeLineIdDictionary = new Dictionary<string, string>()
-                                       });
+                            resDic.Add(key, new ResultForForksDictionary
+                            {
+                                TeamNames = eventWithName.Value,
+                                EventId = eventWithName.Key.ToString(),
+                                MatchDateTime = DateTime.Parse(eventWithTotal.MatchDateTime.Replace("\"", "")),
+                                TypeCoefDictionary = new Dictionary<string, double>(),
+                                TypeLineIdDictionary = new Dictionary<string, string>()
+                            });
                             if (eventWithTotal.TotalType.Contains("T")) eventWithTotal.TotalType = ParseTotalType(eventWithTotal.TotalType);
                             {
-                                resDic[key].TypeCoefDictionary.Add(eventWithTotal.TotalType,
-                                                                   _converter.ConvertAmericanToDecimal(eventWithTotal.TotalValue.ConvertToDoubleOrNull()));
+                                resDic[key].TypeCoefDictionary.Add(eventWithTotal.TotalType, _converter.ConvertAmericanToDecimal(eventWithTotal.TotalValue.ConvertToDoubleOrNull()));
                             }
                             resDic[key].TypeLineIdDictionary.Add(eventWithTotal.TotalType, eventWithTotal.LineId);
                             if (eventWithTotal.LeagueId != null && eventsWithLeaguesNames.ContainsKey(eventWithTotal.LeagueId.Value))
@@ -295,13 +353,9 @@ namespace DataParser.DefaultRealization
                         {
                             if (eventWithTotal.TotalType.Contains("T")) eventWithTotal.TotalType = ParseTotalType(eventWithTotal.TotalType);
                             if (!resDic[key].TypeCoefDictionary.ContainsKey(eventWithTotal.TotalType))
-                                resDic[key].TypeCoefDictionary.Add(eventWithTotal.TotalType,
-                                                                   _converter.ConvertAmericanToDecimal(
-                                                                                                       eventWithTotal.TotalValue.ConvertToDoubleOrNull()));
+                                resDic[key].TypeCoefDictionary.Add(eventWithTotal.TotalType, _converter.ConvertAmericanToDecimal(eventWithTotal.TotalValue.ConvertToDoubleOrNull()));
                             if (!resDic[key].TypeLineIdDictionary.ContainsKey(eventWithTotal.TotalType)) resDic[key].TypeLineIdDictionary.Add(eventWithTotal.TotalType, eventWithTotal.LineId);
-
                         }
-
                     }
                 }
             }
@@ -324,8 +378,7 @@ namespace DataParser.DefaultRealization
             return prefix + Extentions.Round(_converter.ConvertAmericanToDecimal(totalType.ConvertToDoubleOrNull())) + ")";
         }
 
-        public Dictionary<string, ResultForForksDictionary> GetAllPinacleEventsDictionary(
-            SportType sportType, string userLogin, string userPass)
+        public Dictionary<string, ResultForForksDictionary> GetAllPinacleEventsDictionary(SportType sportType, string userLogin, string userPass)
         {
             Dictionary<string, ResultForForksDictionary> resDic;
             _sportType = sportType;
@@ -351,10 +404,7 @@ namespace DataParser.DefaultRealization
                 {
                     listForRemove.Clear();
 
-                    listForRemove.AddRange(from typeCoefKey in resDic[key].TypeCoefDictionary.Keys
-                                           let coef = resDic[key].TypeCoefDictionary[typeCoefKey]
-                                           where Math.Abs(coef) < 0.01 || Math.Abs(coef - _converter.IncorrectAmericanOdds) < 0.01
-                                           select typeCoefKey);
+                    listForRemove.AddRange(from typeCoefKey in resDic[key].TypeCoefDictionary.Keys let coef = resDic[key].TypeCoefDictionary[typeCoefKey] where Math.Abs(coef) < 0.01 || Math.Abs(coef - _converter.IncorrectAmericanOdds) < 0.01 select typeCoefKey);
 
                     foreach (var keyForRemove in listForRemove) resDic[key].TypeCoefDictionary.Remove(keyForRemove);
                 }

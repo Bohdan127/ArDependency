@@ -24,7 +24,7 @@ namespace FormulasCollection.Realizations
 
         public bool CheckIsFork(double? coef1, double? coef2, ResultForForks marEvent, ResultForForksDictionary pinEvent)
         {
-            if (marEvent.Event_RU.Contains("Манчестер Юнайтед") &&marEvent.Event_RU.Contains("Халл Сити"))
+            if (marEvent.Event_RU.Contains("Манчестер Юнайтед") && marEvent.Event_RU.Contains("Халл Сити"))
             {
                 int i = 0;
             }
@@ -36,9 +36,15 @@ namespace FormulasCollection.Realizations
         public List<Fork> GetAllForksDictionary(Dictionary<string, ResultForForksDictionary> pinnacle,
             List<ResultForForks> marathon)
         {
-             var resList = new List<Fork>();
+            var resList = new List<Fork>();
+            var alltypes = new List<string>();
+            foreach (var @event in marathon)
+            {
+                if (!alltypes.Contains(@event.Type))
+                    alltypes.Add(@event.Type);
+            }
             foreach (var eventItem in marathon)
-            {               
+            {
                 if (eventItem.Event == null) continue;
                 string pinKey = null;
                 if (_pinKeyCache.ContainsKey(eventItem.Event) && pinnacle.ContainsKey(_pinKeyCache[eventItem.Event]))

@@ -1,4 +1,5 @@
-﻿#define PlaceBets
+﻿//#define PlaceBets
+#define TestSoccer
 
 using DataParser.DefaultRealization;
 using DataParser.Enums;
@@ -7,13 +8,13 @@ using DataSaver.Models;
 using FormulasCollection.Enums;
 using FormulasCollection.Models;
 using FormulasCollection.Realizations;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using NLog;
 #if PlaceBets
 using Common.Modules.AntiCaptha;
 using SiteAccess.Access;
@@ -97,9 +98,13 @@ namespace DataLoader
                 Console.WriteLine($"Marathon Password = '{_currentUser.PasswordMarathon}'");
                 Console.WriteLine($"Anti Gate Code = '{_currentUser.AntiGateCode}'");
 
+#if TestSoccer
+                var sportsToLoading = new[] { SportType.Soccer };
+
+#else
                 //always loading all sports
                 var sportsToLoading = new[] { SportType.Basketball, SportType.Hockey, SportType.Soccer, SportType.Tennis, SportType.Volleyball };
-
+#endif
 
 #if PlaceBets
                 _marath = new MarathonAccess(new AntiGate(_currentUser.AntiGateCode));

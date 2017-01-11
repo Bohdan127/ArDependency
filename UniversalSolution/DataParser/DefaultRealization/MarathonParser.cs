@@ -818,7 +818,7 @@ namespace DataParser.DefaultRealization
                                 break;
 
                         }
-                        if (list[i].mn.Contains("Тотал очков"))
+                        if (list[i].mn.Contains("Тотал"))
                         {
                             int numTeam = nameTeams.GetKeyContainsDictionaryValue(list[i].mn);
                             string t = string.Empty;

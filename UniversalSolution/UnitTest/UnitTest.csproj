@@ -46,7 +46,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -55,6 +57,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataParser\DataParser.csproj">
+      <Project>{586A03BB-1702-4143-B370-E1DC6656762A}</Project>
+      <Name>DataParser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FormulasCollection\FormulasCollection.csproj">
       <Project>{c6982ab9-704a-474f-a303-89b4c4a3d11e}</Project>
       <Name>FormulasCollection</Name>

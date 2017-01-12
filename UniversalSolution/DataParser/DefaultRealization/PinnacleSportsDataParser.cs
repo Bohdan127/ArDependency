@@ -341,20 +341,24 @@ namespace DataParser.DefaultRealization
                                 TypeCoefDictionary = new Dictionary<string, double>(),
                                 TypeLineIdDictionary = new Dictionary<string, string>()
                             });
-                            if (eventWithTotal.TotalType.Contains("T")) eventWithTotal.TotalType = ParseTotalType(eventWithTotal.TotalType);
-                            {
-                                resDic[key].TypeCoefDictionary.Add(eventWithTotal.TotalType, _converter.ConvertAmericanToDecimal(eventWithTotal.TotalValue.ConvertToDoubleOrNull()));
-                            }
+
+                            resDic[key].TypeCoefDictionary.Add(eventWithTotal.TotalType,
+                                _converter.ConvertAmericanToDecimal(
+                                    eventWithTotal.TotalValue.ConvertToDoubleOrNull()));
+
                             resDic[key].TypeLineIdDictionary.Add(eventWithTotal.TotalType, eventWithTotal.LineId);
-                            if (eventWithTotal.LeagueId != null && eventsWithLeaguesNames.ContainsKey(eventWithTotal.LeagueId.Value))
+                            if (eventWithTotal.LeagueId != null &&
+                                eventsWithLeaguesNames.ContainsKey(eventWithTotal.LeagueId.Value))
                                 resDic[key].LeagueName = eventsWithLeaguesNames[eventWithTotal.LeagueId.Value];
                         }
                         else
                         {
-                            if (eventWithTotal.TotalType.Contains("T")) eventWithTotal.TotalType = ParseTotalType(eventWithTotal.TotalType);
                             if (!resDic[key].TypeCoefDictionary.ContainsKey(eventWithTotal.TotalType))
-                                resDic[key].TypeCoefDictionary.Add(eventWithTotal.TotalType, _converter.ConvertAmericanToDecimal(eventWithTotal.TotalValue.ConvertToDoubleOrNull()));
-                            if (!resDic[key].TypeLineIdDictionary.ContainsKey(eventWithTotal.TotalType)) resDic[key].TypeLineIdDictionary.Add(eventWithTotal.TotalType, eventWithTotal.LineId);
+                                resDic[key].TypeCoefDictionary.Add(eventWithTotal.TotalType,
+                                    _converter.ConvertAmericanToDecimal(
+                                        eventWithTotal.TotalValue.ConvertToDoubleOrNull()));
+                            if (!resDic[key].TypeLineIdDictionary.ContainsKey(eventWithTotal.TotalType))
+                                resDic[key].TypeLineIdDictionary.Add(eventWithTotal.TotalType, eventWithTotal.LineId);
                         }
                     }
                 }
@@ -366,16 +370,6 @@ namespace DataParser.DefaultRealization
                 throw;
             }
             return resDic;
-        }
-
-        private string ParseTotalType(string totalType)
-        {
-            var prefix = totalType.Substring(0, 3);
-
-            totalType = totalType.Remove(0, 3);
-            totalType = totalType.Remove(totalType.Length - 1, 1);
-
-            return prefix + Extentions.Round(_converter.ConvertAmericanToDecimal(totalType.ConvertToDoubleOrNull())) + ")";
         }
 
         public Dictionary<string, ResultForForksDictionary> GetAllPinacleEventsDictionary(SportType sportType, string userLogin, string userPass)

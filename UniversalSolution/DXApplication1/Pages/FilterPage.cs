@@ -88,6 +88,8 @@ namespace DXApplication1.Pages
                 textEditMaxRate.EditValue = Filter.MaxRate;
                 toggleSwitchAutoDelete.EditValue = Filter.AutoDelete;
                 textEditAutoDeleteTime.EditValue = Filter.AutoDeleteTime;
+                dateTimePickerAfter.DateTime = Filter.AfterTime ?? DateTime.Now.Date;
+                dateTimePickerBefore.DateTime = Filter.BeforeTime ?? DateTime.Now.Date;
             }
         }
 
@@ -135,6 +137,8 @@ namespace DXApplication1.Pages
                 Filter.MaxRate = textEditMaxRate.EditValue.ConvertToDecimalOrNull();
                 Filter.AutoDelete = toggleSwitchAutoDelete.EditValue.ConvertToBool();
                 Filter.AutoDeleteTime = textEditAutoDeleteTime.EditValue.ConvertToIntOrNull();
+                Filter.AfterTime = dateTimePickerAfter.DateTime;
+                Filter.BeforeTime = dateTimePickerBefore.DateTime;
             }
         }
 
@@ -144,7 +148,35 @@ namespace DXApplication1.Pages
             bRes &= ValidateMaxRate();
             bRes &= ValidateMinPercent();
             bRes &= ValidateMaxPercent();
+            //bRes &= ValidateAfterTime();
+            //bRes &= ValidateBeforeTime();
             return bRes && ValidateAllNumbers();
+        }
+
+        private bool ValidateBeforeTime()
+        {
+            var bRes = true;
+            if (dateTimePickerBefore.DateTime < dateTimePickerAfter.DateTime)
+            {
+                bRes = false;
+                dateTimePickerBefore.ErrorIcon = DXErrorProvider.GetErrorIconInternal(ErrorType.Critical);
+            }
+            else
+                dateTimePickerBefore.ErrorIcon = null;
+            return bRes;
+        }
+
+        private bool ValidateAfterTime()
+        {
+            var bRes = true;
+            if (dateTimePickerAfter.DateTime > dateTimePickerBefore.DateTime)
+            {
+                bRes = false;
+                dateTimePickerAfter.ErrorIcon = DXErrorProvider.GetErrorIconInternal(ErrorType.Critical);
+            }
+            else
+                dateTimePickerAfter.ErrorIcon = null;
+            return bRes;
         }
 
         private bool ValidateAllNumbers()

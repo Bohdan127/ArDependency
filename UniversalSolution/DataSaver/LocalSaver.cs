@@ -221,7 +221,7 @@ namespace DataSaver
                 CoefFirst = json.DataAsJson.Value<string>("CoefFirst"),
                 TypeSecond = json.DataAsJson.Value<string>("TypeSecond"),
                 CoefSecond = json.DataAsJson.Value<string>("CoefSecond"),
-                MatchDateTime = json.DataAsJson.Value<string>("MatchDateTime"),
+                MatchDateTime = json.DataAsJson.Value<DateTime>("MatchDateTime"),
                 BookmakerFirst = json.DataAsJson.Value<string>("BookmakerFirst"),
                 BookmakerSecond = json.DataAsJson.Value<string>("BookmakerSecond"),
                 MarathonEventId = json.DataAsJson.Value<string>("MarathonEventId"),
@@ -390,6 +390,8 @@ namespace DataSaver
             userDocument.AutoUpdateTime = filter.AutoUpdateTime;
             userDocument.AutoDelete = filter.AutoDelete;
             userDocument.AutoUpdateTime = filter.AutoUpdateTime;
+            userDocument.AfterTime = filter.AfterTime;
+            userDocument.BeforeTime = filter.BeforeTime;
 
             Session.SaveChanges();
         }

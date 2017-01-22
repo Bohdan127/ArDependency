@@ -1,4 +1,6 @@
-﻿namespace FormulasCollection.Models
+﻿using System;
+
+namespace FormulasCollection.Models
 {
     public class Filter
     {
@@ -42,6 +44,10 @@
             get { return _autoDeleteTime ?? (_autoDeleteTime = defaultAutoDeleteTime); }
             set { _autoDeleteTime = value; }
         }
+
+        public DateTime? BeforeTime { get; set; }
+
+        public DateTime? AfterTime { get; set; }
 
     }
 }

@@ -32,6 +32,10 @@ namespace DXApplication1.Pages
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FilterPage));
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
+            this.dateTimePickerAfter = new DevExpress.XtraEditors.DateEdit();
+            this.simpleButtonDeleteForks = new DevExpress.XtraEditors.SimpleButton();
+            this.textEditAutoDeleteTime = new DevExpress.XtraEditors.TextEdit();
+            this.toggleSwitchAutoDelete = new DevExpress.XtraEditors.ToggleSwitch();
             this.simpleButtonSave = new DevExpress.XtraEditors.SimpleButton();
             this.textEditAntiGateCode = new DevExpress.XtraEditors.TextEdit();
             this.textEditPasswordMarathon = new DevExpress.XtraEditors.TextEdit();
@@ -49,6 +53,7 @@ namespace DXApplication1.Pages
             this.textEditMinRate = new DevExpress.XtraEditors.TextEdit();
             this.textEditMaxRate = new DevExpress.XtraEditors.TextEdit();
             this.simpleButtonCancel = new DevExpress.XtraEditors.SimpleButton();
+            this.dateTimePickerBefore = new DevExpress.XtraEditors.DateEdit();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlGroupIncome = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemMinPercent = new DevExpress.XtraLayout.LayoutControlItem();
@@ -76,15 +81,19 @@ namespace DXApplication1.Pages
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
             this.emptySpaceItem4 = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.toggleSwitchAutoDelete = new DevExpress.XtraEditors.ToggleSwitch();
-            this.layoutControlItemAutoDelete = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroupAutoDelete = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.textEditAutoDeleteTime = new DevExpress.XtraEditors.TextEdit();
+            this.layoutControlItemAutoDelete = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemAutoDeleteTime = new DevExpress.XtraLayout.LayoutControlItem();
-            this.simpleButtonDeleteForks = new DevExpress.XtraEditors.SimpleButton();
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlGroupTime = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.layoutControlItemAfter = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItemBefore = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dateTimePickerAfter.Properties.CalendarTimeProperties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dateTimePickerAfter.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditAutoDeleteTime.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitchAutoDelete.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditAntiGateCode.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditPasswordMarathon.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditLoginMarathon.Properties)).BeginInit();
@@ -100,6 +109,8 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.textEditMaxPercent.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditMinRate.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditMaxRate.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dateTimePickerBefore.Properties.CalendarTimeProperties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dateTimePickerBefore.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIncome)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemMinPercent)).BeginInit();
@@ -127,16 +138,18 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitchAutoDelete.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoDelete)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupAutoDelete)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEditAutoDeleteTime.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoDelete)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoDeleteTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupTime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAfter)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemBefore)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
             // 
+            this.dataLayoutControl1.Controls.Add(this.dateTimePickerAfter);
             this.dataLayoutControl1.Controls.Add(this.simpleButtonDeleteForks);
             this.dataLayoutControl1.Controls.Add(this.textEditAutoDeleteTime);
             this.dataLayoutControl1.Controls.Add(this.toggleSwitchAutoDelete);
@@ -157,13 +170,62 @@ namespace DXApplication1.Pages
             this.dataLayoutControl1.Controls.Add(this.textEditMinRate);
             this.dataLayoutControl1.Controls.Add(this.textEditMaxRate);
             this.dataLayoutControl1.Controls.Add(this.simpleButtonCancel);
+            this.dataLayoutControl1.Controls.Add(this.dateTimePickerBefore);
             this.dataLayoutControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataLayoutControl1.Location = new System.Drawing.Point(0, 0);
             this.dataLayoutControl1.Name = "dataLayoutControl1";
             this.dataLayoutControl1.Root = this.layoutControlGroup1;
-            this.dataLayoutControl1.Size = new System.Drawing.Size(600, 471);
+            this.dataLayoutControl1.Size = new System.Drawing.Size(600, 475);
             this.dataLayoutControl1.TabIndex = 0;
             this.dataLayoutControl1.Text = "dataLayoutControl1";
+            // 
+            // dateTimePickerAfter
+            // 
+            this.dateTimePickerAfter.EditValue = new System.DateTime(2017, 1, 14, 0, 0, 0, 0);
+            this.dateTimePickerAfter.Location = new System.Drawing.Point(302, 380);
+            this.dateTimePickerAfter.Name = "dateTimePickerAfter";
+            this.dateTimePickerAfter.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.False;
+            this.dateTimePickerAfter.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton()});
+            this.dateTimePickerAfter.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.dateTimePickerAfter.Size = new System.Drawing.Size(136, 20);
+            this.dateTimePickerAfter.StyleController = this.dataLayoutControl1;
+            this.dateTimePickerAfter.TabIndex = 23;
+            // 
+            // simpleButtonDeleteForks
+            // 
+            this.simpleButtonDeleteForks.Image = ((System.Drawing.Image)(resources.GetObject("simpleButtonDeleteForks.Image")));
+            this.simpleButtonDeleteForks.Location = new System.Drawing.Point(24, 414);
+            this.simpleButtonDeleteForks.Name = "simpleButtonDeleteForks";
+            this.simpleButtonDeleteForks.Size = new System.Drawing.Size(174, 22);
+            this.simpleButtonDeleteForks.StyleController = this.dataLayoutControl1;
+            this.simpleButtonDeleteForks.TabIndex = 22;
+            this.simpleButtonDeleteForks.Text = "Удалить все Вилки";
+            this.simpleButtonDeleteForks.Click += new System.EventHandler(this.simpleButtonDeleteForks_Click);
+            // 
+            // textEditAutoDeleteTime
+            // 
+            this.textEditAutoDeleteTime.Location = new System.Drawing.Point(100, 390);
+            this.textEditAutoDeleteTime.Name = "textEditAutoDeleteTime";
+            this.textEditAutoDeleteTime.Properties.Mask.BeepOnError = true;
+            this.textEditAutoDeleteTime.Properties.Mask.EditMask = "[1-9]\\d?+";
+            this.textEditAutoDeleteTime.Properties.Mask.IgnoreMaskBlank = false;
+            this.textEditAutoDeleteTime.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx;
+            this.textEditAutoDeleteTime.Properties.Mask.ShowPlaceHolders = false;
+            this.textEditAutoDeleteTime.Size = new System.Drawing.Size(98, 20);
+            this.textEditAutoDeleteTime.StyleController = this.dataLayoutControl1;
+            this.textEditAutoDeleteTime.TabIndex = 21;
+            // 
+            // toggleSwitchAutoDelete
+            // 
+            this.toggleSwitchAutoDelete.Location = new System.Drawing.Point(100, 362);
+            this.toggleSwitchAutoDelete.Name = "toggleSwitchAutoDelete";
+            this.toggleSwitchAutoDelete.Properties.OffText = "Off";
+            this.toggleSwitchAutoDelete.Properties.OnText = "On";
+            this.toggleSwitchAutoDelete.Size = new System.Drawing.Size(98, 24);
+            this.toggleSwitchAutoDelete.StyleController = this.dataLayoutControl1;
+            this.toggleSwitchAutoDelete.TabIndex = 20;
             // 
             // simpleButtonSave
             // 
@@ -361,6 +423,20 @@ namespace DXApplication1.Pages
             this.simpleButtonCancel.Text = "Отменить";
             this.simpleButtonCancel.Click += new System.EventHandler(this.simpleButtonCancel_Click);
             // 
+            // dateTimePickerBefore
+            // 
+            this.dateTimePickerBefore.EditValue = new System.DateTime(2017, 1, 14, 0, 0, 0, 0);
+            this.dateTimePickerBefore.Location = new System.Drawing.Point(302, 404);
+            this.dateTimePickerBefore.Name = "dateTimePickerBefore";
+            this.dateTimePickerBefore.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.False;
+            this.dateTimePickerBefore.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton()});
+            this.dateTimePickerBefore.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.dateTimePickerBefore.Size = new System.Drawing.Size(136, 20);
+            this.dateTimePickerBefore.StyleController = this.dataLayoutControl1;
+            this.dateTimePickerBefore.TabIndex = 23;
+            // 
             // layoutControlGroup1
             // 
             this.layoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
@@ -375,10 +451,11 @@ namespace DXApplication1.Pages
             this.emptySpaceItem1,
             this.layoutControlGroupActions,
             this.emptySpaceItem4,
-            this.layoutControlGroupAutoDelete});
+            this.layoutControlGroupAutoDelete,
+            this.layoutControlGroupTime});
             this.layoutControlGroup1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup1.Name = "Root";
-            this.layoutControlGroup1.Size = new System.Drawing.Size(600, 471);
+            this.layoutControlGroup1.Size = new System.Drawing.Size(600, 475);
             this.layoutControlGroup1.TextVisible = false;
             // 
             // layoutControlGroupIncome
@@ -595,16 +672,16 @@ namespace DXApplication1.Pages
             this.emptySpaceItem2.CustomizationFormText = "emptySpaceItem1";
             this.emptySpaceItem2.Location = new System.Drawing.Point(0, 440);
             this.emptySpaceItem2.Name = "emptySpaceItem2";
-            this.emptySpaceItem2.Size = new System.Drawing.Size(202, 11);
+            this.emptySpaceItem2.Size = new System.Drawing.Size(202, 15);
             this.emptySpaceItem2.Text = "emptySpaceItem1";
             this.emptySpaceItem2.TextSize = new System.Drawing.Size(0, 0);
             // 
             // emptySpaceItem1
             // 
             this.emptySpaceItem1.AllowHotTrack = false;
-            this.emptySpaceItem1.Location = new System.Drawing.Point(202, 338);
+            this.emptySpaceItem1.Location = new System.Drawing.Point(202, 428);
             this.emptySpaceItem1.Name = "emptySpaceItem1";
-            this.emptySpaceItem1.Size = new System.Drawing.Size(240, 113);
+            this.emptySpaceItem1.Size = new System.Drawing.Size(240, 27);
             this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlGroupActions
@@ -642,27 +719,8 @@ namespace DXApplication1.Pages
             this.emptySpaceItem4.AllowHotTrack = false;
             this.emptySpaceItem4.Location = new System.Drawing.Point(442, 0);
             this.emptySpaceItem4.Name = "emptySpaceItem4";
-            this.emptySpaceItem4.Size = new System.Drawing.Size(138, 451);
+            this.emptySpaceItem4.Size = new System.Drawing.Size(138, 455);
             this.emptySpaceItem4.TextSize = new System.Drawing.Size(0, 0);
-            // 
-            // toggleSwitchAutoDelete
-            // 
-            this.toggleSwitchAutoDelete.Location = new System.Drawing.Point(100, 362);
-            this.toggleSwitchAutoDelete.Name = "toggleSwitchAutoDelete";
-            this.toggleSwitchAutoDelete.Properties.OffText = "Off";
-            this.toggleSwitchAutoDelete.Properties.OnText = "On";
-            this.toggleSwitchAutoDelete.Size = new System.Drawing.Size(98, 24);
-            this.toggleSwitchAutoDelete.StyleController = this.dataLayoutControl1;
-            this.toggleSwitchAutoDelete.TabIndex = 20;
-            // 
-            // layoutControlItemAutoDelete
-            // 
-            this.layoutControlItemAutoDelete.Control = this.toggleSwitchAutoDelete;
-            this.layoutControlItemAutoDelete.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItemAutoDelete.Name = "layoutControlItemAutoDelete";
-            this.layoutControlItemAutoDelete.Size = new System.Drawing.Size(178, 28);
-            this.layoutControlItemAutoDelete.Text = "Удаление";
-            this.layoutControlItemAutoDelete.TextSize = new System.Drawing.Size(73, 13);
             // 
             // layoutControlGroupAutoDelete
             // 
@@ -675,18 +733,14 @@ namespace DXApplication1.Pages
             this.layoutControlGroupAutoDelete.Size = new System.Drawing.Size(202, 120);
             this.layoutControlGroupAutoDelete.Text = "Автоматическое Удаление";
             // 
-            // textEditAutoDeleteTime
+            // layoutControlItemAutoDelete
             // 
-            this.textEditAutoDeleteTime.Location = new System.Drawing.Point(100, 390);
-            this.textEditAutoDeleteTime.Name = "textEditAutoDeleteTime";
-            this.textEditAutoDeleteTime.Properties.Mask.BeepOnError = true;
-            this.textEditAutoDeleteTime.Properties.Mask.EditMask = "[1-9]\\d?+";
-            this.textEditAutoDeleteTime.Properties.Mask.IgnoreMaskBlank = false;
-            this.textEditAutoDeleteTime.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx;
-            this.textEditAutoDeleteTime.Properties.Mask.ShowPlaceHolders = false;
-            this.textEditAutoDeleteTime.Size = new System.Drawing.Size(98, 20);
-            this.textEditAutoDeleteTime.StyleController = this.dataLayoutControl1;
-            this.textEditAutoDeleteTime.TabIndex = 21;
+            this.layoutControlItemAutoDelete.Control = this.toggleSwitchAutoDelete;
+            this.layoutControlItemAutoDelete.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemAutoDelete.Name = "layoutControlItemAutoDelete";
+            this.layoutControlItemAutoDelete.Size = new System.Drawing.Size(178, 28);
+            this.layoutControlItemAutoDelete.Text = "Удаление";
+            this.layoutControlItemAutoDelete.TextSize = new System.Drawing.Size(73, 13);
             // 
             // layoutControlItemAutoDeleteTime
             // 
@@ -697,17 +751,6 @@ namespace DXApplication1.Pages
             this.layoutControlItemAutoDeleteTime.Text = "Время(сек)";
             this.layoutControlItemAutoDeleteTime.TextSize = new System.Drawing.Size(73, 13);
             // 
-            // simpleButtonDeleteForks
-            // 
-            this.simpleButtonDeleteForks.Image = ((System.Drawing.Image)(resources.GetObject("simpleButtonDeleteForks.Image")));
-            this.simpleButtonDeleteForks.Location = new System.Drawing.Point(24, 414);
-            this.simpleButtonDeleteForks.Name = "simpleButtonDeleteForks";
-            this.simpleButtonDeleteForks.Size = new System.Drawing.Size(174, 22);
-            this.simpleButtonDeleteForks.StyleController = this.dataLayoutControl1;
-            this.simpleButtonDeleteForks.TabIndex = 22;
-            this.simpleButtonDeleteForks.Text = "Удалить все Вилки";
-            this.simpleButtonDeleteForks.Click += new System.EventHandler(this.simpleButtonDeleteForks_Click);
-            // 
             // layoutControlItem3
             // 
             this.layoutControlItem3.Control = this.simpleButtonDeleteForks;
@@ -717,11 +760,40 @@ namespace DXApplication1.Pages
             this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem3.TextVisible = false;
             // 
+            // layoutControlGroupTime
+            // 
+            this.layoutControlGroupTime.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlItemAfter,
+            this.layoutControlItemBefore});
+            this.layoutControlGroupTime.Location = new System.Drawing.Point(202, 338);
+            this.layoutControlGroupTime.Name = "layoutControlGroupTime";
+            this.layoutControlGroupTime.Size = new System.Drawing.Size(240, 90);
+            this.layoutControlGroupTime.Text = "Время";
+            // 
+            // layoutControlItemAfter
+            // 
+            this.layoutControlItemAfter.Control = this.dateTimePickerAfter;
+            this.layoutControlItemAfter.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlItemAfter.Name = "layoutControlItemAfter";
+            this.layoutControlItemAfter.Size = new System.Drawing.Size(216, 24);
+            this.layoutControlItemAfter.Text = "Игра скорее";
+            this.layoutControlItemAfter.TextSize = new System.Drawing.Size(73, 13);
+            // 
+            // layoutControlItemBefore
+            // 
+            this.layoutControlItemBefore.Control = this.dateTimePickerBefore;
+            this.layoutControlItemBefore.CustomizationFormText = "layoutControlItemAfter";
+            this.layoutControlItemBefore.Location = new System.Drawing.Point(0, 24);
+            this.layoutControlItemBefore.Name = "layoutControlItemBefore";
+            this.layoutControlItemBefore.Size = new System.Drawing.Size(216, 24);
+            this.layoutControlItemBefore.Text = "Игра позже";
+            this.layoutControlItemBefore.TextSize = new System.Drawing.Size(73, 13);
+            // 
             // FilterPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(600, 471);
+            this.ClientSize = new System.Drawing.Size(600, 475);
             this.Controls.Add(this.dataLayoutControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FilterPage";
@@ -729,6 +801,10 @@ namespace DXApplication1.Pages
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).EndInit();
             this.dataLayoutControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dateTimePickerAfter.Properties.CalendarTimeProperties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dateTimePickerAfter.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditAutoDeleteTime.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitchAutoDelete.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditAntiGateCode.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditPasswordMarathon.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditLoginMarathon.Properties)).EndInit();
@@ -744,6 +820,8 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.textEditMaxPercent.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditMinRate.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditMaxRate.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dateTimePickerBefore.Properties.CalendarTimeProperties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dateTimePickerBefore.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupIncome)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemMinPercent)).EndInit();
@@ -771,12 +849,13 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleSwitchAutoDelete.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoDelete)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupAutoDelete)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textEditAutoDeleteTime.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoDelete)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAutoDeleteTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAfter)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemBefore)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -835,5 +914,10 @@ namespace DXApplication1.Pages
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemAutoDeleteTime;
         private SimpleButton simpleButtonDeleteForks;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem3;
+        private DevExpress.XtraEditors.DateEdit dateTimePickerAfter;
+        private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroupTime;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemAfter;
+        private DevExpress.XtraEditors.DateEdit dateTimePickerBefore;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemBefore;
     }
 }

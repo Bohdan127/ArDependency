@@ -1,4 +1,5 @@
 ﻿using FormulasCollection.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace FormulasCollection.Models
@@ -46,7 +47,7 @@ namespace FormulasCollection.Models
         /// <summary>
         /// Game time
         /// </summary>
-        public string MatchDateTime { get; set; }
+        public DateTime? MatchDateTime { get; set; }
 
         /// <summary>
         /// First Bookmaker Name

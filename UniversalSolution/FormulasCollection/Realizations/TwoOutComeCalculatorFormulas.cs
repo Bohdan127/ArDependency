@@ -50,6 +50,10 @@ namespace FormulasCollection.Realizations
 
         public List<Fork> FilteredForks(List<Fork> forks, Filter filterPage)
         {
+            if (filterPage.AfterTime != null)
+                forks.RemoveAll(f => f.MatchDateTime < filterPage.AfterTime.Value);
+            if (filterPage.BeforeTime != null)
+                forks.RemoveAll(f => f.MatchDateTime > filterPage.BeforeTime.Value);
             if (filterPage.MinPercent != null)
                 forks.RemoveAll(f => Convert.ToDecimal(f.Profit) <= filterPage.MinPercent.Value);
             if (filterPage.MaxPercent != null)

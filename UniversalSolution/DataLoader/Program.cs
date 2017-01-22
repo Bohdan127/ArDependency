@@ -1,4 +1,4 @@
-﻿//#define PlaceBets
+﻿#define PlaceBets
 //#define TestSoccer
 
 using DataParser.DefaultRealization;
@@ -120,6 +120,8 @@ namespace DataLoader
                     Console.WriteLine($"Max Percent {_filter.MaxPercent}");
                     Console.WriteLine($"Min Rate {_filter.MinRate}");
                     Console.WriteLine($"Max Rate {_filter.MaxRate}");
+                    Console.WriteLine($"After Time {_filter.AfterTime}");
+                    Console.WriteLine($"Before Time {_filter.BeforeTime}");
                     switch (sportType)
                     {
                         case SportType.Soccer:
@@ -179,10 +181,7 @@ namespace DataLoader
             var tmpRate = _filter.MaxRate ?? _filter.MinRate;
             if (tmpRate == null) return;
 
-            foreach (
-            var fork in
-                _calculatorFormulas.FilteredForks(forks.Select(f => f).ToList(), _filter)
-                    .OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
+            foreach (var fork in _calculatorFormulas.FilteredForks(forks.Select(f => f).ToList(), _filter).OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
             {
                 bool resM;
 #if PlaceBets

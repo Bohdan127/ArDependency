@@ -101,7 +101,7 @@ namespace FormulasCollection.Realizations
                             TypeSecond = pinEventKey.ToString(CultureInfo.InvariantCulture),
                             CoefSecond = pinnacleEvent.TypeCoefDictionary[pinEventKey].ToString(CultureInfo.InvariantCulture),
                             Sport = eventItem.SportType,
-                            MatchDateTime = pinnacleEvent.MatchDateTime.ToString(CultureInfo.CurrentCulture),
+                            MatchDateTime = pinnacleEvent.MatchDateTime,
                             BookmakerSecond = pinKey,
                             BookmakerFirst = eventItem.Event_RU,
                             Type = ForkType.Current,

@@ -1,4 +1,5 @@
-﻿using DataParser.Enums;
+﻿//#define TestCoef
+using DataParser.Enums;
 using FormulasCollection.Enums;
 using FormulasCollection.Helpers;
 using FormulasCollection.Models;
@@ -37,12 +38,14 @@ namespace FormulasCollection.Realizations
             List<ResultForForks> marathon)
         {
             var resList = new List<Fork>();
+#if TestCoef
             var alltypes = new List<string>();
             foreach (var @event in marathon)
             {
                 if (!alltypes.Contains(@event.Type))
                     alltypes.Add(@event.Type);
             }
+#endif
             foreach (var eventItem in marathon)
             {
                 if (eventItem.Event == null) continue;

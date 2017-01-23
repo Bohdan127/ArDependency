@@ -1,5 +1,5 @@
-﻿#define PlaceBets
-//#define TestSoccer
+﻿//#define PlaceBets
+#define TestSoccer
 
 using DataParser.DefaultRealization;
 using DataParser.Enums;

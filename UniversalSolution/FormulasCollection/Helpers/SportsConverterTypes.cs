@@ -164,5 +164,12 @@ namespace FormulasCollection.Helpers
                 ? typeValue.TrimStart('-')
                 : "-" + typeValue;
         }
+
+        public static string LocalizeToMarathon(this string typeValue)
+        {
+            return typeValue.StartsWith("-")
+                ? typeValue
+                : "+" + typeValue.TrimStart('-');
+        }
     }
 }

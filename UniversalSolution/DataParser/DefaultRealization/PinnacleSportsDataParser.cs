@@ -96,7 +96,7 @@ namespace DataParser.DefaultRealization
                                         resList[id].Add(new EventWithTotalDictionary
                                         {
                                             LineId = lineId,
-                                            TotalType = $"F1({spread.Value["hdp"]})".MinimalizeValue(),
+                                            TotalType = $"F1({spread.Value["hdp"].ToString().LocalizeToMarathon()})".MinimalizeValue(),
                                             TotalValue = spread.Value["home"].ToString(),
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId

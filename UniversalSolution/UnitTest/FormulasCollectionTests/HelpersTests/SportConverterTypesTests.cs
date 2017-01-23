@@ -74,5 +74,18 @@ namespace UnitTest.FormulasCollectionTests.HelpersTests
             outValue = "0.0";
             Assert.AreEqual(inValue.InvertValue(), outValue);
         }
+
+        [TestMethod]
+        public void LocalizeToMarathon_TestWithNumbers()
+        {
+            var inValue = "-2";
+            var outValue = "-2";
+            Assert.AreEqual(inValue.LocalizeToMarathon(), outValue);
+
+            inValue = "2";
+            outValue = "+2";
+            Assert.AreEqual(inValue.LocalizeToMarathon(), outValue);
+
+        }
     }
 }

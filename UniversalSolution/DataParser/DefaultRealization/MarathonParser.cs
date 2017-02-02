@@ -108,14 +108,14 @@ namespace DataParser.DefaultRealization
 
             var ids = englishTeams.Keys.ToList();
 
-             var tasks = new Task<List<ResultForForks>>[ids.Count];
+            var tasks = new Task<List<ResultForForks>>[ids.Count];
             //var tasks = new List<ResultForForks>();
             var idCounter = 0;
 
             for (var index = 0; index < ids.Count; index++)
             {
-                 //ReSharper disable once AccessToModifiedClosure
-                 tasks[index] = Task.Factory.StartNew(() => LoadEvent(ids[idCounter++], sportType, englishTeams, russianTeams));
+                //ReSharper disable once AccessToModifiedClosure
+                tasks[index] = Task.Factory.StartNew(() => LoadEvent(ids[idCounter++], sportType, englishTeams, russianTeams));
                 //tasks = LoadEvent(ids[idCounter++], sportType, englishTeams, russianTeams);
             }
             Task.WaitAll(tasks);
@@ -640,7 +640,7 @@ namespace DataParser.DefaultRealization
             }
             else
             {
-                CreateEvent(list, ref eventCoefList, nameTeams, event_id);
+                CreateEvent(list, ref eventCoefList, nameTeams, event_id, sportType);
             }
             if (teamToAdd.Event_RU.Contains("Манчестер Юнайтед") && teamToAdd.Event_RU.Contains("Халл Сити"))
             {
@@ -736,7 +736,7 @@ namespace DataParser.DefaultRealization
             "Победа с учетом форы",
             "Тотал очков"
         };
-        private void CreateEvent(List<DataMarathonForAutoPlays> list, ref MarathonEvent teamToAdd, Dictionary<string, string> nameTeams, string eventID)
+        private void CreateEvent(List<DataMarathonForAutoPlays> list, ref MarathonEvent teamToAdd, Dictionary<string, string> nameTeams, string eventID, SportType sportType)
         {
             Dictionary<string, string> mainCoef = new Dictionary<string, string>();
             List<EventForAutoPlay> Coef = new List<EventForAutoPlay>();
@@ -751,59 +751,72 @@ namespace DataParser.DefaultRealization
                     {
                         //switch (list[i].mn.ToLower())
                         //{
-                        if (list[i].mn.ToLower().Contains("победитель матча")) {
-                            if (list[i].sn.Equals(nameTeams["1"]))
-                            {
-                                if (!mainCoef.ContainsKey("1"))
-                                {
-                                    mainCoef.Add("1", list[i].epr);
-                                    type = "1";
-                                    value = list[i].epr;
-                                }
-                            }
-                            else if (list[i].sn.Equals(nameTeams["2"]))
-                            {
-                                if (!mainCoef.ContainsKey("2"))
-                                {
-                                    mainCoef.Add("2", list[i].epr);
-                                    type = "2";
-                                    value = list[i].epr;
-                                }
-                            }
-                            //else_logger.Error(l.sn + " - " + l.epr);
-                        }
-                        if (list[i].mn.ToLower().Contains("результат"))
+                        if (CheckWithoutTags(list[i].mn.ToLower()) && CheckWithoutTags(list[i].selection_key))
                         {
-                            string r = ChangeFormatResult(list[i].sn, nameTeams);
-                            if (!mainCoef.ContainsKey(r))
+                            if (list[i].mn.ToLower().Contains("победитель матча"))
                             {
-                                mainCoef.Add(r, list[i].epr);
-                                type = r;
-                                value = list[i].epr;
+                                if (list[i].sn.Equals(nameTeams["1"]))
+                                {
+                                    if (!mainCoef.ContainsKey("1"))
+                                    {
+                                        mainCoef.Add("1", list[i].epr);
+                                        type = "1";
+                                        value = list[i].epr;
+                                    }
+                                }
+                                else if (list[i].sn.Equals(nameTeams["2"]))
+                                {
+                                    if (!mainCoef.ContainsKey("2"))
+                                    {
+                                        mainCoef.Add("2", list[i].epr);
+                                        type = "2";
+                                        value = list[i].epr;
+                                    }
+                                }
+                                //else_logger.Error(l.sn + " - " + l.epr);
                             }
-                            //else_logger.Error(l.sn + " - " + l.epr);
-                        }
-                        if (list[i].mn.ToLower().Contains("победа с учетом форы")) {
-                            string f = ChangeFormatFora(list[i].sn, nameTeams["1"]);
-                            if (!mainCoef.ContainsKey(f))
+                            if (list[i].mn.ToLower().Contains("результат"))
                             {
-                                mainCoef.Add(f, list[i].epr);
-                                type = f;
-                                value = list[i].epr;
+                                string r = ChangeFormatResult(list[i].sn, nameTeams);
+                                if (!mainCoef.ContainsKey(r))
+                                {
+                                    mainCoef.Add(r, list[i].epr);
+                                    type = r;
+                                    value = list[i].epr;
+                                }
+                                //else_logger.Error(l.sn + " - " + l.epr);
                             }
-                            //else_logger.Error(l.sn + " - " + l.epr);
-                        }
-                        //Tennis
-                        if (list[i].mn.ToLower().Contains("результат матча")) {
-                            string rr = ChangeFormatResult(list[i].sn, nameTeams);
-                            if (!mainCoef.ContainsKey(rr))
+                            if (list[i].mn.ToLower().Contains("победа с учетом форы"))
                             {
-                                mainCoef.Add(rr, list[i].epr);
-                                type = rr;
-                                value = list[i].epr;
+                                if (sportType == SportType.Hockey)
+                                {
+                                    if (MarathonTags.WITHOUT_FORE_NUM.Any(x => list[i].sn.Contains(x)))
+                                        continue;
+                                }
+
+                                string f = ChangeFormatFora(list[i].sn, nameTeams["1"]);
+                                if (!mainCoef.ContainsKey(f))
+                                {
+                                    mainCoef.Add(f, list[i].epr);
+                                    type = f;
+                                    value = list[i].epr;
+                                }
+                                //else_logger.Error(l.sn + " - " + l.epr);
+                            }
+                            //Tennis
+                            if (list[i].mn.ToLower().Contains("результат матча"))
+                            {
+                                string rr = ChangeFormatResult(list[i].sn, nameTeams);
+                                if (!mainCoef.ContainsKey(rr))
+                                {
+                                    mainCoef.Add(rr, list[i].epr);
+                                    type = rr;
+                                    value = list[i].epr;
+                                }
                             }
                         }
-                        if (list[i].mn.ToLower().Contains("тотал по сетам")) {
+                        if (list[i].mn.ToLower().Contains("тотал по сетам"))
+                        {
                             string tt = ChangeFormatTotals(list[i].sn);
                             if (!mainCoef.ContainsKey(tt))
                             {
@@ -813,7 +826,8 @@ namespace DataParser.DefaultRealization
                             }
                             //else_logger.Error(l.sn + " - " + l.epr);
                         }
-                        if (list[i].mn.ToLower().Contains("тотал по геймам")) {
+                        if (list[i].mn.ToLower().Contains("тотал по геймам"))
+                        {
                             string ttt = ChangeFormatTotals(list[i].sn);
                             if (!mainCoef.ContainsKey(ttt))
                             {
@@ -930,6 +944,29 @@ namespace DataParser.DefaultRealization
                 result = Total.game_T;
             }
             return result;
+        }
+        private bool CheckWithoutTags(string line)
+        {
+
+            List<string> WITHOUT_NAME = new List<string>()
+        {
+            "период",
+            "Период",
+            "четвер",
+            "Четвер",
+            "половин",
+            "Половин"
+        };
+            foreach (var tag in WITHOUT_NAME)
+            {
+                if (line.Contains(tag))
+                    return false;
+            }
+            if (line._Contains("half", "period", "половина", "points", "sets", "games"))
+            {
+                return false;
+            }
+            return true;
         }
 
         private void CreateEventVoleyball(List<DataMarathonForAutoPlays> list, ref MarathonEvent teamToAdd, Dictionary<string, string> nameTeams, string eventID)

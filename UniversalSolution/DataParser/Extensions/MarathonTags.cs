@@ -1,4 +1,6 @@
-﻿namespace DataParser.Extensions
+﻿using System.Collections.Generic;
+
+namespace DataParser.Extensions
 {
     public static class MarathonTags
     {
@@ -54,6 +56,21 @@
         public static string fora_nameTab = "name-field";
         public static string fora_typeCoef = "coeff-handicap"; //+1
         public static string fora_valueCoef = "data-selection-price";
+
+        public static List<string> WITHOUT_NAME = new List<string>()
+        {
+            "период",
+            "Период",
+            "четвер",
+            "Четвер",
+            "половин",
+            "Половин"
+        };
+        public static List<string> WITHOUT_FORE_NUM = new List<string>()
+        {
+            "0",
+            "-1"
+        };
 
     }
 }

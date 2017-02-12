@@ -1,7 +1,9 @@
-﻿using DataSaver;
+﻿#define DisableForkDeletion
+using DataSaver;
 using DataSaver.Models;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.DXErrorProvider;
+using DevExpress.XtraLayout.Utils;
 using FormulasCollection.Models;
 using System;
 using System.ComponentModel;
@@ -37,9 +39,17 @@ namespace DXApplication1.Pages
             UserBind();
             _autoDeleteTimer = new Timer();
             _autoDeleteTimer.Tick += simpleButtonDeleteForks_Click;
-            // ReSharper disable once PossibleInvalidOperationException
+#if DisableForkDeletion
+            layoutControlGroupAutoDelete.Visibility = LayoutVisibility.Never;
+            _autoDeleteTimer.Interval = 1;
+            _autoDeleteTimer.Enabled = false;
+
+#else
+    // ReSharper disable once PossibleInvalidOperationException
             _autoDeleteTimer.Interval = Filter.AutoDeleteTime.Value * 1000;
             _autoDeleteTimer.Enabled = Filter.AutoDelete;
+#endif
+
         }
 
         private void UpdateFilter(Filter dbFilter)
@@ -57,8 +67,13 @@ namespace DXApplication1.Pages
             Filter.RecommendedRate2 = dbFilter.RecommendedRate2;
             Filter.Tennis = dbFilter.Tennis;
             Filter.Volleyball = dbFilter.Volleyball;
+#if DisableForkDeletion
+            Filter.AutoDelete = false;
+            Filter.AutoDeleteTime = 0;
+#else
             Filter.AutoDelete = dbFilter.AutoDelete;
             Filter.AutoDeleteTime = dbFilter.AutoDeleteTime;
+#endif
         }
 
         private void UserBind()

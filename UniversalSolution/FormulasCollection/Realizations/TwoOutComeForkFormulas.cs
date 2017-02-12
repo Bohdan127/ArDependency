@@ -1,4 +1,5 @@
 ﻿//#define TestCoef
+//#define TestNames
 using DataParser.Enums;
 using FormulasCollection.Enums;
 using FormulasCollection.Helpers;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using ToolsPortable;
 
 namespace FormulasCollection.Realizations
@@ -17,6 +19,68 @@ namespace FormulasCollection.Realizations
         private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private readonly TwoOutComeCalculatorFormulas _calculatorFormulas;
         private readonly Dictionary<string, string> _pinKeyCache = new Dictionary<string, string>();
+
+        public static int CalculateSimilarity(string first, string second, DateTime dateFirst, DateTime dateSecond)
+        {
+            try
+            {
+                if (dateSecond.Year != dateFirst.Year || dateSecond.DayOfYear != dateFirst.DayOfYear)
+                    return 0;
+                Regex regex = new Regex("U|O^[A-Za-z]?\\d+");
+                if (regex.IsMatch(first) && !regex.IsMatch(second)
+                || !regex.IsMatch(first) && regex.IsMatch(second))
+                    return 0;
+                var source = first.ToLower();
+                var target = second.ToLower();
+                if ((source.Length == 0) || (target.Length == 0)) return 0;
+                if (source == target) return 200;
+                if (source.Contains(target) || target.Contains(source)) return 200;
+
+                var sourceSplit = source.Split(new[] { " - ", " v " }, StringSplitOptions.None);
+                var targetSplit = target.Split(new[] { " - ", " v ", " @ " }, StringSplitOptions.None);
+
+                var stepsToSameOne = ComputeLevenshteinDistance(sourceSplit[0], targetSplit[0]);
+                var stepsToSameTwo = ComputeLevenshteinDistance(sourceSplit[1], targetSplit[1]);
+                var one = stepsToSameOne / Math.Max(sourceSplit[0].Length, targetSplit[0].Length) * 100;
+                var two = stepsToSameTwo / Math.Max(sourceSplit[1].Length, targetSplit[1].Length) * 100;
+
+                var stepsToSameOneR = ComputeLevenshteinDistance(sourceSplit[1], targetSplit[0]);
+                var stepsToSameTwoR = ComputeLevenshteinDistance(sourceSplit[0], targetSplit[1]);
+                var oneR = stepsToSameOneR / Math.Max(sourceSplit[1].Length, targetSplit[0].Length) * 100;
+                var twoR = stepsToSameTwoR / Math.Max(sourceSplit[0].Length, targetSplit[1].Length) * 100;
+                return Math.Max(one + two, oneR + twoR);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        private static int ComputeLevenshteinDistance(string source, string target)
+        {
+            if ((source == null) || (target == null)) return 0;
+            if ((source.Length == 0) || (target.Length == 0)) return 0;
+            if (source == target) return source.Length;
+            var i = 0;
+            var targetSplit = target.Split(' ');
+            var sourceSplit = source.Split(' ');
+            foreach (var first in sourceSplit)
+            {
+                foreach (var second in targetSplit)
+                {
+                    if (first.Contains(second))
+                    {
+                        i = i + second.Length;
+                    }
+                    else if (second.Contains(first))
+                    {
+                        i = i + first.Length;
+                    }
+                }
+            }
+            return i;
+        }
+
 
         public TwoOutComeForkFormulas()
         {
@@ -46,6 +110,11 @@ namespace FormulasCollection.Realizations
                     alltypes.Add(@event.Type);
             }
 #endif
+#if TestNames
+            using (System.IO.StreamWriter file =
+                new System.IO.StreamWriter(@"D:\T2.txt"))
+            {
+#endif
             foreach (var eventItem in marathon)
             {
                 if (eventItem.Event == null) continue;
@@ -69,8 +138,21 @@ namespace FormulasCollection.Realizations
                                 ConvertToDateTimeFromMarathon(eventItem.MatchDateTime),
                                 pinEvent.Value.MatchDateTime)
                             >= 85)
-                            .Key;
-
+                            .Key
+                                 ?? pinnacle.FirstOrDefault(pinEvent =>
+                                     CalculateSimilarity(
+                                         eventItem.Event,
+                                         pinEvent.Key,
+                                         ConvertToDateTimeFromMarathon(eventItem.MatchDateTime),
+                                         pinEvent.Value.MatchDateTime)
+                                     >= 100)
+                                     .Key;
+#if TestNames
+                            if (pinKey != null)
+                            {
+                                file.WriteLine($"{eventItem.Event} => {pinKey}");
+                            }
+#endif
                     }
                     catch (Exception ex)
                     {
@@ -88,7 +170,8 @@ namespace FormulasCollection.Realizations
 
                 try
                 {
-                    var pinEventKeys = IsAnyForkAll(eventItem, pinnacle[pinKey], eventItem.SportType.EnumParse<SportType>());
+                    var pinEventKeys = IsAnyForkAll(eventItem, pinnacle[pinKey],
+                        eventItem.SportType.EnumParse<SportType>());
                     if (pinEventKeys.Count == 0) continue;
                     foreach (var pinEventKey in pinEventKeys)
                     {
@@ -102,7 +185,8 @@ namespace FormulasCollection.Realizations
                             TypeFirst = eventItem.Type,
                             CoefFirst = eventItem.Coef,
                             TypeSecond = pinEventKey.ToString(CultureInfo.InvariantCulture),
-                            CoefSecond = pinnacleEvent.TypeCoefDictionary[pinEventKey].ToString(CultureInfo.InvariantCulture),
+                            CoefSecond =
+                                pinnacleEvent.TypeCoefDictionary[pinEventKey].ToString(CultureInfo.InvariantCulture),
                             Sport = eventItem.SportType,
                             MatchDateTime = pinnacleEvent.MatchDateTime,
                             BookmakerSecond = pinKey,
@@ -130,6 +214,9 @@ namespace FormulasCollection.Realizations
                     _logger.Error(ex.StackTrace);
                 }
             }
+#if TestNames
+            }
+#endif
             return resList;
         }
 

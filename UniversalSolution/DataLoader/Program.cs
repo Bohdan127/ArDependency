@@ -1,5 +1,5 @@
-﻿//#define PlaceBets
-#define TestSoccer
+﻿#define PlaceBets
+//#define TestSoccer
 
 using DataParser.DefaultRealization;
 using DataParser.Enums;
@@ -99,7 +99,7 @@ namespace DataLoader
                 Console.WriteLine($"Anti Gate Code = '{_currentUser.AntiGateCode}'");
 
 #if TestSoccer
-                var sportsToLoading = new[] { SportType.Soccer };
+                var sportsToLoading = new[] { SportType.Basketball };
 
 #else
                 //always loading all sports

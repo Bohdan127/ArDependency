@@ -276,7 +276,8 @@ namespace DataSaver
                 Volleyball = json.DataAsJson.Value<bool>("Volleyball"),
                 AutoUpdateTime = json.DataAsJson.Value<int?>("AutoUpdateTime"),
                 AutoDelete = json.DataAsJson.Value<bool>("AutoDelete"),
-                AutoDeleteTime = json.DataAsJson.Value<int?>("AutoDeleteTime")
+                AutoDeleteTime = json.DataAsJson.Value<int?>("AutoDeleteTime"),
+                PinnaclePlace = json.DataAsJson.Value<bool>("PinnaclePlace")
             };
             return result;
         }
@@ -392,6 +393,7 @@ namespace DataSaver
             userDocument.AutoUpdateTime = filter.AutoUpdateTime;
             userDocument.AfterTime = filter.AfterTime;
             userDocument.BeforeTime = filter.BeforeTime;
+            userDocument.PinnaclePlace = filter.PinnaclePlace;
 
             Session.SaveChanges();
         }

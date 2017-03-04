@@ -15,6 +15,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using SiteAccess.Enums;
+using ToolsPortable;
 #if PlaceBets
 using Common.Modules.AntiCaptha;
 using SiteAccess.Access;
@@ -32,8 +34,10 @@ namespace DataLoader
         private static TwoOutComeForkFormulas _forkFormulas;
         private static LocalSaver _localSaver;
         private static TwoOutComeCalculatorFormulas _calculatorFormulas;
+        private const decimal MinPinnacleRate = 1;
 #if PlaceBets
         private static MarathonAccess _marath;
+        private static PinncaleAccess _pinn;
 #endif
         private static double _defRate;
         private static Filter _filter;
@@ -99,7 +103,7 @@ namespace DataLoader
                 Console.WriteLine($"Anti Gate Code = '{_currentUser.AntiGateCode}'");
 
 #if TestSoccer
-                var sportsToLoading = new[] { SportType.Basketball };
+                var sportsToLoading = new[] { SportType.Hockey };
 
 #else
                 //always loading all sports
@@ -109,6 +113,9 @@ namespace DataLoader
 #if PlaceBets
                 _marath = new MarathonAccess(new AntiGate(_currentUser.AntiGateCode));
                 _marath.Login(_currentUser.LoginMarathon, _currentUser.PasswordMarathon);
+                //https://www.pinnacle.com/ru/api/manual#pbet
+                _pinn = new PinncaleAccess();
+                _pinn.Login(_currentUser.LoginPinnacle, _currentUser.PasswordPinnacle);
 #endif
 
                 foreach (var sportType in sportsToLoading)
@@ -183,32 +190,70 @@ namespace DataLoader
 
             foreach (var fork in _calculatorFormulas.FilteredForks(forks.Select(f => f).ToList(), _filter).OrderBy(f => Convert.ToDateTime(f.MatchDateTime)))
             {
-                bool resM;
+                bool resM = false;
 #if PlaceBets
                 var rate = tmpRate.Value;
-                do
+                var recomendedPinnacle = _calculatorFormulas.CalculateRatePart((double)rate,
+                                                                               fork.CoefFirst.ConvertToDoubleOrNull(),
+                                                                               fork.CoefSecond.ConvertToDoubleOrNull());
+                if (recomendedPinnacle >= MinPinnacleRate)
                 {
-                    var betM = new MarathonBet
+                    do
                     {
-                        Id = fork.selection_key,
-                        Name = fork.BookmakerFirst,
-                        // ReSharper disable once PossibleInvalidOperationException
-                        Stake = (double)rate,
-                        AddData =
-                            $"{{\"sn\":\"{fork.sn}\"," + $"\"mn\":\"{fork.mn}\"," + $"\"ewc\":\"{fork.ewc}\"," +
-                            $"\"cid\":{fork.cid}," + $"\"prt\":\"{fork.prt}\"," + $"\"ewf\":\"{fork.ewf}\"," +
-                            $"\"epr\":\"{fork.epr}\"," + "\"prices\"" + $":{{\"0\":\"{fork.prices[0]}\"," +
-                            $"\"1\":\"{fork.prices[1]}\"," + $"\"2\":\"{fork.prices[2]}\"," +
-                            $"\"3\":\"{fork.prices[3]}\"," + $"\"4\":\"{fork.prices[4]}\"," +
-                            $"\"5\":\"{fork.prices[5]}\"}}}}"
-                    };
-                    resM = _marath.MakeBet(betM);
-                    Console.WriteLine($"Place result {resM} for {rate} into {fork.BookmakerFirst}");
-                    if (!resM) rate -= 0.1m;
-                } while (!resM && rate >= _filter.MinRate);
-
+                        var betM = new MarathonBet
+                        {
+                            Id = fork.selection_key,
+                            Name = fork.BookmakerFirst,
+                            // ReSharper disable once PossibleInvalidOperationException
+                            Stake = (double)rate,
+                            AddData =
+                                $"{{\"sn\":\"{fork.sn}\"," + $"\"mn\":\"{fork.mn}\"," + $"\"ewc\":\"{fork.ewc}\"," +
+                                $"\"cid\":{fork.cid}," + $"\"prt\":\"{fork.prt}\"," + $"\"ewf\":\"{fork.ewf}\"," +
+                                $"\"epr\":\"{fork.epr}\"," + "\"prices\"" + $":{{\"0\":\"{fork.prices[0]}\"," +
+                                $"\"1\":\"{fork.prices[1]}\"," + $"\"2\":\"{fork.prices[2]}\"," +
+                                $"\"3\":\"{fork.prices[3]}\"," + $"\"4\":\"{fork.prices[4]}\"," +
+                                $"\"5\":\"{fork.prices[5]}\"}}}}"
+                        };
+                        resM = _marath.MakeBet(betM);
+                        Console.WriteLine($"Place result {resM} for {rate} into {fork.BookmakerFirst}");
+                        if (!resM)
+                        {
+                            rate -= 0.1m;
+                        }
+                    } while (!resM && rate >= _filter.MinRate);
+                }
+                if (rate < _filter.MinRate) rate = _filter.MinRate ?? rate;
                 fork.MarRate = rate.ToString(CultureInfo.CurrentCulture);
                 fork.MarSuccess = resM.ToString(CultureInfo.CurrentCulture);
+                if (resM)
+                {
+                    var betP = new PinnacleBet
+                    {
+                        AcceptBetterLine = true,
+                        BetType = BetType.MONEYLINE,
+                        Eventid = Convert.ToInt64(fork.PinnacleEventId),
+                        Guid = Guid.NewGuid()
+                                          .ToString(),
+                        OddsFormat = OddsFormat.DECIMAL,
+                        LineId = Convert.ToInt64(fork.LineId),
+                        /*
+                         * This represents the period of the match. For example, for soccer we have:
+                         * 0 - Game
+                         * 1 - 1st Half
+                         * 2 - 2nd Half
+                         */
+                        PeriodNumber = 0,
+                        WinRiskRate = WinRiskType.WIN,
+                        // ReSharper disable once PossibleInvalidOperationException
+                        Stake = recomendedPinnacle,
+                        SportId = (int)(SportType)Enum.Parse(typeof(SportType), fork.Sport, false)
+                    };
+                    var resP = _pinn.MakeBet(betP);
+                    Console.WriteLine(resP.Success
+                                     ? $"Place result {resP.Success} for {recomendedPinnacle} into {fork.BookmakerFirst}"
+                                     : $"Place result {resP.Success} with code {resP.Status} and description {resP.Error} for {recomendedPinnacle} into {fork.BookmakerFirst}");
+                    fork.PinSuccess = $"{resP.Success} {resP.Status} {resP.Error}";
+                }
 #endif
                 var outF =
                     forks.First(

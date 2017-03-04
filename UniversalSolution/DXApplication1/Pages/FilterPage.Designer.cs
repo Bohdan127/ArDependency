@@ -88,6 +88,8 @@ namespace DXApplication1.Pages
             this.layoutControlGroupTime = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItemAfter = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItemBefore = new DevExpress.XtraLayout.LayoutControlItem();
+            this.pinnaclePlaceToggleSwitch = new DevExpress.XtraEditors.ToggleSwitch();
+            this.layoutControlItemPinnaclePlace = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dateTimePickerAfter.Properties.CalendarTimeProperties)).BeginInit();
@@ -145,10 +147,13 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAfter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemBefore)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pinnaclePlaceToggleSwitch.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPinnaclePlace)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
             // 
+            this.dataLayoutControl1.Controls.Add(this.pinnaclePlaceToggleSwitch);
             this.dataLayoutControl1.Controls.Add(this.dateTimePickerAfter);
             this.dataLayoutControl1.Controls.Add(this.simpleButtonDeleteForks);
             this.dataLayoutControl1.Controls.Add(this.textEditAutoDeleteTime);
@@ -175,21 +180,21 @@ namespace DXApplication1.Pages
             this.dataLayoutControl1.Location = new System.Drawing.Point(0, 0);
             this.dataLayoutControl1.Name = "dataLayoutControl1";
             this.dataLayoutControl1.Root = this.layoutControlGroup1;
-            this.dataLayoutControl1.Size = new System.Drawing.Size(600, 475);
+            this.dataLayoutControl1.Size = new System.Drawing.Size(466, 495);
             this.dataLayoutControl1.TabIndex = 0;
             this.dataLayoutControl1.Text = "dataLayoutControl1";
             // 
             // dateTimePickerAfter
             // 
             this.dateTimePickerAfter.EditValue = new System.DateTime(2017, 1, 14, 0, 0, 0, 0);
-            this.dateTimePickerAfter.Location = new System.Drawing.Point(302, 380);
+            this.dateTimePickerAfter.Location = new System.Drawing.Point(302, 408);
             this.dateTimePickerAfter.Name = "dateTimePickerAfter";
             this.dateTimePickerAfter.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.False;
             this.dateTimePickerAfter.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton()});
             this.dateTimePickerAfter.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.dateTimePickerAfter.Size = new System.Drawing.Size(136, 20);
+            this.dateTimePickerAfter.Size = new System.Drawing.Size(121, 20);
             this.dateTimePickerAfter.StyleController = this.dataLayoutControl1;
             this.dateTimePickerAfter.TabIndex = 23;
             // 
@@ -230,10 +235,10 @@ namespace DXApplication1.Pages
             // simpleButtonSave
             // 
             this.simpleButtonSave.Image = ((System.Drawing.Image)(resources.GetObject("simpleButtonSave.Image")));
-            this.simpleButtonSave.Location = new System.Drawing.Point(226, 312);
+            this.simpleButtonSave.Location = new System.Drawing.Point(226, 340);
             this.simpleButtonSave.MaximumSize = new System.Drawing.Size(104, 22);
             this.simpleButtonSave.Name = "simpleButtonSave";
-            this.simpleButtonSave.Size = new System.Drawing.Size(104, 22);
+            this.simpleButtonSave.Size = new System.Drawing.Size(96, 22);
             this.simpleButtonSave.StyleController = this.dataLayoutControl1;
             this.simpleButtonSave.TabIndex = 19;
             this.simpleButtonSave.Text = "Сохранить";
@@ -241,25 +246,25 @@ namespace DXApplication1.Pages
             // 
             // textEditAntiGateCode
             // 
-            this.textEditAntiGateCode.Location = new System.Drawing.Point(302, 246);
+            this.textEditAntiGateCode.Location = new System.Drawing.Point(302, 274);
             this.textEditAntiGateCode.Name = "textEditAntiGateCode";
-            this.textEditAntiGateCode.Size = new System.Drawing.Size(136, 20);
+            this.textEditAntiGateCode.Size = new System.Drawing.Size(121, 20);
             this.textEditAntiGateCode.StyleController = this.dataLayoutControl1;
             this.textEditAntiGateCode.TabIndex = 14;
             // 
             // textEditPasswordMarathon
             // 
-            this.textEditPasswordMarathon.Location = new System.Drawing.Point(302, 222);
+            this.textEditPasswordMarathon.Location = new System.Drawing.Point(302, 250);
             this.textEditPasswordMarathon.Name = "textEditPasswordMarathon";
-            this.textEditPasswordMarathon.Size = new System.Drawing.Size(136, 20);
+            this.textEditPasswordMarathon.Size = new System.Drawing.Size(121, 20);
             this.textEditPasswordMarathon.StyleController = this.dataLayoutControl1;
             this.textEditPasswordMarathon.TabIndex = 13;
             // 
             // textEditLoginMarathon
             // 
-            this.textEditLoginMarathon.Location = new System.Drawing.Point(302, 198);
+            this.textEditLoginMarathon.Location = new System.Drawing.Point(302, 226);
             this.textEditLoginMarathon.Name = "textEditLoginMarathon";
-            this.textEditLoginMarathon.Size = new System.Drawing.Size(136, 20);
+            this.textEditLoginMarathon.Size = new System.Drawing.Size(121, 20);
             this.textEditLoginMarathon.StyleController = this.dataLayoutControl1;
             this.textEditLoginMarathon.TabIndex = 12;
             // 
@@ -267,7 +272,7 @@ namespace DXApplication1.Pages
             // 
             this.textEditLoginPinnacle.Location = new System.Drawing.Point(302, 108);
             this.textEditLoginPinnacle.Name = "textEditLoginPinnacle";
-            this.textEditLoginPinnacle.Size = new System.Drawing.Size(136, 20);
+            this.textEditLoginPinnacle.Size = new System.Drawing.Size(121, 20);
             this.textEditLoginPinnacle.StyleController = this.dataLayoutControl1;
             this.textEditLoginPinnacle.TabIndex = 11;
             // 
@@ -280,7 +285,7 @@ namespace DXApplication1.Pages
             this.textEditAutoUpdate.Properties.Mask.IgnoreMaskBlank = false;
             this.textEditAutoUpdate.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.RegEx;
             this.textEditAutoUpdate.Properties.Mask.ShowPlaceHolders = false;
-            this.textEditAutoUpdate.Size = new System.Drawing.Size(65, 20);
+            this.textEditAutoUpdate.Size = new System.Drawing.Size(50, 20);
             this.textEditAutoUpdate.StyleController = this.dataLayoutControl1;
             this.textEditAutoUpdate.TabIndex = 10;
             // 
@@ -338,7 +343,7 @@ namespace DXApplication1.Pages
             // 
             this.textEditPasswordPinnacle.Location = new System.Drawing.Point(302, 132);
             this.textEditPasswordPinnacle.Name = "textEditPasswordPinnacle";
-            this.textEditPasswordPinnacle.Size = new System.Drawing.Size(136, 20);
+            this.textEditPasswordPinnacle.Size = new System.Drawing.Size(121, 20);
             this.textEditPasswordPinnacle.StyleController = this.dataLayoutControl1;
             this.textEditPasswordPinnacle.TabIndex = 11;
             // 
@@ -414,10 +419,10 @@ namespace DXApplication1.Pages
             // simpleButtonCancel
             // 
             this.simpleButtonCancel.Image = ((System.Drawing.Image)(resources.GetObject("simpleButtonCancel.Image")));
-            this.simpleButtonCancel.Location = new System.Drawing.Point(334, 312);
+            this.simpleButtonCancel.Location = new System.Drawing.Point(326, 340);
             this.simpleButtonCancel.MaximumSize = new System.Drawing.Size(104, 22);
             this.simpleButtonCancel.Name = "simpleButtonCancel";
-            this.simpleButtonCancel.Size = new System.Drawing.Size(104, 22);
+            this.simpleButtonCancel.Size = new System.Drawing.Size(97, 22);
             this.simpleButtonCancel.StyleController = this.dataLayoutControl1;
             this.simpleButtonCancel.TabIndex = 19;
             this.simpleButtonCancel.Text = "Отменить";
@@ -426,14 +431,14 @@ namespace DXApplication1.Pages
             // dateTimePickerBefore
             // 
             this.dateTimePickerBefore.EditValue = new System.DateTime(2017, 1, 14, 0, 0, 0, 0);
-            this.dateTimePickerBefore.Location = new System.Drawing.Point(302, 404);
+            this.dateTimePickerBefore.Location = new System.Drawing.Point(302, 432);
             this.dateTimePickerBefore.Name = "dateTimePickerBefore";
             this.dateTimePickerBefore.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.False;
             this.dateTimePickerBefore.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton()});
             this.dateTimePickerBefore.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.dateTimePickerBefore.Size = new System.Drawing.Size(136, 20);
+            this.dateTimePickerBefore.Size = new System.Drawing.Size(121, 20);
             this.dateTimePickerBefore.StyleController = this.dataLayoutControl1;
             this.dateTimePickerBefore.TabIndex = 23;
             // 
@@ -455,7 +460,7 @@ namespace DXApplication1.Pages
             this.layoutControlGroupTime});
             this.layoutControlGroup1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup1.Name = "Root";
-            this.layoutControlGroup1.Size = new System.Drawing.Size(600, 475);
+            this.layoutControlGroup1.Size = new System.Drawing.Size(466, 495);
             this.layoutControlGroup1.TextVisible = false;
             // 
             // layoutControlGroupIncome
@@ -585,7 +590,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemAutoUpdate});
             this.layoutControlGroupOther.Location = new System.Drawing.Point(202, 0);
             this.layoutControlGroupOther.Name = "layoutControlGroupOther";
-            this.layoutControlGroupOther.Size = new System.Drawing.Size(240, 66);
+            this.layoutControlGroupOther.Size = new System.Drawing.Size(225, 66);
             this.layoutControlGroupOther.Text = "Дополнительные";
             // 
             // layoutControlItemAutoUpdate
@@ -593,7 +598,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemAutoUpdate.Control = this.textEditAutoUpdate;
             this.layoutControlItemAutoUpdate.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemAutoUpdate.Name = "layoutControlItemAutoUpdate";
-            this.layoutControlItemAutoUpdate.Size = new System.Drawing.Size(216, 24);
+            this.layoutControlItemAutoUpdate.Size = new System.Drawing.Size(201, 24);
             this.layoutControlItemAutoUpdate.Text = "Время автообновления(сек)";
             this.layoutControlItemAutoUpdate.TextAlignMode = DevExpress.XtraLayout.TextAlignModeItem.AutoSize;
             this.layoutControlItemAutoUpdate.TextSize = new System.Drawing.Size(142, 13);
@@ -603,10 +608,11 @@ namespace DXApplication1.Pages
             // 
             this.layoutControlGroupPinnacle.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlItemLoginPinnacle,
-            this.layoutControlItemPasswordPinnacle});
+            this.layoutControlItemPasswordPinnacle,
+            this.layoutControlItemPinnaclePlace});
             this.layoutControlGroupPinnacle.Location = new System.Drawing.Point(202, 66);
             this.layoutControlGroupPinnacle.Name = "layoutControlGroupPinnacle";
-            this.layoutControlGroupPinnacle.Size = new System.Drawing.Size(240, 90);
+            this.layoutControlGroupPinnacle.Size = new System.Drawing.Size(225, 118);
             this.layoutControlGroupPinnacle.Text = "Пиннакл";
             // 
             // layoutControlItemLoginPinnacle
@@ -614,7 +620,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemLoginPinnacle.Control = this.textEditLoginPinnacle;
             this.layoutControlItemLoginPinnacle.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemLoginPinnacle.Name = "layoutControlItemLoginPinnacle";
-            this.layoutControlItemLoginPinnacle.Size = new System.Drawing.Size(216, 24);
+            this.layoutControlItemLoginPinnacle.Size = new System.Drawing.Size(201, 24);
             this.layoutControlItemLoginPinnacle.Text = "Логин";
             this.layoutControlItemLoginPinnacle.TextSize = new System.Drawing.Size(73, 13);
             // 
@@ -624,7 +630,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemPasswordPinnacle.CustomizationFormText = "layoutControlItem1";
             this.layoutControlItemPasswordPinnacle.Location = new System.Drawing.Point(0, 24);
             this.layoutControlItemPasswordPinnacle.Name = "layoutControlItemPasswordPinnacle";
-            this.layoutControlItemPasswordPinnacle.Size = new System.Drawing.Size(216, 24);
+            this.layoutControlItemPasswordPinnacle.Size = new System.Drawing.Size(201, 24);
             this.layoutControlItemPasswordPinnacle.Text = "Пароль";
             this.layoutControlItemPasswordPinnacle.TextSize = new System.Drawing.Size(73, 13);
             // 
@@ -634,9 +640,9 @@ namespace DXApplication1.Pages
             this.layoutControlItemLoginMarathon,
             this.layoutControlItemPasswordMarathon,
             this.layoutControlItemAntiGateCode});
-            this.layoutControlGroupMarathon.Location = new System.Drawing.Point(202, 156);
+            this.layoutControlGroupMarathon.Location = new System.Drawing.Point(202, 184);
             this.layoutControlGroupMarathon.Name = "layoutControlGroupMarathon";
-            this.layoutControlGroupMarathon.Size = new System.Drawing.Size(240, 114);
+            this.layoutControlGroupMarathon.Size = new System.Drawing.Size(225, 114);
             this.layoutControlGroupMarathon.Text = "Марафон";
             // 
             // layoutControlItemLoginMarathon
@@ -644,7 +650,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemLoginMarathon.Control = this.textEditLoginMarathon;
             this.layoutControlItemLoginMarathon.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemLoginMarathon.Name = "layoutControlItemLoginMarathon";
-            this.layoutControlItemLoginMarathon.Size = new System.Drawing.Size(216, 24);
+            this.layoutControlItemLoginMarathon.Size = new System.Drawing.Size(201, 24);
             this.layoutControlItemLoginMarathon.Text = "Логин";
             this.layoutControlItemLoginMarathon.TextSize = new System.Drawing.Size(73, 13);
             // 
@@ -653,7 +659,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemPasswordMarathon.Control = this.textEditPasswordMarathon;
             this.layoutControlItemPasswordMarathon.Location = new System.Drawing.Point(0, 24);
             this.layoutControlItemPasswordMarathon.Name = "layoutControlItemPasswordMarathon";
-            this.layoutControlItemPasswordMarathon.Size = new System.Drawing.Size(216, 24);
+            this.layoutControlItemPasswordMarathon.Size = new System.Drawing.Size(201, 24);
             this.layoutControlItemPasswordMarathon.Text = "Пароль";
             this.layoutControlItemPasswordMarathon.TextSize = new System.Drawing.Size(73, 13);
             // 
@@ -662,7 +668,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemAntiGateCode.Control = this.textEditAntiGateCode;
             this.layoutControlItemAntiGateCode.Location = new System.Drawing.Point(0, 48);
             this.layoutControlItemAntiGateCode.Name = "layoutControlItemAntiGateCode";
-            this.layoutControlItemAntiGateCode.Size = new System.Drawing.Size(216, 24);
+            this.layoutControlItemAntiGateCode.Size = new System.Drawing.Size(201, 24);
             this.layoutControlItemAntiGateCode.Text = "Anti Gate Code";
             this.layoutControlItemAntiGateCode.TextSize = new System.Drawing.Size(73, 13);
             // 
@@ -672,16 +678,16 @@ namespace DXApplication1.Pages
             this.emptySpaceItem2.CustomizationFormText = "emptySpaceItem1";
             this.emptySpaceItem2.Location = new System.Drawing.Point(0, 440);
             this.emptySpaceItem2.Name = "emptySpaceItem2";
-            this.emptySpaceItem2.Size = new System.Drawing.Size(202, 15);
+            this.emptySpaceItem2.Size = new System.Drawing.Size(202, 35);
             this.emptySpaceItem2.Text = "emptySpaceItem1";
             this.emptySpaceItem2.TextSize = new System.Drawing.Size(0, 0);
             // 
             // emptySpaceItem1
             // 
             this.emptySpaceItem1.AllowHotTrack = false;
-            this.emptySpaceItem1.Location = new System.Drawing.Point(202, 428);
+            this.emptySpaceItem1.Location = new System.Drawing.Point(202, 456);
             this.emptySpaceItem1.Name = "emptySpaceItem1";
-            this.emptySpaceItem1.Size = new System.Drawing.Size(240, 27);
+            this.emptySpaceItem1.Size = new System.Drawing.Size(225, 19);
             this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlGroupActions
@@ -689,9 +695,9 @@ namespace DXApplication1.Pages
             this.layoutControlGroupActions.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlItem1,
             this.layoutControlItem2});
-            this.layoutControlGroupActions.Location = new System.Drawing.Point(202, 270);
+            this.layoutControlGroupActions.Location = new System.Drawing.Point(202, 298);
             this.layoutControlGroupActions.Name = "layoutControlGroupActions";
-            this.layoutControlGroupActions.Size = new System.Drawing.Size(240, 68);
+            this.layoutControlGroupActions.Size = new System.Drawing.Size(225, 68);
             this.layoutControlGroupActions.Text = "Действия";
             // 
             // layoutControlItem1
@@ -699,7 +705,7 @@ namespace DXApplication1.Pages
             this.layoutControlItem1.Control = this.simpleButtonSave;
             this.layoutControlItem1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItem1.Name = "layoutControlItem1";
-            this.layoutControlItem1.Size = new System.Drawing.Size(108, 26);
+            this.layoutControlItem1.Size = new System.Drawing.Size(100, 26);
             this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem1.TextVisible = false;
             // 
@@ -707,9 +713,9 @@ namespace DXApplication1.Pages
             // 
             this.layoutControlItem2.Control = this.simpleButtonCancel;
             this.layoutControlItem2.CustomizationFormText = "layoutControlItem1";
-            this.layoutControlItem2.Location = new System.Drawing.Point(108, 0);
+            this.layoutControlItem2.Location = new System.Drawing.Point(100, 0);
             this.layoutControlItem2.Name = "layoutControlItem2";
-            this.layoutControlItem2.Size = new System.Drawing.Size(108, 26);
+            this.layoutControlItem2.Size = new System.Drawing.Size(101, 26);
             this.layoutControlItem2.Text = "layoutControlItem1";
             this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem2.TextVisible = false;
@@ -717,9 +723,9 @@ namespace DXApplication1.Pages
             // emptySpaceItem4
             // 
             this.emptySpaceItem4.AllowHotTrack = false;
-            this.emptySpaceItem4.Location = new System.Drawing.Point(442, 0);
+            this.emptySpaceItem4.Location = new System.Drawing.Point(427, 0);
             this.emptySpaceItem4.Name = "emptySpaceItem4";
-            this.emptySpaceItem4.Size = new System.Drawing.Size(138, 455);
+            this.emptySpaceItem4.Size = new System.Drawing.Size(19, 475);
             this.emptySpaceItem4.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlGroupAutoDelete
@@ -765,9 +771,9 @@ namespace DXApplication1.Pages
             this.layoutControlGroupTime.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlItemAfter,
             this.layoutControlItemBefore});
-            this.layoutControlGroupTime.Location = new System.Drawing.Point(202, 338);
+            this.layoutControlGroupTime.Location = new System.Drawing.Point(202, 366);
             this.layoutControlGroupTime.Name = "layoutControlGroupTime";
-            this.layoutControlGroupTime.Size = new System.Drawing.Size(240, 90);
+            this.layoutControlGroupTime.Size = new System.Drawing.Size(225, 90);
             this.layoutControlGroupTime.Text = "Время";
             // 
             // layoutControlItemAfter
@@ -775,7 +781,7 @@ namespace DXApplication1.Pages
             this.layoutControlItemAfter.Control = this.dateTimePickerAfter;
             this.layoutControlItemAfter.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemAfter.Name = "layoutControlItemAfter";
-            this.layoutControlItemAfter.Size = new System.Drawing.Size(216, 24);
+            this.layoutControlItemAfter.Size = new System.Drawing.Size(201, 24);
             this.layoutControlItemAfter.Text = "Игра скорее";
             this.layoutControlItemAfter.TextSize = new System.Drawing.Size(73, 13);
             // 
@@ -785,15 +791,34 @@ namespace DXApplication1.Pages
             this.layoutControlItemBefore.CustomizationFormText = "layoutControlItemAfter";
             this.layoutControlItemBefore.Location = new System.Drawing.Point(0, 24);
             this.layoutControlItemBefore.Name = "layoutControlItemBefore";
-            this.layoutControlItemBefore.Size = new System.Drawing.Size(216, 24);
+            this.layoutControlItemBefore.Size = new System.Drawing.Size(201, 24);
             this.layoutControlItemBefore.Text = "Игра позже";
             this.layoutControlItemBefore.TextSize = new System.Drawing.Size(73, 13);
+            // 
+            // pinnaclePlaceToggleSwitch
+            // 
+            this.pinnaclePlaceToggleSwitch.Location = new System.Drawing.Point(302, 156);
+            this.pinnaclePlaceToggleSwitch.Name = "pinnaclePlaceToggleSwitch";
+            this.pinnaclePlaceToggleSwitch.Properties.OffText = "Off";
+            this.pinnaclePlaceToggleSwitch.Properties.OnText = "On";
+            this.pinnaclePlaceToggleSwitch.Size = new System.Drawing.Size(121, 24);
+            this.pinnaclePlaceToggleSwitch.StyleController = this.dataLayoutControl1;
+            this.pinnaclePlaceToggleSwitch.TabIndex = 24;
+            // 
+            // layoutControlItemPinnaclePlace
+            // 
+            this.layoutControlItemPinnaclePlace.Control = this.pinnaclePlaceToggleSwitch;
+            this.layoutControlItemPinnaclePlace.Location = new System.Drawing.Point(0, 48);
+            this.layoutControlItemPinnaclePlace.Name = "layoutControlItemPinnaclePlace";
+            this.layoutControlItemPinnaclePlace.Size = new System.Drawing.Size(201, 28);
+            this.layoutControlItemPinnaclePlace.Text = "Автоставка";
+            this.layoutControlItemPinnaclePlace.TextSize = new System.Drawing.Size(73, 13);
             // 
             // FilterPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(600, 475);
+            this.ClientSize = new System.Drawing.Size(466, 495);
             this.Controls.Add(this.dataLayoutControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FilterPage";
@@ -856,6 +881,8 @@ namespace DXApplication1.Pages
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroupTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemAfter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemBefore)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pinnaclePlaceToggleSwitch.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemPinnaclePlace)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -919,5 +946,7 @@ namespace DXApplication1.Pages
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemAfter;
         private DevExpress.XtraEditors.DateEdit dateTimePickerBefore;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItemBefore;
+        private ToggleSwitch pinnaclePlaceToggleSwitch;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItemPinnaclePlace;
     }
 }

@@ -49,5 +49,7 @@ namespace FormulasCollection.Models
 
         public DateTime? AfterTime { get; set; }
 
+        public bool PinnaclePlace { get; set; }
+
     }
 }

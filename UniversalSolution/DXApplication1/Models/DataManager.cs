@@ -61,6 +61,7 @@ namespace DXApplication1.Models
             filter.MaxRate = dbFilter.MaxRate;
             filter.AutoDelete = dbFilter.AutoDelete;
             filter.AutoDeleteTime = dbFilter.AutoDeleteTime;
+            filter.PinnaclePlace = dbFilter.PinnaclePlace;
         }
     }
 }

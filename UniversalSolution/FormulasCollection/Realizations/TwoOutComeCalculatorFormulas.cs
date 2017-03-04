@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using ToolsPortable;
 
 namespace FormulasCollection.Realizations
 {
@@ -33,6 +34,44 @@ namespace FormulasCollection.Realizations
             return new Tuple<string, string>(
                 rate1.ToString(CultureInfo.CurrentCulture),
                 rate2.ToString(CultureInfo.CurrentCulture));
+        }
+
+        public decimal CalculateRatePart(double? currentRate, double? kof1, double? kof2)
+        {
+            decimal res = 0;
+            bool? over = null;
+            // ReSharper disable once PossibleInvalidOperationException
+            var startRate = (decimal)currentRate;
+            var sumRate = currentRate * 2;
+            do
+            {
+                var recommendedRates = GetRecommendedRates(sumRate, kof1, kof2);
+                if (recommendedRates?.Item1.ConvertToDecimalOrNull() == null
+                 || recommendedRates.Item2.ConvertToDecimalOrNull() == null)
+                    break;
+                // ReSharper disable once PossibleInvalidOperationException
+                var resRate = recommendedRates.Item1.ConvertToDecimalOrNull().Value;
+                // ReSharper disable once PossibleInvalidOperationException
+                res = recommendedRates.Item2.ConvertToDecimalOrNull().Value;
+                if (resRate == startRate) break;
+                if (over == null)
+                {
+                    over = resRate > startRate;
+                }
+                if (over.Value)
+                {
+                    if (resRate < startRate)//we can't find value
+                        return 0;
+                    sumRate -= 0.01;
+                }
+                else
+                {
+                    if (resRate > startRate)//we can't find value
+                        return 0;
+                    sumRate += 0.01;
+                }
+            } while (true);
+            return res;
         }
 
         public double? CalculateSummaryRate(params double?[] rates) => rates?.Sum();

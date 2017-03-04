@@ -1,9 +1,8 @@
-﻿#define DisableForkDeletion
+﻿//#define DisableForkDeletion
 using DataSaver;
 using DataSaver.Models;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.DXErrorProvider;
-using DevExpress.XtraLayout.Utils;
 using FormulasCollection.Models;
 using System;
 using System.ComponentModel;
@@ -45,7 +44,7 @@ namespace DXApplication1.Pages
             _autoDeleteTimer.Enabled = false;
 
 #else
-    // ReSharper disable once PossibleInvalidOperationException
+            // ReSharper disable once PossibleInvalidOperationException
             _autoDeleteTimer.Interval = Filter.AutoDeleteTime.Value * 1000;
             _autoDeleteTimer.Enabled = Filter.AutoDelete;
 #endif
@@ -74,6 +73,7 @@ namespace DXApplication1.Pages
             Filter.AutoDelete = dbFilter.AutoDelete;
             Filter.AutoDeleteTime = dbFilter.AutoDeleteTime;
 #endif
+            Filter.PinnaclePlace = dbFilter.PinnaclePlace;
         }
 
         private void UserBind()
@@ -105,6 +105,7 @@ namespace DXApplication1.Pages
                 textEditAutoDeleteTime.EditValue = Filter.AutoDeleteTime;
                 dateTimePickerAfter.DateTime = Filter.AfterTime ?? DateTime.Now.Date;
                 dateTimePickerBefore.DateTime = Filter.BeforeTime ?? DateTime.Now.Date;
+                pinnaclePlaceToggleSwitch.EditValue = Filter.PinnaclePlace;
             }
         }
 
@@ -154,6 +155,7 @@ namespace DXApplication1.Pages
                 Filter.AutoDeleteTime = textEditAutoDeleteTime.EditValue.ConvertToIntOrNull();
                 Filter.AfterTime = dateTimePickerAfter.DateTime;
                 Filter.BeforeTime = dateTimePickerBefore.DateTime;
+                Filter.PinnaclePlace = pinnaclePlaceToggleSwitch.EditValue.ConvertToBool();
             }
         }
 

@@ -1202,12 +1202,13 @@ namespace DataParser.DefaultRealization
                 if (lines[i]._Contains(MarathonTags.newEventID))
                 {
                     _eventid = lines[i].GetEventID();
-
+                    //data-event-name
                     ru = lines[i].TagsContent("data-event-name=");
                 }
 
                 if (lines[i]._Contains(MarathonTags.newTeamName))
                 {
+                    i++;
                     if (name1 == null)
                         name1 = GetAttribut(lines[i]);// line.Substrings(Tags.NameTeam);
                     else name2 = GetAttribut(lines[i]);//line.Substrings(Tags.NameTeam);

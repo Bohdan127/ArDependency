@@ -20,7 +20,8 @@ namespace DXApplication1.Pages
 
         public virtual void OnCalculatorCall() => CalculatorCall?.Invoke(gridView1.GetFocusedRow(), null);
 
-        public SearchPage(bool isSearchPage = true){
+        public SearchPage(bool isSearchPage = true)
+        {
             InitializeComponent();
             Closing += SearchPage_Closing;
             backgroundWorker1.DoWork += BackgroundWorker1_DoWork;
@@ -36,13 +37,13 @@ namespace DXApplication1.Pages
         private void InitAccountingPage()
         {
             Text = "Учет";
-            Icon = Icon.FromHandle(( (Bitmap)imageList1.Images[3] ).GetHicon());
+            Icon = Icon.FromHandle(((Bitmap)imageList1.Images[3]).GetHicon());
         }
 
         private void InitSearchPage()
         {
             Text = "Поиск вилок";
-            Icon = Icon.FromHandle(( (Bitmap)imageList1.Images[2] ).GetHicon());
+            Icon = Icon.FromHandle(((Bitmap)imageList1.Images[2]).GetHicon());
             colMarRate.Visible = false;
             colMarSuccess.Visible = false;
             colPinRate.Visible = false;

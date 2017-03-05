@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchPage));
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.progressBarControl1 = new DevExpress.XtraEditors.ProgressBarControl();
@@ -58,7 +57,7 @@
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem9 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.imageList1 = new System.Windows.Forms.ImageList();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
@@ -257,12 +256,16 @@
             this.colPinRate.Caption = "Ставка на Пиннакл";
             this.colPinRate.FieldName = "PinRate";
             this.colPinRate.Name = "colPinRate";
+            this.colPinRate.Visible = true;
+            this.colPinRate.VisibleIndex = 11;
             // 
             // colPinSuccess
             // 
             this.colPinSuccess.Caption = "Успех на Пиннакле";
             this.colPinSuccess.FieldName = "PinSuccess";
             this.colPinSuccess.Name = "colPinSuccess";
+            this.colPinSuccess.Visible = true;
+            this.colPinSuccess.VisibleIndex = 12;
             // 
             // colProfit
             // 
@@ -272,7 +275,7 @@
             this.colProfit.Name = "colProfit";
             this.colProfit.OptionsColumn.ReadOnly = true;
             this.colProfit.Visible = true;
-            this.colProfit.VisibleIndex = 11;
+            this.colProfit.VisibleIndex = 13;
             this.colProfit.Width = 53;
             // 
             // repositoryItemTextEditPercent

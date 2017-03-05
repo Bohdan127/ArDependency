@@ -252,6 +252,7 @@ namespace DataLoader
                     Console.WriteLine(resP.Success
                                      ? $"Place result {resP.Success} for {recomendedPinnacle} into {fork.BookmakerFirst}"
                                      : $"Place result {resP.Success} with code {resP.Status} and description {resP.Error} for {recomendedPinnacle} into {fork.BookmakerFirst}");
+                    fork.PinRate = recomendedPinnacle.ToString(CultureInfo.CurrentCulture);
                     fork.PinSuccess = $"{resP.Success} {resP.Status} {resP.Error}";
                 }
 #endif

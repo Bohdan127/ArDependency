@@ -1,4 +1,6 @@
-﻿namespace DataParser.Models
+﻿using SiteAccess.Enums;
+
+namespace DataParser.Models
 {
     public class EventWithTotalDictionary
     {
@@ -11,5 +13,11 @@
         public string LineId { get; set; }
 
         public long? LeagueId { get; set; }
+
+        public int MatchPeriod { get; set; }
+
+        public SideType? SideType { get; set; }
+
+        public TeamType? TeamType { get; set; }
     }
 }

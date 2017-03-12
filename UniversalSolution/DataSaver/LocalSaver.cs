@@ -9,6 +9,7 @@ using Raven.Client;
 using Raven.Client.Document;
 using Raven.Client.Linq;
 using Raven.Json.Linq;
+using SiteAccess.Enums;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -241,7 +242,11 @@ namespace DataSaver
                 MarRate = json.DataAsJson.Value<string>("MarRate"),
                 MarSuccess = json.DataAsJson.Value<string>("MarSuccess"),
                 PinRate = json.DataAsJson.Value<string>("PinRate"),
-                PinSuccess = json.DataAsJson.Value<string>("PinSuccess")
+                PinSuccess = json.DataAsJson.Value<string>("PinSuccess"),
+                Period = json.DataAsJson.Value<int>("Period"),
+                SideType = json.DataAsJson.Value<SideType>("SideType"),
+                TeamType = json.DataAsJson.Value<TeamType>("TeamType"),
+
             };
             return result;
         }
@@ -316,7 +321,11 @@ namespace DataSaver
                 MarRate = fork.MarRate,
                 PinRate = fork.PinRate,
                 MarSuccess = fork.MarSuccess,
-                PinSuccess = fork.PinSuccess
+                PinSuccess = fork.PinSuccess,
+
+                Period = fork.Period,
+                SideType = fork.SideType,
+                TeamType = fork.TeamType
             };
             return result;
         }
@@ -355,8 +364,11 @@ namespace DataSaver
                 MarRate = forkRow.MarRate,
                 PinRate = forkRow.PinRate,
                 MarSuccess = forkRow.MarSuccess,
-                PinSuccess = forkRow.PinSuccess
+                PinSuccess = forkRow.PinSuccess,
 
+                Period = forkRow.Period,
+                SideType = forkRow.SideType,
+                TeamType = forkRow.TeamType
             };
             return result;
         }

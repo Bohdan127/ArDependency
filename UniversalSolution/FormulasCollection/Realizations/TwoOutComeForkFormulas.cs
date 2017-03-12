@@ -185,16 +185,15 @@ namespace FormulasCollection.Realizations
                             TypeFirst = eventItem.Type,
                             CoefFirst = eventItem.Coef,
                             TypeSecond = pinEventKey.ToString(CultureInfo.InvariantCulture),
-                            CoefSecond =
-                                pinnacleEvent.TypeCoefDictionary[pinEventKey].ToString(CultureInfo.InvariantCulture),
+                            CoefSecond = pinnacleEvent.ForkDetailDictionary[pinEventKey].TypeCoef.ToString(CultureInfo.InvariantCulture),
                             Sport = eventItem.SportType,
                             MatchDateTime = pinnacleEvent.MatchDateTime,
                             BookmakerSecond = pinKey,
                             BookmakerFirst = eventItem.Event_RU,
                             Type = ForkType.Current,
-                            LineId = pinnacleEvent.TypeLineIdDictionary[pinEventKey],
+                            LineId = pinnacleEvent.ForkDetailDictionary[pinEventKey].LineId,
                             Profit = _calculatorFormulas.GetProfit(Convert.ToDouble(eventItem.Coef),
-                                Convert.ToDouble(pinnacleEvent.TypeCoefDictionary[pinEventKey])),
+                                                                   Convert.ToDouble(pinnacleEvent.ForkDetailDictionary[pinEventKey].TypeCoef)),
                             sn = eventItem.marathonAutoPlay.sn,
                             mn = eventItem.marathonAutoPlay.mn,
                             ewc = eventItem.marathonAutoPlay.ewc,
@@ -203,7 +202,10 @@ namespace FormulasCollection.Realizations
                             ewf = eventItem.marathonAutoPlay.ewf,
                             epr = eventItem.marathonAutoPlay.epr,
                             prices = eventItem.marathonAutoPlay.prices,
-                            selection_key = eventItem.marathonAutoPlay.selection_key
+                            selection_key = eventItem.marathonAutoPlay.selection_key,
+                            Period = pinnacleEvent.ForkDetailDictionary[pinEventKey].Period,
+                            SideType = pinnacleEvent.ForkDetailDictionary[pinEventKey].SideType,
+                            TeamType = pinnacleEvent.ForkDetailDictionary[pinEventKey].TeamType
                         };
                         resList.Add(fork);
                     }
@@ -288,40 +290,20 @@ namespace FormulasCollection.Realizations
                 CultureInfo.CurrentCulture);
         }
 
-        private void RevertValues(Dictionary<string, ResultForForksDictionary> pinnacle, string pinKey)
-        {
-            var pin = pinnacle[pinKey];
-            var tmpDic = new Dictionary<string, double>();
-            foreach (var typeCoef in pin.TypeCoefDictionary)
-            {
-                if (typeCoef.Key == "1")
-                    tmpDic.Add("2", typeCoef.Value);
-                else if (typeCoef.Key == "2")
-                    tmpDic.Add("1", typeCoef.Value);
-                else if (typeCoef.Key.StartsWith("F1"))
-                    tmpDic.Add("F2" + typeCoef.Key.Remove(0, 2), typeCoef.Value);
-                else if (typeCoef.Key.StartsWith("F2"))
-                    tmpDic.Add("F1" + typeCoef.Key.Remove(0, 2), typeCoef.Value);
-                else
-                    tmpDic.Add(typeCoef.Key, typeCoef.Value);
-            }
-            pin.TypeCoefDictionary = tmpDic;
-        }
-
         private List<string> IsAnyForkAll(ResultForForks marEvent, ResultForForksDictionary pinEvent, SportType st)
         {
             var resList = new List<string>();
             try
             {
                 marEvent.Type = marEvent.Type.Trim();
-                var resTypes = SportsConverterTypes.TypeParseAll(marEvent.Type,
-                    st)/*remove it =>*/.Select(c => c.ToString()).ToList();
+                var resTypes = SportsConverterTypes.TypeParseAll(marEvent.Type, st);
+                if (resTypes == null) return resList;
                 foreach (var resType in resTypes)
                 {
-                    if (!pinEvent.TypeCoefDictionary.ContainsKey(resType))
+                    if (!pinEvent.ForkDetailDictionary.ContainsKey(resType))
                         continue;
                     var isFork = CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(),
-                        pinEvent.TypeCoefDictionary[resType],
+                        pinEvent.ForkDetailDictionary[resType].TypeCoef,
                         marEvent,
                         pinEvent);
                     if (isFork)

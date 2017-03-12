@@ -1,4 +1,5 @@
 ﻿using FormulasCollection.Enums;
+using SiteAccess.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -111,6 +112,10 @@ namespace DataSaver.Models
 
         public string PinSuccess { get; set; }
 
+        public SideType? SideType { get; set; }
 
+        public TeamType? TeamType { get; set; }
+
+        public int Period { get; set; }
     }
 }

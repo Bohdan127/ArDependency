@@ -125,6 +125,10 @@
       <Project>{C6982AB9-704A-474F-A303-89B4C4A3D11E}</Project>
       <Name>FormulasCollection</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SiteAccess\SiteAccess.csproj">
+      <Project>{DDC82E86-35CB-4465-B23C-6C341FE9CC36}</Project>
+      <Name>SiteAccess</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="RavenDB\RavenDB_Example.cs" />

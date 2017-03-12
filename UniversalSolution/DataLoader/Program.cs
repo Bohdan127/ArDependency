@@ -232,8 +232,7 @@ namespace DataLoader
                         AcceptBetterLine = true,
                         BetType = BetType.MONEYLINE,
                         Eventid = Convert.ToInt64(fork.PinnacleEventId),
-                        Guid = Guid.NewGuid()
-                                          .ToString(),
+                        Guid = Guid.NewGuid().ToString(),
                         OddsFormat = OddsFormat.DECIMAL,
                         LineId = Convert.ToInt64(fork.LineId),
                         /*
@@ -242,11 +241,13 @@ namespace DataLoader
                          * 1 - 1st Half
                          * 2 - 2nd Half
                          */
-                        PeriodNumber = 0,
+                        PeriodNumber = fork.Period,
                         WinRiskRate = WinRiskType.WIN,
                         // ReSharper disable once PossibleInvalidOperationException
                         Stake = recomendedPinnacle,
-                        SportId = (int)(SportType)Enum.Parse(typeof(SportType), fork.Sport, false)
+                        SportId = (int)(SportType)Enum.Parse(typeof(SportType), fork.Sport, false),
+                         Side = fork.SideType ?? default(SideType) ,
+                         TeamType =fork.TeamType ?? default(TeamType)
                     };
                     var resP = _pinn.MakeBet(betP);
                     Console.WriteLine(resP.Success

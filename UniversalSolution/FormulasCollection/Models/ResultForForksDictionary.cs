@@ -13,8 +13,6 @@ namespace FormulasCollection.Models
 
         public string LeagueName { get; set; }
 
-        public Dictionary<string, double> TypeCoefDictionary { get; set; }
-
-        public Dictionary<string, string> TypeLineIdDictionary { get; set; }
+        public Dictionary<string, ForkDetail> ForkDetailDictionary { get; set; }
     }
 }

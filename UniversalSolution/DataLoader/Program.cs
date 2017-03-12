@@ -230,20 +230,13 @@ namespace DataLoader
                     var betP = new PinnacleBet
                     {
                         AcceptBetterLine = true,
-                        BetType = BetType.MONEYLINE,
+                        BetType = fork.BetType,
                         Eventid = Convert.ToInt64(fork.PinnacleEventId),
                         Guid = Guid.NewGuid().ToString(),
                         OddsFormat = OddsFormat.DECIMAL,
                         LineId = Convert.ToInt64(fork.LineId),
-                        /*
-                         * This represents the period of the match. For example, for soccer we have:
-                         * 0 - Game
-                         * 1 - 1st Half
-                         * 2 - 2nd Half
-                         */
                         PeriodNumber = fork.Period,
                         WinRiskRate = WinRiskType.WIN,
-                        // ReSharper disable once PossibleInvalidOperationException
                         Stake = recomendedPinnacle,
                         SportId = (int)(SportType)Enum.Parse(typeof(SportType), fork.Sport, false),
                          Side = fork.SideType ?? default(SideType) ,

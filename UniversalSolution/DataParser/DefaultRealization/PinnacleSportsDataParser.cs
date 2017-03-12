@@ -69,7 +69,9 @@ namespace DataParser.DefaultRealization
                                         MatchDateTime = matchDateTime,
                                         LeagueId = leagueId,
                                         MatchPeriod = matchPeriod,
-                                        TeamType = TeamType.TEAM1
+                                        TeamType = TeamType.TEAM1,
+                                        SideType = SideType.OVER,
+                                        BetType = BetType.MONEYLINE
                                     });
                                 if (moneyLine.ContainsKey("away") && moneyLine["away"] != null)
                                     resList[id].Add(new EventWithTotalDictionary
@@ -80,7 +82,9 @@ namespace DataParser.DefaultRealization
                                         MatchDateTime = matchDateTime,
                                         LeagueId = leagueId,
                                         MatchPeriod = matchPeriod,
-                                        TeamType = TeamType.TEAM2
+                                        TeamType = TeamType.TEAM2,
+                                        SideType = SideType.OVER,
+                                        BetType = BetType.MONEYLINE
                                     });
                                 if (moneyLine.ContainsKey("draw") && moneyLine["draw"] != null)
                                     resList[id].Add(new EventWithTotalDictionary
@@ -91,7 +95,9 @@ namespace DataParser.DefaultRealization
                                         MatchDateTime = matchDateTime,
                                         LeagueId = leagueId,
                                         MatchPeriod = matchPeriod,
-                                        TeamType = TeamType.DRAW
+                                        TeamType = TeamType.DRAW,
+                                        SideType = SideType.OVER,
+                                        BetType = BetType.MONEYLINE
                                     });
                             }
                             if (period.Value.ContainsKey("spreads") && period.Value["spreads"] != null && matchPeriod == 0)
@@ -108,7 +114,9 @@ namespace DataParser.DefaultRealization
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId,
                                             MatchPeriod = matchPeriod,
-                                            TeamType = TeamType.TEAM1
+                                            TeamType = TeamType.TEAM1,
+                                            SideType = SideType.OVER,
+                                            BetType = BetType.SPREAD
                                         });
 
                                     if (spread.Value.ContainsKey("away") && spread.Value["away"] != null)
@@ -119,7 +127,9 @@ namespace DataParser.DefaultRealization
                                             TotalValue = spread.Value["away"].ToString(),
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId,
-                                            TeamType = TeamType.TEAM2
+                                            TeamType = TeamType.TEAM2,
+                                            SideType = SideType.OVER,
+                                            BetType = BetType.SPREAD
                                         });
                                 }
                             if (period.Value.ContainsKey("totals") && period.Value["totals"] != null)
@@ -164,7 +174,9 @@ namespace DataParser.DefaultRealization
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId,
                                             MatchPeriod = matchPeriod,
-                                            SideType = SideType.OVER
+                                            TeamType = TeamType.DRAW,
+                                            SideType = SideType.OVER,
+                                            BetType = BetType.TOTAL_POINTS
                                         });
                                     }
                                     if (total.Value.ContainsKey("under") && total.Value["under"] != null)
@@ -206,7 +218,9 @@ namespace DataParser.DefaultRealization
                                             MatchDateTime = matchDateTime,
                                             LeagueId = leagueId,
                                             MatchPeriod = matchPeriod,
-                                            SideType = SideType.UNDER
+                                            TeamType = TeamType.DRAW,
+                                            SideType = SideType.UNDER,
+                                            BetType = BetType.TOTAL_POINTS
                                         });
                                     }
                                 }
@@ -227,7 +241,8 @@ namespace DataParser.DefaultRealization
                                             LeagueId = leagueId,
                                             MatchPeriod = matchPeriod,
                                             SideType = SideType.OVER,
-                                            TeamType = TeamType.TEAM1
+                                            TeamType = TeamType.TEAM1,
+                                            BetType = BetType.TEAM_TOTAL_POINTS
                                         });
                                     if (home.ContainsKey("under") && home["under"] != null)
                                         resList[id].Add(new EventWithTotalDictionary
@@ -239,7 +254,8 @@ namespace DataParser.DefaultRealization
                                             LeagueId = leagueId,
                                             MatchPeriod = matchPeriod,
                                             SideType = SideType.UNDER,
-                                            TeamType = TeamType.TEAM1
+                                            TeamType = TeamType.TEAM1,
+                                            BetType = BetType.TEAM_TOTAL_POINTS
                                         });
                                 }
                                 if (teamTotal.ContainsKey("away") && teamTotal["away"] != null)
@@ -256,7 +272,8 @@ namespace DataParser.DefaultRealization
                                             LeagueId = leagueId,
                                             MatchPeriod = matchPeriod,
                                             SideType = SideType.OVER,
-                                            TeamType = TeamType.TEAM2
+                                            TeamType = TeamType.TEAM2,
+                                            BetType = BetType.TEAM_TOTAL_POINTS
                                         });
                                     if (away.ContainsKey("under") && away["under"] != null)
                                         resList[id].Add(new EventWithTotalDictionary
@@ -268,7 +285,8 @@ namespace DataParser.DefaultRealization
                                             LeagueId = leagueId,
                                             MatchPeriod = matchPeriod,
                                             SideType = SideType.UNDER,
-                                            TeamType = TeamType.TEAM2
+                                            TeamType = TeamType.TEAM2,
+                                            BetType = BetType.TEAM_TOTAL_POINTS
                                         });
                                 }
                             }
@@ -374,7 +392,8 @@ namespace DataParser.DefaultRealization
                                 LineId = eventWithTotal.LineId,
                                 Period = eventWithTotal.MatchPeriod,
                                 SideType = eventWithTotal.SideType,
-                                TeamType = eventWithTotal.TeamType
+                                TeamType = eventWithTotal.TeamType,
+                                BetType = eventWithTotal.BetType
                             });
 
                             if (eventWithTotal.LeagueId != null &&
@@ -391,7 +410,8 @@ namespace DataParser.DefaultRealization
                                     LineId = eventWithTotal.LineId,
                                     Period = eventWithTotal.MatchPeriod,
                                     SideType = eventWithTotal.SideType,
-                                    TeamType = eventWithTotal.TeamType
+                                    TeamType = eventWithTotal.TeamType,
+                                    BetType = eventWithTotal.BetType
                                 });
                         }
                     }

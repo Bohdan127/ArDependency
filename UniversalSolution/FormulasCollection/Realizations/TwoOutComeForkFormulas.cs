@@ -205,7 +205,8 @@ namespace FormulasCollection.Realizations
                             selection_key = eventItem.marathonAutoPlay.selection_key,
                             Period = pinnacleEvent.ForkDetailDictionary[pinEventKey].Period,
                             SideType = pinnacleEvent.ForkDetailDictionary[pinEventKey].SideType,
-                            TeamType = pinnacleEvent.ForkDetailDictionary[pinEventKey].TeamType
+                            TeamType = pinnacleEvent.ForkDetailDictionary[pinEventKey].TeamType,
+                            BetType = pinnacleEvent.ForkDetailDictionary[pinEventKey].BetType
                         };
                         resList.Add(fork);
                     }

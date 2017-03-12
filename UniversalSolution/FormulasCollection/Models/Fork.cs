@@ -121,5 +121,7 @@ namespace FormulasCollection.Models
         public TeamType? TeamType { get; set; }
             
         public int Period { get; set; }
+
+        public BetType BetType { get; set; }
     }
 }

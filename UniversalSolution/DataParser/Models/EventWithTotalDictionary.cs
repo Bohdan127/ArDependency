@@ -16,8 +16,10 @@ namespace DataParser.Models
 
         public int MatchPeriod { get; set; }
 
-        public SideType? SideType { get; set; }
+        public SideType SideType { get; set; }
 
-        public TeamType? TeamType { get; set; }
+        public TeamType TeamType { get; set; }
+
+        public BetType BetType { get; set; }
     }
 }

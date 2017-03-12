@@ -246,7 +246,7 @@ namespace DataSaver
                 Period = json.DataAsJson.Value<int>("Period"),
                 SideType = json.DataAsJson.Value<SideType>("SideType"),
                 TeamType = json.DataAsJson.Value<TeamType>("TeamType"),
-
+                BetType = json.DataAsJson.Value<BetType>("Period")
             };
             return result;
         }
@@ -325,7 +325,8 @@ namespace DataSaver
 
                 Period = fork.Period,
                 SideType = fork.SideType,
-                TeamType = fork.TeamType
+                TeamType = fork.TeamType,
+                BetType = fork.BetType
             };
             return result;
         }
@@ -368,7 +369,8 @@ namespace DataSaver
 
                 Period = forkRow.Period,
                 SideType = forkRow.SideType,
-                TeamType = forkRow.TeamType
+                TeamType = forkRow.TeamType,
+                BetType = forkRow.BetType
             };
             return result;
         }

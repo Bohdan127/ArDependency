@@ -62,6 +62,8 @@ namespace DXApplication1.Models
             filter.AutoDelete = dbFilter.AutoDelete;
             filter.AutoDeleteTime = dbFilter.AutoDeleteTime;
             filter.PinnaclePlace = dbFilter.PinnaclePlace;
+            filter.AfterTime = dbFilter.AfterTime;
+            filter.BeforeTime = dbFilter.BeforeTime;
         }
     }
 }

@@ -101,10 +101,10 @@ namespace FormulasCollection.Helpers
             }
             return null;
         }
+
         public static List<string> CheckAsiatType(string _type)
         {
-            // перевірити азіатскі типи на баскетбол 
-            // const double delta = 0.25;
+            // перевірити азіатскі типи на баскетбол const double delta = 0.25;
 
             List<string> result = new List<string>();
             result.Add(_type);
@@ -170,6 +170,21 @@ namespace FormulasCollection.Helpers
             return typeValue.StartsWith("-")
                 ? typeValue
                 : "+" + typeValue.TrimStart('-');
+        }
+
+        public static string ExtendType(this string typeValue, string extention, int period)
+        {
+            if (extention.IsBlank()) return typeValue;
+            if (period <= 0) return typeValue;
+
+            var brace = typeValue.IndexOf('(');
+            if (brace != -1)
+            {
+                var leftPart = typeValue.Substring(0, brace);
+                var rightPart = typeValue.Substring(brace, typeValue.Length - brace);
+                return $"{leftPart}{extention}{period}{rightPart}";
+            }
+            else return $"{typeValue}{extention}{period}";
         }
     }
 }

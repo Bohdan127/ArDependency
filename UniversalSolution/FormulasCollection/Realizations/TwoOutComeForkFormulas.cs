@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ToolsPortable;
+using NewMarathonEvent = MarathonBetLibrary.Model.MarathonEvent;
 
 namespace FormulasCollection.Realizations
 {
@@ -81,18 +82,13 @@ namespace FormulasCollection.Realizations
             return i;
         }
 
-
         public TwoOutComeForkFormulas()
         {
             _calculatorFormulas = new TwoOutComeCalculatorFormulas();
         }
 
-        public bool CheckIsFork(double? coef1, double? coef2, ResultForForks marEvent, ResultForForksDictionary pinEvent)
+        public bool CheckIsFork(double? coef1, double? coef2)
         {
-            if (marEvent.Event_RU.Contains("Манчестер Юнайтед") && marEvent.Event_RU.Contains("Халл Сити"))
-            {
-                int i = 0;
-            }
             if (coef1 == null || coef2 == null) return false;
 
             return _calculatorFormulas.GetProfit(coef1.Value, coef2.Value) > 0;
@@ -223,6 +219,93 @@ namespace FormulasCollection.Realizations
             return resList;
         }
 
+        public List<Fork> GetAllForksDictionary(Dictionary<string, ResultForForksDictionary> pinnacle,
+            List<NewMarathonEvent> marathon)
+        {
+            var resList = new List<Fork>();
+            foreach (var eventItem in marathon)
+            {
+                //todo log it!
+                if (eventItem.EventNameEN == null) continue;
+                string pinKey = null;
+                try
+                {
+                    pinKey = pinnacle.FirstOrDefault(pinEvent => Extentions
+                                     .GetStringSimilarityForSportTeams(eventItem.EventNameEN.FullName,
+                                                                       pinEvent.Key,
+                                                                       true,
+                                                                       eventItem.Date,
+                                                                       pinEvent.Value.MatchDateTime)
+                                      >= 85).Key
+                          ?? pinnacle.FirstOrDefault(pinEvent =>
+                                                                       CalculateSimilarity(eventItem.EventNameEN.FullName,
+                                                                       pinEvent.Key,
+                                                                       eventItem.Date,
+                                                                       pinEvent.Value.MatchDateTime)
+                                      >= 100).Key;
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(eventItem.Date);
+                    _logger.Error(ex.Message);
+                    _logger.Error(ex.StackTrace);
+                }
+
+                if (pinKey == null) continue;
+                var pinnacleEvent = pinnacle[pinKey];
+
+                try
+                {
+                    var forkEvents = IsAnyForkAll(eventItem, pinnacle[pinKey],
+                        eventItem.SportType.EnumParse<SportType>());
+                    if (forkEvents.Count == 0) continue;
+                    foreach (var forkEvent in forkEvents)
+                    {
+                        //fork variable is created for debug, please don't refactor it into resList.Add function
+                        var fork = new Fork
+                        {
+                            League = pinnacleEvent.LeagueName,
+                            MarathonEventId = eventItem.EventId,
+                            PinnacleEventId = pinnacleEvent.EventId,
+                            Event = eventItem.EventNameEN.FullName,
+                            TypeFirst = forkEvent.Mar.NameCoef,
+                            CoefFirst = forkEvent.Mar.ValueCoef,
+                            TypeSecond = forkEvent.Pin,
+                            CoefSecond = pinnacleEvent.ForkDetailDictionary[forkEvent.Pin].TypeCoef.ToString(CultureInfo.InvariantCulture),
+                            Sport = eventItem.SportType,
+                            MatchDateTime = pinnacleEvent.MatchDateTime,
+                            BookmakerSecond = pinKey,
+                            BookmakerFirst = eventItem.EventNameRU.FullName,
+                            Type = ForkType.Current,
+                            LineId = pinnacleEvent.ForkDetailDictionary[forkEvent.Pin].LineId,
+                            Profit = _calculatorFormulas.GetProfit(forkEvent.Mar.ValueCoef,
+                                                                   Convert.ToDouble(pinnacleEvent.ForkDetailDictionary[forkEvent.Pin].TypeCoef)),
+                            sn = forkEvent.Mar.AutoPlay.sn,
+                            mn = forkEvent.Mar.AutoPlay.mn,
+                            ewc = forkEvent.Mar.AutoPlay.ewc,
+                            cid = forkEvent.Mar.AutoPlay.cid,
+                            prt = forkEvent.Mar.AutoPlay.prt,
+                            ewf = forkEvent.Mar.AutoPlay.ewf,
+                            epr = forkEvent.Mar.AutoPlay.epr,
+                            prices = forkEvent.Mar.AutoPlay.prices,
+                            selection_key = forkEvent.Mar.AutoPlay.selection_key,
+                            Period = pinnacleEvent.ForkDetailDictionary[forkEvent].Period,
+                            SideType = pinnacleEvent.ForkDetailDictionary[forkEvent].SideType,
+                            TeamType = pinnacleEvent.ForkDetailDictionary[forkEvent].TeamType,
+                            BetType = pinnacleEvent.ForkDetailDictionary[forkEvent].BetType
+                        };
+                        resList.Add(fork);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                    _logger.Error(ex.StackTrace);
+                }
+            }
+            return resList;
+        }
+
         private DateTime ConvertToDateTimeFromMarathon(string matchDateTime)
         {
             DateTime tmpDateTime;
@@ -243,39 +326,51 @@ namespace FormulasCollection.Realizations
                 case "янв":
                     month = "01";
                     break;
+
                 case "фев":
                     month = "02";
                     break;
+
                 case "мар":
                     month = "03";
                     break;
+
                 case "апр":
                     month = "04";
                     break;
+
                 case "май":
                     month = "05";
                     break;
+
                 case "июн":
                     month = "06";
                     break;
+
                 case "июл":
                     month = "07";
                     break;
+
                 case "авг":
                     month = "08";
                     break;
+
                 case "сен":
                     month = "09";
                     break;
+
                 case "окт":
                     month = "10";
                     break;
+
                 case "ноя":
                     month = "11";
                     break;
+
                 case "дек":
                     month = "12";
                     break;
+
                 default:
                     month = matchDateTime.Substring(2, 3);
                     break;
@@ -304,9 +399,7 @@ namespace FormulasCollection.Realizations
                     if (!pinEvent.ForkDetailDictionary.ContainsKey(resType))
                         continue;
                     var isFork = CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(),
-                        pinEvent.ForkDetailDictionary[resType].TypeCoef,
-                        marEvent,
-                        pinEvent);
+                        pinEvent.ForkDetailDictionary[resType].TypeCoef);
                     if (isFork)
                         resList.Add(resType);
                 }
@@ -315,6 +408,34 @@ namespace FormulasCollection.Realizations
             {
                 _logger.Error(ex.Message);
                 _logger.Error(ex.StackTrace);
+            }
+            return resList;
+        }
+
+        private List<dynamic> IsAnyForkAll(NewMarathonEvent marEvent, ResultForForksDictionary pinEvent, SportType st)
+        {
+            var resList = new List<dynamic>();
+            foreach (var eventForAutoPlay in marEvent.Coefs)
+            {
+                try
+                {
+                    var resTypes = SportsConverterTypes.TypeParseAll(eventForAutoPlay.NameCoef, st);
+                    if (resTypes == null) continue;
+                    foreach (var resType in resTypes)
+                    {
+                        if (!pinEvent.ForkDetailDictionary.ContainsKey(resType))
+                            continue;
+                        var isFork = CheckIsFork(eventForAutoPlay.ValueCoef,
+                            pinEvent.ForkDetailDictionary[resType].TypeCoef);
+                        if (isFork)
+                            resList.Add(new { Mar = eventForAutoPlay, Pin = resType });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                    _logger.Error(ex.StackTrace);
+                }
             }
             return resList;
         }

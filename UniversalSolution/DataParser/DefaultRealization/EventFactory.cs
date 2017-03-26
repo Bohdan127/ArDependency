@@ -108,6 +108,18 @@ namespace DataParser.DefaultRealization
                         TeamType = team,
                         SideType = sideType,
                         BetType = betType
+                    },
+                    new EventWithTotalDictionary
+                    {
+                        LineId = lineId,
+                        TotalType = totalType.ExtendType("PR",matchPeriod),
+                        TotalValue = totalValue,
+                        MatchDateTime = matchDateTime,
+                        LeagueId = leagueId,
+                        MatchPeriod = matchPeriod,
+                        TeamType = team,
+                        SideType = sideType,
+                        BetType = betType
                     }};
 
                 default:

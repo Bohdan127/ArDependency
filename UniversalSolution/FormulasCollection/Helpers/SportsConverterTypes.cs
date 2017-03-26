@@ -54,50 +54,14 @@ namespace FormulasCollection.Helpers
                 }
             }
 
-            if (st == SportType.Soccer && SportTypes.TypeCoefsSoccer.ContainsKey(typeEventTrim))
+            if (SportTypes.TypeCoefsAll.ContainsKey(typeEventTrim))
             {
                 if (isTotal || isFora)
                 {
-                    return CheckAsiatType(SportTypes.TypeCoefsSoccer[typeEventTrim] + "(" + number + ")");
+                    return CheckAsiatType(SportTypes.TypeCoefsAll[typeEventTrim] + "(" + number + ")");
                 }
                 else
-                    return CheckAsiatType(SportTypes.TypeCoefsSoccer[typeEventTrim]);
-            }
-            if (st == SportType.Tennis && SportTypes.TypeCoefsTennis.ContainsKey(typeEventTrim))
-            {
-                if (isTotal || isFora)
-                {
-                    return CheckAsiatType(SportTypes.TypeCoefsTennis[typeEventTrim] + "(" + number + ")");
-                }
-                else
-                    return CheckAsiatType(SportTypes.TypeCoefsTennis[typeEventTrim]);
-            }
-            if (st == SportType.Basketball && SportTypes.TypeCoefsBasketBall.ContainsKey(typeEventTrim))
-            {
-                if (isTotal || isFora)
-                {
-                    return CheckAsiatType(SportTypes.TypeCoefsBasketBall[typeEventTrim] + "(" + number + ")");
-                }
-                else
-                    return CheckAsiatType(SportTypes.TypeCoefsBasketBall[typeEventTrim]);
-            }
-            if (st == SportType.Hockey && SportTypes.TypeCoefsHockey.ContainsKey(typeEventTrim))
-            {
-                if (isTotal || isFora)
-                {
-                    return CheckAsiatType(SportTypes.TypeCoefsHockey[typeEventTrim] + "(" + number + ")");
-                }
-                else
-                    return CheckAsiatType(SportTypes.TypeCoefsHockey[typeEventTrim]);
-            }
-            if (st == SportType.Volleyball && SportTypes.TypeCoefsVolleyBall.ContainsKey(typeEventTrim))
-            {
-                if (isTotal || isFora)
-                {
-                    return CheckAsiatType(SportTypes.TypeCoefsVolleyBall[typeEventTrim] + "(" + number + ")");
-                }
-                else
-                    return CheckAsiatType(SportTypes.TypeCoefsVolleyBall[typeEventTrim]);
+                    return CheckAsiatType(SportTypes.TypeCoefsAll[typeEventTrim]);
             }
             return null;
         }

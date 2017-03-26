@@ -122,41 +122,41 @@ namespace DataParser.DefaultRealization
                             if (period.Value.ContainsKey("teamTotal") && period.Value["teamTotal"] != null)
                             {
                                 //todo
-                                //var teamTotal = period.Value["teamTotal"];
-                                //if (teamTotal.ContainsKey("home") && teamTotal["home"] != null)
-                                //{
-                                //    var home = teamTotal["home"];
-                                //    if (!home.ContainsKey("points") || home["points"] == null) continue;
-                                //    if (home.ContainsKey("over") && home["over"] != null)
-                                //        resList[id].AddRange(eventFactory.CreateEventsWithTotal($"TF1O({home["points"]})".MinimalizeValue(),
-                                //                                                          home["over"].ToString(),
-                                //                                                          TeamType.TEAM1,
-                                //                                                          SideType.OVER,
-                                //                                                          BetType.TEAM_TOTAL_POINTS));
-                                //    if (home.ContainsKey("under") && home["under"] != null)
-                                //        resList[id].AddRange(eventFactory.CreateEventsWithTotal($"TF1U({home["points"]})".MinimalizeValue(),
-                                //                                                          home["under"].ToString(),
-                                //                                                          TeamType.TEAM1,
-                                //                                                          SideType.UNDER,
-                                //                                                          BetType.TEAM_TOTAL_POINTS));
-                                //}
-                                //if (teamTotal.ContainsKey("away") && teamTotal["away"] != null)
-                                //{
-                                //    var away = teamTotal["away"];
-                                //    if (!away.ContainsKey("points") || away["points"] == null) continue;
-                                //    if (away.ContainsKey("over") && away["over"] != null)
-                                //        resList[id].AddRange(eventFactory.CreateEventsWithTotal($"TF2O({away["points"]})".MinimalizeValue(),
-                                //                                                          away["over"].ToString(),
-                                //                                                          TeamType.TEAM2,
-                                //                                                          SideType.OVER,
-                                //                                                          BetType.TEAM_TOTAL_POINTS));
-                                //    if (away.ContainsKey("under") && away["under"] != null)
-                                //        resList[id].AddRange(eventFactory.CreateEventsWithTotal($"TF2U({away["points"]})".MinimalizeValue(),
-                                //                                                          away["under"].ToString(),
-                                //                                                          TeamType.TEAM2,
-                                //                                                          SideType.UNDER,
-                                //                                                          BetType.TEAM_TOTAL_POINTS));
-                                //}
+                                var teamTotal = period.Value["teamTotal"];
+                                if (teamTotal.ContainsKey("home") && teamTotal["home"] != null)
+                                {
+                                    var home = teamTotal["home"];
+                                    if (!home.ContainsKey("points") || home["points"] == null) continue;
+                                    if (home.ContainsKey("over") && home["over"] != null)
+                                        resList[id].AddRange(eventFactory.CreateEventsWithTotal($"TOT1({home["points"]})".MinimalizeValue(),
+                                                                                          home["over"].ToString(),
+                                                                                          TeamType.TEAM1,
+                                                                                          SideType.OVER,
+                                                                                          BetType.TEAM_TOTAL_POINTS));
+                                    if (home.ContainsKey("under") && home["under"] != null)
+                                        resList[id].AddRange(eventFactory.CreateEventsWithTotal($"TUT1({home["points"]})".MinimalizeValue(),
+                                                                                          home["under"].ToString(),
+                                                                                          TeamType.TEAM1,
+                                                                                          SideType.UNDER,
+                                                                                          BetType.TEAM_TOTAL_POINTS));
+                                }
+                                if (teamTotal.ContainsKey("away") && teamTotal["away"] != null)
+                                {
+                                    var away = teamTotal["away"];
+                                    if (!away.ContainsKey("points") || away["points"] == null) continue;
+                                    if (away.ContainsKey("over") && away["over"] != null)
+                                        resList[id].AddRange(eventFactory.CreateEventsWithTotal($"TOT2({away["points"]})".MinimalizeValue(),
+                                                                                          away["over"].ToString(),
+                                                                                          TeamType.TEAM2,
+                                                                                          SideType.OVER,
+                                                                                          BetType.TEAM_TOTAL_POINTS));
+                                    if (away.ContainsKey("under") && away["under"] != null)
+                                        resList[id].AddRange(eventFactory.CreateEventsWithTotal($"TUT2({away["points"]})".MinimalizeValue(),
+                                                                                          away["under"].ToString(),
+                                                                                          TeamType.TEAM2,
+                                                                                          SideType.UNDER,
+                                                                                          BetType.TEAM_TOTAL_POINTS));
+                                }
                             }
                         }
                     }

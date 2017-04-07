@@ -37,8 +37,8 @@ namespace FormulasCollection.Realizations
                 if (source == target) return 200;
                 if (source.Contains(target) || target.Contains(source)) return 200;
 
-                var sourceSplit = source.Split(new[] { " - ", " v " }, StringSplitOptions.None);
-                var targetSplit = target.Split(new[] { " - ", " v ", " @ " }, StringSplitOptions.None);
+                var sourceSplit = source.Split(new[] { " - ", " v ", "#" }, StringSplitOptions.None);
+                var targetSplit = target.Split(new[] { " - ", " v ", " @ ", "#" }, StringSplitOptions.None);
 
                 var stepsToSameOne = ComputeLevenshteinDistance(sourceSplit[0], targetSplit[0]);
                 var stepsToSameTwo = ComputeLevenshteinDistance(sourceSplit[1], targetSplit[1]);
@@ -172,38 +172,36 @@ namespace FormulasCollection.Realizations
                     foreach (var pinEventKey in pinEventKeys)
                     {
                         //fork variable is created for debug, please don't refactor it into resList.Add function
-                        var fork = new Fork
-                        {
-                            League = pinnacleEvent.LeagueName,
-                            MarathonEventId = eventItem.EventId,
-                            PinnacleEventId = pinnacleEvent.EventId,
-                            Event = eventItem.Event,
-                            TypeFirst = eventItem.Type,
-                            CoefFirst = eventItem.Coef,
-                            TypeSecond = pinEventKey.ToString(CultureInfo.InvariantCulture),
-                            CoefSecond = pinnacleEvent.ForkDetailDictionary[pinEventKey].TypeCoef.ToString(CultureInfo.InvariantCulture),
-                            Sport = eventItem.SportType,
-                            MatchDateTime = pinnacleEvent.MatchDateTime,
-                            BookmakerSecond = pinKey,
-                            BookmakerFirst = eventItem.Event_RU,
-                            Type = ForkType.Current,
-                            LineId = pinnacleEvent.ForkDetailDictionary[pinEventKey].LineId,
-                            Profit = _calculatorFormulas.GetProfit(Convert.ToDouble(eventItem.Coef),
-                                                                   Convert.ToDouble(pinnacleEvent.ForkDetailDictionary[pinEventKey].TypeCoef)),
-                            sn = eventItem.marathonAutoPlay.sn,
-                            mn = eventItem.marathonAutoPlay.mn,
-                            ewc = eventItem.marathonAutoPlay.ewc,
-                            cid = eventItem.marathonAutoPlay.cid,
-                            prt = eventItem.marathonAutoPlay.prt,
-                            ewf = eventItem.marathonAutoPlay.ewf,
-                            epr = eventItem.marathonAutoPlay.epr,
-                            prices = eventItem.marathonAutoPlay.prices,
-                            selection_key = eventItem.marathonAutoPlay.selection_key,
-                            Period = pinnacleEvent.ForkDetailDictionary[pinEventKey].Period,
-                            SideType = pinnacleEvent.ForkDetailDictionary[pinEventKey].SideType,
-                            TeamType = pinnacleEvent.ForkDetailDictionary[pinEventKey].TeamType,
-                            BetType = pinnacleEvent.ForkDetailDictionary[pinEventKey].BetType
-                        };
+                        var fork = new Fork();
+                        fork.League = pinnacleEvent.LeagueName;
+                        fork.MarathonEventId = eventItem.EventId;
+                        fork.PinnacleEventId = pinnacleEvent.EventId;
+                        fork.Event = eventItem.Event;
+                        fork.TypeFirst = eventItem.Type;
+                        fork.CoefFirst = eventItem.Coef;
+                        fork.TypeSecond = pinEventKey.ToString(CultureInfo.InvariantCulture);
+                        fork.CoefSecond = pinnacleEvent.ForkDetailDictionary[pinEventKey].TypeCoef.ToString(CultureInfo.InvariantCulture);
+                        fork.Sport = eventItem.SportType;
+                        fork.MatchDateTime = pinnacleEvent.MatchDateTime;
+                        fork.BookmakerSecond = pinKey;
+                        fork.BookmakerFirst = eventItem.Event_RU;
+                        fork.Type = ForkType.Current;
+                        fork.LineId = pinnacleEvent.ForkDetailDictionary[pinEventKey].LineId;
+                        fork.Profit = _calculatorFormulas.GetProfit(Convert.ToDouble(eventItem.Coef),
+                            Convert.ToDouble(pinnacleEvent.ForkDetailDictionary[pinEventKey].TypeCoef));
+                        fork.sn = eventItem.marathonAutoPlay.sn;
+                        fork.mn = eventItem.marathonAutoPlay.mn;
+                        fork.ewc = eventItem.marathonAutoPlay.ewc;
+                        fork.cid = eventItem.marathonAutoPlay.cid;
+                        fork.prt = eventItem.marathonAutoPlay.prt;
+                        fork.ewf = eventItem.marathonAutoPlay.ewf;
+                        fork.epr = eventItem.marathonAutoPlay.epr;
+                        fork.prices = eventItem.marathonAutoPlay.prices;
+                        fork.selection_key = eventItem.marathonAutoPlay.selection_key;
+                        fork.Period = pinnacleEvent.ForkDetailDictionary[pinEventKey].Period;
+                        fork.SideType = pinnacleEvent.ForkDetailDictionary[pinEventKey].SideType;
+                        fork.TeamType = pinnacleEvent.ForkDetailDictionary[pinEventKey].TeamType;
+                        fork.BetType = pinnacleEvent.ForkDetailDictionary[pinEventKey].BetType;
                         resList.Add(fork);
                     }
                 }
@@ -226,7 +224,7 @@ namespace FormulasCollection.Realizations
             foreach (var eventItem in marathon)
             {
                 //todo log it!
-                if (eventItem.EventNameEN == null) continue;
+                if (eventItem?.EventNameEN == null) continue;
                 string pinKey = null;
                 try
                 {
@@ -262,38 +260,37 @@ namespace FormulasCollection.Realizations
                     foreach (var forkEvent in forkEvents)
                     {
                         //fork variable is created for debug, please don't refactor it into resList.Add function
-                        var fork = new Fork
-                        {
-                            League = pinnacleEvent.LeagueName,
-                            MarathonEventId = eventItem.EventId,
-                            PinnacleEventId = pinnacleEvent.EventId,
-                            Event = eventItem.EventNameEN.FullName,
-                            TypeFirst = forkEvent.Mar.NameCoef,
-                            CoefFirst = forkEvent.Mar.ValueCoef,
-                            TypeSecond = forkEvent.Pin,
-                            CoefSecond = pinnacleEvent.ForkDetailDictionary[forkEvent.Pin].TypeCoef.ToString(CultureInfo.InvariantCulture),
-                            Sport = eventItem.SportType,
-                            MatchDateTime = pinnacleEvent.MatchDateTime,
-                            BookmakerSecond = pinKey,
-                            BookmakerFirst = eventItem.EventNameRU.FullName,
-                            Type = ForkType.Current,
-                            LineId = pinnacleEvent.ForkDetailDictionary[forkEvent.Pin].LineId,
-                            Profit = _calculatorFormulas.GetProfit(forkEvent.Mar.ValueCoef,
-                                                                   Convert.ToDouble(pinnacleEvent.ForkDetailDictionary[forkEvent.Pin].TypeCoef)),
-                            sn = forkEvent.Mar.AutoPlay.sn,
-                            mn = forkEvent.Mar.AutoPlay.mn,
-                            ewc = forkEvent.Mar.AutoPlay.ewc,
-                            cid = forkEvent.Mar.AutoPlay.cid,
-                            prt = forkEvent.Mar.AutoPlay.prt,
-                            ewf = forkEvent.Mar.AutoPlay.ewf,
-                            epr = forkEvent.Mar.AutoPlay.epr,
-                            prices = forkEvent.Mar.AutoPlay.prices,
-                            selection_key = forkEvent.Mar.AutoPlay.selection_key,
-                            Period = pinnacleEvent.ForkDetailDictionary[forkEvent].Period,
-                            SideType = pinnacleEvent.ForkDetailDictionary[forkEvent].SideType,
-                            TeamType = pinnacleEvent.ForkDetailDictionary[forkEvent].TeamType,
-                            BetType = pinnacleEvent.ForkDetailDictionary[forkEvent].BetType
-                        };
+                        // ReSharper disable once UseObjectOrCollectionInitializer
+                        var fork = new Fork();
+                        fork.League = pinnacleEvent.LeagueName;
+                        fork.MarathonEventId = eventItem.EventId;
+                        fork.PinnacleEventId = pinnacleEvent.EventId;
+                        fork.Event = eventItem.EventNameEN.FullName;
+                        fork.TypeFirst = forkEvent.Mar.NameCoef;
+                        fork.CoefFirst = forkEvent.Mar.ValueCoef.ToString();
+                        fork.TypeSecond = forkEvent.Pin;
+                        fork.CoefSecond = pinnacleEvent.ForkDetailDictionary[forkEvent.Pin].TypeCoef.ToString(CultureInfo.InvariantCulture);
+                        fork.Sport = eventItem.SportType;
+                        fork.MatchDateTime = pinnacleEvent.MatchDateTime;
+                        fork.BookmakerSecond = pinKey;
+                        fork.BookmakerFirst = eventItem.EventNameRU.FullName;
+                        fork.Type = ForkType.Current;
+                        fork.LineId = pinnacleEvent.ForkDetailDictionary[forkEvent.Pin].LineId;
+                        fork.Profit = _calculatorFormulas.GetProfit(forkEvent.Mar.ValueCoef,
+                            Convert.ToDouble(pinnacleEvent.ForkDetailDictionary[forkEvent.Pin].TypeCoef));
+                        fork.sn = forkEvent.Mar.AutoPlay.sn;
+                        fork.mn = forkEvent.Mar.AutoPlay.mn;
+                        fork.ewc = forkEvent.Mar.AutoPlay.ewc;
+                        fork.cid = forkEvent.Mar.AutoPlay.cid;
+                        fork.prt = forkEvent.Mar.AutoPlay.prt;
+                        fork.ewf = forkEvent.Mar.AutoPlay.ewf;
+                        fork.epr = forkEvent.Mar.AutoPlay.epr;
+                        fork.prices = forkEvent.Mar.AutoPlay.prices;
+                        fork.selection_key = forkEvent.Mar.AutoPlay.selection_key;
+                        fork.Period = pinnacleEvent.ForkDetailDictionary[forkEvent.Pin].Period;
+                        fork.SideType = pinnacleEvent.ForkDetailDictionary[forkEvent.Pin].SideType;
+                        fork.TeamType = pinnacleEvent.ForkDetailDictionary[forkEvent.Pin].TeamType;
+                        fork.BetType = pinnacleEvent.ForkDetailDictionary[forkEvent.Pin].BetType;
                         resList.Add(fork);
                     }
                 }

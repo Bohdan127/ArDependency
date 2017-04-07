@@ -80,6 +80,10 @@ namespace DataSaver.Models
         /// </summary>
         public ForkType Type { get; set; }
 
+        /// <summary>
+        /// Profit from Fork
+        /// </summary>
+        public double Profit { get; set; }
 
         /// <summary>
         /// Id of event for placing bet in Pinnacle

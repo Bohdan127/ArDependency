@@ -28,9 +28,6 @@ namespace DXApplication1.Models
 
             foreach (var fork in forks)
             {
-                fork.Profit = _calculatorFormulas.GetProfit(
-                    fork.CoefFirst.ConvertToDoubleOrNull() ?? 0d,
-                    fork.CoefSecond.ConvertToDoubleOrNull() ?? 0d);
                 fork.prices = null;
             }
 

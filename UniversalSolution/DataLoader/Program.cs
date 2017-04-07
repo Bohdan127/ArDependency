@@ -121,7 +121,7 @@ namespace DataLoader
 
 #else
                 //always loading all sports
-                var sportsToLoading = new[] { SportType.Tennis, SportType.Hockey, SportType.Soccer, SportType.Volleyball, SportType.Basketball };
+                var sportsToLoading = new[] { SportType.Hockey, SportType.Tennis, SportType.Soccer, SportType.Volleyball, SportType.Basketball };
 #endif
 
 #if PlaceBets
@@ -173,9 +173,11 @@ namespace DataLoader
                     }
                     var pinSport = LoadPinacleDictionary(sportType);
 #if NewMarathon
+                    Console.WriteLine("Start loading Marathon");
                     _marLoading = new Loading(_marathonSportType);
                     _marLoading.LoadingEvent();
                     var marSport = _marLoading.GetEvents();
+                    Console.WriteLine($"Was loaded {marSport.Count}");
                     var forks = GetForksDictionary(sportType, pinSport, marSport);
 #else
                     var marSport = LoadMarathon(sportType);

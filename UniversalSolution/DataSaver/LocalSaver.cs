@@ -123,8 +123,7 @@ namespace DataSaver
             return rowsForDelete;
         }
 
-        public bool IsSameFork(Fork fNew,
-            ForkRow fBase)
+        public bool IsSameFork(Fork fNew, ForkRow fBase)
         {
             // ReSharper disable once JoinDeclarationAndInitializer
             bool bRes;
@@ -246,7 +245,8 @@ namespace DataSaver
                 Period = json.DataAsJson.Value<int>("Period"),
                 SideType = json.DataAsJson.Value<SideType>("SideType"),
                 TeamType = json.DataAsJson.Value<TeamType>("TeamType"),
-                BetType = json.DataAsJson.Value<BetType>("Period")
+                BetType = json.DataAsJson.Value<BetType>("BetType"),
+                Profit = json.DataAsJson.Value<double>("Profit")
             };
             return result;
         }
@@ -326,7 +326,8 @@ namespace DataSaver
                 Period = fork.Period,
                 SideType = fork.SideType,
                 TeamType = fork.TeamType,
-                BetType = fork.BetType
+                BetType = fork.BetType,
+                Profit = fork.Profit
             };
             return result;
         }
@@ -370,7 +371,8 @@ namespace DataSaver
                 Period = forkRow.Period,
                 SideType = forkRow.SideType,
                 TeamType = forkRow.TeamType,
-                BetType = forkRow.BetType
+                BetType = forkRow.BetType,
+                Profit = forkRow.Profit
             };
             return result;
         }

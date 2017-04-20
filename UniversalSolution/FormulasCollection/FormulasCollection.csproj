@@ -36,9 +36,6 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="MarathonBetLibrary">
-      <HintPath>..\MarathonBetLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.3.6\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
@@ -95,6 +92,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MarathonBetLibrary\MarathonBetLibrary.csproj">
+      <Project>{b1e83a0f-594b-4da5-a787-bc95a7f99765}</Project>
+      <Name>MarathonBetLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SiteAccess\SiteAccess.csproj">
       <Project>{DDC82E86-35CB-4465-B23C-6C341FE9CC36}</Project>
       <Name>SiteAccess</Name>

@@ -172,13 +172,24 @@ namespace DataLoader
                             break;
                     }
                     var pinSport = LoadPinacleDictionary(sportType);
+                    var forks = new List<Fork>();
 #if NewMarathon
                     Console.WriteLine("Start loading Marathon");
-                    _marLoading = new Loading(_marathonSportType);
-                    _marLoading.LoadingEvent();
-                    var marSport = _marLoading.GetEvents();
-                    Console.WriteLine($"Was loaded {marSport.Count}");
-                    var forks = GetForksDictionary(sportType, pinSport, marSport);
+                    try
+                    {
+                        _marLoading = new Loading(_marathonSportType);
+                        _marLoading.LoadingEvent();
+                        var marSport = _marLoading.GetEvents();
+                        Console.WriteLine($"Was loaded {marSport.Count}");
+                        forks = GetForksDictionary(sportType, pinSport, marSport);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                        Console.WriteLine("Error with Marathon. Skip current loading.");
+                        continue;
+                    }
+
 #else
                     var marSport = LoadMarathon(sportType);
                     var forks = GetForksDictionary(sportType, pinSport, marSport);

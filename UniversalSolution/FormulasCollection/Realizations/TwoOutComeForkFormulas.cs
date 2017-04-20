@@ -228,17 +228,22 @@ namespace FormulasCollection.Realizations
                 string pinKey = null;
                 try
                 {
+
+                    //if (eventItem.Date.Length <= 5) //for all times like "00:00"
+                    //    eventItem.Date = DateTime.Now.ToString(CultureInfo.CurrentCulture);
                     pinKey = pinnacle.FirstOrDefault(pinEvent => Extentions
                                      .GetStringSimilarityForSportTeams(eventItem.EventNameEN.FullName,
                                                                        pinEvent.Key,
                                                                        true,
                                                                        eventItem.Date,
+                                                                       //ConvertToDateTimeFromMarathon(eventItem.Date),
                                                                        pinEvent.Value.MatchDateTime)
                                       >= 85).Key
                           ?? pinnacle.FirstOrDefault(pinEvent =>
                                                                        CalculateSimilarity(eventItem.EventNameEN.FullName,
                                                                        pinEvent.Key,
                                                                        eventItem.Date,
+                                                                       //ConvertToDateTimeFromMarathon(eventItem.Date),
                                                                        pinEvent.Value.MatchDateTime)
                                       >= 100).Key;
                 }

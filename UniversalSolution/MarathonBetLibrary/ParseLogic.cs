@@ -60,9 +60,9 @@ namespace MarathonBetLibrary
                 eventBet.EventNameRU = ParseTools.CreateEventName(nameEventRU, eventBet.Queue);
                 eventBet.EventId = eventId;
                 eventBet.LeguaId = Regex.Match(HTML, Tags.CategoryId).Groups[1].Value;
-                //eventBet.Date = ParseTools.ConvertStringToDateTime(Helper.GetDate(HTML));
+                eventBet.Date = ParseTools.ConvertStringToDateTime(Helper.GetDate(HTML));
                 //eventBet.Date = Helper.GetDate(HTML);
-                eventBet.Date = ParseTools.ConvertStringToDateTime(Regex.Match(HTML, Tags.DateTime).Value);
+                //eventBet.Date = ParseTools.ConvertStringToDateTime(Regex.Match(HTML, Tags.DateTime).Value);
                 eventBet.isLive = Convert.ToBoolean(ParseTools.RegexByTags(HTML, Tags.IsLive));
                 eventBet.SportType = sportType.ToString();
 

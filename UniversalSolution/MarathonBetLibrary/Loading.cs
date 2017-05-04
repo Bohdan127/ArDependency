@@ -1,4 +1,4 @@
-﻿#define OneThread
+﻿//#define OneThread
 
 using MarathonBetLibrary.Enums;
 using MarathonBetLibrary.Model;

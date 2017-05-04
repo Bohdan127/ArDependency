@@ -1,5 +1,5 @@
-﻿#define PlaceBets
-//#define TestSoccer
+﻿//#define PlaceBets
+#define TestSoccer
 //#define TestPinnacleOnly
 #define NewMarathon
 
@@ -117,7 +117,7 @@ namespace DataLoader
                 Console.WriteLine($"Anti Gate Code = '{_currentUser.AntiGateCode}'");
 
 #if TestSoccer
-                var sportsToLoading = new[] { SportType.Hockey };
+                var sportsToLoading = new[] { SportType.Soccer };
 
 #else
                 //always loading all sports

@@ -88,31 +88,41 @@ namespace MarathonBetLibrary.Tools
         {
             //21 мар 16:30
             //20:30
-            string year = string.Empty;
-            string month = string.Empty;
-            string day = string.Empty;
+            bool haveTime = date.Contains(":");
+
+            int year = default(int);
+            int month = default(int);
+            int day = default(int);
+            int hours = default(int);
+            int minutes = default(int);
+
             string time = string.Empty;
 
             date = date.Trim();
             DateTime dateTime = DateTime.Now;
+            year = DateTime.Now.Year;
             if (!date.Contains(" "))
             {
-                year = DateTime.Now.Year.ToString();
-                month = DateTime.Now.Month.ToString();
-                day = DateTime.Now.Day.ToString();
+                month = DateTime.Now.Month;
+                day = DateTime.Now.Day;
                 time = date;
             }
             else
             {
                 string[] partDate = date.Split(' ');
-                year = DateTime.Now.Year.ToString();
-                month = DateFormatHelper.DateFormat[partDate[1]];
-                day = partDate[0];
-                time = partDate[2];
+                month = Int32.Parse(DateFormatHelper.DateFormat[partDate[1]]);
+                day = Int32.Parse(partDate[0]);
+                if (haveTime)
+                    time = partDate[2];
+            }
+            if (!string.IsNullOrEmpty(time) && haveTime)
+            {
+                hours = Int32.Parse(time.Split(':')[0]);
+                minutes = Int32.Parse(time.Split(':')[1]);
             }
             try
             {
-                dateTime = DateTime.Parse(day + "/" + month + "/" + year + " " + time);
+                dateTime = new DateTime(year, month, day, hours, minutes,0);
             }
             catch
             {

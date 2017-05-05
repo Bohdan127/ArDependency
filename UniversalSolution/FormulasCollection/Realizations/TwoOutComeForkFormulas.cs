@@ -257,6 +257,10 @@ namespace FormulasCollection.Realizations
                 if (pinKey == null) continue;
                 var pinnacleEvent = pinnacle[pinKey];
 
+
+                if (NeedReOrder(pinKey, eventItem.EventNameEN.NameTeam1))
+                    ReOrder(pinnacleEvent);
+
                 try
                 {
                     var forkEvents = IsAnyForkAll(eventItem, pinnacle[pinKey],
@@ -306,6 +310,46 @@ namespace FormulasCollection.Realizations
                 }
             }
             return resList;
+        }
+
+        private void ReOrder(ResultForForksDictionary pinnacleEvent)
+        {
+            //copy current types
+            var tmpForkDetailDictionary = new Dictionary<string,ForkDetail>();
+            foreach (var forkDetail in pinnacleEvent.ForkDetailDictionary)
+            {
+                tmpForkDetailDictionary.Add(forkDetail.Key,forkDetail.Value);
+            }
+            //clear dictionary to not violate key duplication
+            pinnacleEvent.ForkDetailDictionary.Clear();
+            //revert types
+            foreach (var forkDetail in tmpForkDetailDictionary)
+            {
+                pinnacleEvent.ForkDetailDictionary.Add(ConvertKey(forkDetail.Key),forkDetail.Value);
+            }
+        }
+
+        private string ConvertKey(string forkDetailKey)
+        {
+            //we will convert only 1,2,F1,F2,TUT1,TOT1,TUT2 and TOT2, but for now we will not convert TU and TO
+            if (forkDetailKey.Length > 1)
+            {
+                //it will always have '('
+                return forkDetailKey.Split('(')[0].EndsWith("1")
+                    ? $"{forkDetailKey.Split('(')[0].TrimEnd('1')}2({forkDetailKey.Split('(')[1]}"
+                    : $"{forkDetailKey.Split('(')[0].TrimEnd('2')}1({forkDetailKey.Split('(')[1]}";
+            }
+            if (forkDetailKey == "1") return "2";
+            if (forkDetailKey == "2") return "1";
+            //it will be Draw
+            return forkDetailKey;
+        }
+
+        private bool NeedReOrder(string pinKey, string nameTeam1)
+        {
+            //pinKey always will have teams split by '-'
+            return Extentions.GetStringSimilarityInPercent(pinKey.Split('-')[0], nameTeam1, true) <
+                   Extentions.GetStringSimilarityInPercent(pinKey.Split('-')[1], nameTeam1, true);
         }
 
         private DateTime ConvertToDateTimeFromMarathon(string matchDateTime)

@@ -1,5 +1,5 @@
 ﻿//#define PlaceBets
-#define TestSoccer
+//#define TestSoccer
 //#define TestPinnacleOnly
 #define NewMarathon
 

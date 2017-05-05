@@ -64,7 +64,11 @@ namespace MarathonBetLibrary.Tools
             try
             {
                 string result = "ERROR_ASIAT";
-                string[] split = string.Join("", ParseTools.RegexByTagsMany(sn, "(([-]|[+]|[0-9]|[.]|[0-9]*)(,*)([-]|[+]|[0-9]|[.]|[0-9]*))")).Replace(" ", "").Split(',');
+                string[] split;
+                if (sn.Contains("(") && sn.Contains(")"))
+                    split = sn.Split('(', ')')[1].Split(',');
+                else
+                    split = string.Join("", ParseTools.RegexByTagsMany(sn, "(([-]|[+]|[0-9]|[.]|[0-9]*)(,*)([-]|[+]|[0-9]|[.]|[0-9]*))")).Replace(" ", "").Split(',');
                 double num1 = Double.Parse(CheckCharacters(split[0]));
                 double num2 = Double.Parse(CheckCharacters(split[1]));
                 result = ((num1 + num2) / 2).ToString();

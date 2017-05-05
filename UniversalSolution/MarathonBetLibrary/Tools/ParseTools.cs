@@ -217,6 +217,10 @@ namespace MarathonBetLibrary.Tools
             if ("ERROR".Equals(result))
             {
             }
+            if (mn.Contains("минут"))
+            {
+                result = "[" + "]";
+            }
             return result;
         }
 

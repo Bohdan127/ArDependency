@@ -196,7 +196,7 @@ namespace MarathonBetLibrary.Tools
 
             }
             #endregion
-            else if (mn.Contains("победа в матче"))// назва команди      венгрия
+            else if (mn.Equals("победа в матче"))// назва команди      венгрия
             {
                 result = Results(EventNameRU, sn, mn);
             }
@@ -344,6 +344,10 @@ namespace MarathonBetLibrary.Tools
         private static string Results(NameEvent EventNameRU, string sn, string mn)
         {
             string result = "ERROR";
+            if(mn.Equals("победа в матче"))
+            {
+                result = Helper.CheckPositionForNameTeam(sn, EventNameRU);
+            }
             if (sn.Contains(CoefTypes.WINS))
             {
                 if (!sn.Contains(CoefTypes.DRAW))

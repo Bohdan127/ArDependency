@@ -13,6 +13,7 @@ namespace MarathonBetLibrary.Setup
 
         public static string WINS = "победа";
         public static string DRAW = "ничья";
+        public static string OR = "или";
 
         public static string WINS_WITH_FORA = "победа с учетом форы";
         public static string WINS_WITH_ASIAT_FORA = "победа с учетом азиатской форы";

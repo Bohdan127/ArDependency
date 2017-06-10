@@ -223,6 +223,10 @@ namespace FormulasCollection.Realizations
             var resList = new List<Fork>();
             foreach (var eventItem in marathon)
             {
+                if (eventItem == null)
+                {
+
+                }
                 //todo log it!
                 if (eventItem?.EventNameEN == null) continue;
                 string pinKey = null;
@@ -348,8 +352,8 @@ namespace FormulasCollection.Realizations
         private bool NeedReOrder(string pinKey, string nameTeam1)
         {
             //pinKey always will have teams split by '-'
-            return Extentions.GetStringSimilarityInPercent(pinKey.Split('-')[0], nameTeam1, true) <
-                   Extentions.GetStringSimilarityInPercent(pinKey.Split('-')[1], nameTeam1, true);
+            return Extentions.GetStringSimilarityInPercent(pinKey.Split('#')[0], nameTeam1, true) <
+                   Extentions.GetStringSimilarityInPercent(pinKey.Split('#')[1], nameTeam1, true);
         }
 
         private DateTime ConvertToDateTimeFromMarathon(string matchDateTime)

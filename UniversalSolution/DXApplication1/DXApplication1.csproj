@@ -226,6 +226,7 @@
     </Compile>
     <EmbeddedResource Include="XtraForm1.resx">
       <DependentUpon>XtraForm1.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="DXApplication1_TemporaryKey.pfx" />

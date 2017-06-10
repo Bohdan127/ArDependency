@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarathonBetLibrary.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,5 +51,27 @@ namespace MarathonBetLibrary.Setup
         public static string Date { get { return "class=\"date \""; } }
 
 
+    }
+    public class FilterTypeCoef
+    {
+        private bool winsResult; //результат 1; 2; X; 1X; 2X
+        private bool winWithFora;
+        private bool winWithTotal;
+        private bool summaryCountGame; // счет матча
+
+        private List<string> limitResult;
+        private List<string> limitFora;
+        private List<string> limitTotal;
+        private List<string> limitForAll;
+        private bool Filter(SportType sportType, string value)
+        {
+            bool result = false;
+            return result;
+        }
+
+        private bool WinsResult { get { return this.winsResult; } set { this.winsResult = value; } }
+        private bool WinWithFora { get { return this.winWithFora; } set { this.winWithFora = value; } }
+        private bool WinWithTotal { get { return this.winWithTotal; } set { this.winWithTotal = value; } }
+        private bool SummaryCountGame { get { return this.summaryCountGame; } set { this.summaryCountGame = value; } }
     }
 }

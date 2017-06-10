@@ -205,6 +205,10 @@ namespace MarathonBetLibrary.Tools
                 if (!_eventsID.Any(x => x.Equals(id)))
                     _eventsID.Add(id);
             }
+            foreach(var e in HTML.Split('\n'))
+            {
+
+            }
             return _eventsID.Count < 2;
         }
     }

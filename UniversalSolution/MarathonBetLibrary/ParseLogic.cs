@@ -75,7 +75,7 @@ namespace MarathonBetLibrary
                         Recid = eventId,
                         AutoPlay = autoPlay,
                         isAsiat = isAsiat,
-                        NameCoef = ParseTools.TypeCoef(eventBet.EventNameRU, autoPlay.sn, autoPlay.mn, isAsiat),
+                        NameCoef = ParseTools.TypeCoef_new(eventBet.EventNameRU, autoPlay.sn, autoPlay.mn, isAsiat),
                         ValueCoef = Double.Parse(autoPlay.epr),
                         Description = autoPlay.mn + $"[{autoPlay.sn}]"
                     });

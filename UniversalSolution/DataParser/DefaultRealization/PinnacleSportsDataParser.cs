@@ -190,7 +190,7 @@ namespace DataParser.DefaultRealization
                         if (id == null) continue;
                         //System.Diagnostics.Debug.WriteLine(sportEvent.Value["status"]);
                         if (!resList.ContainsKey(id.Value))
-                            resList.Add(id.Value, $"{sportEvent.Value["home"]} - {sportEvent.Value["away"]}".Replace("\"", ""));
+                            resList.Add(id.Value, $"{sportEvent.Value["home"]} # {sportEvent.Value["away"]}".Replace("\"", ""));
                     }
                 }
             }

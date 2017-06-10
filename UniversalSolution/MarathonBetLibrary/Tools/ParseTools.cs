@@ -122,7 +122,7 @@ namespace MarathonBetLibrary.Tools
             }
             try
             {
-                dateTime = new DateTime(year, month, day, hours, minutes,0);
+                dateTime = new DateTime(year, month, day, hours, minutes, 0);
             }
             catch
             {
@@ -131,7 +131,150 @@ namespace MarathonBetLibrary.Tools
 
             return dateTime;
         }
+        public static string TypeCoef_new(NameEvent EventNameRU, string sn, string mn, bool isAsiat)
+        {
+            sn = sn.ToLower();
+            mn = mn.ToLower();
 
+            if (sn.Contains("&#39;"))
+            {
+                sn = sn.Replace("&#39;", "'");
+            }
+            if (mn.Contains("&#39;"))
+            {
+                mn = mn.Replace("&#39;", "'");
+            }
+
+            string result = string.Empty;
+            #region[mn.Contains("результат"))]
+            if (mn.Equals("результат") || mn.Equals("результат матча"))
+            {
+                result = Results(EventNameRU, sn, mn);
+            }
+            else if (mn.Equals("тотал очков наименее результативной четверти"))//Меньше 31.5   Больше 31.5  Нечет  Чет
+            {
+
+            }
+            else if (mn.Contains("победа по результату овертайма"))//Победа по результату овертайма + назва команди     Да Нет
+            {
+
+            }
+            else if (mn.Contains("победа по результату основного времени"))//Победа по результату основного времени + назва команди     Да Нет
+            {
+
+            }
+            else if (mn.Contains("чемпион мира по результату основного времени"))//Чемпион мира по результату основного времени + назва команди(Любая команда)     Да Нет
+            {
+
+            }
+            else if (mn.Contains("чемпион мира по результату дополнительного времени"))//Чемпион мира по результату дополнительного времени + назва команди(Любая команда)     Да Нет
+            {
+
+            }
+            else if (mn.Equals("тотал очков самой результативной четверти"))//Меньше 43.5  Больше 43.5   Нечет  Чет
+            {
+
+            }
+            else if (mn.Equals("тотал очков наименее результативной четверти"))//Меньше 43.5  Больше 43.5   Нечет  Чет
+            {
+
+            }
+            else if (mn.Contains("3-е место по результату послематчевых пенальти"))//3-е место по результату послематчевых пенальти + назва команди(Любая команда)     Да Нет
+            {
+
+            }
+            else if (mn.Contains("3-е место по результату дополнительного времени"))//3-е место по результату дополнительного времени + назва команди(Любая команда)     Да Нет
+            {
+
+            }
+            else if (mn.Contains("3-е место по результату основного времени"))//3-е место по результату основного времени + назва команди(Любая команда)     Да Нет
+            {
+
+            }
+            else if (mn.Contains("чемпион мира по результату послематчевых пенальти"))//чемпион мира по результату послематчевых пенальти + назва команди(Любая команда)     Да Нет
+            {
+
+            }
+            #endregion
+            else if (mn.Contains("победа в матче "))// назва команди      венгрия
+            {
+                result = Results(EventNameRU, sn, mn);
+            }
+
+            #region[mn.Contains("победа") && mn.Contains("учетом") && mn.Contains("форы")]
+            else if (mn.Equals("победа с учетом форы"))//гранд-рапидс гриффинз (+1.5)
+            {
+                result = Fora(EventNameRU, sn, mn, false);
+            }
+            else if (mn.Contains("победа с учетом форы") && mn.Contains("период"))//гранд-рапидс гриффинз (+1.5)
+            {
+                result = Fora(EventNameRU, sn, mn, false);
+            }
+            else if (mn.Contains("победа с учетом форы") && mn.Contains("геймам"))//гранд-рапидс гриффинз (+1.5)
+            {
+                result = Fora(EventNameRU, sn, mn, false);
+            }
+            else if (mn.Contains("победа с учетом форы") && mn.Contains("сетам"))//гранд-рапидс гриффинз (+1.5)
+            {
+                result = Fora(EventNameRU, sn, mn, false);
+            }
+            else if (mn.Contains("победа с учетом форы") && mn.Contains("тайм"))//гранд-рапидс гриффинз (+1.5)
+            {
+                result = Fora(EventNameRU, sn, mn, false);
+            }
+            else if (mn.Contains("победа с учетом форы") && mn.Contains("четверть"))//гранд-рапидс гриффинз (+1.5)
+            {
+                result = Fora(EventNameRU, sn, mn, false);
+            }
+            else if (mn.Contains("победа с учетом форы") && mn.Contains("половина"))//гранд-рапидс гриффинз (+1.5)
+            {
+                result = Fora(EventNameRU, sn, mn, false);
+            }
+            else if (mn.Contains("партии с учетом форы по очкам"))//португалия (+4)
+            {
+
+            }
+            else if (mn.Equals("победа в серии с учетом форы по матчам"))//питтсбург пингвинз (-1.5) - да
+            {
+
+            }
+            else if (mn.Equals("победа с учетом азиатской форы"))//питтсбург пингвинз (-1,-1.5)
+            {
+                result = Fora(EventNameRU, sn, mn, isAsiat);
+            }
+            #endregion
+            #region[тотал голов]
+            else if (mn.Equals("тотал голов"))// больше 7.5
+            {
+                result = Total(EventNameRU, sn, mn, false);
+            }
+            else if (mn.Equals("азиатский тотал голов"))//меньше 3,3.5
+            {
+                result = Total(EventNameRU, sn, mn, true);
+            }
+            else if (mn.Contains("тотал голов") && mn.Contains("период"))//меньше 1
+            {
+                result = Total(EventNameRU, sn, mn, false);
+            }
+            else if (mn.Contains("тотал голов") && mn.Contains("тайм"))//меньше 1
+            {
+                result = Total(EventNameRU, sn, mn, false);
+            }
+            else if (mn.Contains("тотал голов") && mn.Contains("минуту"))//меньше 1
+            {
+
+            }
+            else if (mn.Contains("тотал голов") && (mn.Contains(EventNameRU.NameTeam1.ToLower()) || mn.Contains(EventNameRU.NameTeam2.ToLower())))//тотал голов (сиракьюс кранч)                          больше 3
+            {
+                result = Total(EventNameRU, sn, mn, false);
+            }
+            #endregion
+            else
+            {
+
+            }
+            return result;
+        }
         public static string TypeCoef(NameEvent EventNameRU, string sn, string mn, bool isAsiat)
         {
             sn = sn.ToLower();
@@ -143,37 +286,54 @@ namespace MarathonBetLibrary.Tools
             }
             else if (mn.Equals("победа в матче"))
             {
+
                 result = ResultsForVolleyball(EventNameRU, sn, mn);
             }
             else if (mn.Contains("победа") && mn.Contains("учетом") && mn.Contains("форы"))
             {
-                result = Fora(EventNameRU, sn, mn, isAsiat);
+
+                if (mn.Equals("победа учетом форы"))
+                {
+                    result = Fora(EventNameRU, sn, mn, isAsiat);
+                }
+                else
+                {
+
+                }
             }
-            else if (mn.Contains("тотал голов") || mn.Contains("тотал матча по очкам"))
+            else if (mn.Contains("тотал голов")/* || mn.Contains("тотал матча по очкам")*/)
             {
-                result = Total(EventNameRU, sn, mn, isAsiat);
+                TypeCoef_new(EventNameRU, sn, mn, isAsiat);
+                if (mn.Equals("тотал голов"))
+                {
+                    result = Total(EventNameRU, sn, mn, isAsiat);
+                }
+                else
+                {
+
+                }
             }
-            else if (mn.Contains("счет матча"))
-            {
-            }
-            else if (sn.Equals("да") || sn.Equals("нет"))
-            {
-            }
-            else if (mn.Equals("тайм / матч"))
-            {
-            }
-            else if (mn.Equals("количество голов"))
-            {
-            }
-            else if (mn.Equals("команда забьет первой"))
-            {
-            }
-            else if (mn.Equals("последний гол в матче"))
-            {
-            }
-            else if (mn.Contains("что произойдет раньше"))
-            {
-            }
+            //else if (mn.Contains("счет матча"))
+            //{
+            //}
+            //else if (sn.Equals("да") || sn.Equals("нет"))
+            //{
+            //}
+            //else if (mn.Equals("тайм / матч"))
+            //{
+            //}
+            //else if (mn.Equals("количество голов"))
+            //{
+            //}
+            //else if (mn.Equals("команда забьет первой"))
+            //{
+            //}
+            //else if (mn.Equals("последний гол в матче"))
+            //{
+            //}
+            //else if (mn.Contains("что произойдет раньше"))
+            //{
+            //}
             else
             {
                 result = "UNDEFINED";
@@ -189,7 +349,7 @@ namespace MarathonBetLibrary.Tools
                 if (!sn.Contains(CoefTypes.DRAW))
                 {
                     result = Helper.CheckPositionForNameTeam(sn, EventNameRU);
-                    if (sn.Contains(EventNameRU.NameTeam1.ToLower()) && sn.Contains(EventNameRU.NameTeam2.ToLower()))
+                    if (sn.Contains(CoefTypes.OR) && sn.Contains(EventNameRU.NameTeam1.ToLower()) && sn.Contains(EventNameRU.NameTeam2.ToLower()))
                         result = "12";
                 }
                 else

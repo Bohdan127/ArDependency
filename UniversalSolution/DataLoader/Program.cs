@@ -1,4 +1,4 @@
-﻿//#define PlaceBets
+﻿#define PlaceBets
 //#define TestSoccer
 //#define TestPinnacleOnly
 #define NewMarathon
@@ -17,12 +17,14 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using SiteAccess.Enums;
 using ToolsPortable;
 using MarathonBetLibrary;
 using MarathonBetLibrary.Model;
 using MarathonSportType = MarathonBetLibrary.Enums.SportType;
 using NewMarathonEvent = MarathonBetLibrary.Model.MarathonEvent;
+using System.IO;
+using System.Text.RegularExpressions;
+using OddsFormat = SiteAccess.Enums.OddsFormat;
 
 #if PlaceBets
 
@@ -117,7 +119,7 @@ namespace DataLoader
                 Console.WriteLine($"Anti Gate Code = '{_currentUser.AntiGateCode}'");
 
 #if TestSoccer
-                var sportsToLoading = new[] { SportType.Soccer };
+                var sportsToLoading = new[] { SportType.Volleyball };
 
 #else
                 //always loading all sports
@@ -316,21 +318,6 @@ namespace DataLoader
         }
 
         private static List<Fork> GetForksDictionary(SportType sportType, Dictionary<string, ResultForForksDictionary> pinSport, List<NewMarathonEvent> marSport)
-        {
-            Console.WriteLine($"Start Calculate Forks for {sportType} sport type");
-
-            var watch = new Stopwatch();
-            watch.Start();
-            var resList = _forkFormulas.GetAllForksDictionary(pinSport, marSport);
-            watch.Stop();
-            _logger.Fatal($"GetForksDictionary {sportType} {watch.Elapsed}");
-            Console.WriteLine("Calculate finished");
-            Console.WriteLine($"Was founded {resList.Count} {sportType} Forks");
-
-            return resList;
-        }
-
-        private static List<Fork> GetForksDictionary(SportType sportType, Dictionary<string, ResultForForksDictionary> pinSport, List<ResultForForks> marSport)
         {
             Console.WriteLine($"Start Calculate Forks for {sportType} sport type");
 

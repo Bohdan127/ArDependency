@@ -1,4 +1,5 @@
-﻿using DataParser.Enums;
+﻿using System;
+using DataParser.Enums;
 using FormulasCollection.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,14 +55,39 @@ namespace FormulasCollection.Helpers
                 }
             }
 
-            if (SportTypes.TypeCoefsAll.ContainsKey(typeEventTrim))
+            //provide special fork formulas
+            var typeCoef = SportTypes.TypeCoefsAll;
+            switch (st)
+            {
+                case SportType.Soccer:
+                    break;
+                case SportType.Basketball:
+                    typeCoef.Add("1", "2");
+                    typeCoef.Add("2", "1");
+                    break;
+                case SportType.Hockey:
+                    break;
+                case SportType.Tennis:
+                    break;
+                case SportType.Volleyball:
+                    typeCoef.Add("1","2");
+                    typeCoef.Add("2", "1");
+                    break;
+                case SportType.NoType:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(st), st, null);
+            }
+
+
+            if (typeCoef.ContainsKey(typeEventTrim))
             {
                 if (isTotal || isFora)
                 {
-                    return CheckAsiatType(SportTypes.TypeCoefsAll[typeEventTrim] + "(" + number + ")");
+                    return CheckAsiatType(typeCoef[typeEventTrim] + "(" + number + ")");
                 }
                 else
-                    return CheckAsiatType(SportTypes.TypeCoefsAll[typeEventTrim]);
+                    return CheckAsiatType(typeCoef[typeEventTrim]);
             }
             return null;
         }

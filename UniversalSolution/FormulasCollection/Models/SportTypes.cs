@@ -6,17 +6,7 @@ namespace FormulasCollection.Models
 {
     public static class SportTypes
     {
-        private static Dictionary<string, string> CoefsAll;
-
-        public static Dictionary<string, string> TypeCoefsAll => CoefsAll;
-
-        static SportTypes()
-        {
-            initCoefsAll();
-        }
-        private static void initCoefsAll()
-        {
-            CoefsAll = new Dictionary<string, string>
+        public static Dictionary<string, string> TypeCoefsAll => new Dictionary<string, string>
             {
                 {"F1","F2"},
                 {"F2","F1"},
@@ -113,7 +103,5 @@ namespace FormulasCollection.Models
                 {"12P3","XP3"},
                 {"1XP3","2P3"}
             };
-        }
-
     }
 }

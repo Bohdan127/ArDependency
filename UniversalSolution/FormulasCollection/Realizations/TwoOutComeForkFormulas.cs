@@ -94,128 +94,6 @@ namespace FormulasCollection.Realizations
             return _calculatorFormulas.GetProfit(coef1.Value, coef2.Value) > 0;
         }
 
-        public List<Fork> GetAllForksDictionary(Dictionary<string, ResultForForksDictionary> pinnacle,
-            List<ResultForForks> marathon)
-        {
-            var resList = new List<Fork>();
-#if TestCoef
-            var alltypes = new List<string>();
-            foreach (var @event in marathon)
-            {
-                if (!alltypes.Contains(@event.Type))
-                    alltypes.Add(@event.Type);
-            }
-#endif
-#if TestNames
-            using (System.IO.StreamWriter file =
-                new System.IO.StreamWriter(@"D:\T2.txt"))
-            {
-#endif
-            foreach (var eventItem in marathon)
-            {
-                if (eventItem.Event == null) continue;
-                string pinKey = null;
-                if (_pinKeyCache.ContainsKey(eventItem.Event) && pinnacle.ContainsKey(_pinKeyCache[eventItem.Event]))
-                {
-                    pinKey = _pinKeyCache[eventItem.Event];
-                }
-                else
-                {
-                    try
-                    {
-                        if (eventItem.MatchDateTime.Length <= 5) //for all times like "00:00"
-                            eventItem.MatchDateTime = DateTime.Now.ToString(CultureInfo.CurrentCulture);
-
-                        pinKey = pinnacle.FirstOrDefault(pinEvent =>
-                            Extentions.GetStringSimilarityForSportTeams(
-                                eventItem.Event,
-                                pinEvent.Key,
-                                true,
-                                ConvertToDateTimeFromMarathon(eventItem.MatchDateTime),
-                                pinEvent.Value.MatchDateTime)
-                            >= 85)
-                            .Key
-                                 ?? pinnacle.FirstOrDefault(pinEvent =>
-                                     CalculateSimilarity(
-                                         eventItem.Event,
-                                         pinEvent.Key,
-                                         ConvertToDateTimeFromMarathon(eventItem.MatchDateTime),
-                                         pinEvent.Value.MatchDateTime)
-                                     >= 100)
-                                     .Key;
-#if TestNames
-                            if (pinKey != null)
-                            {
-                                file.WriteLine($"{eventItem.Event} => {pinKey}");
-                            }
-#endif
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error(eventItem.MatchDateTime);
-                        _logger.Error(ex.Message);
-                        _logger.Error(ex.StackTrace);
-                    }
-                }
-                if (pinKey == null)
-                    continue;
-                if (!_pinKeyCache.ContainsKey(eventItem.Event))
-                    _pinKeyCache.Add(eventItem.Event, pinKey);
-
-                var pinnacleEvent = pinnacle[pinKey];
-
-                try
-                {
-                    var pinEventKeys = IsAnyForkAll(eventItem, pinnacle[pinKey],
-                        eventItem.SportType.EnumParse<SportType>());
-                    if (pinEventKeys.Count == 0) continue;
-                    foreach (var pinEventKey in pinEventKeys)
-                    {
-                        //fork variable is created for debug, please don't refactor it into resList.Add function
-                        var fork = new Fork();
-                        fork.League = pinnacleEvent.LeagueName;
-                        fork.MarathonEventId = eventItem.EventId;
-                        fork.PinnacleEventId = pinnacleEvent.EventId;
-                        fork.Event = eventItem.Event;
-                        fork.TypeFirst = eventItem.Type;
-                        fork.CoefFirst = eventItem.Coef;
-                        fork.TypeSecond = pinEventKey.ToString(CultureInfo.InvariantCulture);
-                        fork.CoefSecond = pinnacleEvent.ForkDetailDictionary[pinEventKey].TypeCoef.ToString(CultureInfo.InvariantCulture);
-                        fork.Sport = eventItem.SportType;
-                        fork.MatchDateTime = pinnacleEvent.MatchDateTime;
-                        fork.BookmakerSecond = pinKey;
-                        fork.BookmakerFirst = eventItem.Event_RU;
-                        fork.Type = ForkType.Current;
-                        fork.LineId = pinnacleEvent.ForkDetailDictionary[pinEventKey].LineId;
-                        fork.Profit = _calculatorFormulas.GetProfit(Convert.ToDouble(eventItem.Coef),
-                            Convert.ToDouble(pinnacleEvent.ForkDetailDictionary[pinEventKey].TypeCoef));
-                        fork.sn = eventItem.marathonAutoPlay.sn;
-                        fork.mn = eventItem.marathonAutoPlay.mn;
-                        fork.ewc = eventItem.marathonAutoPlay.ewc;
-                        fork.cid = eventItem.marathonAutoPlay.cid;
-                        fork.prt = eventItem.marathonAutoPlay.prt;
-                        fork.ewf = eventItem.marathonAutoPlay.ewf;
-                        fork.epr = eventItem.marathonAutoPlay.epr;
-                        fork.prices = eventItem.marathonAutoPlay.prices;
-                        fork.selection_key = eventItem.marathonAutoPlay.selection_key;
-                        fork.Period = pinnacleEvent.ForkDetailDictionary[pinEventKey].Period;
-                        fork.SideType = pinnacleEvent.ForkDetailDictionary[pinEventKey].SideType;
-                        fork.TeamType = pinnacleEvent.ForkDetailDictionary[pinEventKey].TeamType;
-                        fork.BetType = pinnacleEvent.ForkDetailDictionary[pinEventKey].BetType;
-                        resList.Add(fork);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex.Message);
-                    _logger.Error(ex.StackTrace);
-                }
-            }
-#if TestNames
-            }
-#endif
-            return resList;
-        }
 
         public List<Fork> GetAllForksDictionary(Dictionary<string, ResultForForksDictionary> pinnacle,
             List<NewMarathonEvent> marathon)
@@ -225,9 +103,8 @@ namespace FormulasCollection.Realizations
             {
                 if (eventItem == null)
                 {
-
+                    //todo log it!
                 }
-                //todo log it!
                 if (eventItem?.EventNameEN == null) continue;
                 string pinKey = null;
                 try
@@ -434,32 +311,6 @@ namespace FormulasCollection.Realizations
             return DateTime.ParseExact(fullTime,
                 timeFormat,
                 CultureInfo.CurrentCulture);
-        }
-
-        private List<string> IsAnyForkAll(ResultForForks marEvent, ResultForForksDictionary pinEvent, SportType st)
-        {
-            var resList = new List<string>();
-            try
-            {
-                marEvent.Type = marEvent.Type.Trim();
-                var resTypes = SportsConverterTypes.TypeParseAll(marEvent.Type, st);
-                if (resTypes == null) return resList;
-                foreach (var resType in resTypes)
-                {
-                    if (!pinEvent.ForkDetailDictionary.ContainsKey(resType))
-                        continue;
-                    var isFork = CheckIsFork(marEvent.Coef.ConvertToDoubleOrNull(),
-                        pinEvent.ForkDetailDictionary[resType].TypeCoef);
-                    if (isFork)
-                        resList.Add(resType);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message);
-                _logger.Error(ex.StackTrace);
-            }
-            return resList;
         }
 
         private List<dynamic> IsAnyForkAll(NewMarathonEvent marEvent, ResultForForksDictionary pinEvent, SportType st)

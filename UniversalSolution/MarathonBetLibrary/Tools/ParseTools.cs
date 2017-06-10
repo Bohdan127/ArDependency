@@ -196,7 +196,7 @@ namespace MarathonBetLibrary.Tools
 
             }
             #endregion
-            else if (mn.Contains("победа в матче "))// назва команди      венгрия
+            else if (mn.Contains("победа в матче"))// назва команди      венгрия
             {
                 result = Results(EventNameRU, sn, mn);
             }

@@ -119,6 +119,10 @@
       <Project>{b1e83a0f-594b-4da5-a787-bc95a7f99765}</Project>
       <Name>MarathonBetLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\pinnaclewrapper\PinnacleWrapper.csproj">
+      <Project>{49CCCA7D-98C3-44BA-94F6-45DA4AFF7886}</Project>
+      <Name>PinnacleWrapper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SiteAccess\SiteAccess.csproj">
       <Project>{ddc82e86-35cb-4465-b23c-6c341fe9cc36}</Project>
       <Name>SiteAccess</Name>

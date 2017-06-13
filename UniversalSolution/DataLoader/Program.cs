@@ -1,6 +1,7 @@
 ﻿#define PlaceBets
 //#define TestSoccer
-//#define TestPinnacleOnly
+#define TestPinnacleOnly
+#define NewPinnacle
 #define NewMarathon
 
 using DataParser.DefaultRealization;
@@ -24,6 +25,8 @@ using MarathonSportType = MarathonBetLibrary.Enums.SportType;
 using NewMarathonEvent = MarathonBetLibrary.Model.MarathonEvent;
 using System.IO;
 using System.Text.RegularExpressions;
+using PinnacleWrapper;
+using SiteAccess.Enums;
 using OddsFormat = SiteAccess.Enums.OddsFormat;
 
 #if PlaceBets
@@ -275,7 +278,26 @@ namespace DataLoader
                 if (resM)
                 {
 #endif
-                    var betP = new PinnacleBet
+#if NewPinnacle
+                var client = new PinnacleClient(_currentUser.LoginPinnacle,
+                    _currentUser.PasswordPinnacle, 
+                    "en-US", 
+                    PinnacleWrapper.Enums.OddsFormat.DECIMAL);
+                client.PlaceBet(new PinnacleWrapper.Data.PlaceBetRequest
+                {
+                    UniqueRequestId = Guid.NewGuid(),
+                    AcceptBetterLine = false,
+                    OddsFormat = PinnacleWrapper.Enums.OddsFormat.DECIMAL,
+                    Stake = recomendedPinnacle,
+                    WinRiskType = PinnacleWrapper.Enums.WinRiskType.Win,
+                    SportId = (int)(SportType)Enum.Parse(typeof(SportType), fork.Sport, false),
+                    EventId = Convert.ToInt64(fork.PinnacleEventId),
+                    PeriodNumber = fork.Period,
+                    BetType = fork.BetType,
+                    LineId = Convert.ToInt32(fork.LineId)
+                });
+#else
+                var betP = new PinnacleBet
                     {
                         AcceptBetterLine = true,
                         BetType = fork.BetType,
@@ -296,6 +318,7 @@ namespace DataLoader
                                      : $"Place result {resP.Success} with code {resP.Status} and description {resP.Error} for {recomendedPinnacle} into {fork.BookmakerFirst}");
                     fork.PinRate = recomendedPinnacle.ToString(CultureInfo.CurrentCulture);
                     fork.PinSuccess = $"{resP.Success} {resP.Status} {resP.Error}";
+#endif
 #if !TestPinnacleOnly
                 }
 #endif

@@ -1,7 +1,7 @@
 ﻿using FormulasCollection.Enums;
-using SiteAccess.Enums;
 using System;
 using System.Collections.Generic;
+using PinnacleWrapper.Enums;
 
 namespace FormulasCollection.Models
 {

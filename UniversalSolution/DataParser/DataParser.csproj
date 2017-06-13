@@ -134,6 +134,10 @@
       <Project>{c6982ab9-704a-474f-a303-89b4c4a3d11e}</Project>
       <Name>FormulasCollection</Name>
     </ProjectReference>
+    <ProjectReference Include="..\pinnaclewrapper\PinnacleWrapper.csproj">
+      <Project>{49CCCA7D-98C3-44BA-94F6-45DA4AFF7886}</Project>
+      <Name>PinnacleWrapper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SiteAccess\SiteAccess.csproj">
       <Project>{DDC82E86-35CB-4465-B23C-6C341FE9CC36}</Project>
       <Name>SiteAccess</Name>

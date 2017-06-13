@@ -1,4 +1,6 @@
-﻿using SiteAccess.Enums;
+﻿
+
+using PinnacleWrapper.Enums;
 
 namespace DataParser.Models
 {
@@ -16,10 +18,10 @@ namespace DataParser.Models
 
         public int MatchPeriod { get; set; }
 
-        public SideType SideType { get; set; }
+        public SideType? SideType { get; set; }
 
         public TeamType TeamType { get; set; }
 
-        public BetType BetType { get; set; }
+        public BetType? BetType { get; set; }
     }
 }

@@ -1,9 +1,9 @@
-﻿using SiteAccess.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PinnacleWrapper.Enums;
 
 namespace FormulasCollection.Models
 {
@@ -12,8 +12,8 @@ namespace FormulasCollection.Models
         public double TypeCoef { get; set; }
         public string LineId { get; set; }
         public int Period { get; set; }
-        public SideType SideType { get; set; }
+        public SideType? SideType { get; set; }
         public TeamType TeamType { get; set; }
-        public BetType BetType { get; set; }
+        public BetType? BetType { get; set; }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using DataParser.Models;
-using SiteAccess.Enums;
 using System.Collections.Generic;
 using FormulasCollection.Helpers;
+using PinnacleWrapper.Enums;
 
 namespace DataParser.DefaultRealization
 {
@@ -27,8 +27,8 @@ namespace DataParser.DefaultRealization
         internal IEnumerable<EventWithTotalDictionary> CreateEventsWithTotal(string totalType,
                                                                string totalValue,
                                                                TeamType team,
-                                                               SideType sideType,
-                                                               BetType betType)
+                                                               SideType? sideType,
+                                                               BetType? betType)
         {
             switch (matchPeriod)
             {
